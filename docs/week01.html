@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>第一周：项目启动与统计学导论 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week02.html" rel="next">
+<link href="./syllbus.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week01.html">课程内容</a></li><li class="breadcrumb-item"><a href="./week01.html"><span class="chapter-title">第一周：项目启动与统计学导论</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">欢迎</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllbus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">课程概述</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">课程内容</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第一周：项目启动与统计学导论</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学讲义 - 第二周：R语言数据导入与常用数据包</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学讲义 - 第三周：描述性统计：数据探索与可视化</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学讲义 - 第四周：推断性统计初步：参数估计与假设检验</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#欢迎来到统计学" id="toc-欢迎来到统计学" class="nav-link active" data-scroll-target="#欢迎来到统计学">欢迎来到统计学！</a></li>
+  <li><a href="#课程和项目介绍" id="toc-课程和项目介绍" class="nav-link" data-scroll-target="#课程和项目介绍">课程和项目介绍</a></li>
+  <li><a href="#统计学导论" id="toc-统计学导论" class="nav-link" data-scroll-target="#统计学导论">统计学导论</a>
+  <ul class="collapse">
+  <li><a href="#什么是统计学" id="toc-什么是统计学" class="nav-link" data-scroll-target="#什么是统计学">什么是统计学？</a></li>
+  <li><a href="#统计学基本概念" id="toc-统计学基本概念" class="nav-link" data-scroll-target="#统计学基本概念">统计学基本概念</a></li>
+  <li><a href="#r语言tidyverse-和-ai-辅助工具简介-vs-codecursor" id="toc-r语言tidyverse-和-ai-辅助工具简介-vs-codecursor" class="nav-link" data-scroll-target="#r语言tidyverse-和-ai-辅助工具简介-vs-codecursor">R语言、tidyverse 和 AI 辅助工具简介 (VS Code/Cursor)</a></li>
+  <li><a href="#数据获取方法入门" id="toc-数据获取方法入门" class="nav-link" data-scroll-target="#数据获取方法入门">数据获取方法入门</a></li>
+  <li><a href="#本周内容总结与下周预告" id="toc-本周内容总结与下周预告" class="nav-link" data-scroll-target="#本周内容总结与下周预告">本周内容总结与下周预告</a></li>
+  <li><a href="#课后任务" id="toc-课后任务" class="nav-link" data-scroll-target="#课后任务">课后任务</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week01.html">课程内容</a></li><li class="breadcrumb-item"><a href="./week01.html"><span class="chapter-title">第一周：项目启动与统计学导论</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">第一周：项目启动与统计学导论</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="欢迎来到统计学" class="level3">
+<h3 class="anchored" data-anchor-id="欢迎来到统计学">欢迎来到统计学！</h3>
+<p>本周我们将开启统计学之旅！ 第一周是入门周，我们会一起了解本课程的项目式教学模式，探索统计学的奥秘，初步接触强大的R语言和AI辅助工具，并开始为我们的第一个项目做准备。</p>
+<p><strong>本讲义特别说明：</strong> 本课程鼓励大家使用现代化的代码编辑器，例如 <strong>VS Code</strong> 或 <strong>Cursor</strong>，并结合强大的 <strong>AI 插件</strong> 来进行 R 语言编程和统计分析。 这些工具能够提供更智能的代码辅助、更高效的开发体验，并更好地与 AI 功能集成。 当然，如果您习惯使用 RStudio，也可以继续使用。 本讲义将重点介绍如何在 VS Code 和 Cursor 中配置和使用 R 语言环境。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+本周学习目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>理解课程模式:</strong> 了解项目式教学，明确项目要求。</li>
+<li><strong>统计学入门:</strong> <strong>深入理解</strong>统计学的基本概念和应用。</li>
+<li><strong>R语言初探 (VS Code/Cursor):</strong> 初步认识 R 语言在 VS Code 或 Cursor 中的使用。</li>
+<li><strong>AI工具体验 (VS Code/Cursor):</strong> 了解 AI 插件在 VS Code 或 Cursor 中辅助统计学习的作用。</li>
+<li><strong>数据获取初步:</strong> 掌握基本数据获取方法 (公开数据集、API)。</li>
+<li><strong>环境搭建 (VS Code/Cursor):</strong> 完成 VS Code 或 Cursor 中 R 语言环境的搭建和 <code>tidyverse</code> 包的安装。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="课程和项目介绍" class="level3">
+<h3 class="anchored" data-anchor-id="课程和项目介绍">课程和项目介绍</h3>
+<p>大家好！很高兴和大家一起学习统计学。</p>
+<ul>
+<li><p><strong>课程概要:</strong> 本课程为期16周，共64课时。 我们的目标是让大家不仅掌握统计学的理论知识，更能运用统计方法解决实际的经济管理问题。 考核方式包括平时成绩、项目报告和期末考试。</p></li>
+<li><p><strong>项目式教学:</strong> 本课程采用项目式教学，这意味着我们将通过一系列实际项目来学习统计学。 项目是驱动力，实践是最好的老师！</p>
+<ul>
+<li><p><strong>项目一：数据探索与初步洞察 (4周)</strong> 我们将从大家感兴趣的领域入手，例如电影、音乐、游戏、股票等，选择一个主题进行数据探索和初步分析。</p></li>
+<li><p><strong>项目目标:</strong> 通过实际操作，学习数据获取、描述性统计和初步推断，培养数据分析的初步能力。</p></li>
+<li><p><strong>主题选择:</strong> 大家可以选择以下主题，或者自拟主题 (需经老师批准)：</p>
+<ul>
+<li>电影偏好分析</li>
+<li>音乐流行趋势分析</li>
+<li>电子游戏市场分析</li>
+<li>股票市场波动分析</li>
+</ul></li>
+<li><p><strong>小组合作:</strong> 我们将以小组 (2-3人) 为单位进行项目。鼓励大家自由组队，发挥团队合作精神。小组内部分工协作，例如数据收集、数据分析、报告撰写、展示汇报等。</p></li>
+<li><p><strong>时间安排:</strong> 项目一为期四周，期间会有中期检查和汇报，最终进行项目答辩。</p></li>
+<li><p><strong>成果要求:</strong> 每个小组需要提交项目报告，并在答辩时进行展示。 项目报告需要包含：问题描述、数据来源、研究方法、数据分析过程、结果解释、结论与建议、R代码等。</p></li>
+<li><p><strong>评价标准:</strong> 项目评价将综合考虑小组互评和教师评价，内容包括项目报告质量、展示效果、答辩表现、团队合作、创新性、R代码质量等。</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="统计学导论" class="level2">
+<h2 class="anchored" data-anchor-id="统计学导论">统计学导论</h2>
+<section id="什么是统计学" class="level3">
+<h3 class="anchored" data-anchor-id="什么是统计学">什么是统计学？</h3>
+<ul>
+<li><p><strong>什么是统计学？</strong> 统计学是一门从数据中提取信息和知识的科学。 它的目标是：</p>
+<ul>
+<li><strong>描述数据:</strong> 用简洁明了的方式概括数据的特征。</li>
+<li><strong>推断结论:</strong> 从样本数据推断总体特征。</li>
+<li><strong>预测未来:</strong> 利用数据模型预测未来的趋势。</li>
+<li><strong>辅助决策:</strong> 为决策提供数据支持和科学依据。</li>
+</ul></li>
+<li><p><strong>统计学的应用领域:</strong> 统计学无处不在！ 在经济管理领域，统计学更是应用广泛，例如：</p>
+<ul>
+<li><strong>市场调查:</strong> 了解消费者需求和市场趋势，例如，通过问卷调查了解消费者对新产品的偏好。</li>
+<li><strong>销售预测:</strong> 预测产品销量，制定生产计划和库存管理策略，例如，根据历史销售数据和季节性因素预测下个季度的销售额。</li>
+<li><strong>风险管理:</strong> 评估和控制经营风险，例如，利用统计模型评估投资组合的风险，或者预测贷款违约率。</li>
+<li><strong>运营优化:</strong> 提高运营效率，降低成本，例如，通过分析生产数据，找出影响生产效率的关键因素，并进行优化。</li>
+<li><strong>人力资源管理:</strong> 分析员工绩效，优化人员配置，例如，通过分析员工的绩效数据，评估培训效果，或者预测员工离职率。</li>
+</ul>
+<p>统计学与我们的生活息息相关，掌握统计学方法，将为未来的学习和工作打下坚实的基础。</p></li>
+</ul>
+</section>
+<section id="统计学基本概念" class="level3">
+<h3 class="anchored" data-anchor-id="统计学基本概念">统计学基本概念</h3>
+<ul>
+<li><p><strong>基本概念详解:</strong> 理解以下基本概念是学好统计学的基石。</p>
+<ul>
+<li><p><strong>总体 (Population):</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+总体 (Population)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>定义：</strong> <strong>总体</strong> 是我们研究对象的全体，由所有感兴趣的个体组成。 总体是我们希望了解和推断的<strong>目标群体</strong>。</p>
+<p><strong>关键特征：</strong></p>
+<ul>
+<li><strong>完整性：</strong> 包含所有研究个体。</li>
+<li><strong>理论性：</strong> 在实际研究中，有时总体是理论上的，难以完全观测。</li>
+</ul>
+<p><strong>例子：</strong></p>
+<ul>
+<li><strong>研究中国大学生的平均身高：</strong> 总体是中国<strong>所有</strong>在校大学生。</li>
+<li><strong>研究某品牌手机的用户满意度：</strong> 总体是该品牌手机的<strong>所有</strong>用户。</li>
+<li><strong>研究某城市所有家庭的收入水平：</strong> 总体是该城市<strong>所有</strong>家庭。</li>
+</ul>
+<p><strong>目标总体 vs.&nbsp;抽样总体 (重要概念):</strong></p>
+<ul>
+<li><strong>目标总体 (Target Population):</strong> 研究者<strong>真正想要研究</strong>的总体，例如，所有中国大学生。</li>
+<li><strong>抽样总体 (Sampling Population):</strong> <strong>实际抽取样本</strong>的总体，是目标总体的<strong>可操作部分</strong>。 例如，由于时间和经费限制，我们可能只能从中国<strong>部分地区</strong>的大学生中抽取样本，那么这些被抽样的地区大学生构成的总体就是抽样总体。</li>
+</ul>
+<p><strong>理想情况：</strong> 抽样总体 <strong>尽可能接近</strong> 目标总体，以保证研究结果的<strong>代表性</strong>和<strong>推广性</strong>。 但实际研究中，抽样总体往往只是目标总体的一部分。 需要注意抽样总体和目标总体的差异，谨慎推广研究结论。</p>
+</div>
+</div></li>
+<li><p><strong>个体 (Individual):</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+个体 (Individual)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>定义：</strong> <strong>个体</strong> 是总体中的<strong>基本单元</strong>，是我们研究的<strong>对象</strong>。 总体由若干个个体组成。</p>
+<p><strong>关键特征：</strong></p>
+<ul>
+<li><strong>不可再分性：</strong> 在当前研究问题下，个体是<strong>不可再分割</strong>的最小单元。</li>
+<li><strong>同质性：</strong> 同一总体中的个体，在研究的<strong>某些特征</strong>上是<strong>相似的</strong>。</li>
+</ul>
+<p><strong>例子 (继续沿用上面的例子):</strong></p>
+<ul>
+<li><strong>研究中国大学生的平均身高：</strong> <strong>每个大学生</strong> 就是一个个体。</li>
+<li><strong>研究某品牌手机的用户满意度：</strong> <strong>每个手机用户</strong> 就是一个个体。</li>
+<li><strong>研究某城市所有家庭的收入水平：</strong> <strong>每个家庭</strong> 就是一个个体。</li>
+</ul>
+<p><strong>注意：</strong> 个体和总体的概念是<strong>相对</strong>的。 例如，当我们研究 “大学” 这个总体时，每个 “大学” 是一个个体；但当我们研究某个 “大学” 的学生情况时，这个 “大学” 就变成了总体，而每个 “学生” 则变成了个体。 <strong>个体和总体的划分取决于研究问题和研究范围。</strong></p>
+</div>
+</div></li>
+<li><p><strong>样本 (Sample):</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+样本 (Sample)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>定义：</strong> <strong>样本</strong> 是从总体中<strong>抽取</strong>的一部分个体的集合。 样本是总体的<strong>代表</strong>。 我们通过研究样本来<strong>推断总体</strong>。</p>
+<p><strong>关键特征：</strong></p>
+<ul>
+<li><strong>部分性：</strong> 样本只是总体的一部分。</li>
+<li><strong>代表性 (重要！):</strong> 样本应该<strong>尽可能代表总体</strong>，反映总体的特征。 只有具有代表性的样本，才能有效地推断总体。</li>
+<li><strong>随机性 (理想情况):</strong> 理想的样本是<strong>随机抽取</strong>的，以减少抽样偏差，提高样本的代表性。</li>
+</ul>
+<p><strong>例子 (继续沿用上面的例子):</strong></p>
+<ul>
+<li><strong>研究中国大学生的平均身高：</strong> 从中国大学生中<strong>随机抽取</strong> 1000 名大学生，这 1000 名大学生构成一个样本。</li>
+<li><strong>研究某品牌手机的用户满意度：</strong> 从该品牌手机用户中<strong>随机抽取</strong> 500 名用户进行调查，这 500 名用户的回答构成一个样本。</li>
+<li><strong>研究某城市所有家庭的收入水平：</strong> 从该城市家庭中<strong>随机抽取</strong> 200 户家庭进行调查，这 200 户家庭构成一个样本。</li>
+</ul>
+<p><strong>样本容量 (Sample Size):</strong> 样本中所包含的个体数量。 样本容量的大小会影响样本的代表性和推断的精度。 <strong>样本容量越大，通常样本的代表性越好，推断结果越精确，但成本也越高。</strong> 如何确定合适的样本容量，是统计学研究中的重要问题。</p>
+<p><strong>抽样 (Sampling):</strong> 从总体中抽取样本的过程。 抽样方法的选择直接影响样本的代表性。 常见的抽样方法包括：</p>
+<ul>
+<li><strong>简单随机抽样 (Simple Random Sampling):</strong> 每个个体被抽取的概率相等，保证了抽样的公平性。</li>
+<li><strong>分层抽样 (Stratified Sampling):</strong> 先将总体分层，然后在每层内进行随机抽样，可以提高样本的代表性，尤其适用于总体内部差异较大的情况。</li>
+<li><strong>整群抽样 (Cluster Sampling):</strong> 先将总体分成若干群，然后随机抽取若干群，再对抽取的群内的所有个体进行调查，适用于总体分布范围广、调查成本较高的情况。</li>
+<li><strong>系统抽样 (Systematic Sampling):</strong> 按照一定的顺序和间隔抽取个体，操作简便，但需要注意周期性偏差。</li>
+<li><strong>方便抽样 (Convenience Sampling):</strong> 选择容易接触到的个体作为样本，成本低，但代表性差，结论的推广性受到限制。</li>
+</ul>
+<p><strong>在实际研究中，需要根据研究目的、总体特征、研究成本等因素，选择合适的抽样方法，尽可能提高样本的代表性，保证研究结论的可靠性和有效性。</strong></p>
+</div>
+</div></li>
+<li><p><strong>变量 (Variable):</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+变量 (Variable)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>定义：</strong> <strong>变量</strong> 是描述个体<strong>某种特征</strong>的<strong>概念</strong>。 变量是<strong>可变的</strong>，不同个体在同一变量上的取值可能不同。 统计研究的核心内容之一就是研究变量及其关系。</p>
+<p><strong>关键特征：</strong></p>
+<ul>
+<li><strong>可变性：</strong> 变量的取值在不同个体之间是变化的。</li>
+<li><strong>可测量性：</strong> 变量的取值是可以测量和记录的。</li>
+<li><strong>多样性：</strong> 变量可以是各种各样的，例如，身高、体重、年龄、性别、收入、学历、满意度、偏好等等。</li>
+</ul>
+<p><strong>例子 (继续沿用上面的例子):</strong></p>
+<ul>
+<li><strong>研究中国大学生的平均身高：</strong> <strong>身高</strong> 就是一个变量。 每个大学生的身高数值可能不同。</li>
+<li><strong>研究某品牌手机的用户满意度：</strong> <strong>用户满意度</strong> 就是一个变量。 每个用户对手机的满意程度可能不同。 <strong>手机品牌</strong> 也可以作为一个变量，不同用户可能使用不同品牌的手机。</li>
+<li><strong>研究某城市所有家庭的收入水平：</strong> <strong>家庭年收入</strong> 就是一个变量。 不同家庭的年收入数值可能不同。 <strong>家庭所在地区</strong> 也可以作为一个变量，不同家庭可能居住在城市的不同地区。</li>
+</ul>
+<p><strong>变量的类型 (重要！):</strong> 根据变量的性质和测量尺度，可以将变量分为不同的类型：</p>
+<ul>
+<li><strong>分类变量 (Categorical Variable) / 定性变量 (Qualitative Variable):</strong> 描述个体所属类别或属性的变量。 取值为<strong>类别</strong>，例如，性别 (男/女), 学历 (本科/硕士/博士), 颜色 (红/绿/蓝), 品牌 (苹果/华为/小米) 等。 分类变量的取值<strong>没有顺序</strong>或<strong>数值大小</strong>的含义，只能进行分类和计数。 分类变量又可以分为：
+<ul>
+<li><strong>名义变量 (Nominal Variable):</strong> 类别之间<strong>没有顺序</strong>关系，例如，性别、颜色、品牌等。</li>
+<li><strong>有序变量 (Ordinal Variable):</strong> 类别之间<strong>有顺序</strong>关系，但<strong>间隔不相等</strong>，例如，学历 (小学 &lt; 初中 &lt; 高中 &lt; 本科 &lt; 硕士 &lt; 博士), 满意度 (非常满意 &gt; 满意 &gt; 一般 &gt; 不满意 &gt; 非常不满意), 等级 (一级 &gt; 二级 &gt; 三级) 等。</li>
+</ul></li>
+<li><strong>数值变量 (Numerical Variable) / 定量变量 (Quantitative Variable):</strong> 描述个体数量特征的变量。 取值为<strong>数值</strong>，可以进行数学运算，例如，身高 (cm), 体重 (kg), 年龄 (岁), 收入 (元), 考试成绩 (分), 销售额 (万元) 等。 数值变量又可以分为：
+<ul>
+<li><strong>离散变量 (Discrete Variable):</strong> 取值是<strong>有限的</strong>或<strong>可数的</strong>，通常是整数，例如，人口数、汽车数量、考试及格人数、问卷调查的题项数等。</li>
+<li><strong>连续变量 (Continuous Variable):</strong> 取值是<strong>无限的</strong>或<strong>不可数的</strong>，在一定范围内可以取任意数值，例如，身高、体重、温度、时间、收入、价格等。</li>
+</ul></li>
+</ul>
+<p><strong>理解变量的类型对于选择合适的统计分析方法至关重要。 例如，对于分类变量，我们通常计算频数、频率、百分比等；对于数值变量，我们可以计算均值、标准差、相关系数等。</strong></p>
+</div>
+</div></li>
+<li><p><strong>数据 (Data):</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+数据 (Data)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>定义：</strong> <strong>数据</strong> 是变量的<strong>具体观测值</strong>，是<strong>记录下来的事实</strong>。 数据是统计分析的<strong>原材料</strong>。</p>
+<p><strong>关键特征：</strong></p>
+<ul>
+<li><strong>真实性：</strong> 数据应该<strong>真实</strong>反映客观情况。</li>
+<li><strong>记录性：</strong> 数据是<strong>记录下来</strong>的，可以存储和分析。</li>
+<li><strong>多样性：</strong> 数据可以是<strong>各种形式</strong>的，例如，数值、文本、图像、音频、视频等。 在统计学中，我们主要处理<strong>结构化数据</strong> (例如，表格数据、数据库数据)。</li>
+</ul>
+<p><strong>例子 (继续沿用上面的例子):</strong></p>
+<ul>
+<li><strong>研究中国大学生的平均身高：</strong> 收集到的 <strong>每个大学生的具体身高数值</strong> (例如，170cm, 175cm, 165cm, …) 就是数据。</li>
+<li><strong>研究某品牌手机的用户满意度：</strong> 收集到的 <strong>每个用户的满意度评分</strong> (例如，5分, 4分, 3分, …) 就是数据。 以及 <strong>用户对满意度评价的具体类别</strong> (例如，满意, 一般, 不满意) 也是数据。</li>
+<li><strong>研究某城市所有家庭的收入水平：</strong> 收集到的 <strong>每个家庭的具体年收入数值</strong> (例如，10万元, 20万元, 8万元, …) 就是数据。</li>
+</ul>
+<p><strong>数据与变量的关系：</strong> 数据是变量的具体实现，变量是数据的抽象概括。 <strong>数据是变量的取值，变量是数据的名称。</strong> 我们通过收集数据来研究变量，通过分析数据来了解变量的规律和特征。</p>
+<p><strong>数据质量 (重要性):</strong> <strong>高质量的数据</strong> 是得出<strong>可靠统计结论</strong>的基础。 数据质量问题包括：</p>
+<ul>
+<li><strong>数据缺失 (Missing Data):</strong> 部分数据缺失，影响分析的完整性和准确性。</li>
+<li><strong>数据错误 (Data Error):</strong> 数据记录错误，例如，录入错误、测量误差等。</li>
+<li><strong>数据不一致 (Data Inconsistency):</strong> 不同来源的数据不一致，例如，不同部门统计的数据口径不一致。</li>
+<li><strong>数据偏差 (Data Bias):</strong> 数据本身存在系统性偏差，例如，抽样偏差、选择偏差等。</li>
+</ul>
+<p><strong>在进行统计分析之前，需要对数据进行清洗和预处理，以提高数据质量，保证分析结果的可靠性。</strong></p>
+</div>
+</div></li>
+</ul></li>
+<li><p><strong>数据的类型:</strong> 根据性质不同，数据可以分为不同的类型 (前面已简要介绍，这里再强调一下)：</p>
+<ul>
+<li><strong>分类数据 (Categorical Data) / 定性数据 (Qualitative Data):</strong> 描述个体所属类别的数据。</li>
+<li><strong>顺序数据 (Ordinal Data):</strong> 可以排序的数据，但数值之间没有确定的间隔。</li>
+<li><strong>数值型数据 (Numerical Data) / 定量数据 (Quantitative Data):</strong> 用数值表示的数据，可以进行数学运算。 又分为离散型和连续型。</li>
+</ul></li>
+<li><p><strong>度量尺度:</strong> 数据的度量尺度决定了可以进行的统计分析类型 (前面已简要介绍，这里再强调一下)：</p>
+<ul>
+<li><strong>定类尺度 (Nominal Scale):</strong> 只能进行分类，类别之间没有顺序。</li>
+<li><strong>定序尺度 (Ordinal Scale):</strong> 可以排序，类别之间有顺序，但间隔不确定。</li>
+<li><strong>定距尺度 (Interval Scale):</strong> 可以进行加减运算，数值之间间隔相等，但没有绝对零点。</li>
+<li><strong>定比尺度 (Ratio Scale):</strong> 可以进行加减乘除运算，数值之间间隔相等，有绝对零点。</li>
+</ul></li>
+<li><p><strong>理解数据类型和度量尺度</strong> <strong>至关重要</strong>，这将直接影响我们选择合适的统计方法和解释分析结果。 在后续的学习中，我们会不断强调数据类型和度量尺度的重要性。</p></li>
+</ul>
+</section>
+<section id="r语言tidyverse-和-ai-辅助工具简介-vs-codecursor" class="level3">
+<h3 class="anchored" data-anchor-id="r语言tidyverse-和-ai-辅助工具简介-vs-codecursor">R语言、tidyverse 和 AI 辅助工具简介 (VS Code/Cursor)</h3>
+<ul>
+<li><p><strong>R 语言:</strong> 统计分析的利器！ 在 VS Code 和 Cursor 中，我们可以通过安装相应的扩展来支持 R 语言。</p>
+<ul>
+<li><p><strong>R 语言的特点:</strong></p>
+<ul>
+<li><strong>开源免费:</strong> 任何人都可以免费使用和修改 R 语言。</li>
+<li><strong>强大的统计分析功能:</strong> R 语言拥有丰富的统计分析包，几乎涵盖了所有统计分析方法。</li>
+<li><strong>优秀的数据可视化能力:</strong> R 语言的 <code>ggplot2</code> 包是数据可视化的标杆。</li>
+<li><strong>活跃的社区:</strong> R 语言拥有庞大而活跃的社区，可以方便地获取帮助和资源。</li>
+<li><strong>跨平台性:</strong> R 语言可以运行在 Windows, macOS, Linux 等多种操作系统上。</li>
+</ul></li>
+<li><p><strong>R 语言的应用领域:</strong> 统计学、数据科学、机器学习、生物信息学、金融分析、社会科学等。</p></li>
+<li><p><strong>在 VS Code 和 Cursor 中使用 R 语言:</strong> 通过安装 R 扩展 (R Extension for VS Code)，我们可以方便地在 VS Code 和 Cursor 中进行 R 语言编程。 R 扩展提供了代码高亮、代码补全、代码格式化、代码调试、R 终端集成等功能，极大地提升了 R 语言开发效率。</p>
+<p><strong>在 VS Code 中配置 R 语言环境:</strong></p>
+<ol type="1">
+<li><p><strong>安装 R 软件:</strong> 首先需要在您的计算机上安装 R 软件。 请访问 R 官网 <a href="https://www.r-project.org/">https://www.r-project.org/</a>，根据您的操作系统下载并安装 R 软件。 安装完成后，在命令行或终端中输入 <code>R --version</code>，如果能正确显示 R 版本信息，则说明 R 软件安装成功。</p></li>
+<li><p><strong>安装 VS Code R 扩展:</strong> 打开 VS Code，点击左侧的 “扩展” 图标 (或按下 <code>Ctrl+Shift+X</code>)，在搜索框中输入 “R”，找到 “R Extension for VS Code” 扩展，点击 “安装” 按钮进行安装。 安装完成后，点击 “重新加载” 按钮重启 VS Code。</p></li>
+<li><p><strong>配置 R 路径:</strong> VS Code R 扩展需要知道 R 软件的安装路径。 在 VS Code 中，按下 <code>Ctrl+Shift+P</code> (或 <code>Cmd+Shift+P</code> 在 macOS 上) 打开命令面板，输入 “R: Set R Path”，选择 “R: Set R Path” 命令。 然后，在弹出的输入框中输入 R 软件的安装路径。 如果您不确定 R 软件的安装路径，可以在 R 终端中输入 <code>R.home()</code> 命令获取 R 的安装路径。 通常情况下，Windows 上的 R 安装路径类似于 <code>C:\Program Files\R\R-4.3.0</code>，macOS 上的 R 安装路径类似于 <code>/Library/Frameworks/R.framework/Resources</code>，Linux 上的 R 安装路径可能是 <code>/usr/bin/R</code> 或 <code>/usr/local/bin/R</code>。 请根据您的实际安装路径进行配置。</p></li>
+<li><p><strong>安装 <code>languageserver</code> 包:</strong> <code>languageserver</code> 包是 R 语言的语言服务器协议 (LSP) 实现，为 VS Code R 扩展提供代码智能提示、代码补全、代码诊断等功能。 在 R 终端中输入 <code>install.packages("languageserver")</code> 命令安装 <code>languageserver</code> 包。</p></li>
+<li><p><strong>创建 R 文件并运行代码:</strong> 在 VS Code 中，创建一个新的文件，将文件后缀名保存为 <code>.R</code>，例如 <code>hello.R</code>。 在 <code>hello.R</code> 文件中输入 R 代码，例如 <code>print("Hello, R in VS Code!")</code>。 按下 <code>Ctrl+Shift+P</code>，输入 “R: Run R code”，选择 “R: Run R code” 命令，即可在 VS Code 的 R 终端中运行 R 代码。 您也可以选中要运行的 R 代码，然后右键点击，选择 “Run Selection in R Terminal” 运行选中的代码。</p></li>
+</ol>
+<p><strong>在 Cursor 中配置 R 语言环境:</strong></p>
+<p>Cursor 编辑器与 VS Code 高度兼容，可以直接使用 VS Code 的扩展。 因此，在 Cursor 中配置 R 语言环境的步骤与 VS Code 类似：</p>
+<ol type="1">
+<li><p><strong>安装 R 软件:</strong> (同 VS Code 配置步骤 1)</p></li>
+<li><p><strong>安装 VS Code R 扩展:</strong> 打开 Cursor，点击左侧的 “扩展” 图标 (或按下 <code>Ctrl+Shift+X</code>)，在搜索框中输入 “R”，找到 “R Extension for VS Code” 扩展，点击 “安装” 按钮进行安装。 安装完成后，点击 “重新加载” 按钮重启 Cursor。</p></li>
+<li><p><strong>配置 R 路径:</strong> (同 VS Code 配置步骤 3) 在 Cursor 中，按下 <code>Ctrl+Shift+P</code> (或 <code>Cmd+Shift+P</code> 在 macOS 上) 打开命令面板，输入 “R: Set R Path”，选择 “R: Set R Path” 命令，配置 R 软件的安装路径。</p></li>
+<li><p><strong>安装 <code>languageserver</code> 包:</strong> (同 VS Code 配置步骤 4) 在 R 终端中输入 <code>install.packages("languageserver")</code> 命令安装 <code>languageserver</code> 包。</p></li>
+<li><p><strong>创建 R 文件并运行代码:</strong> (同 VS Code 配置步骤 5) 在 Cursor 中，创建一个新的 R 文件 (后缀名为 <code>.R</code>)，输入 R 代码，使用 “R: Run R code” 或 “Run Selection in R Terminal” 命令运行 R 代码。</p></li>
+</ol>
+<p><strong>完成以上步骤后，您就可以在 VS Code 或 Cursor 中愉快地进行 R 语言编程了！</strong></p></li>
+</ul></li>
+<li><p><strong>tidyverse:</strong> R 语言的现代数据科学工具集！ <code>tidyverse</code> 是由 Hadley Wickham 等开发的 R 包集合，旨在提供一套<strong>一致、简洁、高效</strong>的数据科学工具。 <code>tidyverse</code> 包的核心理念是 <strong>“数据整理 (Data Wrangling) -&gt; 数据可视化 (Data Visualization) -&gt; 数据建模 (Data Modeling)”</strong> 的数据分析流程。</p>
+<ul>
+<li><strong><code>tidyverse</code> 核心包:</strong>
+<ul>
+<li><strong><code>dplyr</code>:</strong> 用于数据清洗和数据转换，提供了一系列简洁高效的数据操作函数，例如 <code>filter()</code> (筛选行), <code>select()</code> (选择列), <code>mutate()</code> (创建新列), <code>group_by()</code> (分组), <code>summarise()</code> (汇总) 等。 <code>dplyr</code> 的语法简洁易懂，易于学习和使用。</li>
+<li><strong><code>ggplot2</code>:</strong> 用于数据可视化，基于 “图形语法 (Grammar of Graphics)” 理论，可以绘制各种精美、灵活、可定制的统计图形。 <code>ggplot2</code> 是 R 语言数据可视化的标杆，也是数据科学领域最流行的可视化工具之一。</li>
+<li><strong><code>tidyr</code>:</strong> 用于数据整理，主要用于处理 “整洁数据 (Tidy Data)”，将数据整理成适合分析的规范格式。 <code>tidyr</code> 提供了 <code>pivot_longer()</code> (长数据转换), <code>pivot_wider()</code> (宽数据转换), <code>separate()</code> (分离列), <code>unite()</code> (合并列) 等函数。</li>
+<li><strong><code>readr</code>:</strong> 用于数据导入，提供快速、可靠的数据读取函数，可以读取 CSV, TSV, FWV 等多种格式的数据文件。 <code>readr</code> 默认使用 UTF-8 编码，可以有效避免中文乱码问题。</li>
+<li><strong><code>purrr</code>:</strong> 用于函数式编程，提供了一系列函数式编程工具，可以简化循环操作，提高代码效率和可读性。</li>
+<li><strong><code>stringr</code>:</strong> 用于字符串处理，提供了一系列简洁易用的字符串操作函数，可以方便地进行字符串的匹配、替换、提取等操作。</li>
+<li><strong><code>forcats</code>:</strong> 用于因子 (分类变量) 处理，提供了一系列因子操作函数，可以方便地调整因子水平的顺序、合并因子水平等。</li>
+</ul></li>
+<li><strong><code>tidyverse</code> 的优势:</strong>
+<ul>
+<li><strong>一致的语法风格:</strong> <code>tidyverse</code> 包的函数命名和语法风格高度一致，易于学习和记忆。</li>
+<li><strong>链式操作 (管道操作符 <code>%&gt;%</code>):</strong> <code>tidyverse</code> 广泛使用管道操作符 <code>%&gt;%</code>，可以将多个操作连接起来，形成清晰的数据处理流程，提高代码可读性。</li>
+<li><strong>高效的数据处理能力:</strong> <code>tidyverse</code> 包底层使用 C++ 编写，具有高效的数据处理能力，可以处理大规模数据集。</li>
+<li><strong>与 R 语言生态系统良好集成:</strong> <code>tidyverse</code> 与 R 语言的其他包和工具良好集成，可以方便地进行扩展和应用。</li>
+</ul></li>
+<li><strong>安装 <code>tidyverse</code>:</strong> 在 R 终端中输入 <code>install.packages("tidyverse")</code> 即可安装 <code>tidyverse</code> 包及其依赖包。 安装完成后，使用 <code>library(tidyverse)</code> 加载 <code>tidyverse</code> 包。</li>
+</ul></li>
+<li><p><strong>AI 辅助工具 (VS Code/Cursor 插件):</strong> AI 正在改变编程方式！ 在 VS Code 和 Cursor 中，我们可以使用各种 AI 插件来辅助 R 语言编程和统计分析。</p>
+<ul>
+<li><p><strong>AI 插件的类型:</strong> 代码自动补全、代码生成、代码解释、代码重构、AI 聊天等。</p></li>
+<li><p><strong>常用的 AI 插件:</strong> GitHub Copilot, Cursor AI, Codeium, Tabnine 等。</p></li>
+<li><p><strong>AI 插件在统计学习中的作用:</strong> 提高编程效率、辅助代码学习、解答 R 语言问题、辅助数据分析和模型构建等。</p>
+<p><strong>GitHub Copilot (VS Code/Cursor 插件) 使用示例:</strong></p>
+<ol type="1">
+<li><p><strong>安装 GitHub Copilot 插件:</strong> 在 VS Code 或 Cursor 中，点击左侧的 “扩展” 图标，搜索 “GitHub Copilot”，找到 “GitHub Copilot” 扩展，点击 “安装” 按钮进行安装。 安装完成后，需要登录您的 GitHub 账号并订阅 GitHub Copilot 服务 (通常提供免费试用期)。</p></li>
+<li><p><strong>代码自动补全:</strong> 在 R 代码编辑器中输入代码时，GitHub Copilot 会根据上下文自动给出代码建议。 例如，当您输入 <code>library(</code> 时，Copilot 会自动提示 R 包的名称列表；当您定义一个函数时，Copilot 会根据函数名和参数自动生成函数体代码。 您可以使用 <code>Tab</code> 键接受 Copilot 的建议，或者继续输入自己的代码。</p></li>
+<li><p><strong>代码生成:</strong> 您可以让 GitHub Copilot 根据自然语言描述生成 R 代码。 例如，您可以输入注释 <code># generate a scatter plot of mpg and wt from mtcars dataset using ggplot2</code>，然后按下 <code>Enter</code> 键，Copilot 可能会自动生成相应的 R 代码。 您也可以选中一段注释，然后按下 <code>Ctrl+I</code> (或 <code>Cmd+I</code> 在 macOS 上) 快捷键，让 Copilot 根据注释生成代码。</p></li>
+<li><p><strong>代码解释:</strong> 您可以选中一段 R 代码，然后右键点击，选择 “Copilot: Explain”，让 Copilot 解释选中的代码的功能和作用。 Copilot 会在侧边栏中显示代码解释。</p></li>
+</ol>
+<p><strong>Cursor AI (Cursor 内置功能) 使用示例:</strong></p>
+<ol type="1">
+<li><p><strong>代码生成:</strong> 在 Cursor 中，您可以按下 <code>Ctrl+Shift+L</code> (或 <code>Cmd+Shift+L</code> 在 macOS 上) 快捷键，打开 Cursor AI 的 “Generate” 功能。 在弹出的输入框中输入自然语言描述，例如 “用 R 语言读取 CSV 文件并计算均值”，然后点击 “Generate” 按钮，Cursor AI 会自动生成相应的 R 代码。</p></li>
+<li><p><strong>代码解释:</strong> 在 Cursor 中，您可以选中一段 R 代码，然后按下 <code>Ctrl+Shift+E</code> (或 <code>Cmd+Shift+E</code> 在 macOS 上) 快捷键，打开 Cursor AI 的 “Explain” 功能。 Cursor AI 会在编辑器中以注释的形式解释选中的代码。</p></li>
+<li><p><strong>AI 聊天:</strong> 在 Cursor 中，您可以按下 <code>Ctrl+Shift+C</code> (或 <code>Cmd+Shift+C</code> 在 macOS 上) 快捷键，打开 Cursor AI 的 “Chat” 功能。 在聊天框中，您可以向 AI 提问 R 语言相关的问题，例如 “如何用 R 语言安装包？”，“<code>dplyr::filter()</code> 函数怎么用？” 等。 Cursor AI 会根据您的问题给出解答和代码示例。</p></li>
+</ol>
+<p><strong>其他 AI 插件的使用方法类似，您可以参考插件的官方文档或使用说明，探索和掌握各种 AI 插件的功能，充分利用 AI 技术来辅助 R 语言学习和编程。</strong></p></li>
+</ul></li>
+</ul>
+</section>
+<section id="数据获取方法入门" class="level3">
+<h3 class="anchored" data-anchor-id="数据获取方法入门">数据获取方法入门</h3>
+<ul>
+<li><p><strong>数据来源的重要性:</strong> 数据是统计分析的基础，高质量的数据是得出可靠结论的前提。</p>
+<ul>
+<li><strong>数据来源的类型:</strong> 一手数据 (Primary Data) 和 二手数据 (Secondary Data)。</li>
+<li><strong>数据获取方法:</strong> 调查、实验、观察、文献检索、网络爬虫等。</li>
+<li><strong>本课程主要关注二手数据，重点介绍公开数据集和公开 API 的获取方法。</strong></li>
+</ul></li>
+<li><p><strong>公开数据集:</strong></p>
+<ul>
+<li><p><strong>什么是公开数据集？</strong> 公开数据集是指可以<strong>免费获取</strong>和<strong>自由使用</strong>的数据集。 这些数据集通常由政府机构、研究机构、企业或个人发布，旨在促进数据共享和科学研究。</p></li>
+<li><p><strong>常见的公开数据集平台和网站:</strong></p>
+<ul>
+<li><p><strong>Kaggle Datasets (<a href="https://www.kaggle.com/datasets">https://www.kaggle.com/datasets</a>):</strong> Kaggle 是一个著名的数据科学竞赛平台，也提供了丰富的高质量公开数据集，涵盖了各种领域，例如，金融、电商、医疗、教育、自然语言处理、计算机视觉等。 Kaggle Datasets 的数据质量高，格式规范，并且通常附带详细的数据描述和使用案例，是数据科学学习和项目实践的理想数据来源。</p></li>
+<li><p><strong>UCI Machine Learning Repository (<a href="http://archive.ics.uci.edu/ml/datasets.php">http://archive.ics.uci.edu/ml/datasets.php</a>):</strong> UCI 机器学习仓库是机器学习领域最经典、最常用的公开数据集平台之一。 提供了大量的机器学习数据集，涵盖了分类、回归、聚类、关联规则挖掘等各种机器学习任务。 UCI 数据集历史悠久，被广泛应用于机器学习算法的benchmark测试和研究。</p></li>
+<li><p><strong>政府统计网站:</strong> 各国政府统计部门通常会发布大量的公开统计数据，例如，国家统计局 (<a href="http://www.stats.gov.cn/">http://www.stats.gov.cn/</a>)、美国人口普查局 (<a href="https://www.census.gov/data.html">https://www.census.gov/data.html</a>)、英国国家统计局 (<a href="https://www.ons.gov.uk/">https://www.ons.gov.uk/</a>) 等。 政府统计数据权威可靠，覆盖面广，是进行宏观经济分析、社会发展研究的重要数据来源。</p></li>
+<li><p><strong>行业协会网站:</strong> 各行业协会通常也会发布行业相关的统计数据和报告，例如，中国汽车工业协会 (<a href="http://www.caam.org.cn/">http://www.caam.org.cn/</a>)、中国互联网络信息中心 (<a href="https://www.cnnic.net.cn/">https://www.cnnic.net.cn/</a>)、世界银行公开数据 (<a href="https://data.worldbank.org/">https://data.worldbank.org/</a>) 等。 行业协会数据具有行业特色，可以用于进行行业分析和市场研究。</p></li>
+<li><p><strong>其他公开数据集平台:</strong> Google Dataset Search (<a href="https://datasetsearch.research.google.com/">https://datasetsearch.research.google.com/</a>), Data.gov (<a href="https://www.data.gov/">https://www.data.gov/</a>), Awesome Public Datasets (<a href="https://github.com/awesomedata/awesome-public-datasets">https://github.com/awesomedata/awesome-public-datasets</a>) 等。</p></li>
+</ul></li>
+<li><p><strong>如何查找和下载公开数据集:</strong></p>
+<ul>
+<li><p><strong>使用搜索引擎:</strong> 可以使用 Google, Baidu 等搜索引擎，输入关键词 “公开数据集”，“public datasets”，“open data” 等，加上您感兴趣的领域或主题，例如 “金融公开数据集”，“电影数据集”，“COVID-19 数据集” 等，进行搜索。</p></li>
+<li><p><strong>访问公开数据集平台:</strong> 直接访问上述公开数据集平台和网站，浏览和搜索您需要的数据集。 大多数平台都提供了数据集的分类、关键词搜索、筛选、预览、下载等功能。</p></li>
+<li><p><strong>查看数据集描述和文档:</strong> 在下载数据集之前，务必仔细阅读数据集的描述、数据字典、数据来源、数据质量、使用许可等信息，了解数据集的内容、特点和使用限制，确保数据集符合您的研究需求。</p></li>
+<li><p><strong>下载数据集:</strong> 根据平台提供的下载方式，下载数据集文件。 常见的数据集文件格式包括 CSV, TXT, JSON, Excel, SQL, Parquet 等。 选择您熟悉的格式进行下载。</p></li>
+</ul></li>
+<li><p><strong>公开数据集的优缺点:</strong></p>
+<ul>
+<li><strong>优点:</strong>
+<ul>
+<li><strong>免费获取:</strong> 无需付费，降低了数据获取成本。</li>
+<li><strong>数据量大:</strong> 通常包含大量数据，可以满足各种研究需求。</li>
+<li><strong>覆盖面广:</strong> 涵盖了各种领域和主题，选择范围广。</li>
+<li><strong>质量较高:</strong> 许多公开数据集经过清洗和整理，数据质量相对较高。</li>
+<li><strong>易于使用:</strong> 数据格式规范，易于导入和分析。</li>
+<li><strong>促进共享:</strong> 有利于数据共享和科学研究的开放性。</li>
+</ul></li>
+<li><strong>缺点:</strong>
+<ul>
+<li><strong>可能不是最新数据:</strong> 部分公开数据集可能不是最新的，数据更新频率可能较低。</li>
+<li><strong>数据可能不完整:</strong> 部分公开数据集可能存在数据缺失、数据错误等问题。</li>
+<li><strong>数据可能不完全符合需求:</strong> 公开数据集是通用的，可能不完全符合特定研究问题的需求，需要进行筛选和处理。</li>
+<li><strong>数据使用限制:</strong> 部分公开数据集可能存在使用许可限制，例如，禁止商业用途、需要署名等，需要仔细阅读和遵守数据使用协议。</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong>公开 API:</strong></p>
+<ul>
+<li><p><strong>什么是 API？</strong> API (Application Programming Interface，应用程序编程接口) 是一组定义了软件组件之间如何交互的规范和协议。 API 允许不同的软件系统相互通信和交换数据，而无需了解彼此的内部实现细节。 API 就像一个 “接口” 或 “桥梁”，连接了不同的系统，实现了数据的互联互通。</p></li>
+<li><p><strong>公开 API 的概念和作用:</strong> 公开 API (Public API) 是指<strong>对外公开</strong>的 API 接口，允许<strong>第三方开发者</strong>或<strong>用户</strong>通过网络访问和使用其功能和数据。 公开 API 的作用在于：</p>
+<ul>
+<li><strong>数据共享:</strong> 将数据以结构化的方式对外开放，方便用户获取和使用数据。</li>
+<li><strong>功能开放:</strong> 将软件系统的部分功能对外开放，允许第三方开发者在其基础上进行二次开发和应用创新。</li>
+<li><strong>生态构建:</strong> 通过开放 API，构建开放的生态系统，吸引更多的开发者和用户参与，共同创造价值。</li>
+</ul></li>
+<li><p><strong>常见的公开 API 类型:</strong></p>
+<ul>
+<li><p><strong>Web API:</strong> 基于 Web 技术 (HTTP 协议) 的 API，通过 URL 地址进行访问和数据交互。 Web API 是目前最流行的 API 类型。</p></li>
+<li><p><strong>REST API (Representational State Transfer API):</strong> 一种特殊的 Web API 设计风格，基于 REST 架构风格，使用 HTTP 协议的 GET, POST, PUT, DELETE 等方法进行资源操作。 REST API 具有简洁、易用、可扩展性强等优点，被广泛应用于 Web 服务开发。 我们通常所说的 “API” 在很多情况下就是指 REST API。</p></li>
+</ul></li>
+<li><p><strong>相关公开 API 示例:</strong></p>
+<ul>
+<li><p><strong>OMDb API (Open Movie Database API, <a href="http://www.omdbapi.com/">http://www.omdbapi.com/</a>):</strong> 提供电影、电视剧等影视作品信息的 API。 可以根据电影标题、演员、导演等关键词查询电影信息，包括电影海报、剧情简介、演员列表、评分、票房等。 OMDb API 是一个免费的公开 API，但需要注册获取 API Key 才能使用。</p></li>
+<li><p><strong>Spotify API (<a href="https://developer.spotify.com/documentation/web-api/">https://developer.spotify.com/documentation/web-api/</a>):</strong> Spotify 音乐平台的 API。 可以获取音乐、艺术家、专辑、播放列表等信息，还可以进行音乐搜索、播放控制、用户数据获取等操作。 Spotify API 需要注册开发者账号并创建应用才能使用，部分高级功能需要付费。</p></li>
+<li><p><strong>Yahoo Finance API (Yahoo 财经 API, <a href="https://finance.yahoo.com/">https://finance.yahoo.com/</a>):</strong> 提供股票、指数、基金等金融产品的实时数据和历史数据。 可以获取股票价格、成交量、财务指标等信息，还可以进行股票搜索、数据导出等操作。 Yahoo Finance API 是一个免费的公开 API，但需要注册账号并获取 API Key 才能使用。</p></li>
+</ul></li>
+</ul></li>
+<li><p><strong>如何获取和使用公开 API:</strong></p>
+<ul>
+<li><p><strong>注册 API 账号:</strong> 访问 API 提供商的官方网站，注册账号并创建应用，获取 API Key。</p></li>
+<li><p><strong>阅读 API 文档:</strong> 访问 API 提供商的官方网站，阅读 API 文档，了解 API 的接口、参数、返回结果等。 API 文档通常会详细说明每个 API 接口的功能、请求方法 (GET/POST 等)、请求参数、参数类型、返回值、错误代码、使用示例等信息。 <strong>认真阅读 API 文档是正确使用 API 的前提。</strong></p></li>
+<li><p><strong>发送 API 请求:</strong> 使用编程语言 (例如 R, Python) 或工具 (例如 Postman, curl) 发送 HTTP 请求到 API 接口的 URL 地址。 根据 API 文档的要求，设置请求头 (Headers)、请求参数 (Parameters) 或请求体 (Body)。 通常需要将 API Key 包含在请求头或请求参数中进行身份验证。</p></li>
+<li><p><strong>处理 API 响应:</strong> API 服务器收到请求后，会返回 HTTP 响应。 响应包含状态码 (Status Code)、响应头 (Headers) 和响应体 (Body)。 <strong>状态码</strong>表示请求的处理结果 (例如，200 表示成功，404 表示未找到资源，500 表示服务器错误)。 <strong>响应体</strong>通常是 JSON 或 XML 格式的数据，包含了API 返回的实际数据。 需要解析响应体，提取所需的数据。</p></li>
+<li><p><strong>R 语言中使用 <code>httr</code> 包调用 API:</strong> 在 R 语言中，可以使用 <code>httr</code> 包来发送 HTTP 请求和处理 API 响应。 <code>httr</code> 包提供了简洁易用的函数，可以方便地进行 API 调用。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装 httr 包 (如果尚未安装)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("httr")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite) <span class="co"># 用于解析 JSON 数据</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># OMDb API 示例 (需要注册并获取 API Key)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>api_key <span class="ot">&lt;-</span> <span class="st">"YOUR_OMDB_API_KEY"</span>  <span class="co"># 替换为您的 API Key</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>title <span class="ot">&lt;-</span> <span class="st">"Titanic"</span>  <span class="co"># 查询电影标题</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 构造 API 请求 URL</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>api_url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"http://www.omdbapi.com/?apikey="</span>, api_key, <span class="st">"&amp;t="</span>, title)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 发送 GET 请求</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">GET</span>(api_url)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查状态码</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">http_status</span>(response)<span class="sc">$</span>category <span class="sc">==</span> <span class="st">"Success"</span>) {</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"API 请求成功！</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 解析 JSON 响应内容</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  movie_data <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">content</span>(response, <span class="st">"text"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 打印电影标题和年份</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"电影标题:"</span>, movie_data<span class="sc">$</span>Title, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"上映年份:"</span>, movie_data<span class="sc">$</span>Year, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 打印其他电影信息 (可以根据需要提取更多信息)</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(movie_data)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"API 请求失败！状态码:"</span>, <span class="fu">http_status</span>(response)<span class="sc">$</span>status_code, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>代码解释:</strong></p>
+<ol type="1">
+<li><strong>加载 <code>httr</code> 和 <code>jsonlite</code> 包:</strong> <code>httr</code> 用于发送 HTTP 请求，<code>jsonlite</code> 用于解析 JSON 格式的 API 响应数据。</li>
+<li><strong>设置 API Key 和查询参数:</strong> <code>api_key</code> 变量存储您的 OMDb API Key，<code>title</code> 变量存储要查询的电影标题。 <strong>请务必替换 <code>YOUR_OMDB_API_KEY</code> 为您自己的 API Key。</strong></li>
+<li><strong>构造 API 请求 URL:</strong> 使用 <code>paste0()</code> 函数将 API 根 URL, API Key 和查询参数拼接成完整的 API 请求 URL。</li>
+<li><strong>发送 GET 请求:</strong> 使用 <code>GET()</code> 函数发送 GET 请求到 API URL，并将响应结果保存在 <code>response</code> 变量中。</li>
+<li><strong>检查状态码:</strong> 使用 <code>http_status(response)$category == "Success"</code> 检查 HTTP 状态码是否表示成功 (2xx 状态码)。</li>
+<li><strong>解析 JSON 响应内容:</strong> 如果请求成功，使用 <code>content(response, "text", encoding = "UTF-8")</code> 获取响应内容 (文本格式，并指定编码为 UTF-8)，然后使用 <code>fromJSON()</code> 函数将 JSON 格式的文本数据解析为 R 列表对象 <code>movie_data</code>。</li>
+<li><strong>提取和打印电影信息:</strong> 从 <code>movie_data</code> 列表中提取电影标题 (<code>movie_data$Title</code>) 和上映年份 (<code>movie_data$Year</code>)，并使用 <code>cat()</code> 函数打印输出。 <code>print(movie_data)</code> 打印整个 <code>movie_data</code> 列表，您可以根据需要提取更多电影信息。</li>
+<li><strong>处理请求失败情况:</strong> 如果请求失败 (状态码不是 2xx)，则打印错误信息，包括状态码。</li>
+</ol>
+<p><strong>请注意:</strong> OMDb API 是一个免费的 API，但需要注册账号并获取 API Key 才能使用。 请访问 OMDb API 官网 (<a href="http://www.omdbapi.com/">http://www.omdbapi.com/</a>) 注册账号并获取 API Key。 其他公开 API 的使用方法类似，通常也需要注册账号、阅读 API 文档、发送 API 请求、处理 API 响应等步骤。</p></li>
+</ul></li>
+<li><p><strong>公开 API 的优缺点:</strong></p>
+<ul>
+<li><strong>优点:</strong>
+<ul>
+<li><strong>数据实时性:</strong> API 通常提供实时更新的数据，可以获取最新的数据信息。</li>
+<li><strong>数据结构化:</strong> API 返回的数据通常是结构化的 (例如 JSON, XML)，易于程序解析和处理。</li>
+<li><strong>数据获取自动化:</strong> 使用 API 可以实现数据获取的自动化，无需手动下载和整理数据。</li>
+<li><strong>数据来源权威:</strong> API 数据通常来自权威的数据提供商，数据质量和可靠性较高。</li>
+</ul></li>
+<li><strong>缺点:</strong>
+<ul>
+<li><strong>需要编程知识:</strong> 使用 API 需要一定的编程知识，例如，了解 HTTP 协议、API 文档、编程语言等。</li>
+<li><strong>API 使用限制:</strong> 部分 API 可能有使用频率限制、数据量限制、功能限制或收费等。</li>
+<li><strong>API 维护成本:</strong> API 提供商需要维护 API 接口和服务器，可能会存在 API 不稳定或停止服务的情况。</li>
+<li><strong>数据格式和接口变化:</strong> API 的数据格式和接口可能会发生变化，需要及时更新代码以适应变化。</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Playwright 爬虫初步介绍:</strong></p>
+<ul>
+<li><p><strong>什么是网络爬虫？</strong> 网络爬虫 (Web Crawler)，也称为网络蜘蛛 (Web Spider) 或网络机器人 (Web Robot)，是一种<strong>自动化程序</strong>，用于<strong>抓取互联网上的信息</strong>。 爬虫模拟人类用户浏览网页的行为，自动访问网页，提取网页上的数据，并将数据存储下来。</p></li>
+<li><p><strong>Playwright 简介:</strong> Playwright 是一个强大的<strong>自动化测试和网络爬虫</strong>工具，由 Microsoft 开发。 Playwright 可以<strong>模拟多种浏览器</strong> (Chromium, Firefox, WebKit) 的行为，支持 JavaScript 和多种编程语言 (例如 Python, JavaScript, Java, .NET, <strong>R</strong>)。 Playwright 具有以下优点：</p>
+<ul>
+<li><strong>跨浏览器支持:</strong> 可以模拟 Chromium, Firefox, WebKit 等多种浏览器的行为，确保爬虫的兼容性和稳定性。</li>
+<li><strong>强大的自动化能力:</strong> 可以模拟用户在浏览器中的各种操作，例如，点击、输入、滚动、截图、等待等，实现复杂的网页交互和数据抓取。</li>
+<li><strong>异步非阻塞:</strong> Playwright 基于异步非阻塞架构，可以高效地处理大量的并发请求，提高爬虫的抓取效率。</li>
+<li><strong>易于使用:</strong> Playwright 提供了简洁易用的 API，学习曲线平缓，上手容易。</li>
+<li><strong>多语言支持:</strong> 支持多种编程语言，包括 R 语言 (通过 <code>rplaywright</code> 包)。</li>
+</ul></li>
+<li><p><strong>爬虫的应用场景:</strong> 网络爬虫在数据获取和信息挖掘方面有广泛的应用场景，例如：</p>
+<ul>
+<li><strong>搜索引擎:</strong> 搜索引擎使用爬虫抓取互联网上的网页，建立索引，提供搜索服务 (例如 Google, Baidu)。</li>
+<li><strong>数据分析:</strong> 爬虫可以抓取电商平台商品信息、社交媒体用户数据、新闻网站文章等，用于市场分析、舆情监控、竞争情报等。</li>
+<li><strong>价格监控:</strong> 爬虫可以抓取电商网站商品价格，进行价格比较和监控。</li>
+<li><strong>内容聚合:</strong> 爬虫可以抓取多个网站的内容，聚合到自己的平台，提供更丰富的信息服务。</li>
+<li><strong>学术研究:</strong> 爬虫可以抓取学术论文、专利信息、研究数据等，用于学术研究和知识发现。</li>
+</ul></li>
+<li><p><strong>爬虫的注意事项 (Robots 协议):</strong> 在进行网络爬虫时，需要遵守网站的 <strong>Robots 协议</strong> (<a href="https://zh.wikipedia.org/wiki/robots.txt">https://zh.wikipedia.org/wiki/robots.txt</a>)。 Robots 协议是网站通过 <code>robots.txt</code> 文件声明的<strong>爬虫访问规则</strong>，告知爬虫哪些页面可以抓取，哪些页面禁止抓取。 <strong>合法的爬虫应该遵守 Robots 协议，尊重网站的意愿，避免对网站造成不必要的负担或侵犯网站的权益。</strong> 通常情况下，<code>robots.txt</code> 文件位于网站的根目录下 (例如 <code>https://www.example.com/robots.txt</code>)。 您可以使用浏览器访问该文件查看网站的爬虫规则。</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="本周内容总结与下周预告" class="level3">
+<h3 class="anchored" data-anchor-id="本周内容总结与下周预告">本周内容总结与下周预告</h3>
+<ul>
+<li><p><strong>本周回顾:</strong> 回顾本周学习内容，巩固重点知识。 本周我们<strong>深入学习</strong>了统计学基本概念，以及项目式教学模式、R 语言和 <code>tidyverse</code> 简介 (在 VS Code/Cursor 中)、AI 辅助工具 (VS Code/Cursor 插件)、数据获取方法 (公开数据集、API)、VS Code/Cursor 中 R 语言环境搭建和 <code>tidyverse</code> 包安装。</p></li>
+<li><p><strong>下周预告:</strong> 下周我们将继续学习数据获取实践技巧，包括使用 API 获取数据，以及学习如何使用 R 语言导入各种格式的数据文件。 数据导入是数据分析的关键步骤，下周我们将重点学习数据导入的方法和技巧。</p></li>
+</ul>
+</section>
+<section id="课后任务" class="level3">
+<h3 class="anchored" data-anchor-id="课后任务">课后任务</h3>
+<ul>
+<li><strong>小组任务:</strong>
+<ul>
+<li><strong>确定项目主题:</strong> 小组讨论并最终确定项目一的研究主题。 下周上课时需要汇报确定后的主题。</li>
+<li><strong>初步确定数据获取方式:</strong> 小组讨论并初步确定项目一的数据获取方式。 开始尝试查找和下载数据。</li>
+</ul></li>
+<li><strong>个人任务:</strong>
+<ul>
+<li><strong>复习本周内容:</strong> 回顾本周讲义和课堂笔记，巩固统计学基本概念、数据获取方法和 VS Code/Cursor 中 R 语言环境搭建步骤。</li>
+<li><strong>完成环境搭建 (VS Code/Cursor):</strong> 选择 VS Code 或 Cursor 作为 R 语言编程环境，并按照讲义步骤完成 R 语言环境的搭建和 <code>tidyverse</code> 包的安装。 尝试运行简单的 R 代码，确保环境配置成功。 探索和体验 AI 插件的功能。</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+AI 辅助学习小贴士 (VS Code/Cursor)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>R 语言练习:</strong> 在 VS Code 或 Cursor 中练习 R 语言代码时，充分利用 AI 插件的代码自动补全、代码生成、代码解释、AI 聊天等功能。</li>
+<li><strong>概念理解:</strong> 对于本周学习的统计学基本概念，如果遇到理解困难的地方，可以使用 AI 聊天工具进行提问，例如，向 AI 提问 “什么是总体？”, “样本的代表性是什么意思？”, “分类变量和数值变量有什么区别？” 等。 AI 可以提供更详细的解释和例子，帮助您更好地理解概念。</li>
+<li><strong>数据集搜索:</strong> 使用 AI 工具搜索公开数据集平台和 API 文档，快速找到所需的数据资源。</li>
+<li><strong>问题解答:</strong> 遇到统计学概念或 R 语言代码问题时，尝试使用 AI 插件的 AI 聊天功能提问，获取快速解答。 也可以直接在 Cursor 的聊天框中提问 R 语言问题。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+学习寄语 (VS Code/Cursor + AI)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>选择 VS Code 或 Cursor 配合 AI 插件进行 R 语言学习，是拥抱现代编程工具和 AI 技术的明智之举。 这将使您的学习过程更加高效、智能、有趣。 <strong>本周我们深入学习了统计学的基本概念，这是统计学学习的基石。 务必牢固掌握这些概念，为后续的学习打下坚实的基础。</strong> 充分利用 AI 插件的强大功能，让 AI 成为您的 R 语言和统计学学习助手！ 相信大家会在统计学和 R 语言的学习中取得更大的进步！ 下周见！</p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./syllbus.html" class="pagination-link" aria-label="课程概述">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">课程概述</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week02.html" class="pagination-link" aria-label="统计学讲义 - 第二周：R语言数据导入与常用数据包">
+        <span class="nav-page-text"><span class="chapter-title">统计学讲义 - 第二周：R语言数据导入与常用数据包</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

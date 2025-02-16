@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>课程概述 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week01.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./syllbus.html">课程概述</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">欢迎</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllbus.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">课程概述</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">课程内容</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学讲义 - 第一周：项目启动与统计学导论</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学讲义 - 第二周：R语言数据导入与常用数据包</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学讲义 - 第三周：描述性统计：数据探索与可视化</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学讲义 - 第四周：推断性统计初步：参数估计与假设检验</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#课程大纲-按周次和项目" id="toc-课程大纲-按周次和项目" class="nav-link active" data-scroll-target="#课程大纲-按周次和项目">课程大纲 (按周次和项目)</a>
+  <ul class="collapse">
+  <li><a href="#项目一数据探索与初步洞察以兴趣领域为例-第1-4周共16课时" id="toc-项目一数据探索与初步洞察以兴趣领域为例-第1-4周共16课时" class="nav-link" data-scroll-target="#项目一数据探索与初步洞察以兴趣领域为例-第1-4周共16课时">项目一：数据探索与初步洞察：以兴趣领域为例 (第1-4周，共16课时)</a></li>
+  <li><a href="#项目二xxx-第5-8周共16课时-项目主题待定可根据学生专业和兴趣调整" id="toc-项目二xxx-第5-8周共16课时-项目主题待定可根据学生专业和兴趣调整" class="nav-link" data-scroll-target="#项目二xxx-第5-8周共16课时-项目主题待定可根据学生专业和兴趣调整">项目二：XXX (第5-8周，共16课时) <em>(项目主题待定，可根据学生专业和兴趣调整)</em></a></li>
+  <li><a href="#项目三xxx-第9-12周共16课时-项目主题待定可根据课程进度和学生反馈调整" id="toc-项目三xxx-第9-12周共16课时-项目主题待定可根据课程进度和学生反馈调整" class="nav-link" data-scroll-target="#项目三xxx-第9-12周共16课时-项目主题待定可根据课程进度和学生反馈调整">项目三：XXX (第9-12周，共16课时) <em>(项目主题待定，可根据课程进度和学生反馈调整)</em></a></li>
+  <li><a href="#综合项目xxx-第13-16周共16课时-项目主题为综合性经管问题鼓励学生自主选题" id="toc-综合项目xxx-第13-16周共16课时-项目主题为综合性经管问题鼓励学生自主选题" class="nav-link" data-scroll-target="#综合项目xxx-第13-16周共16课时-项目主题为综合性经管问题鼓励学生自主选题">综合项目：XXX (第13-16周，共16课时) <em>(项目主题为综合性经管问题，鼓励学生自主选题)</em></a></li>
+  </ul></li>
+  <li><a href="#项目式教学说明" id="toc-项目式教学说明" class="nav-link" data-scroll-target="#项目式教学说明">项目式教学说明</a></li>
+  <li><a href="#ai辅助教学说明" id="toc-ai辅助教学说明" class="nav-link" data-scroll-target="#ai辅助教学说明">AI辅助教学说明</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">课程概述</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>授课对象：</strong> 经管学院本科生</p>
+<p><strong>总课时：</strong> 64课时 (16周，每周2次课，每次90分钟)</p>
+<p><strong>教学目标：</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+知识目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>理解统计学的基本概念、原理和方法。</li>
+<li>掌握描述性统计、推断性统计的基本方法。</li>
+<li>熟练运用假设检验、置信区间和回归分析等统计方法解决实际问题。</li>
+<li>熟悉R语言及 <code>tidyverse</code> 生态在统计分析中的应用。</li>
+<li>了解AI辅助统计分析工具的基本使用。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+能力目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>培养学生运用统计思维分析和解决实际经济管理问题的能力。</li>
+<li>提升学生的数据处理、分析和解释能力。</li>
+<li>培养学生使用R语言和 <code>tidyverse</code> 进行高效数据分析和建模的能力。</li>
+<li>培养学生利用AI工具辅助学习和研究的能力。</li>
+<li>提升学生的团队合作、沟通和项目管理能力（通过项目式教学）。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+素质目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>培养学生严谨的科学态度和实事求是的精神。</li>
+<li>培养学生对数据敏感性和批判性思维。</li>
+<li>培养学生终身学习和自主学习的能力，适应数字化时代的需求。</li>
+</ul>
+</div>
+</div>
+<p><strong>教学方法：</strong></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+教学方法
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>课堂讲授 (传统教学 + AI辅助)：</strong> 结合传统讲授，利用AI工具（如Cursor, VS Code插件）进行代码演示、实时答疑、个性化辅导等，提升课堂互动性和效率。</li>
+<li><strong>项目式教学：</strong> 以小组为单位，围绕实际经管问题开展统计项目，学生在项目实践中学习和应用统计知识。</li>
+<li><strong>R语言 &amp; tidyverse 实践：</strong> 强调R语言和 <code>tidyverse</code> 生态的实际操作，通过案例分析、实验练习等方式，让学生掌握 <code>tidyverse</code> 在数据处理、可视化和统计分析中的应用。</li>
+<li><strong>AI辅助学习：</strong> 引导学生使用AI工具辅助学习，例如利用AI代码生成、代码解释、错误诊断等功能，提高学习效率和解决问题的能力。</li>
+</ul>
+</div>
+</div>
+<p><strong>考核方式：</strong></p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+考核方式
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>课堂参与 (10%)：</strong> 出勤、课堂互动、课堂表现</li>
+<li><strong>小组项目3次 (30%)：</strong> 包括项目选题、数据收集、统计分析、结果解释和结论。</li>
+<li><strong>最终项目1次 (20%)：</strong> 包括项目选题、数据收集、统计分析、结果解释和结论。</li>
+<li><strong>期末考试 (40%)：</strong> 闭卷考试，考察学生对统计学基本概念、原理和方法的掌握程度。</li>
+</ul>
+</div>
+</div>
+<p><strong>教材及参考书：</strong></p>
+<ul>
+<li><strong>教材：</strong> 推荐使用经典的统计学教材，例如《统计学》（贾俊平）、《商务与经济统计》（David R. Anderson）等，可根据实际情况选择合适的教材。</li>
+<li><strong>R语言 &amp; tidyverse 参考书：</strong> 《R for Data Science》（Hadley Wickham &amp; Garrett Grolemund），《R语言实战》（Robert I. Kabacoff）等。</li>
+<li><strong>AI辅助工具参考资料：</strong> Cursor, VS Code 插件相关教程和文档。</li>
+</ul>
+<section id="课程大纲-按周次和项目" class="level2">
+<h2 class="anchored" data-anchor-id="课程大纲-按周次和项目">课程大纲 (按周次和项目)</h2>
+<section id="项目一数据探索与初步洞察以兴趣领域为例-第1-4周共16课时" class="level3">
+<h3 class="anchored" data-anchor-id="项目一数据探索与初步洞察以兴趣领域为例-第1-4周共16课时">项目一：数据探索与初步洞察：以兴趣领域为例 (第1-4周，共16课时)</h3>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+项目主题 (学生可选择以下主题之一，或自拟主题经教师批准)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>主题一：电影偏好分析</strong>
+<ul>
+<li>项目目标：通过<strong>获取电影数据集</strong>（例如IMDb, MovieLens等公开数据集或API），运用描述性统计方法和初步推断方法，分析不同类型电影的特征、用户评分分布、流行趋势等，洞察电影市场和用户偏好。</li>
+</ul></li>
+<li><strong>主题二：音乐流派分析</strong>
+<ul>
+<li>项目目标：通过<strong>获取音乐数据集</strong>（例如Spotify API, Last.fm API, 或公开音乐数据集），运用描述性统计方法和初步推断方法，分析不同音乐流派的特征、用户收听习惯、流行趋势等，洞察音乐市场和用户偏好。</li>
+</ul></li>
+<li><strong>主题三：游戏类型分析</strong>
+<ul>
+<li>项目目标：通过<strong>获取游戏数据集</strong>（例如Steam API, 游戏数据平台API, 或游戏销售数据集），运用描述性统计方法和初步推断方法，分析不同游戏类型的特征、用户偏好、流行趋势等，洞察游戏市场和用户偏好。</li>
+</ul></li>
+<li><strong>主题四：股票市场分析</strong>
+<ul>
+<li>项目目标：通过<strong>获取股票市场数据集</strong>（例如Yahoo Finance API, Tushare API, 或股票交易数据集），运用描述性统计方法和初步推断方法，分析不同股票的特征、价格波动规律、市场趋势等，洞察股票市场和投资机会。</li>
+</ul></li>
+</ul>
+<p>学生可以从以上四个主题中选择一个，或者结合自己的兴趣和专业背景，<strong>自拟项目主题</strong>，并提交给教师审批。鼓励学生发挥创新思维，选择具有实际意义和研究价值的主题。</p>
+</div>
+</div>
+<section id="第一周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第一周-4课时">第一周 (4课时)</h4>
+<ul>
+<li><strong>项目启动与统计学导论</strong>
+<ul>
+<li>课程和项目介绍、项目主题选择、分组</li>
+<li>统计学基本概念、应用领域、R语言和 <code>tidyverse</code> 简介</li>
+<li>数据获取方法入门：公开数据集、API、爬虫初步</li>
+<li>R环境搭建和 <code>tidyverse</code> 安装</li>
+</ul></li>
+</ul>
+</section>
+<section id="第二周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第二周-4课时">第二周 (4课时)</h4>
+<ul>
+<li><strong>数据获取与R语言数据导入</strong>
+<ul>
+<li>项目讨论：确定数据来源和获取方案</li>
+<li>公开数据集、API获取实践</li>
+<li>R语言数据导入：<code>readr</code> 包，CSV, TXT等格式</li>
+<li>数据初步查看和理解</li>
+<li>数据类型回顾与数据质量</li>
+<li>描述性统计量：均值、中位数、标准差等</li>
+<li><code>dplyr</code> 包：数据清洗和预处理初步</li>
+</ul></li>
+</ul>
+</section>
+<section id="第三周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第三周-4课时">第三周 (4课时)</h4>
+<ul>
+<li><strong>描述性统计：数据探索与可视化</strong>
+<ul>
+<li><code>dplyr</code> 、<code>tidyr</code> 包：数据清洗和预处理进阶</li>
+<li><code>ggplot2</code> 包：数据可视化初步，直方图、散点图、箱线图等</li>
+<li><code>tidyverse</code> 生态：数据处理和可视化的综合应用 #### 第四周 (4课时)</li>
+</ul></li>
+<li><strong>推断性统计初步：参数估计与假设检验</strong>
+<ul>
+<li>参数估计：点估计、区间估计</li>
+<li>假设检验基本原理与步骤</li>
+<li>单样本t检验、双样本t检验 (独立样本、配对样本)</li>
+<li>项目一检查与汇报准备</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="项目二xxx-第5-8周共16课时-项目主题待定可根据学生专业和兴趣调整" class="level3">
+<h3 class="anchored" data-anchor-id="项目二xxx-第5-8周共16课时-项目主题待定可根据学生专业和兴趣调整">项目二：XXX (第5-8周，共16课时) <em>(项目主题待定，可根据学生专业和兴趣调整)</em></h3>
+<section id="第五周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第五周-4课时">第五周 (4课时)</h4>
+<ul>
+<li><strong>方差分析 (ANOVA)</strong>
+<ul>
+<li>方差分析原理与应用场景</li>
+<li>单因素方差分析</li>
+<li>多重比较</li>
+<li>R语言实现和案例分析</li>
+</ul></li>
+</ul>
+</section>
+<section id="第六周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第六周-4课时">第六周 (4课时)</h4>
+<ul>
+<li><strong>回归分析初步</strong>
+<ul>
+<li>线性回归模型</li>
+<li>最小二乘法</li>
+<li>回归系数的解释和检验</li>
+<li>R语言实现和案例分析</li>
+</ul></li>
+</ul>
+</section>
+<section id="第七周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第七周-4课时">第七周 (4课时)</h4>
+<ul>
+<li><strong>分类数据分析</strong>
+<ul>
+<li>卡方检验：拟合优度检验、独立性检验</li>
+<li>相关分析：Pearson相关系数、Spearman相关系数</li>
+<li>R语言实现和案例分析</li>
+</ul></li>
+</ul>
+</section>
+<section id="第八周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第八周-4课时">第八周 (4课时)</h4>
+<ul>
+<li><strong>项目二中期检查与汇报</strong>
+<ul>
+<li>项目中期汇报和交流</li>
+<li>非参数检验方法简介 (根据项目进展情况选择性讲解)</li>
+<li>项目二中期总结与后续计划</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="项目三xxx-第9-12周共16课时-项目主题待定可根据课程进度和学生反馈调整" class="level3">
+<h3 class="anchored" data-anchor-id="项目三xxx-第9-12周共16课时-项目主题待定可根据课程进度和学生反馈调整">项目三：XXX (第9-12周，共16课时) <em>(项目主题待定，可根据课程进度和学生反馈调整)</em></h3>
+<section id="第九周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第九周-4课时">第九周 (4课时)</h4>
+<ul>
+<li><strong>多元回归分析</strong>
+<ul>
+<li>多元线性回归模型</li>
+<li>模型诊断与改进</li>
+<li>变量选择</li>
+<li>R语言实现和案例分析</li>
+</ul></li>
+</ul>
+</section>
+<section id="第十周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第十周-4课时">第十周 (4课时)</h4>
+<ul>
+<li><strong>Logistic 回归</strong>
+<ul>
+<li>Logistic 回归模型原理</li>
+<li>模型评估与解释</li>
+<li>R语言实现和案例分析</li>
+</ul></li>
+</ul>
+</section>
+<section id="第十一周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第十一周-4课时">第十一周 (4课时)</h4>
+<ul>
+<li><strong>时间序列分析初步 (或根据学生兴趣选择其他专题)</strong>
+<ul>
+<li>时间序列基本概念</li>
+<li>平稳性检验</li>
+<li>ARIMA模型初步</li>
+<li>R语言实现和案例分析</li>
+</ul></li>
+</ul>
+</section>
+<section id="第十二周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第十二周-4课时">第十二周 (4课时)</h4>
+<ul>
+<li><strong>项目三中期检查与汇报</strong>
+<ul>
+<li>项目中期汇报和交流</li>
+<li>时间序列分析或其他专题深入 (根据学生兴趣和项目进展调整)</li>
+<li>项目三中期总结与后续计划</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="综合项目xxx-第13-16周共16课时-项目主题为综合性经管问题鼓励学生自主选题" class="level3">
+<h3 class="anchored" data-anchor-id="综合项目xxx-第13-16周共16课时-项目主题为综合性经管问题鼓励学生自主选题">综合项目：XXX (第13-16周，共16课时) <em>(项目主题为综合性经管问题，鼓励学生自主选题)</em></h3>
+<section id="第十三周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第十三周-4课时">第十三周 (4课时)</h4>
+<ul>
+<li><strong>综合项目启动与选题指导</strong>
+<ul>
+<li>综合项目介绍和要求</li>
+<li>选题原则和方法指导</li>
+<li>小组讨论和选题</li>
+</ul></li>
+</ul>
+</section>
+<section id="第十四周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第十四周-4课时">第十四周 (4课时)</h4>
+<ul>
+<li><strong>综合项目数据分析方法指导</strong>
+<ul>
+<li>针对不同项目选题的数据分析方法建议</li>
+<li>R语言高级数据分析技巧</li>
+<li>AI辅助统计分析工具介绍和使用</li>
+</ul></li>
+</ul>
+</section>
+<section id="第十五周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第十五周-4课时">第十五周 (4课时)</h4>
+<ul>
+<li><strong>综合项目中期检查与辅导</strong>
+<ul>
+<li>小组汇报项目进展，展示初步分析结果</li>
+<li>教师巡回指导，解答学生疑问，提供个性化辅导</li>
+<li>项目报告撰写指导</li>
+</ul></li>
+</ul>
+</section>
+<section id="第十六周-4课时" class="level4">
+<h4 class="anchored" data-anchor-id="第十六周-4课时">第十六周 (4课时)</h4>
+<ul>
+<li><strong>综合项目展示与答辩</strong>
+<ul>
+<li>各小组进行综合项目展示和答辩</li>
+<li>课程总结与期末考试安排</li>
+<li>优秀综合项目展示</li>
+</ul></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="项目式教学说明" class="level2">
+<h2 class="anchored" data-anchor-id="项目式教学说明">项目式教学说明</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+项目分组
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>建议每组2-3人，鼓励学生自由组队，也可由教师根据情况进行分组。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+项目选题
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>项目主题为示例，教师可以根据教学目标、学生专业背景和兴趣、以及实际数据可获得性等因素，调整项目主题。鼓励学生结合自身专业和兴趣自主选题。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+项目成果
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>每个项目小组需要提交项目报告，并在指定时间进行项目展示和答辩。项目报告应包括：项目背景、研究问题、数据来源、研究方法、数据分析过程、结果解释、结论与建议、参考文献、R代码 (使用 <code>tidyverse</code> 风格) 等。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+项目评价
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>项目评价包括小组互评和教师评价。评价内容包括：项目报告质量、项目展示效果、答辩表现、团队合作、创新性、R代码质量 (包括 <code>tidyverse</code> 的合理使用) 等。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="ai辅助教学说明" class="level2">
+<h2 class="anchored" data-anchor-id="ai辅助教学说明">AI辅助教学说明</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+AI辅助教学
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>课堂互动与答疑：</strong> 利用AI工具（如Cursor, VS Code插件的AI聊天功能）辅助课堂答疑，快速解答学生在统计概念、R语言代码等方面的问题。</li>
+<li><strong>代码演示与生成：</strong> 使用AI工具进行R代码的实时演示和生成，例如，在讲解统计方法时，可以使用AI工具快速生成R代码，并展示运行结果，提高教学效率。</li>
+<li><strong>个性化学习辅导：</strong> 鼓励学生使用AI工具进行个性化学习，例如，利用AI的代码解释功能理解代码逻辑，利用AI的代码错误诊断功能解决编程问题。教师也可以利用AI工具分析学生的学习数据，提供个性化辅导建议。</li>
+<li><strong>拓展学习资源：</strong> 教师可以利用AI工具搜索和推荐与课程相关的学习资源，例如，公开数据集、API文档、R语言教程、统计学案例分析等，拓展学生的学习视野。</li>
+</ul>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="欢迎">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">欢迎</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week01.html" class="pagination-link" aria-label="统计学讲义 - 第一周：项目启动与统计学导论">
+        <span class="nav-page-text"><span class="chapter-title">统计学讲义 - 第一周：项目启动与统计学导论</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

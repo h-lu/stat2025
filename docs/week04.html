@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>第四周：推断性统计初步：参数估计与假设检验 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week03.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week01.html">课程内容</a></li><li class="breadcrumb-item"><a href="./week04.html"><span class="chapter-title">第四周：推断性统计初步：参数估计与假设检验</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">欢迎</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllbus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">课程概述</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">课程内容</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week01.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周：项目启动与统计学导论</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week02.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周：R语言数据导入与常用数据包</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week03.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周：描述性统计：数据探索与可视化</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week04.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第四周：推断性统计初步：参数估计与假设检验</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#从样本推断总体推断性统计入门" id="toc-从样本推断总体推断性统计入门" class="nav-link active" data-scroll-target="#从样本推断总体推断性统计入门">从样本推断总体：推断性统计入门</a></li>
+  <li><a href="#推断性统计核心思想从样本到总体" id="toc-推断性统计核心思想从样本到总体" class="nav-link" data-scroll-target="#推断性统计核心思想从样本到总体">1. 推断性统计核心思想：从样本到总体</a></li>
+  <li><a href="#参数估计用样本估计总体" id="toc-参数估计用样本估计总体" class="nav-link" data-scroll-target="#参数估计用样本估计总体">2. 参数估计：用样本估计总体</a></li>
+  <li><a href="#假设检验检验关于总体的假设" id="toc-假设检验检验关于总体的假设" class="nav-link" data-scroll-target="#假设检验检验关于总体的假设">3. 假设检验：检验关于总体的假设</a></li>
+  <li><a href="#项目一汇报准备" id="toc-项目一汇报准备" class="nav-link" data-scroll-target="#项目一汇报准备">5. 项目一汇报准备</a></li>
+  <li><a href="#本周内容总结与下周预告" id="toc-本周内容总结与下周预告" class="nav-link" data-scroll-target="#本周内容总结与下周预告">6. 本周内容总结与下周预告</a></li>
+  <li><a href="#课后任务" id="toc-课后任务" class="nav-link" data-scroll-target="#课后任务">7. 课后任务</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week01.html">课程内容</a></li><li class="breadcrumb-item"><a href="./week04.html"><span class="chapter-title">第四周：推断性统计初步：参数估计与假设检验</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">第四周：推断性统计初步：参数估计与假设检验</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="从样本推断总体推断性统计入门" class="level3">
+<h3 class="anchored" data-anchor-id="从样本推断总体推断性统计入门">从样本推断总体：推断性统计入门</h3>
+<p>前三周我们学习了描述性统计，掌握了如何概括和可视化数据。 从本周开始，我们将进入统计学的核心领域：<strong>推断性统计</strong>。 推断性统计的目标是<strong>利用样本数据来推断总体特征</strong>。 由于我们通常无法获取总体的全部数据，只能通过抽样获得样本数据，因此需要使用推断性统计方法，<strong>基于样本信息，对总体参数进行估计和检验</strong>。 本周我们将学习推断性统计的两个基本内容：<strong>参数估计</strong>和 <strong>假设检验</strong>，并初步接触常用的 <strong>t 检验</strong>。</p>
+<p><strong>继续使用 VS Code 或 Cursor + AI 插件：</strong> 请继续使用 VS Code 或 Cursor 编辑器，并充分利用 AI 插件的代码辅助、智能提示、聊天问答等功能，提升学习效率。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+本周学习目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>推断性统计核心思想:</strong> 理解推断性统计的目的和基本逻辑。</li>
+<li><strong>参数估计:</strong> 掌握点估计和区间估计的基本概念和方法。</li>
+<li><strong>假设检验:</strong> 理解假设检验的基本原理和步骤。</li>
+<li><strong>假设检验的错误、功效与效应量:</strong> 理解假设检验中 Type I 错误和 Type II 错误，掌握检验功效和效应量的概念和意义。</li>
+<li><strong>t 检验:</strong> 掌握单样本 t 检验和双样本 t 检验 (独立样本、配对样本) 的适用条件和 R 语言实现，并能计算效应量 Cohen’s d 和进行功效分析。</li>
+<li><strong>抽样分布:</strong> 理解抽样分布的概念，为理解推断性统计奠定基础。</li>
+<li><strong>项目中期检查准备:</strong> 开始准备项目一的中期检查汇报。</li>
+<li><strong>AI 辅助统计推断:</strong> 探索使用 AI 工具辅助统计推断学习和应用。</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="推断性统计核心思想从样本到总体" class="level3">
+<h3 class="anchored" data-anchor-id="推断性统计核心思想从样本到总体">1. 推断性统计核心思想：从样本到总体</h3>
+<ul>
+<li><p><strong>总体 (Population) 与 样本 (Sample) 回顾:</strong> 回顾第一周学习的总体和样本的概念。</p>
+<ul>
+<li><strong>总体:</strong> 研究对象的全体，是我们想要了解的<strong>真实情况</strong>。 例如，所有本科生、所有股票、所有商品。 总体通常很大，甚至无限，<strong>难以直接获取总体全部数据</strong>。</li>
+<li><strong>样本:</strong> 从总体中抽取的一部分个体，是<strong>实际观测到的数据</strong>。 例如，随机抽取的 100 名本科生、某只股票过去一年的交易数据、某批次商品中抽取的 10 件商品。 <strong>样本数据是总体信息的载体，我们通过分析样本数据来推断总体特征。</strong></li>
+</ul></li>
+<li><p><strong>参数 (Parameter) 与 统计量 (Statistic):</strong></p>
+<ul>
+<li><strong>参数:</strong> 描述<strong>总体特征</strong>的数值，例如，总体均值 (μ)、总体标准差 (σ)、总体比例 (P)。 <strong>总体参数是未知的，是我们想要估计的目标。</strong></li>
+<li><strong>统计量:</strong> 描述<strong>样本特征</strong>的数值，例如，样本均值 (<span class="math inline">\(\\bar{x}\)</span>)、样本标准差 (s)、样本比例 (<span class="math inline">\(\\hat{p}\)</span>)。 <strong>统计量是已知的，可以根据样本数据计算出来，用于估计总体参数。</strong></li>
+</ul></li>
+<li><p><strong>抽样 (Sampling) 与 随机性 (Randomness):</strong></p>
+<ul>
+<li><strong>抽样:</strong> 从总体中抽取样本的过程。 <strong>随机抽样</strong>是推断性统计的基础，保证样本的<strong>代表性</strong>，避免抽样偏差。 常用的随机抽样方法包括简单随机抽样、分层抽样、整群抽样等。</li>
+<li><strong>随机性:</strong> 抽样过程中的随机性导致<strong>样本统计量具有随机性</strong>，不同的样本会得到不同的统计量。 <strong>抽样分布</strong>描述了样本统计量的随机性规律。</li>
+</ul></li>
+</ul>
+</section>
+<section id="参数估计用样本估计总体" class="level3">
+<h3 class="anchored" data-anchor-id="参数估计用样本估计总体">2. 参数估计：用样本估计总体</h3>
+<ul>
+<li><p><strong>点估计 (Point Estimation):</strong></p>
+<ul>
+<li><strong>用样本统计量直接估计总体参数。</strong> 例如，用样本均值 <span class="math inline">\(\\bar{x}\)</span> 估计总体均值 μ，用样本标准差 s 估计总体标准差 σ，用样本比例 <span class="math inline">\(\\hat{p}\)</span> 估计总体比例 P。</li>
+<li><strong>点估计的优点是简单直观，易于计算。 缺点是只给出一个估计值，没有说明估计的精确程度，可能存在较大误差。</strong> 例如，我们用一个样本均值 52 来估计总体均值，但总体均值可能是 50，也可能是 55，我们不知道 52 这个估计值有多可靠。</li>
+</ul></li>
+<li><p><strong>区间估计 (Interval Estimation):</strong></p>
+<ul>
+<li><strong>给出一个总体参数的可能取值范围，并说明该范围包含总体参数真值的可信程度。</strong> 例如，总体均值的 95% 置信区间为 [48, 56]，表示我们有 95% 的把握认为总体均值落在 48 到 56 之间。</li>
+<li><strong>区间估计比点估计提供更丰富的信息，既给出了估计范围，又说明了估计的可靠性。</strong> 常用的区间估计方法是<strong>置信区间 (Confidence Interval)</strong>。</li>
+</ul></li>
+<li><p><strong>置信区间 (Confidence Interval, CI):</strong></p>
+<ul>
+<li><p><strong>置信区间是指由样本数据计算出的、包含总体参数真值的某个概率范围。</strong> 例如，95% 置信区间表示，如果重复抽样 100 次，每次都计算一个置信区间，那么平均会有 95 个区间包含总体参数的真值。</p></li>
+<li><p><strong>置信水平 (Confidence Level):</strong> <strong>表示置信区间包含总体参数真值的概率，常用百分数表示，例如 90%, 95%, 99%。</strong> 常用的置信水平是 95%，对应的 <span class="math inline">\(\\alpha = 1 - 0.95 = 0.05\)</span>。 置信水平越高，置信区间越宽，包含总体参数真值的可能性越大，但估计的精确度降低。 置信水平越低，置信区间越窄，估计的精确度提高，但包含总体参数真值的可能性降低。</p></li>
+<li><p><strong>置信区间的计算:</strong> 置信区间的计算公式取决于总体参数类型、样本统计量分布、样本容量等因素。 例如，总体均值 μ 的置信区间 (样本容量较大时，总体标准差 σ 已知)：</p>
+<p><span class="math display">\[
+置信区间 = 样本均值 \\pm 临界值 \\times 标准误差 = \\bar{x} \\pm Z_{\\alpha/2} \\times \\frac{\\sigma}{\\sqrt{n}}
+\]</span></p>
+<p>其中，<span class="math inline">\(\\bar{x}\)</span> 是样本均值，<span class="math inline">\(\\sigma\)</span> 是总体标准差，n 是样本容量，<span class="math inline">\(Z_{\\alpha/2}\)</span> 是标准正态分布的临界值 (例如，95% 置信水平时，<span class="math inline">\(\\alpha = 0.05\)</span>, <span class="math inline">\(\\alpha/2 = 0.025\)</span>, <span class="math inline">\(Z_{0.025} = 1.96\)</span>)，<span class="math inline">\(\frac{\\sigma}{\\sqrt{n}}\)</span> 是样本均值 <span class="math inline">\(\\bar{x}\)</span> 的标准误差。</p></li>
+<li><p><strong>R 函数 <code>t.test()</code> 计算 t 检验的置信区间:</strong> <code>t.test()</code> 函数可以进行 t 检验，并输出均值差的置信区间。 例如，独立样本 t 检验，比较两组均值差异，<code>t.test()</code> 输出的是两组均值差的置信区间。</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="假设检验检验关于总体的假设" class="level3">
+<h3 class="anchored" data-anchor-id="假设检验检验关于总体的假设">3. 假设检验：检验关于总体的假设</h3>
+<ul>
+<li><p><strong>假设检验的基本思想:</strong></p>
+<ul>
+<li><strong>先对总体参数提出一个假设 (原假设 H₀)，然后利用样本数据，判断是否有充分的证据拒绝原假设 H₀，接受备择假设 H₁。</strong> 类似于法庭判案，先假设被告无罪 (原假设 H₀)，然后收集证据 (样本数据)，判断是否有充分证据证明被告有罪 (拒绝原假设 H₀，接受备择假设 H₁)。</li>
+<li><strong>假设检验是一种反证法。</strong> 我们通常无法直接证明备择假设 H₁ 为真，但可以通过<strong>否定原假设 H₀，间接支持备择假设 H₁</strong>。 如果样本数据与原假设 H₀ 矛盾，我们就有理由拒绝 H₀，转而接受 H₁。 如果样本数据与原假设 H₀ 并不矛盾，我们则<strong>没有充分证据拒绝 H₀，但也不能说 H₀ 一定为真，只能说 “接受 H₀” 或 “不拒绝 H₀”</strong>。</li>
+</ul></li>
+<li><p><strong>原假设 (H₀) 与 备择假设 (H₁):</strong></p>
+<ul>
+<li><strong>原假设 (Null Hypothesis, H₀):</strong> <strong>研究者想要检验的假设，通常是关于总体参数 “没有效应”、“没有差异”、“没有关系” 的假设。</strong> 例如，总体均值等于某个特定值 (μ = μ₀)，两组总体均值相等 (μ₁ = μ₂)，变量之间没有相关关系 (ρ = 0)。 原假设 H₀ 是假设检验的出发点，也是我们要试图拒绝的假设。</li>
+<li><strong>备择假设 (Alternative Hypothesis, H₁):</strong> <strong>与原假设 H₀ 对立的假设，是研究者希望支持的假设，通常是关于总体参数 “存在效应”、“存在差异”、“存在关系” 的假设。</strong> 例如，总体均值不等于某个特定值 (μ ≠ μ₀)，两组总体均值不相等 (μ₁ ≠ μ₂)，变量之间存在相关关系 (ρ ≠ 0)。 备择假设 H₁ 是当原假设 H₀ 被拒绝时，我们接受的结论。</li>
+<li><strong>假设类型:</strong>
+<ul>
+<li><strong>双侧检验 (Two-tailed Test):</strong> 备择假设 H₁ 是总体参数 “不等于” 某个特定值，检验方向是双侧的。 例如，H₀: μ = μ₀, H₁: μ ≠ μ₀。</li>
+<li><strong>单侧检验 (One-tailed Test):</strong> 备择假设 H₁ 是总体参数 “大于” 或 “小于” 某个特定值，检验方向是单侧的 (左侧或右侧)。 例如，右侧检验：H₀: μ ≤ μ₀, H₁: μ &gt; μ₀； 左侧检验：H₀: μ ≥ μ₀, H₁: μ &lt; μ₀。 <strong>选择单侧检验需要有充分的理由，并且在研究开始前就应该确定检验方向。 通常情况下，更常用双侧检验，因为它更保守，适用范围更广。</strong></li>
+</ul></li>
+</ul></li>
+<li><p><strong>假设检验的逻辑：</strong></p>
+<ol type="1">
+<li><strong>假设原假设 H₀ 为真。</strong> 先假定原假设 H₀ 是正确的，作为出发点。</li>
+<li><strong>在 H₀ 为真的前提下，推导样本统计量的抽样分布。</strong> 根据原假设 H₀ 和抽样分布理论，推导出检验统计量 (例如，t 统计量、F 统计量、<span class="math inline">\(\\chi^2\)</span> 统计量) 的抽样分布。</li>
+<li><strong>计算检验统计量的值和 p 值。</strong> 根据样本数据，计算检验统计量的值。 <strong>p 值 (p-value) 是指，在原假设 H₀ 为真的前提下，出现当前样本结果或更极端结果的概率。</strong> p 值越小，说明在 H₀ 为真的情况下，出现当前样本结果的可能性越小，样本数据越不支持 H₀。</li>
+<li><strong>根据 p 值和显著性水平 <span class="math inline">\(\\alpha\)</span>，做出决策。</strong> <strong>显著性水平 <span class="math inline">\(\\alpha\)</span> 是事先设定的一个概率值，通常取 0.05, 0.01, 0.10，表示我们愿意容忍犯 Type I 错误的最大概率。</strong> 将 p 值与 <span class="math inline">\(\\alpha\)</span> 进行比较：
+<ul>
+<li><strong>如果 p 值 ≤ <span class="math inline">\(\\alpha\)</span>，则拒绝原假设 H₀，接受备择假设 H₁。</strong> 认为样本数据提供了充分的证据，否定了原假设 H₀，支持了备择假设 H₁。 结果具有<strong>统计显著性 (Statistically Significant)</strong>。</li>
+<li><strong>如果 p 值 &gt; <span class="math inline">\(\\alpha\)</span>，则没有充分证据拒绝原假设 H₀，接受原假设 H₀ (或 “不拒绝” H₀)。</strong> 认为样本数据没有提供充分的证据，否定原假设 H₀。 <strong>不能说原假设 H₀ 一定为真，只能说目前没有足够的证据推翻它。</strong> 结果<strong>不具有统计显著性 (Not Statistically Significant)</strong>。</li>
+</ul></li>
+</ol></li>
+<li><p><strong>假设检验可能犯的错误：Type I 错误 &amp; Type II 错误</strong></p>
+<ul>
+<li><p><strong>在假设检验中，我们的决策 (拒绝 H₀ 或 接受 H₀) 是基于样本数据做出的，有可能犯错误。 根据原假设 H₀ 的真实情况和我们的决策，可能出现两种类型的错误：</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>决策</th>
+<th>H₀ 真实 (True)</th>
+<th>H₀ 错误 (False)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>拒绝 H₀</strong></td>
+<td><strong>Type I 错误</strong></td>
+<td><strong>正确决策</strong></td>
+</tr>
+<tr class="even">
+<td><strong>接受 H₀</strong></td>
+<td><strong>正确决策</strong></td>
+<td><strong>Type II 错误</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p><strong>Type I 错误 (Type I Error, <span class="math inline">\(\\alpha\)</span> 错误, 拒真错误):</strong> <strong>当原假设 H₀ 实际上为真时，我们却拒绝了 H₀。</strong> 就好比 “真阳性” 的反面，把真原假设当成假原假设拒绝了。 Type I 错误的概率用 <span class="math inline">\(\\alpha\)</span> 表示，<span class="math inline">\(\\alpha\)</span> 也被称为 <strong>显著性水平 (Significance Level)</strong>，通常取值 0.05, 0.01, 0.10。 <strong>显著性水平 <span class="math inline">\(\\alpha\)</span> 是我们事先设定的，我们愿意容忍犯 Type I 错误的最大概率。</strong> 例如，如果 <span class="math inline">\(\\alpha = 0.05\)</span>，意味着如果我们重复进行 100 次假设检验，当 H₀ 均为真时，平均会有 5 次犯 Type I 错误。 <strong>我们希望尽可能控制 Type I 错误的概率，避免 “冤枉好人”。</strong></p></li>
+<li><p><strong>Type II 错误 (Type II Error, <span class="math inline">\(\\beta\)</span> 错误, 纳伪错误):</strong> <strong>当原假设 H₀ 实际上为假时，我们却没有拒绝 H₀，反而接受了 H₀。</strong> 就好比 “假阴性”，把假原假设当成真原假设接受了。 Type II 错误的概率用 <span class="math inline">\(\\beta\)</span> 表示，<span class="math inline">\(\\beta\)</span> 的值通常是未知的，与总体参数的真实值、样本容量、显著性水平等因素有关。 <strong>我们希望尽可能减小 Type II 错误的概率，避免 “放过坏人”。</strong></p></li>
+</ul></li>
+<li><p><strong><span class="math inline">\(\\alpha\)</span> 与 <span class="math inline">\(\\beta\)</span> 的权衡:</strong> <strong><span class="math inline">\(\\alpha\)</span> 和 <span class="math inline">\(\\beta\)</span> 之间存在权衡关系。 当我们试图减小 <span class="math inline">\(\\alpha\)</span> (例如，降低显著性水平，使拒绝 H₀ 更困难) 时，<span class="math inline">\(\\beta\)</span> 通常会增大 (更容易接受错误的 H₀)。 反之，当我们试图减小 <span class="math inline">\(\\beta\)</span> (例如，增大样本容量，提高检验功效) 时，<span class="math inline">\(\\alpha\)</span> 可能会增大。 在实际应用中，我们需要根据具体情况，权衡 Type I 错误和 Type II 错误的重要性，选择合适的 <span class="math inline">\(\\alpha\)</span> 水平，并尽可能提高检验功效，减小 <span class="math inline">\(\\beta\)</span>。 </strong>通常情况下，我们更关注控制 Type I 错误的概率 <span class="math inline">\(\\alpha\)</span>，因为拒绝原假设通常意味着发现了新的、重要的结论。**</p></li>
+</ul></li>
+<li><p><strong>检验功效 (Power of a Test, 1 - <span class="math inline">\(\\beta\)</span>):</strong></p>
+<ul>
+<li><p><strong>检验功效是指当原假设 H₀ 实际上为假时，我们正确地拒绝 H₀ 的概率。</strong> 检验功效 = 1 - <span class="math inline">\(\\beta\)</span>。 <strong>检验功效越高，犯 Type II 错误的概率 <span class="math inline">\(\\beta\)</span> 就越低，检验就越有效。 我们希望检验具有较高的功效，能够有效地发现真实存在的效应或差异。</strong></p></li>
+<li><p><strong>影响检验功效的因素:</strong></p>
+<ul>
+<li><strong>效应量 (Effect Size):</strong> <strong>效应量是指总体参数偏离原假设 H₀ 的程度。</strong> 效应量越大，总体参数与原假设的差异越大，越容易被检验出来，检验功效越高。 例如，如果两个总体均值差异很大，就更容易通过 t 检验发现均值差异。</li>
+<li><strong>样本容量 (Sample Size, n):</strong> <strong>样本容量越大，样本信息越丰富，抽样误差越小，检验功效越高。</strong> 增大样本容量是提高检验功效的常用方法。</li>
+<li><strong>显著性水平 (Significance Level, <span class="math inline">\(\\alpha\)</span>):</strong> <strong>显著性水平 <span class="math inline">\(\\alpha\)</span> 越大，拒绝 H₀ 越容易，检验功效越高。</strong> 但增大 <span class="math inline">\(\\alpha\)</span> 也会增大犯 Type I 错误的概率。 通常在保证 <span class="math inline">\(\\alpha\)</span> 水平的前提下，尽可能提高检验功效。</li>
+<li><strong>总体标准差 (<span class="math inline">\(\\sigma\)</span>):</strong> <strong>总体标准差越小，数据变异性越小，抽样误差越小，检验功效越高。</strong> 减小总体标准差通常无法直接控制，但在实验设计中，可以尽量控制无关变量，减小实验误差，从而减小数据变异性。</li>
+<li><strong>单侧检验 vs 双侧检验:</strong> <strong>在其他条件相同的情况下，单侧检验的功效通常比双侧检验高 (当效应方向与备择假设方向一致时)。</strong> 但选择单侧检验需要有充分的理由，并且在研究开始前就应该确定检验方向。</li>
+</ul></li>
+<li><p><strong>功效分析 (Power Analysis):</strong> <strong>功效分析是一种用于评估和提高检验功效的方法。</strong> 功效分析可以在研究设计阶段，<strong>预先计算所需的样本容量</strong>，以达到预期的检验功效。 也可以在研究结束后，<strong>评估已完成研究的检验功效</strong>，判断未拒绝原假设是否是因为检验功效不足。 R 中 <code>pwr</code> 包可以进行功效分析。 常用的功效分析类型包括：</p>
+<ul>
+<li><p><strong>事前功效分析 (A-priori Power Analysis): 在研究开始前，为了达到预期的检验功效，计算所需的最小样本容量。</strong> 例如，研究者希望在显著性水平 <span class="math inline">\(\\alpha = 0.05\)</span> 下，以 80% 的功效 (power = 0.8) 检测到中等效应量 (Cohen’s d = 0.5) 的均值差异，需要计算每组至少需要多少样本量。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装和加载 pwr 包 (如果尚未安装)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pwr")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置参数</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>desired_power <span class="ot">&lt;-</span> <span class="fl">0.8</span>      <span class="co"># 期望的检验功效 (通常为 0.8)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sig_level <span class="ot">&lt;-</span> <span class="fl">0.05</span>         <span class="co"># 显著性水平 (通常为 0.05)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>effect_size <span class="ot">&lt;-</span> <span class="fl">0.5</span>       <span class="co"># 预期效应量 Cohen's d (例如，小效应 0.2, 中等效应 0.5, 大效应 0.8)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>alternative_hypothesis <span class="ot">&lt;-</span> <span class="st">"two.sided"</span> <span class="co"># 双侧检验</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>test_type <span class="ot">&lt;-</span> <span class="st">"two.sample"</span> <span class="co"># 独立样本 t 检验</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 进行事前功效分析，计算所需样本容量</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>power_analysis_result <span class="ot">&lt;-</span> <span class="fu">pwr.t.test</span>(<span class="at">power =</span> desired_power,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">sig.level =</span> sig_level,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">d =</span> effect_size,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">type =</span> test_type,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">alternative =</span> alternative_hypothesis)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(power_analysis_result)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取所需样本容量 (每组样本量)</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>required_sample_size <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(power_analysis_result<span class="sc">$</span>n) <span class="co"># 向上取整</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Required sample size per group:"</span>, required_sample_size, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 解释结果</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"为了在显著性水平为"</span>, sig_level, <span class="st">"，检测到 Cohen's d ="</span>, effect_size, <span class="st">"的效应量，</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"并达到"</span>, desired_power <span class="sc">*</span> <span class="dv">100</span>, <span class="st">"% 的检验功效，每组至少需要"</span>, required_sample_size, <span class="st">"个样本。</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>事后功效分析 (Post-hoc Power Analysis):</strong> 在研究结束后，根据已获得的样本数据和效应量，计算检验的实际功效。 <strong>事后功效分析存在争议，因为其结果高度依赖于样本效应量，可能无法提供关于检验功效的可靠信息。 更推荐在研究设计阶段进行事前功效分析。</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 group1_vector 和 group2_vector 是已收集的两组独立样本数据向量</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>group1_vector <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># 模拟数据</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>group2_vector <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="at">mean =</span> <span class="dv">55</span>, <span class="at">sd =</span> <span class="dv">10</span>) <span class="co"># 模拟数据</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sample_size <span class="ot">&lt;-</span> <span class="fu">length</span>(group1_vector) <span class="co"># 样本容量 (每组样本量)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算样本效应量 Cohen's d</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>cohen_d_result <span class="ot">&lt;-</span> <span class="fu">cohen.d</span>(group1_vector, group2_vector, <span class="at">paired =</span> <span class="cn">FALSE</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>sample_effect_size <span class="ot">&lt;-</span> cohen_d_result<span class="sc">$</span>estimate</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 进行事后功效分析，计算实际功效</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>post_hoc_power_analysis_result <span class="ot">&lt;-</span> <span class="fu">pwr.t.test</span>(<span class="at">n =</span> sample_size,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">d =</span> sample_effect_size,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">sig.level =</span> <span class="fl">0.05</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">type =</span> <span class="st">"two.sample"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(post_hoc_power_analysis_result)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取实际功效</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>actual_power <span class="ot">&lt;-</span> post_hoc_power_analysis_result<span class="sc">$</span>power</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Actual power:"</span>, actual_power, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 解释结果</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"在样本容量为"</span>, sample_size, <span class="st">"，显著性水平为 0.05，样本效应量 Cohen's d ="</span>, sample_effect_size, <span class="st">"的情况下，</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"该独立样本 t 检验的实际功效为"</span>, actual_power <span class="sc">*</span> <span class="dv">100</span>, <span class="st">"%。</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"这意味着，如果总体中真实存在 Cohen's d ="</span>, sample_effect_size, <span class="st">"的效应，</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"我们有"</span>, actual_power <span class="sc">*</span> <span class="dv">100</span>, <span class="st">"% 的概率通过该检验发现这个效应。</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+</ul></li>
+<li><p><strong>效应量 (Effect Size):</strong></p>
+<ul>
+<li><p><strong>效应量是用于衡量效应或差异大小的指标，它独立于样本容量，不受样本容量的影响。</strong> p 值只告诉我们效应是否 “显著”，但不告诉我们效应 “有多大”。 <strong>效应量弥补了 p 值的不足，提供了效应大小的信息，有助于判断研究结果的实际意义和重要性。</strong> “统计显著性” (p 值) 不等于 “实际显著性” (效应量)。 一个很小的效应，如果样本容量足够大，也可能达到统计显著性，但这并不意味着这个效应在实际应用中很重要。 反之，一个较大的效应，如果样本容量太小，可能无法达到统计显著性，但这并不意味着这个效应不存在或不重要。 <strong>在报告假设检验结果时，除了 p 值，还应该报告效应量和置信区间，以便更全面地评价研究结果。</strong></p></li>
+<li><p><strong>常用的效应量指标:</strong></p>
+<ul>
+<li><p><strong>Cohen’s d:</strong> 用于<strong>独立样本 t 检验</strong>，衡量两个总体均值差异的标准化指标。 Cohen’s d = (<span class="math inline">\(\\bar{x}_1\)</span> - <span class="math inline">\(\\bar{x}_2\)</span>) / s_pooled，其中 s_pooled 是合并样本标准差。 Cohen 提出的经验法则：d = 0.2 (小效应), d = 0.5 (中等效应), d = 0.8 (大效应)。 R 中 <code>effsize</code> 包的 <code>cohen.d()</code> 函数可以计算 Cohen’s d。 代码示例 (独立样本 t 检验):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装和加载 effsize 包 (如果尚未安装)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("effsize")</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effsize)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 group1_vector 和 group2_vector 是两组独立样本数据向量</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>cohen_d_result <span class="ot">&lt;-</span> <span class="fu">cohen.d</span>(group1_vector, group2_vector,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">paired =</span> <span class="cn">FALSE</span>,  <span class="co"># 独立样本</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">var.equal =</span> <span class="cn">TRUE</span>) <span class="co"># 假设方差相等 (如果使用 Welch's t 检验，则设置为 FALSE)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cohen_d_result)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取 Cohen's d 值</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>cohen_d_value <span class="ot">&lt;-</span> cohen_d_result<span class="sc">$</span>estimate</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Cohen's d:"</span>, cohen_d_value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 解释效应量大小 (根据 Cohen's 经验法则)</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">abs</span>(cohen_d_value) <span class="sc">&gt;=</span> <span class="fl">0.8</span>) {</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"效应量很大 (Large effect size).</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(cohen_d_value) <span class="sc">&gt;=</span> <span class="fl">0.5</span>) {</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"效应量为中等 (Medium effect size).</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(cohen_d_value) <span class="sc">&gt;=</span> <span class="fl">0.2</span>) {</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"效应量为小 (Small effect size).</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"效应量很小或无效应 (Very small or negligible effect size).</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>相关系数 (Correlation Coefficient, r):</strong> 用于衡量两个变量之间<strong>线性关系</strong>的强度和方向。 r 的取值范围为 [-1, 1]。 r = 0.1 (小效应), r = 0.3 (中等效应), r = 0.5 (大效应)。 R 函数 <code>cor()</code> 可以计算相关系数。</p></li>
+<li><p><strong>R² (R-squared, 决定系数):</strong> 用于<strong>回归分析</strong>，衡量回归模型对因变量变异的解释程度。 R² 的取值范围为 [0, 1]。 R² = 0.01 (小效应), R² = 0.09 (中等效应), R² = 0.25 (大效应)。 R 函数 <code>summary()</code> 回归模型结果可以得到 R²。</p></li>
+<li><p><strong><span class="math inline">\(\\eta^2\)</span> (Eta-squared, 偏<span class="math inline">\(\\eta^2\)</span>):</strong> 用于<strong>方差分析 (ANOVA)</strong>，衡量自变量对因变量变异的解释程度。 <span class="math inline">\(\\eta^2\)</span> 的取值范围为 [0, 1]。 <span class="math inline">\(\\eta^2\)</span> = 0.01 (小效应), <span class="math inline">\(\\eta^2\)</span> = 0.06 (中等效应), <span class="math inline">\(\\eta^2\)</span> = 0.14 (大效应)。 R 中 <code>effectsize</code> 包的 <code>eta_squared()</code> 函数可以计算 <span class="math inline">\(\\eta^2\)</span> 和 偏<span class="math inline">\(\\eta^2\)</span>。</p></li>
+</ul></li>
+<li><p><strong>效应量的报告:</strong> 在报告假设检验结果时，除了 p 值，应该报告相应的效应量指标，并解释效应量的大小，例如： “独立样本 t 检验结果显示，两组均值差异显著 (t(df) = t 值, p &lt; .05, Cohen’s d = d 值, 95% CI [下限, 上限])，效应量为中等水平，表明…”。</p></li>
+</ul></li>
+<li><p><strong>假设检验步骤总结:</strong></p>
+<ol type="1">
+<li><strong>提出研究问题，确定研究假设。</strong> 明确研究目的，根据研究问题，提出关于总体参数的原假设 H₀ 和备择假设 H₁。 确定检验方向 (双侧或单侧)。</li>
+<li><strong>选择合适的检验方法和检验统计量。</strong> 根据数据类型、研究设计、假设类型，选择合适的假设检验方法 (例如，t 检验、方差分析、卡方检验等)。 确定检验统计量 (例如，t 统计量、F 统计量、<span class="math inline">\(\\chi^2\)</span> 统计量)。</li>
+<li><strong>设定显著性水平 <span class="math inline">\(\\alpha\)</span>。</strong> 通常取 <span class="math inline">\(\\alpha = 0.05\)</span>。 根据研究的重要性、后果、以及对 Type I 错误和 Type II 错误的权衡，选择合适的 <span class="math inline">\(\\alpha\)</span> 水平。</li>
+<li><strong>收集样本数据，计算检验统计量的值。</strong> 使用 R 或其他统计软件，计算样本统计量和检验统计量的值。</li>
+<li><strong>计算 p 值，并与显著性水平 <span class="math inline">\(\\alpha\)</span> 进行比较，做出决策。</strong> 根据检验统计量的值，计算 p 值。 如果 p 值 ≤ <span class="math inline">\(\\alpha\)</span>，则拒绝原假设 H₀，接受备择假设 H₁，认为结果具有统计显著性。 如果 p 值 &gt; <span class="math inline">\(\\alpha\)</span>，则没有充分证据拒绝原假设 H₀，接受原假设 H₀ (或 “不拒绝” H₀)。</li>
+<li><strong>解释结果，报告结论。</strong> 根据假设检验的结果，结合研究背景和实际意义，解释统计结果，并得出研究结论。 <strong>在报告结果时，除了 p 值，还应该报告效应量、置信区间、样本描述性统计量等信息，并讨论可能存在的 Type I 错误和 Type II 错误的风险，以及检验功效的局限性。</strong></li>
+</ol></li>
+<li><p><strong>单样本 t 检验、双样本 t 检验 (独立样本、配对样本):</strong></p>
+<ul>
+<li><p><strong>单样本 t 检验 (One-Sample t-test):</strong> 检验单个样本的均值是否与已知的总体均值 (或某个特定值) 存在显著差异。 适用条件：</p>
+<ul>
+<li><p>因变量为连续变量。</p></li>
+<li><p>样本来自正态分布总体 (或近似正态分布，样本容量较大时可放宽)。</p></li>
+<li><p>总体标准差 σ 未知，用样本标准差 s 估计。</p></li>
+<li><p><strong>假设:</strong></p>
+<ul>
+<li>H₀: μ = μ₀ (总体均值等于 μ₀)</li>
+<li>H₁: μ ≠ μ₀ (总体均值不等于 μ₀，双侧检验) 或 H₁: μ &gt; μ₀ (右侧检验) 或 H₁: μ &lt; μ₀ (左侧检验)</li>
+</ul></li>
+<li><p><strong>检验统计量:</strong> t 统计量</p>
+<p><span class="math display">\[
+t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}
+\]</span></p>
+<p>其中，<span class="math inline">\(\\bar{x}\)</span> 是样本均值，μ₀ 是原假设的总体均值，s 是样本标准差，n 是样本容量。 t 统计量服从自由度为 n-1 的 t 分布。</p></li>
+</ul></li>
+<li><p><strong>R 函数 <code>t.test()</code> 进行单样本 t 检验:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 sample_vector 是样本数据向量，mu_0 是原假设的总体均值</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(sample_vector, <span class="at">mu =</span> mu_0,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">"two.sided"</span>,  <span class="co"># 双侧检验 (默认)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>       <span class="co"># alternative = "greater",  # 右侧检验</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>       <span class="co"># alternative = "less",     # 左侧检验</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">conf.level =</span> <span class="fl">0.95</span>)         <span class="co"># 置信水平 (默认 95%)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>双样本 t 检验 (Two-Sample t-test):</strong> 比较两个样本所代表的总体均值是否存在显著差异。 分为独立样本 t 检验和配对样本 t 检验。</p>
+<ul>
+<li><p><strong>独立样本 t 检验 (Independent Samples t-test):</strong> 比较两个<strong>独立</strong>样本组的均值是否存在显著差异。 适用条件：</p>
+<ul>
+<li><p>因变量为连续变量。</p></li>
+<li><p>两个样本分别来自正态分布总体 (或近似正态分布，样本容量较大时可放宽)。</p></li>
+<li><p>两个总体相互独立。</p></li>
+<li><p><strong>方差齐性 (Homogeneity of Variance):</strong> 两个总体的方差相等 (或近似相等)。 如果方差不齐，可以使用 Welch’s t 检验 (R 中 <code>t.test()</code> 默认 Welch’s t 检验)。</p></li>
+<li><p><strong>假设:</strong></p>
+<ul>
+<li>H₀: μ₁ = μ₂ (两个总体均值相等)</li>
+<li>H₁: μ₁ ≠ μ₂ (两个总体均值不相等，双侧检验) 或 H₁: μ₁ &gt; μ₂ (右侧检验) 或 H₁: μ₁ &lt; μ₂ (左侧检验)</li>
+</ul></li>
+<li><p><strong>检验统计量:</strong> t 统计量 (假设方差齐性) 或 Welch’s t 统计量 (方差不齐)</p>
+<p><span class="math display">\[
+t = \\frac{\\bar{x}_1 - \\bar{x}_2}{s_{pooled} \\sqrt{\\frac{1}{n_1} + \\frac{1}{n_2}}}  (方差齐性)
+\]</span></p>
+<p><span class="math display">\[
+t = \\frac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}}  (Welch's t 检验，方差不齐)
+\]</span></p>
+<p>其中，<span class="math inline">\(\\bar{x}_1, \\bar{x}_2\)</span> 是两个样本均值，<span class="math inline">\(s_{pooled}\)</span> 是合并样本标准差，<span class="math inline">\(s_1, s_2\)</span> 是两个样本标准差，<span class="math inline">\(n_1, n_2\)</span> 是两个样本容量。 t 统计量服从 t 分布，自由度根据方差齐性与否有所不同。</p></li>
+</ul></li>
+<li><p><strong>R 函数 <code>t.test()</code> 进行独立样本 t 检验:</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 group1_vector 和 group2_vector 是两组独立样本数据向量</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(group1_vector, group2_vector,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">paired =</span> <span class="cn">FALSE</span>,         <span class="co"># 独立样本 (默认)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">var.equal =</span> <span class="cn">TRUE</span>,      <span class="co"># 假设方差相等 (默认 FALSE，使用 Welch's t 检验)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">"two.sided"</span>,  <span class="co"># 双侧检验 (默认)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="co"># alternative = "greater",  # 右侧检验 (group1 &gt; group2)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="co"># alternative = "less",     # 左侧检验 (group1 &lt; group2)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">conf.level =</span> <span class="fl">0.95</span>)         <span class="co"># 置信水平 (默认 95%)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>配对样本 t 检验 (Paired Samples t-test):</strong> 比较<strong>配对</strong>样本 (例如，同一对象处理前后的数据) 的均值是否存在显著差异。 适用条件：</p>
+<ul>
+<li><p>因变量为连续变量。</p></li>
+<li><p>配对样本差值来自正态分布总体 (或近似正态分布，样本容量较大时可放宽)。</p></li>
+<li><p>配对样本数据之间存在配对关系。</p></li>
+<li><p><strong>假设:</strong> 配对样本 t 检验实际上是<strong>对配对样本差值进行单样本 t 检验</strong>。 设 <span class="math inline">\(D_i = X_{1i} - X_{2i}\)</span> 为第 i 对样本的差值，总体均值差为 μ_D。</p>
+<ul>
+<li>H₀: μ_D = 0 (总体均值差为 0，即两个总体均值相等)</li>
+<li>H₁: μ_D ≠ 0 (总体均值差不为 0，双侧检验) 或 H₁: μ_D &gt; 0 (右侧检验) 或 H₁: μ_D &lt; 0 (左侧检验)</li>
+</ul></li>
+<li><p><strong>检验统计量:</strong> t 统计量 (基于配对样本差值)</p>
+<p><span class="math display">\[
+t = \\frac{\\bar{D} - 0}{s_D / \\sqrt{n}}
+\]</span></p>
+<p>其中，<span class="math inline">\(\\bar{D}\)</span> 是配对样本差值的样本均值，<span class="math inline">\(s_D\)</span> 是配对样本差值的样本标准差，n 是配对样本对数。 t 统计量服从自由度为 n-1 的 t 分布。</p></li>
+</ul></li>
+<li><p><strong>R 函数 <code>t.test()</code> 进行配对样本 t 检验:</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 before_vector 和 after_vector 是配对样本数据向量</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(before_vector, after_vector,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">paired =</span> <span class="cn">TRUE</span>,          <span class="co"># 配对样本</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">alternative =</span> <span class="st">"two.sided"</span>,  <span class="co"># 双侧检验 (默认)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>       <span class="co"># alternative = "greater",  # 右侧检验 (before &lt; after)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>       <span class="co"># alternative = "less",     # 左侧检验 (before &gt; after)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">conf.level =</span> <span class="fl">0.95</span>)         <span class="co"># 置信水平 (默认 95%)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+<li><p><strong>t 检验的 R 语言实战练习:</strong></p>
+<ul>
+<li><p><strong>单样本 t 检验:</strong> 检验 <code>mtcars</code> 数据集 <code>mpg</code> 列的平均值是否等于 20。 计算效应量 (Cohen’s d 的变体，或报告均值差异)。 进行事后功效分析 (可选)。</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 单样本 t 检验：检验 mtcars 数据集 mpg 列的平均值是否等于 20</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(mtcars<span class="sc">$</span>mpg, <span class="at">mu =</span> <span class="dv">20</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算均值差异 (效应量的一种简单形式)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>mean_mpg <span class="ot">&lt;-</span> <span class="fu">mean</span>(mtcars<span class="sc">$</span>mpg)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>mean_difference <span class="ot">&lt;-</span> mean_mpg <span class="sc">-</span> <span class="dv">20</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Mean difference:"</span>, mean_difference, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># (可选) 事后功效分析 (单样本 t 检验的功效分析相对复杂，这里省略)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>独立样本 t 检验:</strong> 比较 <code>mtcars</code> 数据集不同 <code>am</code> (变速器类型) 组别 <code>mpg</code> 的平均值是否存在显著差异。 计算效应量 (Cohen’s d)。 进行事前功效分析 (例如，计算达到 80% 功效所需的样本容量，假设预期效应量为中等)。 进行事后功效分析 (计算实际功效)。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 独立样本 t 检验：比较 mtcars 数据集不同 am 组别 mpg 的平均值</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>independent_t_test_result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mpg <span class="sc">~</span> am, <span class="at">data =</span> mtcars, <span class="at">var.equal =</span> <span class="cn">TRUE</span>) <span class="co"># 假设方差相等</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(independent_t_test_result)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算 Cohen's d 效应量</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effsize)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>cohen_d_result <span class="ot">&lt;-</span> <span class="fu">cohen.d</span>(mpg <span class="sc">~</span> am, <span class="at">data =</span> mtcars, <span class="at">paired =</span> <span class="cn">FALSE</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cohen_d_result)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 事前功效分析：计算达到 80% 功效所需的样本容量 (假设效应量为 Cohen's d = 0.5)</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>power_analysis_result <span class="ot">&lt;-</span> <span class="fu">pwr.t.test</span>(<span class="at">d =</span> <span class="fl">0.5</span>, <span class="at">power =</span> <span class="fl">0.8</span>, <span class="at">sig.level =</span> <span class="fl">0.05</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">type =</span> <span class="st">"two.sample"</span>, <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(power_analysis_result)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>required_n <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(power_analysis_result<span class="sc">$</span>n)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Required sample size per group (for power = 80%, Cohen's d = 0.5):"</span>, required_n, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 事后功效分析：计算实际功效</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>actual_power_analysis_result <span class="ot">&lt;-</span> <span class="fu">pwr.t.test</span>(<span class="at">n =</span> <span class="fu">length</span>(mtcars<span class="sc">$</span>mpg[mtcars<span class="sc">$</span>am <span class="sc">==</span> <span class="dv">0</span>]), <span class="co"># 或 length(mtcars$mpg[mtcars$am == 1])</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">d =</span> cohen_d_result<span class="sc">$</span>estimate,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">sig.level =</span> <span class="fl">0.05</span>,</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">type =</span> <span class="st">"two.sample"</span>, <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(actual_power_analysis_result)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>actual_power <span class="ot">&lt;-</span> actual_power_analysis_result<span class="sc">$</span>power</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Actual power:"</span>, actual_power, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>配对样本 t 检验:</strong> 分析 <code>sleep</code> 数据集 <code>extra</code> 列在 <code>group</code> 为 1 和 2 时的差异 (实际上 <code>sleep</code> 数据集不是真正的配对数据，这里仅作为演示配对 t 检验的例子)。 计算效应量 (Cohen’s d 的变体，或报告均值差异)。 进行事后功效分析 (可选)。 或者，寻找真正的配对数据集进行配对 t 检验练习。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 配对样本 t 检验：分析 sleep 数据集 extra 列在 group 为 1 和 2 时的差异 (演示配对 t 检验)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>paired_t_test_result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(extra <span class="sc">~</span> group, <span class="at">data =</span> sleep, <span class="at">paired =</span> <span class="cn">TRUE</span>) <span class="co"># 注意：sleep 数据集不是真正的配对数据</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(paired_t_test_result)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算均值差异 (效应量的一种简单形式)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>mean_difference_paired <span class="ot">&lt;-</span> <span class="fu">mean</span>(sleep<span class="sc">$</span>extra[sleep<span class="sc">$</span>group <span class="sc">==</span> <span class="dv">1</span>] <span class="sc">-</span> sleep<span class="sc">$</span>extra[sleep<span class="sc">$</span>group <span class="sc">==</span> <span class="dv">2</span>])</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Mean difference (paired):"</span>, mean_difference_paired, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># (可选) 事后功效分析 (配对样本 t 检验的功效分析相对复杂，这里省略)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="项目一汇报准备" class="level3">
+<h3 class="anchored" data-anchor-id="项目一汇报准备">5. 项目一汇报准备</h3>
+<ul>
+<li><p><strong>汇报内容框架:</strong> 为帮助学生更好地准备项目汇报，提供以下内容框架建议：</p>
+<ul>
+<li><strong>项目背景与目标:</strong> 清晰阐述项目背景、研究意义和具体研究目标</li>
+<li><strong>数据概况:</strong> 详细说明数据来源、样本量、变量特征，以及数据质量评估</li>
+<li><strong>分析方法:</strong> 介绍已采用的数据清洗、预处理和统计分析方法</li>
+<li><strong>初步发现:</strong> 展示描述性统计和可视化分析结果，突出数据特征和潜在模式</li>
+<li><strong>挑战与展望:</strong> 总结当前遇到的困难，并提出后续研究计划和改进方向</li>
+</ul></li>
+<li><p><strong>汇报质量要求:</strong> 为确保汇报效果，提出以下具体要求：</p>
+<ul>
+<li><strong>时间控制:</strong> 每组汇报时间控制在4-5分钟</li>
+<li><strong>演示文稿:</strong> 使用PPT进行展示，要求结构清晰、重点突出</li>
+<li><strong>数据可视化:</strong> 图表设计规范，信息传达准确</li>
+<li><strong>团队协作:</strong> 小组成员需共同参与准备，明确分工</li>
+<li><strong>预演准备:</strong> 建议提前进行小组演练，确保汇报流畅</li>
+</ul></li>
+<li><p><strong>评估标准:</strong> 汇报将根据以下维度进行评估：</p>
+<ul>
+<li><strong>内容完整性:</strong> 是否涵盖所有关键要素</li>
+<li><strong>逻辑清晰度:</strong> 汇报结构是否合理，论证是否严谨</li>
+<li><strong>分析深度:</strong> 是否充分挖掘数据价值，提出有价值见解</li>
+<li><strong>展示效果:</strong> 演示文稿设计是否专业，表达是否清晰</li>
+<li><strong>团队协作:</strong> 小组成员配合是否默契，分工是否合理</li>
+</ul></li>
+</ul>
+</section>
+<section id="本周内容总结与下周预告" class="level3">
+<h3 class="anchored" data-anchor-id="本周内容总结与下周预告">6. 本周内容总结与下周预告</h3>
+<ul>
+<li><p><strong>本周回顾:</strong> 回顾本周学习内容，巩固重点知识。 本周我们<strong>初步学习</strong>了推断性统计的基本思想，参数估计 (点估计和区间估计)，<strong>假设检验的基本原理和步骤，以及假设检验中可能犯的 Type I 错误和 Type II 错误，检验功效和效应量的概念和计算方法</strong>，以及常用的 t 检验 (单样本 t 检验、独立样本 t 检验、配对样本 t 检验)。 <strong>推断性统计是统计学的核心内容，参数估计和假设检验是推断性统计的基础，t 检验是均值检验的常用方法，理解假设检验的错误类型、功效和效应量，掌握效应量 Cohen’s d 的计算和功效分析的基本方法，能够更全面、更深入、更严谨地理解和应用假设检验。 务必理解和掌握本周所学内容。</strong></p></li>
+<li><p><strong>下周预告:</strong> 下周我们将继续学习假设检验，深入学习<strong>方差分析 (ANOVA)</strong>，用于检验<strong>多个总体均值</strong>是否相等。 方差分析是 t 检验的扩展，可以处理三个或更多组别均值比较的问题。 我们还将学习<strong>非参数检验</strong>，用于处理不满足参数检验条件的数据。 下周内容将更加深入，敬请期待！</p></li>
+</ul>
+</section>
+<section id="课后任务" class="level3">
+<h3 class="anchored" data-anchor-id="课后任务">7. 课后任务</h3>
+<ul>
+<li><strong>小组任务:</strong>
+<ul>
+<li><strong>项目一汇报准备:</strong>
+<ul>
+<li>根据项目一汇报框架，准备完整的汇报材料（PPT）</li>
+<li>明确小组成员分工，确定主要汇报人</li>
+<li>进行至少2次小组预演，确保汇报流畅</li>
+<li>重点准备以下内容：
+<ul>
+<li>项目背景与目标（1分钟）</li>
+<li>数据概况与质量评估（1分钟）</li>
+<li>分析方法与初步发现（2分钟）</li>
+<li>挑战与后续计划（1分钟）</li>
+</ul></li>
+</ul></li>
+<li><strong>项目一数据分析深化:</strong>
+<ul>
+<li>在已完成的数据清洗和描述性统计基础上</li>
+<li>提出2-3个具体的假设检验问题</li>
+<li>使用t检验方法进行验证</li>
+<li>计算效应量（Cohen’s d）</li>
+<li>进行简单的事后功效分析</li>
+<li>将分析结果整合到项目汇报中</li>
+</ul></li>
+</ul></li>
+<li><strong>个人任务:</strong>
+<ul>
+<li><strong>复习本周内容:</strong> 回顾本周讲义和课堂笔记，巩固推断性统计基本概念、参数估计方法、假设检验步骤、t 检验的适用条件和 R 语言实现，<strong>重点理解 Type I 错误、Type II 错误、检验功效和效应量的概念和意义，掌握 Cohen’s d 的计算和功效分析的基本 R 代码和结果解释</strong>。</li>
+<li><strong>R 代码练习:</strong> 完成本讲义中布置的 R 代码练习，熟练掌握 <code>t.test()</code> 函数的用法，能够使用 R 进行单样本 t 检验、独立样本 t 检验和配对样本 t 检验。 <strong>练习使用 <code>effsize</code> 包计算 Cohen’s d 效应量 (独立样本 t 检验)，练习使用 <code>pwr</code> 包进行事前功效分析和事后功效分析 (独立样本 t 检验)。</strong> 尝试使用 AI 插件辅助 R 代码练习。</li>
+<li><strong>概念理解和辨析:</strong> 重点理解和辨析以下概念：总体与样本，参数与统计量，点估计与区间估计，置信水平与显著性水平，原假设与备择假设，双侧检验与单侧检验，第一类错误与第二类错误，p 值，单样本 t 检验、独立样本 t 检验、配对样本 t 检验的适用场景和区别，Type I 错误与 Type II 错误，检验功效，效应量 (Cohen’s d, 相关系数 r, R², <span class="math inline">\(\\eta^2\)</span>)，统计显著性与实际显著性，<strong>事前功效分析与事后功效分析</strong>。</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+AI 辅助学习小贴士
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>R 代码练习:</strong> 继续在 VS Code 或 Cursor 中练习 R 语言代码，充分利用 AI 插件的代码自动补全、代码生成、代码解释、AI 聊天等功能。 遇到 R 代码问题，及时向 AI 提问。</li>
+<li><strong>统计概念理解:</strong> 如果对推断性统计的概念 (例如，置信区间、假设检验、p 值、t 检验、<strong>第一类错误、第二类错误、检验功效、效应量、事前功效分析、事后功效分析</strong> 等) 理解不透彻，可以使用 AI 聊天提问，让 AI 提供更详细的解释和例子。 例如，提问： “解释假设检验中的第一类错误和第二类错误”, “什么是统计检验的功效，为什么它很重要？”, “什么是效应量，如何解释 Cohen’s d？”, “事前功效分析和事后功效分析有什么区别？”。</li>
+<li><strong>R 函数用法查询:</strong> 使用 AI 聊天提问： “R 中 <code>t.test()</code> 函数的用法”, “如何使用 <code>effsize</code> 包在 R 中计算 Cohen’s d”, “如何使用 <code>pwr</code> 包在 R 中进行 t 检验的功效分析”, “R 中用于功效分析的包”。 AI 可能会提供函数文档或使用示例，<strong>以及 <code>effsize</code> 包和 <code>pwr</code> 包的更详细使用方法和参数解释</strong>。</li>
+<li><strong>假设检验步骤指导:</strong> 如果不清楚假设检验的步骤，可以使用 AI 聊天咨询，例如，提问： “假设检验的步骤”, “如何设置原假设和备择假设”, “如何解释假设检验中的 p 值”。 AI 可能会提供步骤指导和示例。</li>
+<li><strong>结果解释辅助:</strong> 如果对 R <code>t.test()</code> 函数输出结果的含义不清楚，可以使用 AI 代码解释功能，选中 <code>t.test()</code> 函数的输出结果，让 AI 解释结果的含义，例如，p 值、置信区间、t 统计量、自由度等。 也可以使用 AI 聊天提问，例如，提问： “解释 R 中 <code>t.test()</code> 函数的输出结果”, “如何在 t 检验结果中报告效应量和置信区间？”, “如何解释功效分析结果？”。 <strong>特别是关于功效分析结果中 <code>n</code>（样本量）、<code>d</code>（效应量）、<code>power</code>（检验功效）等参数的含义和解释。</strong></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+学习寄语
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>工欲善其事，必先利其器！ 本周我们不仅学习了假设检验的基本方法，还掌握了评估检验质量和效应大小的工具：功效分析和效应量。 更完善的统计工具箱，助您在数据分析的道路上行稳致远！</strong> 继续保持学习的热情，充分利用 VS Code/Cursor 和 AI 插件的强大功能，相信大家会在统计学和 R 语言的学习中取得更大的进步！ 下周中期检查见！</p>
+</div>
+</div>
+
+
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week03.html" class="pagination-link" aria-label="第三周：描述性统计：数据探索与可视化">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第三周：描述性统计：数据探索与可视化</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

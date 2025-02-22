@@ -28,20 +28,71 @@ title: "第二周：R语言数据导入与数据初步理解"
 *   **互相学习**：  大家可以互相交流经验，看看别人是怎么找数据、拿数据的。
 :::
 
-::: {.callout-tip appearance="simple"}
 ### 数据获取实践：常用方法
 
 #### 公开数据集
 *   **常用网站**：
-    *   **Kaggle**:  [https://www.kaggle.com/datasets](https://www.kaggle.com/datasets) (各种主题的数据集，需要注册账号)
-    *   **UCI Machine Learning Repository**: [https://archive.ics.uci.edu/datasets](https://archive.ics.uci.edu/datasets) (机器学习数据集)
-    *   **政府开放数据平台**：  例如 [中国政府信息公开](https://www.gov.cn/zhengce/xxgk/)，[美国政府开放数据](https://www.data.gov/) (政府公开的各类数据)
-    *   **各机构/组织开放数据**：  例如 [世界银行公开数据](https://data.worldbank.org/)，[联合国数据](http://data.un.org/)
-:::
+    *   **综合数据平台**：
+        *   **Kaggle**:  [https://www.kaggle.com/datasets](https://www.kaggle.com/datasets) (全球综合性数据竞赛和数据集平台，需要注册账号)
+        *   **阿里云天池**: [https://tianchi.aliyun.com/dataset](https://tianchi.aliyun.com/dataset) (阿里巴巴旗下数据竞赛和数据集平台，中文，需要注册账号)
+        *   **DataFountain (DF 平台)**: [https://www.datafountain.cn/datasets](https://www.datafountain.cn/datasets) (中国的数据竞赛和数据集平台，中文)
+    *   **政府开放数据平台**：
+        *   **中国政府数据开放平台**: [http://data.gov.cn/](http://data.gov.cn/) (国家级政府数据开放平台，覆盖多领域)
+        *   **北京市政府数据开放平台**: [https://data.beijing.gov.cn/](https://data.beijing.gov.cn/) (省级/市级政府数据平台示例，中文)
+        *   **中国政府信息公开**:  [https://www.gov.cn/zhengce/xxgk/](https://www.gov.cn/zhengce/xxgk/) (国务院政策文件等，政府信息公开)
+        *   **美国政府开放数据**: [https://www.data.gov/](https://www.data.gov/) (政府公开数据示例，英文，可对比参考)
+    *   **机构/组织数据平台**：
+        *   **世界银行公开数据**: [https://data.worldbank.org/](https://data.worldbank.org/) (国际组织数据，多领域)
+        *   **联合国数据**: [http://data.un.org/](http://data.un.org/) (国际组织数据，全球统计数据)
+        *   **国家统计局**: [http://www.stats.gov.cn/](http://www.stats.gov.cn/) (中国国家统计数据，权威统计信息)
+        *   **中国人民银行**: [http://www.pbc.gov.cn/](http://www.pbc.gov.cn/) (中国金融数据，金融统计信息)
+    *   **特定领域数据平台**:
+        *   **UCI Machine Learning Repository**: [https://archive.ics.uci.edu/datasets](https://archive.ics.uci.edu/datasets) (机器学习领域常用数据集，英文)
+        *   **豆瓣电影、读书、音乐**:  [https://www.douban.com/](https://www.douban.com/) (中文电影、图书、音乐评分、评论等数据，可能需要爬虫或API)
+        *   **Steam 游戏数据**: [https://store.steampowered.com/](https://store.steampowered.com/) (Steam 平台游戏信息，例如用户评价、游戏类型等，可能需要爬虫或API)
+
+#### API (应用程序编程接口)
+*   **API 是什么？**  API 可以理解为**网站或平台提供的数据接口**。通过 API，我们可以用**程序**（比如 R 代码）直接从网站服务器获取数据，而不需要手动下载文件。
+*   **常用 API 平台**：
+    *   **娱乐内容 API (音乐/电影/图书/游戏)**：
+        *   **Spotify API**: [https://developer.spotify.com/documentation/web-api/](https://developer.spotify.com/documentation/web-api/) (获取 Spotify 音乐数据)
+        *   **豆瓣 API** (非官方，但常用):  [https://developers.douban.com/wiki/?title=api_v2](https://developers.douban.com/wiki/?title=api_v2) (获取电影、图书、音乐数据)
+        *   **OMDb API (电影)**: [http://www.omdbapi.com/](http://www.omdbapi.com/) (获取电影信息，免费 API，但有访问限制)
+        *   **Steam API**: [https://steamapi.xpaw.me/](https://steamapi.xpaw.me/) (非官方 Steam API, 获取游戏信息和玩家数据)
+        *   **RAWG API**: [https://rawg.io/apidocs](https://rawg.io/apidocs) (游戏数据库 API, 包含游戏信息、评测等)
+    *   **金融数据 API**：
+        *   **Yahoo Finance API** (非官方，但常用):  [https://finance.yahoo.com/quote/AAPL/history/](https://finance.yahoo.com/quote/AAPL/history/)  (获取股票市场数据)
+        *   **Tushare**: [https://tushare.pro/](https://tushare.pro/) (中国股票、期货、宏观经济数据，需要注册账号)
+        *   **Quandl (Nasdaq Data Link)**: [https://www.nasdaq.com/solutions/nasdaq-datalink](https://www.nasdaq.com/solutions/nasdaq-datalink) (各种金融和经济数据，部分免费，部分收费)
+    *   **通用数据 API 平台**：
+        *   **聚合数据**: [https://www.juhe.cn/](https://www.juhe.cn/) (提供各种生活、出行等 API，部分免费，部分收费)
+        *   **Apipost**: [https://www.apipost.cn/api-store](https://www.apipost.cn/api-store) (API 商店，提供各种类型的 API)
+    *   **实用工具 API**：
+        *   **天气 API**：
+            *   **OpenWeatherMap**: [https://openweathermap.org/api](https://openweathermap.org/api) (全球天气数据)
+            *   **和风天气**: [https://dev.qweather.com/](https://dev.qweather.com/) (中国及全球天气数据)
+        *   **地理编码 API (Geocoding API)**：
+            *   **高德地图API**: [https://lbs.amap.com/api/webservice/guide/api/georegeo](https://lbs.amap.com/api/webservice/guide/api/georegeo) (地址和坐标转换，中国常用)
+*   **如何使用 API 获取数据？**
+    *   **注册 API 账号 (如果需要)**：  很多 API 平台需要注册账号并获取 API 密钥 (API Key) 才能使用。
+    *   **阅读 API 文档**：  API 文档会告诉你如何发送 API 请求，需要哪些参数，以及 API 返回的数据格式。
+    *   **使用 API 请求工具**：  可以使用 Postman 等工具测试 API 请求，或者在 R 中使用 `httr` 包发送 API 请求 (本周课不深入 `httr` 包的具体用法)。
+    *   **AI 辅助**：  可以使用 Cursor, ChatGPT 等 AI 工具辅助理解 API 文档，生成 API 请求代码。 例如，让 AI 总结 API 文档的关键信息，或者解释 API 请求的参数含义。
+
 
 ### R语言数据导入进阶
 
-::: {.callout-note}
+在R语言中，`readr` 包提供了一系列高效读取各种文本数据文件的函数。最常用的包括：
+
+*   `read_csv()` 函数：用于读取逗号分隔的 `.csv` 文件。这是最常见的数据文件格式。
+*   `read_tsv()` 函数：用于读取制表符分隔的 `.tsv` 文件。
+*   `read_delim()` 函数：更通用的读取文本文件的函数，可以自定义分隔符。
+
+这些函数都属于 `readr` 包，通常在RStudio等环境中已经默认安装，如果没有，可以使用 `install.packages("readr")` 安装，并使用 `library(readr)` 加载。
+
+下面是一些基本用法示例：
+
+
 #### `read_excel()` 函数： 读取 Excel 文件
 
 *   可以读取 `.xls` 和 `.xlsx` 格式的 Excel 文件。
@@ -108,12 +159,14 @@ library(data.table)
 # 使用 fread 读取 CSV 文件
 large_csv_data <- fread("你的大型CSV文件.csv")
 ```
-:::
+
 
 ## 第四次课：数据初步理解与描述性统计
 
 
 ### 初步认识数据：常用R函数
+
+在拿到数据之后，我们通常需要先快速了解数据的大致情况。R 语言提供了一系列函数，可以帮助我们快速查看数据的基本信息，例如数据的维度、列名、数据类型、以及数据的前几行和后几行等等。下面介绍一些常用的 R 函数。
 
 #### 常用 R 函数
 
@@ -159,6 +212,9 @@ names(你的数据框)
 
 ### 数据类型与数据质量
 
+在进行数据分析之前，理解数据的类型和质量至关重要。不同的数据类型决定了我们可以对数据进行的操作，而数据质量则直接影响分析结果的可靠性。本节将简要介绍常见的数据类型和数据质量问题。
+
+
 #### 常见数据类型
 
 *   **数值型 (numeric, integer)**:  数字，可以用来计算。
@@ -176,7 +232,10 @@ names(你的数据框)
 *   **数据质量很重要**，如果数据有问题，分析结果可能也会错 ("Garbage in, garbage out")。
 
 
-### 描述性统计量与 `dplyr` 数据清洗入门
+### 描述性统计量
+
+在拿到数据之后，我们首先需要对数据有一个初步的认识。**描述性统计量**就是帮助我们**概括和描述数据基本特征**的统计方法。通过学习和计算**描述性统计量**，例如**均值**、**中位数**、**标准差**等等，我们可以快速了解数据的**集中趋势**、**离散程度**和**大致分布**，为后续的数据分析和建模打下基础。
+
 
 #### 集中趋势
 
@@ -265,6 +324,11 @@ range_value <- data_range[2] - data_range[1] # 最大值 - 最小值
 
 
 ### `dplyr` 包：数据清洗入门
+
+数据清洗 (Data Cleaning) 是数据分析中非常重要的一个环节。真实世界的数据往往是“脏乱”的，可能包含缺失值、重复值、格式错误、异常值等等问题。**数据清洗的目的**就是**处理这些数据质量问题**，让数据变得更加**干净、规范、可用**，为后续的分析和建模打下良好的基础。
+
+`dplyr` 包是 R 语言中一个非常流行和强大的**数据处理包**，它提供了一系列简洁高效的函数，可以帮助我们**快速完成各种数据清洗和转换任务**。接下来我们来学习 `dplyr` 包的一些常用函数。
+
 
 ::: {.callout-tip appearance="simple"}
 #### `dplyr` 包的核心动词

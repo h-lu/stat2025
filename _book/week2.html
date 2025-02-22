@@ -185,13 +185,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#第三次课数据获取与r语言数据导入" id="toc-第三次课数据获取与r语言数据导入" class="nav-link active" data-scroll-target="#第三次课数据获取与r语言数据导入">第三次课：数据获取与R语言数据导入</a>
   <ul class="collapse">
+  <li><a href="#数据获取实践常用方法" id="toc-数据获取实践常用方法" class="nav-link" data-scroll-target="#数据获取实践常用方法">数据获取实践：常用方法</a></li>
   <li><a href="#r语言数据导入进阶" id="toc-r语言数据导入进阶" class="nav-link" data-scroll-target="#r语言数据导入进阶">R语言数据导入进阶</a></li>
   </ul></li>
   <li><a href="#第四次课数据初步理解与描述性统计" id="toc-第四次课数据初步理解与描述性统计" class="nav-link" data-scroll-target="#第四次课数据初步理解与描述性统计">第四次课：数据初步理解与描述性统计</a>
   <ul class="collapse">
   <li><a href="#初步认识数据常用r函数" id="toc-初步认识数据常用r函数" class="nav-link" data-scroll-target="#初步认识数据常用r函数">初步认识数据：常用R函数</a></li>
   <li><a href="#数据类型与数据质量" id="toc-数据类型与数据质量" class="nav-link" data-scroll-target="#数据类型与数据质量">数据类型与数据质量</a></li>
-  <li><a href="#描述性统计量与-dplyr-数据清洗入门" id="toc-描述性统计量与-dplyr-数据清洗入门" class="nav-link" data-scroll-target="#描述性统计量与-dplyr-数据清洗入门">描述性统计量与 <code>dplyr</code> 数据清洗入门</a></li>
+  <li><a href="#描述性统计量" id="toc-描述性统计量" class="nav-link" data-scroll-target="#描述性统计量">描述性统计量</a></li>
   <li><a href="#dplyr-包数据清洗入门" id="toc-dplyr-包数据清洗入门" class="nav-link" data-scroll-target="#dplyr-包数据清洗入门"><code>dplyr</code> 包：数据清洗入门</a></li>
   <li><a href="#描述性统计和数据清洗练习" id="toc-描述性统计和数据清洗练习" class="nav-link" data-scroll-target="#描述性统计和数据清洗练习">描述性统计和数据清洗练习</a></li>
   </ul></li>
@@ -255,40 +256,102 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>一起讨论</strong>： * 看看大家找的数据怎么样，靠不靠谱。 * <strong>重点是确定怎么拿到数据</strong>： * 如果是公开数据集，怎么下载，数据长什么样。 * 如果是 API，怎么注册账号，API 怎么用，先简单了解一下。 * <strong>选数据的时候，要考虑能不能快速拿到数据</strong>，别选太难搞的。 * <strong>互相学习</strong>： 大家可以互相交流经验，看看别人是怎么找数据、拿数据的。</p>
 </div>
 </div>
-<div class="callout callout-style-simple callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-数据获取实践：常用方法
-</div>
-</div>
-<section id="公开数据集" class="level4 callout-body-container callout-body">
+<section id="数据获取实践常用方法" class="level3">
+<h3 class="anchored" data-anchor-id="数据获取实践常用方法">数据获取实践：常用方法</h3>
+<section id="公开数据集" class="level4">
 <h4 class="anchored" data-anchor-id="公开数据集">公开数据集</h4>
 <ul>
 <li><strong>常用网站</strong>：
 <ul>
-<li><strong>Kaggle</strong>: <a href="https://www.kaggle.com/datasets">https://www.kaggle.com/datasets</a> (各种主题的数据集，需要注册账号)</li>
-<li><strong>UCI Machine Learning Repository</strong>: <a href="https://archive.ics.uci.edu/datasets">https://archive.ics.uci.edu/datasets</a> (机器学习数据集)</li>
-<li><strong>政府开放数据平台</strong>： 例如 <a href="https://www.gov.cn/zhengce/xxgk/">中国政府信息公开</a>，<a href="https://www.data.gov/">美国政府开放数据</a> (政府公开的各类数据)</li>
-<li><strong>各机构/组织开放数据</strong>： 例如 <a href="https://data.worldbank.org/">世界银行公开数据</a>，<a href="http://data.un.org/">联合国数据</a></li>
+<li><strong>综合数据平台</strong>：
+<ul>
+<li><strong>Kaggle</strong>: <a href="https://www.kaggle.com/datasets">https://www.kaggle.com/datasets</a> (全球综合性数据竞赛和数据集平台，需要注册账号)</li>
+<li><strong>阿里云天池</strong>: <a href="https://tianchi.aliyun.com/dataset">https://tianchi.aliyun.com/dataset</a> (阿里巴巴旗下数据竞赛和数据集平台，中文，需要注册账号)</li>
+<li><strong>DataFountain (DF 平台)</strong>: <a href="https://www.datafountain.cn/datasets">https://www.datafountain.cn/datasets</a> (中国的数据竞赛和数据集平台，中文)</li>
+</ul></li>
+<li><strong>政府开放数据平台</strong>：
+<ul>
+<li><strong>中国政府数据开放平台</strong>: <a href="http://data.gov.cn/">http://data.gov.cn/</a> (国家级政府数据开放平台，覆盖多领域)</li>
+<li><strong>北京市政府数据开放平台</strong>: <a href="https://data.beijing.gov.cn/">https://data.beijing.gov.cn/</a> (省级/市级政府数据平台示例，中文)</li>
+<li><strong>中国政府信息公开</strong>: <a href="https://www.gov.cn/zhengce/xxgk/">https://www.gov.cn/zhengce/xxgk/</a> (国务院政策文件等，政府信息公开)</li>
+<li><strong>美国政府开放数据</strong>: <a href="https://www.data.gov/">https://www.data.gov/</a> (政府公开数据示例，英文，可对比参考)</li>
+</ul></li>
+<li><strong>机构/组织数据平台</strong>：
+<ul>
+<li><strong>世界银行公开数据</strong>: <a href="https://data.worldbank.org/">https://data.worldbank.org/</a> (国际组织数据，多领域)</li>
+<li><strong>联合国数据</strong>: <a href="http://data.un.org/">http://data.un.org/</a> (国际组织数据，全球统计数据)</li>
+<li><strong>国家统计局</strong>: <a href="http://www.stats.gov.cn/">http://www.stats.gov.cn/</a> (中国国家统计数据，权威统计信息)</li>
+<li><strong>中国人民银行</strong>: <a href="http://www.pbc.gov.cn/">http://www.pbc.gov.cn/</a> (中国金融数据，金融统计信息)</li>
+</ul></li>
+<li><strong>特定领域数据平台</strong>:
+<ul>
+<li><strong>UCI Machine Learning Repository</strong>: <a href="https://archive.ics.uci.edu/datasets">https://archive.ics.uci.edu/datasets</a> (机器学习领域常用数据集，英文)</li>
+<li><strong>豆瓣电影、读书、音乐</strong>: <a href="https://www.douban.com/">https://www.douban.com/</a> (中文电影、图书、音乐评分、评论等数据，可能需要爬虫或API)</li>
+<li><strong>Steam 游戏数据</strong>: <a href="https://store.steampowered.com/">https://store.steampowered.com/</a> (Steam 平台游戏信息，例如用户评价、游戏类型等，可能需要爬虫或API)</li>
+</ul></li>
 </ul></li>
 </ul>
 </section>
-</div>
+<section id="api-应用程序编程接口" class="level4">
+<h4 class="anchored" data-anchor-id="api-应用程序编程接口">API (应用程序编程接口)</h4>
+<ul>
+<li><strong>API 是什么？</strong> API 可以理解为<strong>网站或平台提供的数据接口</strong>。通过 API，我们可以用<strong>程序</strong>（比如 R 代码）直接从网站服务器获取数据，而不需要手动下载文件。</li>
+<li><strong>常用 API 平台</strong>：
+<ul>
+<li><strong>娱乐内容 API (音乐/电影/图书/游戏)</strong>：
+<ul>
+<li><strong>Spotify API</strong>: <a href="https://developer.spotify.com/documentation/web-api/">https://developer.spotify.com/documentation/web-api/</a> (获取 Spotify 音乐数据)</li>
+<li><strong>豆瓣 API</strong> (非官方，但常用): <a href="https://developers.douban.com/wiki/?title=api_v2">https://developers.douban.com/wiki/?title=api_v2</a> (获取电影、图书、音乐数据)</li>
+<li><strong>OMDb API (电影)</strong>: <a href="http://www.omdbapi.com/">http://www.omdbapi.com/</a> (获取电影信息，免费 API，但有访问限制)</li>
+<li><strong>Steam API</strong>: <a href="https://steamapi.xpaw.me/">https://steamapi.xpaw.me/</a> (非官方 Steam API, 获取游戏信息和玩家数据)</li>
+<li><strong>RAWG API</strong>: <a href="https://rawg.io/apidocs">https://rawg.io/apidocs</a> (游戏数据库 API, 包含游戏信息、评测等)</li>
+</ul></li>
+<li><strong>金融数据 API</strong>：
+<ul>
+<li><strong>Yahoo Finance API</strong> (非官方，但常用): <a href="https://finance.yahoo.com/quote/AAPL/history/">https://finance.yahoo.com/quote/AAPL/history/</a> (获取股票市场数据)</li>
+<li><strong>Tushare</strong>: <a href="https://tushare.pro/">https://tushare.pro/</a> (中国股票、期货、宏观经济数据，需要注册账号)</li>
+<li><strong>Quandl (Nasdaq Data Link)</strong>: <a href="https://www.nasdaq.com/solutions/nasdaq-datalink">https://www.nasdaq.com/solutions/nasdaq-datalink</a> (各种金融和经济数据，部分免费，部分收费)</li>
+</ul></li>
+<li><strong>通用数据 API 平台</strong>：
+<ul>
+<li><strong>聚合数据</strong>: <a href="https://www.juhe.cn/">https://www.juhe.cn/</a> (提供各种生活、出行等 API，部分免费，部分收费)</li>
+<li><strong>Apipost</strong>: <a href="https://www.apipost.cn/api-store">https://www.apipost.cn/api-store</a> (API 商店，提供各种类型的 API)</li>
+</ul></li>
+<li><strong>实用工具 API</strong>：
+<ul>
+<li><strong>天气 API</strong>：
+<ul>
+<li><strong>OpenWeatherMap</strong>: <a href="https://openweathermap.org/api">https://openweathermap.org/api</a> (全球天气数据)</li>
+<li><strong>和风天气</strong>: <a href="https://dev.qweather.com/">https://dev.qweather.com/</a> (中国及全球天气数据)</li>
+</ul></li>
+<li><strong>地理编码 API (Geocoding API)</strong>：
+<ul>
+<li><strong>高德地图API</strong>: <a href="https://lbs.amap.com/api/webservice/guide/api/georegeo">https://lbs.amap.com/api/webservice/guide/api/georegeo</a> (地址和坐标转换，中国常用)</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><strong>如何使用 API 获取数据？</strong>
+<ul>
+<li><strong>注册 API 账号 (如果需要)</strong>： 很多 API 平台需要注册账号并获取 API 密钥 (API Key) 才能使用。</li>
+<li><strong>阅读 API 文档</strong>： API 文档会告诉你如何发送 API 请求，需要哪些参数，以及 API 返回的数据格式。</li>
+<li><strong>使用 API 请求工具</strong>： 可以使用 Postman 等工具测试 API 请求，或者在 R 中使用 <code>httr</code> 包发送 API 请求 (本周课不深入 <code>httr</code> 包的具体用法)。</li>
+<li><strong>AI 辅助</strong>： 可以使用 Cursor, ChatGPT 等 AI 工具辅助理解 API 文档，生成 API 请求代码。 例如，让 AI 总结 API 文档的关键信息，或者解释 API 请求的参数含义。</li>
+</ul></li>
+</ul>
+</section>
+</section>
 <section id="r语言数据导入进阶" class="level3">
 <h3 class="anchored" data-anchor-id="r语言数据导入进阶">R语言数据导入进阶</h3>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<code>read_excel()</code> 函数： 读取 Excel 文件
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<p>在R语言中，<code>readr</code> 包提供了一系列高效读取各种文本数据文件的函数。最常用的包括：</p>
+<ul>
+<li><code>read_csv()</code> 函数：用于读取逗号分隔的 <code>.csv</code> 文件。这是最常见的数据文件格式。</li>
+<li><code>read_tsv()</code> 函数：用于读取制表符分隔的 <code>.tsv</code> 文件。</li>
+<li><code>read_delim()</code> 函数：更通用的读取文本文件的函数，可以自定义分隔符。</li>
+</ul>
+<p>这些函数都属于 <code>readr</code> 包，通常在RStudio等环境中已经默认安装，如果没有，可以使用 <code>install.packages("readr")</code> 安装，并使用 <code>library(readr)</code> 加载。</p>
+<p>下面是一些基本用法示例：</p>
+<section id="read_excel-函数-读取-excel-文件" class="level4">
+<h4 class="anchored" data-anchor-id="read_excel-函数-读取-excel-文件"><code>read_excel()</code> 函数： 读取 Excel 文件</h4>
 <ul>
 <li>可以读取 <code>.xls</code> 和 <code>.xlsx</code> 格式的 Excel 文件。</li>
 <li>需要先安装和加载 <code>readxl</code> 包 (<code>install.packages("readxl")</code>, <code>library(readxl)</code>).</li>
@@ -299,6 +362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取 Excel 文件</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>excel_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"你的Excel文件.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 <section id="read_json-函数-读取-json-文件" class="level4">
 <h4 class="anchored" data-anchor-id="read_json-函数-读取-json-文件"><code>read_json()</code> 函数： 读取 JSON 文件</h4>
 <ul>
@@ -349,14 +413,13 @@ library(data.table)
 # 使用 fread 读取 CSV 文件
 large_csv_data &lt;- fread("你的大型CSV文件.csv")</code></pre>
 </section>
-</div>
-</div>
 </section>
 </section>
 <section id="第四次课数据初步理解与描述性统计" class="level2">
 <h2 class="anchored" data-anchor-id="第四次课数据初步理解与描述性统计">第四次课：数据初步理解与描述性统计</h2>
 <section id="初步认识数据常用r函数" class="level3">
 <h3 class="anchored" data-anchor-id="初步认识数据常用r函数">初步认识数据：常用R函数</h3>
+<p>在拿到数据之后，我们通常需要先快速了解数据的大致情况。R 语言提供了一系列函数，可以帮助我们快速查看数据的基本信息，例如数据的维度、列名、数据类型、以及数据的前几行和后几行等等。下面介绍一些常用的 R 函数。</p>
 <section id="常用-r-函数" class="level4">
 <h4 class="anchored" data-anchor-id="常用-r-函数">常用 R 函数</h4>
 <ul>
@@ -401,6 +464,7 @@ glimpse(你的数据框)</code></pre>
 </section>
 <section id="数据类型与数据质量" class="level3">
 <h3 class="anchored" data-anchor-id="数据类型与数据质量">数据类型与数据质量</h3>
+<p>在进行数据分析之前，理解数据的类型和质量至关重要。不同的数据类型决定了我们可以对数据进行的操作，而数据质量则直接影响分析结果的可靠性。本节将简要介绍常见的数据类型和数据质量问题。</p>
 <section id="常见数据类型" class="level4">
 <h4 class="anchored" data-anchor-id="常见数据类型">常见数据类型</h4>
 <ul>
@@ -422,8 +486,9 @@ glimpse(你的数据框)</code></pre>
 </ul>
 </section>
 </section>
-<section id="描述性统计量与-dplyr-数据清洗入门" class="level3">
-<h3 class="anchored" data-anchor-id="描述性统计量与-dplyr-数据清洗入门">描述性统计量与 <code>dplyr</code> 数据清洗入门</h3>
+<section id="描述性统计量" class="level3">
+<h3 class="anchored" data-anchor-id="描述性统计量">描述性统计量</h3>
+<p>在拿到数据之后，我们首先需要对数据有一个初步的认识。<strong>描述性统计量</strong>就是帮助我们<strong>概括和描述数据基本特征</strong>的统计方法。通过学习和计算<strong>描述性统计量</strong>，例如<strong>均值</strong>、<strong>中位数</strong>、<strong>标准差</strong>等等，我们可以快速了解数据的<strong>集中趋势</strong>、<strong>离散程度</strong>和<strong>大致分布</strong>，为后续的数据分析和建模打下基础。</p>
 <section id="集中趋势" class="level4">
 <h4 class="anchored" data-anchor-id="集中趋势">集中趋势</h4>
 <ul>
@@ -580,6 +645,8 @@ Note
 </section>
 <section id="dplyr-包数据清洗入门" class="level3">
 <h3 class="anchored" data-anchor-id="dplyr-包数据清洗入门"><code>dplyr</code> 包：数据清洗入门</h3>
+<p>数据清洗 (Data Cleaning) 是数据分析中非常重要的一个环节。真实世界的数据往往是“脏乱”的，可能包含缺失值、重复值、格式错误、异常值等等问题。<strong>数据清洗的目的</strong>就是<strong>处理这些数据质量问题</strong>，让数据变得更加<strong>干净、规范、可用</strong>，为后续的分析和建模打下良好的基础。</p>
+<p><code>dplyr</code> 包是 R 语言中一个非常流行和强大的<strong>数据处理包</strong>，它提供了一系列简洁高效的函数，可以帮助我们<strong>快速完成各种数据清洗和转换任务</strong>。接下来我们来学习 <code>dplyr</code> 包的一些常用函数。</p>
 <div class="callout callout-style-simple callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

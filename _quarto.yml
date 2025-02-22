@@ -12,6 +12,7 @@ book:
     - part: "项目一：数据探索与初步洞察"
       chapters:
         - week1.qmd
+        - week2.qmd
         
 format:
   html:

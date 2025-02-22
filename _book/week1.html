@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>第一周：统计学导论 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./syllbus.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles/custom.css">
+<link rel="stylesheet" href="styles/mermaid.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1.html">项目一：数据探索与初步洞察</a></li><li class="breadcrumb-item"><a href="./week1.html"><span class="chapter-title">第一周：统计学导论</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">欢迎</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllbus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">课程概述</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">项目一：数据探索与初步洞察</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第一周：统计学导论</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#第一次课课程和项目介绍-统计学导论" id="toc-第一次课课程和项目介绍-统计学导论" class="nav-link active" data-scroll-target="#第一次课课程和项目介绍-统计学导论">第一次课：课程和项目介绍 + 统计学导论</a>
+  <ul class="collapse">
+  <li><a href="#课程和项目介绍" id="toc-课程和项目介绍" class="nav-link" data-scroll-target="#课程和项目介绍">1. 课程和项目介绍</a></li>
+  <li><a href="#统计学基本概念" id="toc-统计学基本概念" class="nav-link" data-scroll-target="#统计学基本概念">2. 统计学基本概念</a></li>
+  <li><a href="#r语言和tidyverse简介" id="toc-r语言和tidyverse简介" class="nav-link" data-scroll-target="#r语言和tidyverse简介">3. R语言和tidyverse简介</a></li>
+  </ul></li>
+  <li><a href="#第二次课r环境搭建与r基础语法" id="toc-第二次课r环境搭建与r基础语法" class="nav-link" data-scroll-target="#第二次课r环境搭建与r基础语法">第二次课：R环境搭建与R基础语法</a>
+  <ul class="collapse">
+  <li><a href="#r及rstudiocursor安装" id="toc-r及rstudiocursor安装" class="nav-link" data-scroll-target="#r及rstudiocursor安装">1. R及RStudio/Cursor安装</a></li>
+  <li><a href="#vscodecursor-插件安装" id="toc-vscodecursor-插件安装" class="nav-link" data-scroll-target="#vscodecursor-插件安装">2. VSCode/Cursor 插件安装</a></li>
+  <li><a href="#r-包安装和r基础语法" id="toc-r-包安装和r基础语法" class="nav-link" data-scroll-target="#r-包安装和r基础语法">3. R 包安装和R基础语法</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1.html">项目一：数据探索与初步洞察</a></li><li class="breadcrumb-item"><a href="./week1.html"><span class="chapter-title">第一周：统计学导论</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">第一周：统计学导论</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+本周学习目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>了解课程和项目式教学模式</li>
+<li>掌握统计学的基本概念，理解统计思维的重要性</li>
+<li>初步了解R语言和tidyverse生态系统</li>
+<li>学习R环境搭建和tidyverse安装</li>
+<li>掌握基本的数据获取方法，包括公开数据集和API</li>
+<li>初步体验 AI 辅助编程，并使用 AI 工具进行简单的 R 编程练习</li>
+</ul>
+</div>
+</div>
+<section id="第一次课课程和项目介绍-统计学导论" class="level2">
+<h2 class="anchored" data-anchor-id="第一次课课程和项目介绍-统计学导论">第一次课：课程和项目介绍 + 统计学导论</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+核心概念
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>统计学是从数据中提取信息，发现规律，并做出合理决策的科学。</p>
+</div>
+</div>
+<section id="课程和项目介绍" class="level3">
+<h3 class="anchored" data-anchor-id="课程和项目介绍">1. 课程和项目介绍</h3>
+<section id="课程和项目概览" class="level4">
+<h4 class="anchored" data-anchor-id="课程和项目概览">课程和项目概览</h4>
+<section id="课程总体目标" class="level5">
+<h5 class="anchored" data-anchor-id="课程总体目标">课程总体目标</h5>
+<ul>
+<li>通过四个项目，学习和应用统计知识。</li>
+</ul>
+</section>
+<section id="项目式教学" class="level5">
+<h5 class="anchored" data-anchor-id="项目式教学">项目式教学</h5>
+<ul>
+<li>强调以项目为驱动，学生通过完成实际项目来学习。</li>
+</ul>
+</section>
+<section id="项目一数据探索与初步洞察" class="level5">
+<h5 class="anchored" data-anchor-id="项目一数据探索与初步洞察">项目一：数据探索与初步洞察</h5>
+<ul>
+<li><strong>目标</strong>： 掌握数据探索的基本方法，获得初步的数据洞察。</li>
+<li><strong>主题选择</strong>： 电影、音乐、游戏、股票等 (学生自选)。</li>
+<li><strong>项目周期</strong>： 第1-4周。</li>
+<li><strong>成果要求</strong>： 分析报告和项目汇报。</li>
+</ul>
+</section>
+<section id="分组" class="level5">
+<h5 class="anchored" data-anchor-id="分组">分组</h5>
+<ul>
+<li>现场自由组队，每组2-3人。</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="统计学基本概念" class="level3">
+<h3 class="anchored" data-anchor-id="统计学基本概念">2. 统计学基本概念</h3>
+<section id="什么是统计学" class="level4">
+<h4 class="anchored" data-anchor-id="什么是统计学">什么是统计学？</h4>
+<ul>
+<li><strong>定义</strong>：研究如何收集、分析、解释和呈现数据的科学。</li>
+<li><strong>目标</strong>：从数据中提取信息，发现规律，做出决策。</li>
+<li><strong>应用案例</strong>： 经管领域案例 (结合学生专业背景)，例如市场调查、销售数据分析、财务报表分析等。 此外，统计学也被广泛应用于自然科学、社会科学、医学、工程等领域。</li>
+</ul>
+</section>
+<section id="统计学的基本概念" class="level4">
+<h4 class="anchored" data-anchor-id="统计学的基本概念">统计学的基本概念</h4>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+总体 (Population) 与 样本 (Sample)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>总体</strong>： 研究对象的全体。例如，如果我们想研究某个城市所有成年人的平均身高，那么该城市所有成年人就是一个总体。</li>
+<li><strong>样本</strong>： 从总体中抽取的一部分个体。由于直接测量所有成年人的身高是不现实的，我们通常会抽取一部分成年人作为样本进行测量。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+变量 (Variable) 的类型
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>分类变量 (Categorical)</strong>： 描述类别或属性，如性别、地区。例如，血型 (A, B, AB, O)、教育程度 (小学, 初中, 高中, 大学) 等。 分类变量的取值是离散的类别，通常不能进行数值运算。</li>
+<li><strong>数值变量 (Numerical)</strong>： 可以数值度量的变量，如身高、收入。例如，年龄、体重、考试成绩等。 数值变量的取值是数值，可以进行数学运算。 数值变量又可以分为<strong>离散型变量 (discrete)</strong> 和<strong>连续型变量 (continuous)</strong>。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+描述性统计 (Descriptive Statistics) 与 推断性统计 (Inferential Statistics)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>描述性统计</strong>： 描述和总结样本数据的特征，如均值、标准差、图表。描述性统计旨在概括和呈现数据的基本特征，例如使用平均数描述数据的中心位置，使用标准差描述数据的离散程度，使用直方图或条形图可视化数据的分布。</li>
+<li><strong>推断性统计</strong>： 利用样本数据推断总体特征，如参数估计、假设检验。推断性统计则更进一步，它利用样本数据的信息来对总体进行推断，例如通过样本的平均身高来估计总体成年人的平均身高，或者通过假设检验来判断某种新药是否有效。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="统计思维的重要性" class="level4">
+<h4 class="anchored" data-anchor-id="统计思维的重要性">统计思维的重要性</h4>
+<ul>
+<li><strong>核心思想</strong>： 如何从数据中提取信息，发现规律，做出决策。统计思维不仅仅是一种分析数据的技能，更是一种看待问题和解决问题的思维方式。 具备统计思维的人能够更加理性地分析问题，更加科学地做出决策，从而在工作和生活中取得更大的成功。 在当今这个数据爆炸的时代，统计思维显得尤为重要。</li>
+</ul>
+</section>
+</section>
+<section id="r语言和tidyverse简介" class="level3">
+<h3 class="anchored" data-anchor-id="r语言和tidyverse简介">3. R语言和tidyverse简介</h3>
+<section id="r语言和tidyverse生态系统" class="level4">
+<h4 class="anchored" data-anchor-id="r语言和tidyverse生态系统">R语言和tidyverse生态系统</h4>
+<section id="r语言的特点和优势" class="level5">
+<h5 class="anchored" data-anchor-id="r语言的特点和优势">R语言的特点和优势</h5>
+<ul>
+<li>开源、免费。</li>
+<li>强大的统计分析和可视化功能。</li>
+<li>活跃的社区和丰富的扩展包。</li>
+</ul>
+</section>
+<section id="tidyverse生态系统" class="level5">
+<h5 class="anchored" data-anchor-id="tidyverse生态系统">tidyverse生态系统</h5>
+<ul>
+<li>核心包： <code>dplyr</code> (数据处理), <code>ggplot2</code> (数据可视化), <code>readr</code> (数据导入), <code>tidyr</code> (数据整理) 等。</li>
+<li>简洁、高效、易读的语法风格。</li>
+<li>统一的数据处理流程 (管道操作符 <code>%&gt;%</code>)。</li>
+</ul>
+</section>
+<section id="为什么选择tidyverse" class="level5">
+<h5 class="anchored" data-anchor-id="为什么选择tidyverse">为什么选择tidyverse?</h5>
+<ul>
+<li>更符合现代数据分析的习惯。</li>
+<li>提高数据处理和分析效率。</li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+<section id="第二次课r环境搭建与r基础语法" class="level2">
+<h2 class="anchored" data-anchor-id="第二次课r环境搭建与r基础语法">第二次课：R环境搭建与R基础语法</h2>
+<section id="r及rstudiocursor安装" class="level3">
+<h3 class="anchored" data-anchor-id="r及rstudiocursor安装">1. R及RStudio/Cursor安装</h3>
+<section id="r-环境安装" class="level4">
+<h4 class="anchored" data-anchor-id="r-环境安装">R 环境安装</h4>
+<section id="下载r" class="level5">
+<h5 class="anchored" data-anchor-id="下载r">下载R</h5>
+<ul>
+<li>访问 <a href="https://www.r-project.org/">R官方网站</a>，根据操作系统选择合适的R版本下载并安装。</li>
+<li>建议安装最新版本的R。</li>
+</ul>
+</section>
+<section id="vscode-可选推荐" class="level5">
+<h5 class="anchored" data-anchor-id="vscode-可选推荐">VSCode (可选，推荐)</h5>
+<ul>
+<li>访问 <a href="https://code.visualstudio.com/">VSCode官网</a>，下载并安装VSCode。</li>
+<li>如果选择VSCode，需要安装R语言和AI相关的插件以获得更好的R语言编程体验。</li>
+</ul>
+</section>
+<section id="安装cursor-可选推荐" class="level5">
+<h5 class="anchored" data-anchor-id="安装cursor-可选推荐">安装Cursor (可选，推荐)</h5>
+<ul>
+<li>访问 <a href="https://cursor.sh/">Cursor官网</a>，下载并安装Cursor。</li>
+<li>Cursor 是一个支持AI辅助编程的代码编辑器，可以作为VSCode的替代品，提供更强大的AI代码生成和编辑功能。</li>
+</ul>
+</section>
+<section id="安装rstudio-desktop-可选" class="level5">
+<h5 class="anchored" data-anchor-id="安装rstudio-desktop-可选">安装RStudio Desktop (可选)</h5>
+<ul>
+<li>访问 <a href="https://posit.co/products/open-source/rstudio/">RStudio Desktop官网</a>，下载并安装RStudio Desktop。</li>
+<li>RStudio是一个集成开发环境 (IDE)，提供更友好的R语言编程界面。</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="vscodecursor-插件安装" class="level3">
+<h3 class="anchored" data-anchor-id="vscodecursor-插件安装">2. VSCode/Cursor 插件安装</h3>
+<section id="vscodecursor-插件配置" class="level4">
+<h4 class="anchored" data-anchor-id="vscodecursor-插件配置">VSCode/Cursor 插件配置</h4>
+<section id="安装r插件-vscode-或-cursor" class="level5">
+<h5 class="anchored" data-anchor-id="安装r插件-vscode-或-cursor">安装R插件 (VSCode 或 Cursor)</h5>
+<ul>
+<li>打开 VSCode 或 Cursor，进入扩展市场 (Extensions)。</li>
+<li>搜索 “R” 插件 (R Extension for Visual Studio Code) 并安装。</li>
+<li>安装 R 插件后，VSCode 或 Cursor 可以提供 R 代码的语法高亮、代码补全、调试等功能。</li>
+</ul>
+</section>
+<section id="安装-ai-辅助插件-vscode-或-cursor" class="level5">
+<h5 class="anchored" data-anchor-id="安装-ai-辅助插件-vscode-或-cursor">安装 AI 辅助插件 (VSCode 或 Cursor)</h5>
+<ul>
+<li><strong>GitHub Copilot (推荐)</strong>： 在 VSCode 或 Cursor 扩展市场搜索 “GitHub Copilot” 并安装。 安装后可能需要登录GitHub账号并进行配置。</li>
+<li><strong>通义灵码 (可选)</strong>： 在 VSCode 或 Cursor 扩展市场搜索 “TONGYI Lingma” 并安装。 安装后可能需要登录通义账号并进行配置。</li>
+<li><strong>Cursor 内置 AI 功能</strong>： Cursor 编辑器本身就内置了强大的 AI 辅助功能，无需额外安装插件，可以直接使用。</li>
+</ul>
+</section>
+<section id="修改-cran-镜像源-可选国内用户推荐" class="level5">
+<h5 class="anchored" data-anchor-id="修改-cran-镜像源-可选国内用户推荐">修改 CRAN 镜像源 (可选，国内用户推荐)</h5>
+<ul>
+<li>为了加快R包的下载速度，可以修改 CRAN 镜像源为国内镜像。</li>
+<li>永久修改 CRAN 镜像源 (推荐，修改 <code>.Rprofile</code> 文件):
+<ul>
+<li>打开你的用户目录 (例如，Windows 下的 “文档” 目录，macOS/Linux 下的 “~” 目录)。</li>
+<li>查找或创建 <code>.Rprofile</code> 文件。如果文件不存在，新建一个文本文件并命名为 <code>.Rprofile</code>。</li>
+<li>使用文本编辑器打开 <code>.Rprofile</code> 文件，添加以下代码，选择国内镜像 (例如 清华大学 [China (Tsinghua University)])：</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN =</span> <span class="st">"https://mirrors.tuna.tsinghua.edu.cn/CRAN/"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>保存 <code>.Rprofile</code> 文件。</li>
+<li>重启 R 或 RStudio/Cursor，新的 CRAN 镜像源将永久生效。</li>
+</ul></li>
+<li>临时修改 CRAN 镜像源 (不推荐永久使用，仅用于测试)：
+<ul>
+<li><p>在R控制台中运行以下代码，选择国内镜像 (例如 清华大学 [China (Tsinghua University)])：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN =</span> <span class="st">"https://mirrors.tuna.tsinghua.edu.cn/CRAN/"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>这种方法只在当前 R 会话中有效，关闭 R 后会失效。</p></li>
+</ul></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="r-包安装和r基础语法" class="level3">
+<h3 class="anchored" data-anchor-id="r-包安装和r基础语法">3. R 包安装和R基础语法</h3>
+<section id="r-包安装和基础语法" class="level4">
+<h4 class="anchored" data-anchor-id="r-包安装和基础语法">R 包安装和基础语法</h4>
+<section id="安装-r-包" class="level5">
+<h5 class="anchored" data-anchor-id="安装-r-包">安装 R 包</h5>
+<ul>
+<li><p>使用 <code>install.packages()</code> 函数安装 R 包。 例如，安装 <code>tidyverse</code> 包：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>可以一次安装多个包，例如：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>, <span class="st">"readr"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="加载-r-包" class="level5">
+<h5 class="anchored" data-anchor-id="加载-r-包">加载 R 包</h5>
+<ul>
+<li><p>使用 <code>library()</code> 函数加载已安装的 R 包。 例如，加载 <code>tidyverse</code> 包：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="使用-pacman-包安装和加载-r-包" class="level5">
+<h5 class="anchored" data-anchor-id="使用-pacman-包安装和加载-r-包">使用 <code>pacman</code> 包安装和加载 R 包</h5>
+<ul>
+<li><p><code>pacman</code> 包是一个方便的包管理工具，可以使用 <code>p_load()</code> 函数一次性安装并加载多个 R 包。如果包尚未安装，<code>p_load()</code> 会自动安装它。</p></li>
+<li><p>首先，如果还没有安装 <code>pacman</code> 包，需要先安装它：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>然后，使用 <code>pacman::p_load()</code> 函数来安装和加载包。 例如，安装并加载 <code>dplyr</code> 和 <code>ggplot2</code> 包：</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(dplyr, ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><code>p_load()</code> 函数的优点是可以一次性处理多个包，并且会自动安装缺失的包，简化了包管理流程。你只需要列出你想要安装和加载的包名，用逗号分隔即可。</p></li>
+</ul>
+</section>
+<section id="r-基础语法" class="level5">
+<h5 class="anchored" data-anchor-id="r-基础语法">R 基础语法</h5>
+<section id="变量赋值和基本运算" class="level6">
+<h6 class="anchored" data-anchor-id="变量赋值和基本运算">变量赋值和基本运算</h6>
+<ul>
+<li><p><strong>变量赋值</strong>: 使用 <code>&lt;-</code> 或 <code>=</code> 进行变量赋值。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="dv">20</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>基本运算</strong>: 加减乘除等基本运算符 <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> x <span class="sc">+</span> y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="常用数据类型" class="level6">
+<h6 class="anchored" data-anchor-id="常用数据类型">常用数据类型</h6>
+<ul>
+<li><strong>常用数据类型</strong>:
+<ul>
+<li>数值型 (numeric): <code>10</code>, <code>3.14</code></li>
+<li>字符型 (character): <code>"hello"</code>, <code>'world'</code></li>
+<li>逻辑型 (logical): <code>TRUE</code>, <code>FALSE</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="向量-vector" class="level6">
+<h6 class="anchored" data-anchor-id="向量-vector">向量 (vector)</h6>
+<ul>
+<li><p><strong>向量 (vector)</strong>: 使用 <code>c()</code> 函数创建向量。</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>char_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>向量索引</strong>: 使用 <code>[]</code> 和索引值访问向量元素 (R 语言索引从1开始)。</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>vec[<span class="dv">1</span>]  <span class="co"># 访问第一个元素，结果为 1</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>vec[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)] <span class="co"># 访问第二个和第四个元素，结果为 c(2, 4)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>vec[<span class="sc">-</span><span class="dv">1</span>] <span class="co"># 排除第一个元素，访问剩余元素</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>vec[vec <span class="sc">&gt;</span> <span class="dv">3</span>] <span class="co"># 逻辑索引，访问大于 3 的元素，结果为 c(4, 5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="列表-list" class="level6">
+<h6 class="anchored" data-anchor-id="列表-list">列表 (list)</h6>
+<ul>
+<li><p><strong>列表 (list)</strong>: 使用 <code>list()</code> 函数创建列表，列表可以包含不同类型的数据。</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>list_example <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">"Alice"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="dv">30</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">scores =</span> <span class="fu">c</span>(<span class="dv">85</span>, <span class="dv">90</span>, <span class="dv">92</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">is_student =</span> <span class="cn">TRUE</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>命名列表</strong>: 在创建列表时为元素命名，方便后续访问。上面的 <code>list_example</code> 就是一个命名列表。</p></li>
+<li><p><strong>列表元素访问</strong>: 使用 <code>$</code> 符号或 <code>[[]]</code> 访问列表元素。</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>list_example<span class="sc">$</span>name <span class="co"># 使用 $ 符号按名称访问，结果为 "Alice"</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>list_example[[<span class="st">"age"</span>]] <span class="co"># 使用 [[]] 按名称访问，结果为 30</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>list_example[[<span class="dv">3</span>]] <span class="co"># 使用 [[]] 按索引访问，结果为 c(85, 90, 92)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="数据框-data.frame" class="level6">
+<h6 class="anchored" data-anchor-id="数据框-data.frame">数据框 (data.frame)</h6>
+<ul>
+<li><p><strong>数据框 (data.frame)</strong>: 用于存储表格数据。</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">28</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">gender =</span> <span class="fu">c</span>(<span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"M"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>数据框引用</strong>: 使用 <code>$</code> 符号、<code>[]</code> 或 <code>[[]]</code> 访问数据框的列或元素。</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>name <span class="co"># 使用 $ 符号按列名访问，结果为 name 列的向量</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df[, <span class="st">"age"</span>] <span class="co"># 使用 [] 按列名访问，结果为 age 列的向量</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>df[, <span class="dv">2</span>] <span class="co"># 使用 [] 按列索引访问，结果为 age 列的向量</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>, ] <span class="co"># 使用 [] 访问第一行，结果为第一行的数据框</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>, <span class="dv">1</span>] <span class="co"># 使用 [] 访问第一行第一列的元素，结果为 "Alice"</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"gender"</span>]] <span class="co"># 使用 [[]] 按列名访问，结果为 gender 列的向量</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="注释和帮助文档" class="level6">
+<h6 class="anchored" data-anchor-id="注释和帮助文档">注释和帮助文档</h6>
+<ul>
+<li><p><strong>注释</strong>: 使用 <code>#</code> 符号添加注释。</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 这是一个注释</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>帮助文档</strong>: 使用 <code>help()</code> 函数或 <code>?</code> 符号查看函数帮助文档。</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(install.packages)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>?library</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+课后作业 (第一周)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>完成R和RStudio (或 Cursor, VSCode) 的安装。</strong></li>
+<li><strong>安装必要的R和AI辅助插件。</strong></li>
+<li><strong>修改CRAN镜像源 (国内用户)。</strong></li>
+<li><strong>安装 <code>tidyverse</code> 包，并尝试加载。</strong></li>
+<li><strong>第一周小组需要完成项目选题，并开始调研相关数据来源。</strong></li>
+<li><strong>尝试使用 <code>readr</code> 包导入自己找到的 (或老师提供的) 示例数据文件到R中。</strong></li>
+<li><strong>思考题：</strong> 结合自己感兴趣的项目主题，初步思考可以从数据中探索哪些问题？希望获得哪些洞察？</li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="ai-辅助学习建议-贯穿第一周" class="level4">
+<h4 class="anchored" data-anchor-id="ai-辅助学习建议-贯穿第一周">AI 辅助学习建议 (贯穿第一周)</h4>
+<section id="r环境搭建和tidyverse安装" class="level5">
+<h5 class="anchored" data-anchor-id="r环境搭建和tidyverse安装">R环境搭建和tidyverse安装</h5>
+<ul>
+<li>使用AI搜索R和RStudio/Cursor的最新安装指南。</li>
+<li>使用AI查找R插件和AI辅助插件的安装教程。</li>
+<li>使用AI工具 (如Cursor) 辅助代码编写和理解，例如，让AI解释 <code>install.packages()</code> 和 <code>library()</code> 函数的作用。</li>
+</ul>
+</section>
+<section id="数据获取方法" class="level5">
+<h5 class="anchored" data-anchor-id="数据获取方法">数据获取方法</h5>
+<ul>
+<li>使用AI工具 (如Cursor, 搜索引擎) 辅助查找数据资源。 例如，使用AI搜索 “电影公开数据集” 或 “Spotify API”。</li>
+<li>使用AI总结API文档的关键信息，或者解释API请求的参数含义。</li>
+</ul>
+</section>
+<section id="r语言数据导入" class="level5">
+<h5 class="anchored" data-anchor-id="r语言数据导入">R语言数据导入</h5>
+<ul>
+<li>使用AI工具 (如Cursor) 辅助代码编写和调试。 例如，如果学生在导入数据时遇到错误，可以使用AI工具诊断错误原因并提供解决方案。</li>
+<li>使用AI工具学习R基础语法，例如，让AI解释变量赋值、数据类型、向量和数据框的概念和用法，并生成示例代码。</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./syllbus.html" class="pagination-link" aria-label="课程概述">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">课程概述</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

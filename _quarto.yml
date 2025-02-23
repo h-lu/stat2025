@@ -13,7 +13,8 @@ book:
       chapters:
         - week1.qmd
         - week2.qmd
-        
+        - week3.qmd
+
 format:
   html:
     theme: cosmo
@@ -24,6 +25,18 @@ format:
     number-sections: false
     toc: true
     toc-depth: 3
+    mainfont: "Noto Sans SC"
 
+knitr:
+  opts_chunk:
+    dev: "ragg_png"
+    dpi: 300
+    fig.width: 8
+    fig.height: 6
+    fig.showtext: true
+    
 execute:
-  freeze: auto 
+  freeze: auto
+  echo: true
+  warning: false
+  message: false 

@@ -6,6 +6,7 @@ book:
   title: "统计学与R语言"
   author: "陆海波"
   date: last-modified
+  repo-url: https://github.com/h-lu/stat2025
   chapters:
     - index.qmd
     - syllbus.qmd

@@ -228,41 +228,84 @@ analysisServer <- function(id, data) {
       # 计算各种统计量
       for (stat in input$stats_select) {
         if (stat == "count") {
-          if (is.numeric(var) || is.logical(var) || is.factor(var) || is.character(var)) {
-            stats_result$count <- length(var)
-            code_lines <- c(code_lines, "# 计算数量", "length(var)")
-          }
+          # 计数不受变量类型限制
+          stats_result$count <- length(var)
+          code_lines <- c(code_lines, "# 计算数量", "length(var)")
         } else if (stat == "mean") {
+          # 均值 - 仅适用于数值型变量
           if (is.numeric(var)) {
-            stats_result$mean <- mean(var, na.rm = TRUE)
-            code_lines <- c(code_lines, "# 计算均值", "mean(var, na.rm = TRUE)")
+            # 确保有非NA值可计算
+            if (sum(!is.na(var)) > 0) {
+              stats_result$mean <- mean(var, na.rm = TRUE)
+              code_lines <- c(code_lines, "# 计算均值", "mean(var, na.rm = TRUE)")
+            } else {
+              stats_result$mean <- NA
+              code_lines <- c(code_lines, "# 计算均值 (全为NA)", "NA")
+            }
           }
         } else if (stat == "median") {
+          # 中位数 - 仅适用于数值型变量
           if (is.numeric(var)) {
-            stats_result$median <- median(var, na.rm = TRUE)
-            code_lines <- c(code_lines, "# 计算中位数", "median(var, na.rm = TRUE)")
+            # 确保有非NA值可计算
+            if (sum(!is.na(var)) > 0) {
+              stats_result$median <- median(var, na.rm = TRUE)
+              code_lines <- c(code_lines, "# 计算中位数", "median(var, na.rm = TRUE)")
+            } else {
+              stats_result$median <- NA
+              code_lines <- c(code_lines, "# 计算中位数 (全为NA)", "NA")
+            }
           }
         } else if (stat == "sd") {
+          # 标准差 - 仅适用于数值型变量
           if (is.numeric(var)) {
-            stats_result$sd <- sd(var, na.rm = TRUE)
-            code_lines <- c(code_lines, "# 计算标准差", "sd(var, na.rm = TRUE)")
+            # 确保有足够的非NA值以计算标准差（至少两个）
+            if (sum(!is.na(var)) > 1) {
+              stats_result$sd <- sd(var, na.rm = TRUE)
+              code_lines <- c(code_lines, "# 计算标准差", "sd(var, na.rm = TRUE)")
+            } else {
+              stats_result$sd <- NA
+              code_lines <- c(code_lines, "# 计算标准差 (数据不足)", "NA")
+            }
           }
         } else if (stat == "min") {
+          # 最小值 - 适用于数值型和日期型变量
           if (is.numeric(var) || inherits(var, "Date")) {
-            stats_result$min <- min(var, na.rm = TRUE)
-            code_lines <- c(code_lines, "# 计算最小值", "min(var, na.rm = TRUE)")
+            # 确保有非NA值可计算
+            if (sum(!is.na(var)) > 0) {
+              stats_result$min <- min(var, na.rm = TRUE)
+              code_lines <- c(code_lines, "# 计算最小值", "min(var, na.rm = TRUE)")
+            } else {
+              stats_result$min <- NA
+              code_lines <- c(code_lines, "# 计算最小值 (全为NA)", "NA")
+            }
           }
         } else if (stat == "max") {
+          # 最大值 - 适用于数值型和日期型变量
           if (is.numeric(var) || inherits(var, "Date")) {
-            stats_result$max <- max(var, na.rm = TRUE)
-            code_lines <- c(code_lines, "# 计算最大值", "max(var, na.rm = TRUE)")
+            # 确保有非NA值可计算
+            if (sum(!is.na(var)) > 0) {
+              stats_result$max <- max(var, na.rm = TRUE)
+              code_lines <- c(code_lines, "# 计算最大值", "max(var, na.rm = TRUE)")
+            } else {
+              stats_result$max <- NA
+              code_lines <- c(code_lines, "# 计算最大值 (全为NA)", "NA")
+            }
           }
         } else if (stat == "quantiles") {
+          # 四分位数 - 仅适用于数值型变量
           if (is.numeric(var)) {
-            stats_result$quantiles <- quantile(var, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
-            code_lines <- c(code_lines, "# 计算四分位数", "quantile(var, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)")
+            # 确保有非NA值可计算
+            if (sum(!is.na(var)) > 0) {
+              stats_result$quantiles <- quantile(var, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+              code_lines <- c(code_lines, "# 计算四分位数", "quantile(var, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)")
+            } else {
+              stats_result$quantiles <- c(NA, NA, NA)
+              names(stats_result$quantiles) <- c("25%", "50%", "75%")
+              code_lines <- c(code_lines, "# 计算四分位数 (全为NA)", "c(NA, NA, NA)")
+            }
           }
         } else if (stat == "na") {
+          # 缺失值 - 适用于所有类型变量
           stats_result$na_count <- sum(is.na(var))
           stats_result$na_percent <- paste0(round(sum(is.na(var)) / length(var) * 100, 2), "%")
           code_lines <- c(code_lines, "# 计算缺失值", 
@@ -277,33 +320,75 @@ analysisServer <- function(id, data) {
         output_text <- paste0(output_text, "计数: ", stats_result$count, "\n")
       }
       if ("mean" %in% names(stats_result)) {
-        output_text <- paste0(output_text, "均值: ", round(stats_result$mean, 4), "\n")
+        if (!is.na(stats_result$mean)) {
+          output_text <- paste0(output_text, "均值: ", round(stats_result$mean, 4), "\n")
+        } else {
+          output_text <- paste0(output_text, "均值: NA (无法计算)\n")
+        }
       }
       if ("median" %in% names(stats_result)) {
-        output_text <- paste0(output_text, "中位数: ", stats_result$median, "\n")
+        if (!is.na(stats_result$median)) {
+          output_text <- paste0(output_text, "中位数: ", stats_result$median, "\n")
+        } else {
+          output_text <- paste0(output_text, "中位数: NA (无法计算)\n")
+        }
       }
       if ("sd" %in% names(stats_result)) {
-        output_text <- paste0(output_text, "标准差: ", round(stats_result$sd, 4), "\n")
+        if (!is.na(stats_result$sd)) {
+          output_text <- paste0(output_text, "标准差: ", round(stats_result$sd, 4), "\n")
+        } else {
+          output_text <- paste0(output_text, "标准差: NA (无法计算)\n")
+        }
       }
       if ("min" %in% names(stats_result)) {
-        output_text <- paste0(output_text, "最小值: ", stats_result$min, "\n")
+        if (!is.na(stats_result$min)) {
+          output_text <- paste0(output_text, "最小值: ", stats_result$min, "\n")
+        } else {
+          output_text <- paste0(output_text, "最小值: NA (无法计算)\n")
+        }
       }
       if ("max" %in% names(stats_result)) {
-        output_text <- paste0(output_text, "最大值: ", stats_result$max, "\n")
+        if (!is.na(stats_result$max)) {
+          output_text <- paste0(output_text, "最大值: ", stats_result$max, "\n")
+        } else {
+          output_text <- paste0(output_text, "最大值: NA (无法计算)\n")
+        }
       }
       if ("quantiles" %in% names(stats_result)) {
-        output_text <- paste0(output_text, "四分位数:\n",
-                            "  25%: ", stats_result$quantiles[1], "\n",
-                            "  50%: ", stats_result$quantiles[2], "\n",
-                            "  75%: ", stats_result$quantiles[3], "\n")
+        if (!is.na(stats_result$quantiles[1])) {
+          output_text <- paste0(output_text, "四分位数:\n",
+                              "  25%: ", stats_result$quantiles[1], "\n",
+                              "  50%: ", stats_result$quantiles[2], "\n",
+                              "  75%: ", stats_result$quantiles[3], "\n")
+        } else {
+          output_text <- paste0(output_text, "四分位数: NA (无法计算)\n")
+        }
       }
       if ("na_count" %in% names(stats_result)) {
         output_text <- paste0(output_text, "缺失值数量: ", stats_result$na_count, "\n",
-                            "缺失值比例: ", stats_result$na_percent, "\n")
+                           "缺失值比例: ", stats_result$na_percent, "\n")
       }
       
       analysis_result(output_text)
-      analysis_code(paste(code_lines, collapse = "\n"))
+      
+      # 将所有选择的统计量代码合并并显示
+      # 我们需要确保代码显示完整，不会丢失部分统计量的代码
+      full_code <- paste(c(
+        paste0("# 计算变量 '", input$var_select, "' 的描述性统计量"),
+        paste0("var <- data$", input$var_select),
+        "",
+        "# 选择的统计量计算代码：",
+        if ("count" %in% input$stats_select) c("# 计算数量", "length(var)", "") else NULL,
+        if ("mean" %in% input$stats_select && is.numeric(var)) c("# 计算均值", "mean(var, na.rm = TRUE)", "") else NULL,
+        if ("median" %in% input$stats_select && is.numeric(var)) c("# 计算中位数", "median(var, na.rm = TRUE)", "") else NULL,
+        if ("sd" %in% input$stats_select && is.numeric(var)) c("# 计算标准差", "sd(var, na.rm = TRUE)", "") else NULL,
+        if ("min" %in% input$stats_select && (is.numeric(var) || inherits(var, "Date"))) c("# 计算最小值", "min(var, na.rm = TRUE)", "") else NULL,
+        if ("max" %in% input$stats_select && (is.numeric(var) || inherits(var, "Date"))) c("# 计算最大值", "max(var, na.rm = TRUE)", "") else NULL,
+        if ("quantiles" %in% input$stats_select && is.numeric(var)) c("# 计算四分位数", "quantile(var, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)", "") else NULL,
+        if ("na" %in% input$stats_select) c("# 计算缺失值", "sum(is.na(var))", "paste0(round(sum(is.na(var)) / length(var) * 100, 2), \"%\")") else NULL
+      ), collapse = "\n")
+      
+      analysis_code(full_code)
     })
     
     # 绘制分布图

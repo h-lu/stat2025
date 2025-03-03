@@ -6,13 +6,29 @@ cat("正在准备启动应用...\n\n")
 
 # 检查环境
 cat("1. 检查工作目录...\n")
-# 获取当前脚本所在目录
-script_dir <- dirname(sys.frame(1)$ofile)
-if (is.null(script_dir) || script_dir == "") {
-  # 如果无法获取脚本目录，则使用当前工作目录
-  cat("   注意: 无法确定脚本位置，使用当前工作目录\n")
-  script_dir <- getwd()
+# 直接使用当前工作目录
+script_dir <- getwd()
+# 如果当前目录不包含code/week2_shiny，则尝试找到正确的路径
+if (!dir.exists(file.path(script_dir, "code/week2_shiny")) && !file.exists(file.path(script_dir, "app.R"))) {
+  # 如果当前目录是week2_shiny的子目录
+  if (basename(script_dir) == "week2_shiny") {
+    # 直接使用当前目录
+    cat("   已在week2_shiny目录中\n")
+  } else if (basename(script_dir) == "modules" && basename(dirname(script_dir)) == "week2_shiny") {
+    # 如果在modules目录中，向上一级
+    script_dir <- dirname(script_dir)
+    cat("   从modules目录向上移动到week2_shiny目录\n")
+  } else {
+    # 尝试定位week2_shiny目录
+    if (dir.exists(file.path(script_dir, "code/week2_shiny"))) {
+      script_dir <- file.path(script_dir, "code/week2_shiny")
+      cat("   找到week2_shiny目录\n")
+    } else {
+      cat("   注意: 无法确定正确的week2_shiny目录位置，使用当前工作目录\n")
+    }
+  }
 }
+
 cat("   工作目录:", script_dir, "\n")
 
 # 设置工作目录

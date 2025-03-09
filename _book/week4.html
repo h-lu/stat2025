@@ -440,27 +440,6 @@ window.Quarto = {
 <li><strong>鼓励学生使用AI工具 (如Cursor) 辅助公式计算和R代码编写。</strong> 例如，让AI生成计算置信区间的R代码，或者解释置信区间的公式。</li>
 </ul></li>
 </ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-交互式演示：置信区间
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>为了帮助理解置信区间的概念，我们提供了一个交互式的Shiny应用程序 <a href="code/week4/confidence_interval_demo.R"><code>confidence_interval_demo.R</code></a>。这个程序演示了影响置信区间宽度的三个主要因素：</p>
-<ul>
-<li>样本量 (n)：样本量越大，置信区间越窄</li>
-<li>置信水平 (1-α)：置信水平越高，置信区间越宽</li>
-<li>总体标准差 (σ)：标准差越大，置信区间越宽</li>
-</ul>
-<p>运行方法：</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"code/week4/confidence_interval_demo.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>通过调整这些参数，你可以直观地观察它们对置信区间宽度的影响。</p>
-</div>
-</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -636,22 +615,22 @@ window.Quarto = {
 </ul></li>
 <li><p><strong>R 语言中进行功效分析</strong>: 可以使用 <code>pwr</code> 包进行功效分析。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装 pwr 包 (如果未安装)</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pwr")</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 示例：单样本 t 检验的功效分析</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设：预期效应量 d = 0.5 (中等效应)，显著性水平 alpha = 0.05，期望功效 power = 0.8</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算所需样本量</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>power_analysis_result <span class="ot">&lt;-</span> <span class="fu">pwr.t.test</span>(</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> <span class="fl">0.5</span>, <span class="co"># 效应量 Cohen's d</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">sig.level =</span> <span class="fl">0.05</span>, <span class="co"># 显著性水平 alpha</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">power =</span> <span class="fl">0.8</span>, <span class="co"># 期望功效</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"one.sample"</span>, <span class="co"># 单样本 t 检验</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">alternative =</span> <span class="st">"two.sided"</span> <span class="co"># 双尾检验</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>power_analysis_result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装 pwr 包 (如果未安装)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pwr")</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 示例：单样本 t 检验的功效分析</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设：预期效应量 d = 0.5 (中等效应)，显著性水平 alpha = 0.05，期望功效 power = 0.8</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算所需样本量</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>power_analysis_result <span class="ot">&lt;-</span> <span class="fu">pwr.t.test</span>(</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> <span class="fl">0.5</span>, <span class="co"># 效应量 Cohen's d</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">sig.level =</span> <span class="fl">0.05</span>, <span class="co"># 显著性水平 alpha</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">power =</span> <span class="fl">0.8</span>, <span class="co"># 期望功效</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"one.sample"</span>, <span class="co"># 单样本 t 检验</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">alternative =</span> <span class="st">"two.sided"</span> <span class="co"># 双尾检验</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>power_analysis_result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      One-sample t test power calculation 
@@ -662,8 +641,8 @@ window.Quarto = {
           power = 0.8
     alternative = two.sided</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 结果解读：</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 需要样本量 n 大约为 33.36，向上取整，至少需要 34 个样本。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 结果解读：</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 需要样本量 n 大约为 33.36，向上取整，至少需要 34 个样本。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><code>pwr.t.test()</code> 函数可以进行单样本 t 检验、双样本 t 检验 (独立样本和配对样本) 的功效分析。</li>
@@ -685,50 +664,6 @@ window.Quarto = {
 <li><strong>科学决策</strong>: 在实际应用中，需要综合考虑效应量、检验功效、研究成本等因素，做出更科学合理的决策。</li>
 </ul></li>
 </ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-交互式演示：假设检验错误类型
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>为了帮助理解假设检验中的两类错误，我们提供了一个交互式的Shiny应用程序 <a href="code/week4/hypothesis_testing_errors.R"><code>hypothesis_testing_errors.R</code></a>。这个程序演示了：</p>
-<ul>
-<li>Type I错误 (α)：错误地拒绝真实的H₀</li>
-<li>Type II错误 (β)：错误地接受错误的H₀</li>
-<li>检验功效 (1-β)：正确拒绝H₀的概率</li>
-</ul>
-<p>运行方法：</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"code/week4/hypothesis_testing_errors.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>通过调整参数，你可以观察不同情况下两类错误的概率变化。</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-交互式演示：检验功效分析
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>为了帮助理解检验功效分析，我们提供了一个交互式的Shiny应用程序 <a href="code/week4/power_analysis_demo.R"><code>power_analysis_demo.R</code></a>。这个程序演示了：</p>
-<ul>
-<li>效应量 (Effect Size)：实际效应的大小</li>
-<li>显著性水平 (α)：Type I错误率</li>
-<li>检验功效 (1-β)：正确拒绝H₀的概率</li>
-<li>样本量 (n)：达到期望功效所需的样本量</li>
-</ul>
-<p>支持三种类型的t检验： - 单样本t检验 - 独立样本t检验 - 配对样本t检验</p>
-<p>运行方法：</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"code/week4/power_analysis_demo.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>通过调整这些参数，你可以观察它们如何影响所需的样本量。</p>
-</div>
-</div>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -795,28 +730,6 @@ window.Quarto = {
 <li><strong>鼓励学生使用 AI 工具 (如 Cursor) 辅助 <code>t.test()</code> 函数的使用和结果解释。</strong> 例如，让 AI 解释 <code>t.test()</code> 函数的输出结果，或者根据 t 检验的结果给出结论建议。</li>
 </ul></li>
 </ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-交互式演示：t检验
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>为了帮助理解t检验的应用，我们提供了一个交互式的Shiny应用程序 <a href="code/week4/t_test_demo.R"><code>t_test_demo.R</code></a>。这个程序演示了三种常用的t检验方法：</p>
-<ul>
-<li>单样本t检验：检验一个样本的均值是否等于某个特定值</li>
-<li>独立样本t检验：比较两个独立样本的均值是否相等</li>
-<li>配对样本t检验：检验配对样本的差异是否显著</li>
-</ul>
-<p>功能特点： - 支持不同类型的t检验 - 可视化数据分布 - 计算并解释效应量 - 提供详细的检验结果解释 - 支持不同的备择假设（双尾、右尾、左尾）</p>
-<p>运行方法：</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"code/week4/t_test_demo.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>通过这个演示程序，你可以直观地理解不同类型t检验的应用场景和结果解释。</p>
-</div>
-</div>
 <p><strong>下半场 (项目一检查与汇报准备，约45分钟):</strong></p>
 <ul>
 <li><strong>项目一检查与中期汇报准备 (30分钟):</strong> {#week-4-project1-check-report-prep}

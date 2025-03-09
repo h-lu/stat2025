@@ -185,22 +185,7 @@ names(custom_colors) <- c("Adelie", "Chinstrap", "Gentoo")
     *   **解释置信区间的含义。**
     *   **鼓励学生使用AI工具 (如Cursor) 辅助公式计算和R代码编写。**  例如，让AI生成计算置信区间的R代码，或者解释置信区间的公式。
 
-::: {.callout-tip}
-## 交互式演示：置信区间
 
-为了帮助理解置信区间的概念，我们提供了一个交互式的Shiny应用程序 [`confidence_interval_demo.R`](code/week4/confidence_interval_demo.R)。这个程序演示了影响置信区间宽度的三个主要因素：
-
-- 样本量 (n)：样本量越大，置信区间越窄
-- 置信水平 (1-α)：置信水平越高，置信区间越宽
-- 总体标准差 (σ)：标准差越大，置信区间越宽
-
-运行方法：
-```R
-shiny::runApp("code/week4/confidence_interval_demo.R")
-```
-
-通过调整这些参数，你可以直观地观察它们对置信区间宽度的影响。
-:::
 
 ::: {.callout-note}
 ### 推断统计初步：假设检验
@@ -361,45 +346,7 @@ shiny::runApp("code/week4/confidence_interval_demo.R")
     *   **避免过度解读 p 值**:  避免仅仅根据 p 值大小判断效应的实际意义，要结合效应量进行判断。
     *   **科学决策**:  在实际应用中，需要综合考虑效应量、检验功效、研究成本等因素，做出更科学合理的决策。
 
-::: {.callout-tip}
-## 交互式演示：假设检验错误类型
 
-为了帮助理解假设检验中的两类错误，我们提供了一个交互式的Shiny应用程序 [`hypothesis_testing_errors.R`](code/week4/hypothesis_testing_errors.R)。这个程序演示了：
-
-- Type I错误 (α)：错误地拒绝真实的H₀
-- Type II错误 (β)：错误地接受错误的H₀
-- 检验功效 (1-β)：正确拒绝H₀的概率
-
-运行方法：
-```R
-shiny::runApp("code/week4/hypothesis_testing_errors.R")
-```
-
-通过调整参数，你可以观察不同情况下两类错误的概率变化。
-:::
-
-::: {.callout-tip}
-## 交互式演示：检验功效分析
-
-为了帮助理解检验功效分析，我们提供了一个交互式的Shiny应用程序 [`power_analysis_demo.R`](code/week4/power_analysis_demo.R)。这个程序演示了：
-
-- 效应量 (Effect Size)：实际效应的大小
-- 显著性水平 (α)：Type I错误率
-- 检验功效 (1-β)：正确拒绝H₀的概率
-- 样本量 (n)：达到期望功效所需的样本量
-
-支持三种类型的t检验：
-- 单样本t检验
-- 独立样本t检验
-- 配对样本t检验
-
-运行方法：
-```R
-shiny::runApp("code/week4/power_analysis_demo.R")
-```
-
-通过调整这些参数，你可以观察它们如何影响所需的样本量。
-:::
 
 ::: {.callout-important}
 #### 假设检验基本原理练习
@@ -444,29 +391,7 @@ shiny::runApp("code/week4/power_analysis_demo.R")
     *   **解释t检验的结果 (p值、置信区间、决策结论)**。  **重点关注 p 值、置信区间和效应量，并尝试解释检验功效**。
     *   **鼓励学生使用 AI 工具 (如 Cursor) 辅助 `t.test()` 函数的使用和结果解释。**  例如，让 AI 解释 `t.test()` 函数的输出结果，或者根据 t 检验的结果给出结论建议。
 
-::: {.callout-tip}
-## 交互式演示：t检验
 
-为了帮助理解t检验的应用，我们提供了一个交互式的Shiny应用程序 [`t_test_demo.R`](code/week4/t_test_demo.R)。这个程序演示了三种常用的t检验方法：
-
-- 单样本t检验：检验一个样本的均值是否等于某个特定值
-- 独立样本t检验：比较两个独立样本的均值是否相等
-- 配对样本t检验：检验配对样本的差异是否显著
-
-功能特点：
-- 支持不同类型的t检验
-- 可视化数据分布
-- 计算并解释效应量
-- 提供详细的检验结果解释
-- 支持不同的备择假设（双尾、右尾、左尾）
-
-运行方法：
-```R
-shiny::runApp("code/week4/t_test_demo.R")
-```
-
-通过这个演示程序，你可以直观地理解不同类型t检验的应用场景和结果解释。
-:::
 
 **下半场 (项目一检查与汇报准备，约45分钟):**
 

@@ -1,0 +1,164 @@
+## 美食画卷展示 {.section-title}
+
+在开始深入探索之前，让我们先来欣赏一番美食世界的多彩风貌。通过这些可视化图表，我们能够直观地感受到不同食物类别的营养特点，为后续的深入分析打下基础。
+
+### 食物类别的营养特征
+
+```{r category-radar}
+# 准备雷达图数据
+radar_data <- food_by_category %>%
+  select(food_category, avg_protein, avg_carbs, avg_fat, avg_fiber, avg_sugar) %>%
+  mutate(across(where(is.numeric), ~ scale(.) %>% as.vector()))
+
+# 转换为长格式
+radar_long <- radar_data %>%
+  pivot_longer(cols = -food_category, 
+               names_to = "nutrient", 
+               values_to = "value") %>%
+  mutate(nutrient = factor(nutrient, 
+                         levels = c("avg_protein", "avg_carbs", "avg_fat", "avg_fiber", "avg_sugar"),
+                         labels = c("蛋白质", "碳水化合物", "脂肪", "纤维", "糖分")))
+
+# 绘制雷达图的替代品：分面的极坐标条形图
+ggplot(radar_long, aes(x = nutrient, y = value, fill = food_category)) +
+  geom_col(position = "dodge", width = 0.8, color = "white", alpha = 0.8) +
+  facet_wrap(~food_category, nrow = 2) +
+  scale_fill_manual(values = food_colors) +
+  coord_polar() +
+  labs(title = "各类食物的营养成分分布",
+       subtitle = "标准化后的数值比较",
+       x = NULL,
+       y = NULL,
+       fill = "食物类别") +
+  food_theme +
+  theme(
+    axis.text.y = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    legend.position = "none",
+    strip.text = element_text(size = 12, face = "bold")
+  )
+```
+
+```{r calorie-distribution}
+# 热量分布
+ggplot(food_unique, aes(x = food_category, y = calories_per_100g, fill = food_category)) +
+  geom_boxplot(alpha = 0.8, outlier.shape = 21, outlier.fill = "white") +
+  geom_jitter(width = 0.2, alpha = 0.5, size = 2) +
+  scale_fill_manual(values = food_colors) +
+  labs(title = "不同食物类别的热量分布",
+       subtitle = "每100克食物的卡路里含量",
+       x = NULL,
+       y = "热量 (卡路里/100克)",
+       fill = "食物类别") +
+  food_theme +
+  theme(legend.position = "none") +
+  coord_flip()
+```
+
+### 食物营养的相互关系
+
+```{r nutrient-correlation}
+# 营养成分之间的相关性热图
+nutrient_cor <- food_unique %>%
+  select(calories_per_100g, protein_per_100g, carbs_per_100g, fat_per_100g, fiber_per_100g, sugar_per_100g, sodium_per_100g) %>%
+  rename("热量" = calories_per_100g,
+         "蛋白质" = protein_per_100g,
+         "碳水化合物" = carbs_per_100g,
+         "脂肪" = fat_per_100g,
+         "纤维" = fiber_per_100g,
+         "糖分" = sugar_per_100g,
+         "钠" = sodium_per_100g) %>%
+  cor() %>%
+  round(2)
+
+# 转换为长格式用于绘图
+cor_long <- nutrient_cor %>%
+  as.data.frame() %>%
+  rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "correlation")
+
+# 绘制热图
+ggplot(cor_long, aes(x = var1, y = var2, fill = correlation)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = correlation), color = "black", size = 3) +
+  scale_fill_gradient2(low = "#8ECAE6", mid = "white", high = "#FF7F50", midpoint = 0,
+                      limits = c(-1, 1)) +
+  labs(title = "营养成分之间的相关性",
+       subtitle = "Pearson相关系数",
+       x = NULL,
+       y = NULL,
+       fill = "相关系数") +
+  food_theme +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "right"
+  )
+```
+
+```{r protein-fat-calories}
+# 蛋白质、脂肪与热量的关系
+ggplot(food_unique, aes(x = protein_per_100g, y = fat_per_100g, size = calories_per_100g, color = food_category)) +
+  geom_point(alpha = 0.7) +
+  scale_color_manual(values = food_colors) +
+  scale_size_continuous(range = c(2, 8)) +
+  labs(title = "蛋白质、脂肪与热量的关系",
+       subtitle = "圆圈大小代表热量含量",
+       x = "蛋白质 (克/100克)",
+       y = "脂肪 (克/100克)",
+       color = "食物类别",
+       size = "热量 (卡路里/100克)") +
+  food_theme +
+  theme(legend.position = "right")
+```
+
+### 食物来源的营养差异
+
+```{r source-comparison}
+# 食物来源营养对比
+source_long <- food_by_source %>%
+  select(food_source, avg_protein, avg_carbs, avg_fat, avg_fiber) %>%
+  pivot_longer(-food_source, names_to = "nutrient", values_to = "value") %>%
+  mutate(nutrient = factor(nutrient, 
+                         levels = c("avg_protein", "avg_carbs", "avg_fat", "avg_fiber"),
+                         labels = c("蛋白质", "碳水化合物", "脂肪", "纤维")))
+
+# 绘制分组条形图
+ggplot(source_long, aes(x = nutrient, y = value, fill = food_source)) +
+  geom_col(position = "dodge", width = 0.7, color = "white") +
+  scale_fill_manual(values = food_colors[7:9]) +
+  labs(title = "不同食物来源的营养成分对比",
+       subtitle = "每100克的平均含量",
+       x = NULL,
+       y = "含量 (克/100克)",
+       fill = "食物来源") +
+  food_theme
+```
+
+```{r food-ridgeplot}
+# 不同食物类别的热量分布山脊图
+ggplot(food_unique, aes(x = calories_per_100g, y = food_category, fill = food_category)) +
+  geom_density_ridges(alpha = 0.7, scale = 0.9, quantile_lines = TRUE, quantiles = 2) +
+  scale_fill_manual(values = food_colors) +
+  labs(title = "不同食物类别的热量分布",
+       subtitle = "山脊图展示热量分布轮廓，中线代表中位数",
+       x = "热量 (卡路里/100克)",
+       y = NULL,
+       fill = "食物类别") +
+  food_theme +
+  theme(legend.position = "none")
+```
+
+通过这些可视化，我们可以看到食物世界中丰富多彩的营养模式。接下来，让我们进一步深入分析这些数据，探索更多有趣的发现。
+
+```{r food-emoji, include=FALSE}
+# 为了下一步分析做准备，创建食物类别与表情符号的对应关系
+food_emoji <- c(
+  "甜点" = "🍰",
+  "肉类" = "🥩",
+  "蔬果/素食" = "🥗",
+  "快餐" = "🍔",
+  "海鲜" = "🦐",
+  "汤/饮品" = "🍲"
+)
+``` 

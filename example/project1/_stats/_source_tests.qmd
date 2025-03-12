@@ -1,0 +1,157 @@
+### 动物与植物的营养对比：谁更富蛋白质？ {.subsection-title}
+
+我们常常听说动物性食物含有丰富的蛋白质，而植物性食物则富含纤维。这是否属实？让我们通过数据来验证这一观点。
+
+```{r animal-plant-prep}
+# 准备数据：选择动物性和植物性食物
+animal_plant <- food_unique %>%
+  filter(food_source %in% c("动物性", "植物性"))
+
+# 创建比较分析数据框
+source_comparison <- animal_plant %>%
+  select(food_name, chinese_name, food_source, protein_per_100g, fiber_per_100g)
+```
+
+```{r animal-plant-test}
+# 进行t检验：比较蛋白质
+protein_test <- t.test(protein_per_100g ~ food_source, data = animal_plant)
+
+# 进行t检验：比较纤维
+fiber_test <- t.test(fiber_per_100g ~ food_source, data = animal_plant)
+
+# 整理结果
+source_test_results <- tibble(
+  比较 = c("蛋白质（克/100克）", "纤维（克/100克）"),
+  动物性均值 = c(
+    mean(animal_plant$protein_per_100g[animal_plant$food_source == "动物性"]),
+    mean(animal_plant$fiber_per_100g[animal_plant$food_source == "动物性"])
+  ),
+  植物性均值 = c(
+    mean(animal_plant$protein_per_100g[animal_plant$food_source == "植物性"]),
+    mean(animal_plant$fiber_per_100g[animal_plant$food_source == "植物性"])
+  ),
+  差值 = 动物性均值 - 植物性均值,
+  p值 = c(protein_test$p.value, fiber_test$p.value),
+  显著性 = ifelse(c(protein_test$p.value, fiber_test$p.value) < 0.05, "是", "否")
+) %>%
+  mutate(across(where(is.numeric), ~ round(., 2)))
+
+# 计算置信区间
+protein_ci <- protein_test$conf.int
+fiber_ci <- fiber_test$conf.int
+
+# 创建置信区间数据框
+source_ci_data <- tibble(
+  比较 = c("蛋白质（克/100克）", "纤维（克/100克）"),
+  下限 = c(protein_ci[1], fiber_ci[1]),
+  上限 = c(protein_ci[2], fiber_ci[2])
+) %>%
+  mutate(across(where(is.numeric), ~ round(., 2)))
+```
+
+```{r animal-plant-viz, fig.height=5}
+# 可视化比较结果
+animal_plant_long <- animal_plant %>%
+  select(food_name, chinese_name, food_source, protein_per_100g, fiber_per_100g) %>%
+  pivot_longer(cols = c(protein_per_100g, fiber_per_100g),
+               names_to = "nutrient",
+               values_to = "value") %>%
+  mutate(nutrient = factor(nutrient,
+                         levels = c("protein_per_100g", "fiber_per_100g"),
+                         labels = c("蛋白质 (克/100克)", "纤维 (克/100克)")))
+
+# 为每种食物添加其中文名标签
+labeled_foods <- animal_plant %>%
+  group_by(food_source, food_name) %>%
+  summarise(
+    protein = mean(protein_per_100g),
+    fiber = mean(fiber_per_100g),
+    chinese_name = first(chinese_name),
+    .groups = "drop"
+  ) %>%
+  # 为了避免标签重叠，只选择一些突出的食物来标注
+  arrange(desc(protein + fiber)) %>%
+  group_by(food_source) %>%
+  slice_head(n = 3) %>%
+  ungroup()
+
+# 创建蛋白质与纤维的散点图，按食物来源分组
+ggplot(animal_plant, aes(x = protein_per_100g, y = fiber_per_100g, color = food_source)) +
+  # 添加散点
+  geom_point(size = 3, alpha = 0.7) +
+  # 添加回归线
+  geom_smooth(method = "lm", se = TRUE, linetype = "dashed", alpha = 0.2) +
+  # 添加一些代表性食物的标签
+  geom_text_repel(
+    data = labeled_foods,
+    aes(x = protein, y = fiber, label = chinese_name),
+    size = 3.5,
+    box.padding = 0.5,
+    point.padding = 0.3,
+    segment.color = "grey50",
+    max.overlaps = 10,
+    family = "noto_sans"
+  ) +
+  # 设置颜色
+  scale_color_manual(values = food_colors[7:8]) +
+  # 添加标题和轴标签
+  labs(
+    title = "动物性与植物性食物的蛋白质与纤维含量",
+    subtitle = "每100克食物的营养含量对比",
+    x = "蛋白质 (克/100克)",
+    y = "纤维 (克/100克)",
+    color = "食物来源"
+  ) +
+  # 应用自定义主题
+  food_theme +
+  # 图例位置
+  theme(legend.position = "bottom")
+```
+
+```{r animal-plant-boxplot, fig.height=4}
+# 创建箱线图比较
+ggplot(animal_plant_long, aes(x = food_source, y = value, fill = food_source)) +
+  geom_boxplot(alpha = 0.7, width = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, alpha = 0.5, size = 1.5) +
+  facet_wrap(~ nutrient, scales = "free_y") +
+  scale_fill_manual(values = food_colors[7:8]) +
+  labs(
+    title = "动物性与植物性食物的营养成分对比",
+    subtitle = "箱线图展示数据分布",
+    x = NULL,
+    y = NULL,
+    fill = "食物来源"
+  ) +
+  food_theme +
+  theme(
+    strip.text = element_text(size = 12, face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+```{r animal-plant-table}
+# 使用自定义函数展示结果表格
+pretty_table(source_test_results, "动物性与植物性食物的营养成分t检验结果")
+```
+
+```{r animal-plant-ci}
+# 展示置信区间表格
+pretty_table(source_ci_data, "差值的95%置信区间 (动物性 - 植物性)")
+```
+
+```{r animal-plant-interpretation, results='asis'}
+# 根据检验结果生成解释文本
+if (protein_test$p.value < 0.05) {
+  cat("**蛋白质分析：** 数据证实了我们的假设，动物性食物的蛋白质含量确实显著高于植物性食物，平均每100克高出约", round(abs(diff(protein_test$estimate)), 1), "克。这个差异从统计学角度来看是显著的 (p =", sprintf("%.3f", protein_test$p.value), ")。")
+} else {
+  cat("**蛋白质分析：** 虽然动物性食物的平均蛋白质含量高于植物性食物，但出乎意料的是，这个差异从统计学角度来看并不显著 (p =", sprintf("%.3f", protein_test$p.value), ")。")
+}
+
+cat("\n\n")
+
+if (fiber_test$p.value < 0.05) {
+  cat("**纤维分析：** 关于纤维含量，数据同样证实了我们的假设，植物性食物的纤维含量显著高于动物性食物，平均每100克高出约", round(abs(diff(fiber_test$estimate)), 1), "克。这个差异从统计学角度来看是显著的 (p =", sprintf("%.3f", fiber_test$p.value), ")。")
+} else {
+  cat("**纤维分析：** 关于纤维含量，虽然植物性食物的平均值高于动物性食物，但这个差异从统计学角度来看并不显著 (p =", sprintf("%.3f", fiber_test$p.value), ")。")
+}
+``` 

@@ -1,0 +1,91 @@
+---
+title: "美食营养探索之旅"
+subtitle: "探寻舌尖上的营养密码"
+author: "美食数据分析师"
+date: today
+format: 
+  html:
+    theme: cosmo
+    css: custom.css
+    toc: true
+    toc-title: "美食导航"
+    toc-depth: 3
+    code-fold: true
+    fig-width: 8
+    fig-height: 6
+    embed-resources: true
+    self-contained: true
+    smooth-scroll: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+# 加载全局设置
+```
+
+{{< include _setup.qmd >}}
+
+#  {.unnumbered .centered-heading}
+
+::::: columns
+::: {.column width="60%"}
+# 美食世界的营养探索 {.welcome-title}
+
+在这个美食纷呈的世界里，我们每天的餐盘里都盛放着各式各样的美味。但你是否好奇，这些美食背后蕴含着怎样的营养奥秘？今天，就让我们一起踏上探索美食营养的奇妙旅程！
+:::
+
+::: {.column .food-image-container width="40%"}
+![](images/dessert.svg){width="100%"}
+:::
+:::::
+
+## 味蕾与营养的双重奏 {.section-title}
+
+食物不仅为我们提供味觉享受，还是身体营养的重要来源。通过这份报告，我们将揭示不同美食类别的营养特点，探寻食物来源的营养差异，以及各种美食组合的营养平衡。
+
+让我们开始这场视觉、味觉与数据的盛宴吧！
+
+{{< include _data_cleaning.qmd >}}
+
+{{< include _visualization.qmd >}}
+
+## 美食营养探索 {.section-title}
+
+我们将食物的世界分解成各个角度，深入探索其中的营养奥秘：
+
+{{< include _stats/_category_tests.qmd >}}
+
+{{< include _stats/_source_tests.qmd >}}
+
+{{< include _stats/_nutrition_tests.qmd >}}
+
+## 美食启示录 {.section-title}
+
+经过我们的数据探索和分析，我们有了哪些发现？
+
+### 营养平衡的艺术
+
+不同的食物类别各有其独特的营养优势。甜点虽然热量较高，但适量享用能够为我们提供愉悦的味觉体验；海鲜富含优质蛋白质但低脂肪；蔬果则提供了丰富的膳食纤维和维生素。
+
+### 美食选择的智慧
+
+了解食物的营养特性，让我们能够更加明智地选择我们的饮食。比如：
+
+-   想要补充蛋白质？可以选择肉类或海鲜
+-   需要控制热量？多选择蔬果类食物
+-   在意健康但又不想放弃口感？可以选择一些植物性与动物性结合的混合食物
+
+### 饮食多样化的重要性
+
+我们的分析也表明，不同食物类别和来源之间存在显著的营养差异，这也正是我们需要多样化饮食的原因。单一的食物来源无法满足我们身体的全部营养需求。
+
+## 结语 {.section-title}
+
+美食与营养并非对立的概念，而是可以和谐共存的。通过了解食物的营养特性，我们可以在享受美食的同时，也为身体提供均衡的营养。
+
+希望这份美食营养探索之旅能为你的饮食选择提供些许灵感和帮助。记住，最好的饮食不是最严格的饮食，而是既能满足营养需求，又能带来愉悦感的饮食！
+
+祝你在美食的世界里探索愉快！

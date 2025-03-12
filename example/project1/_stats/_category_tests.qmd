@@ -1,0 +1,108 @@
+### 甜蜜还是健康？甜点与蔬果的营养对决 {.subsection-title}
+
+让我们来探索一个有趣的问题：甜点和蔬果/素食这两类食物在营养成分上有何差异？是否如我们所想，甜点的热量显著高于蔬果/素食？
+
+```{r dessert-veggie-prep}
+# 准备数据：选择甜点和蔬果/素食类别
+dessert_veggie <- food_unique %>%
+  filter(food_category %in% c("甜点", "蔬果/素食"))
+
+# 创建比较分析数据框
+comparison_data <- dessert_veggie %>%
+  select(food_name, chinese_name, food_category, calories_per_100g, protein_per_100g, fat_per_100g, carbs_per_100g)
+```
+
+```{r dessert-veggie-test}
+# 进行t检验：比较热量
+calories_test <- t.test(calories_per_100g ~ food_category, data = dessert_veggie)
+
+# 进行t检验：比较脂肪
+fat_test <- t.test(fat_per_100g ~ food_category, data = dessert_veggie)
+
+# 整理结果
+test_results <- tibble(
+  比较 = c("热量（卡路里/100克）", "脂肪（克/100克）"),
+  甜点均值 = c(
+    mean(dessert_veggie$calories_per_100g[dessert_veggie$food_category == "甜点"]),
+    mean(dessert_veggie$fat_per_100g[dessert_veggie$food_category == "甜点"])
+  ),
+  蔬果均值 = c(
+    mean(dessert_veggie$calories_per_100g[dessert_veggie$food_category == "蔬果/素食"]),
+    mean(dessert_veggie$fat_per_100g[dessert_veggie$food_category == "蔬果/素食"])
+  ),
+  差值 = 甜点均值 - 蔬果均值,
+  p值 = c(calories_test$p.value, fat_test$p.value),
+  显著性 = ifelse(c(calories_test$p.value, fat_test$p.value) < 0.05, "是", "否")
+) %>%
+  mutate(across(where(is.numeric), ~ round(., 2)))
+
+# 计算置信区间
+calories_ci <- calories_test$conf.int
+fat_ci <- fat_test$conf.int
+
+# 创建置信区间数据框
+ci_data <- tibble(
+  比较 = c("热量（卡路里/100克）", "脂肪（克/100克）"),
+  下限 = c(calories_ci[1], fat_ci[1]),
+  上限 = c(calories_ci[2], fat_ci[2])
+) %>%
+  mutate(across(where(is.numeric), ~ round(., 2)))
+```
+
+```{r dessert-veggie-viz, fig.height=4}
+# 可视化比较结果
+dessert_veggie_long <- dessert_veggie %>%
+  select(food_name, chinese_name, food_category, calories_per_100g, fat_per_100g) %>%
+  pivot_longer(cols = c(calories_per_100g, fat_per_100g),
+               names_to = "nutrient",
+               values_to = "value") %>%
+  mutate(nutrient = factor(nutrient,
+                         levels = c("calories_per_100g", "fat_per_100g"),
+                         labels = c("热量 (卡路里/100克)", "脂肪 (克/100克)")))
+
+# 创建带有置信区间的对比图
+ggplot(dessert_veggie_long, aes(x = food_category, y = value, fill = food_category)) +
+  geom_boxplot(alpha = 0.7, width = 0.5, outlier.shape = NA) +
+  geom_jitter(width = 0.1, alpha = 0.5, size = 1.5) +
+  facet_wrap(~ nutrient, scales = "free_y") +
+  scale_fill_manual(values = c("甜点" = food_colors["甜点"], "蔬果/素食" = food_colors["蔬果/素食"])) +
+  labs(
+    title = "甜点与蔬果/素食的营养成分对比",
+    subtitle = "含95%置信区间",
+    x = NULL,
+    y = NULL,
+    fill = "食物类别"
+  ) +
+  food_theme +
+  theme(
+    strip.text = element_text(size = 12, face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+```{r dessert-veggie-table}
+# 使用自定义函数展示结果表格
+pretty_table(test_results, "甜点与蔬果/素食的营养成分t检验结果")
+```
+
+```{r dessert-veggie-ci}
+# 展示置信区间表格
+pretty_table(ci_data, "差值的95%置信区间 (甜点 - 蔬果/素食)")
+```
+
+```{r dessert-veggie-interpretation, results='asis'}
+# 根据检验结果生成解释文本
+if (calories_test$p.value < 0.05) {
+  cat("**分析发现：** 甜点的热量确实显著高于蔬果/素食，平均每100克高出约", round(diff(calories_test$estimate), 1), "卡路里。这个差异从统计学角度来看是显著的 (p =", sprintf("%.3f", calories_test$p.value), ")。")
+} else {
+  cat("**分析发现：** 虽然甜点的平均热量高于蔬果/素食，但这个差异从统计学角度来看并不显著 (p =", sprintf("%.3f", calories_test$p.value), ")。")
+}
+
+cat("\n\n")
+
+if (fat_test$p.value < 0.05) {
+  cat("**同时，** 在脂肪含量上，甜点也显著高于蔬果/素食，平均每100克高出约", round(diff(fat_test$estimate), 1), "克。这个差异从统计学角度来看也是显著的 (p =", sprintf("%.3f", fat_test$p.value), ")。")
+} else {
+  cat("**同时，** 在脂肪含量上，虽然甜点的平均值高于蔬果/素食，但这个差异从统计学角度来看并不显著 (p =", sprintf("%.3f", fat_test$p.value), ")。")
+}
+``` 

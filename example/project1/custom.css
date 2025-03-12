@@ -1,0 +1,200 @@
+/* 整体页面样式 */
+body {
+  background-color: #FFFAF0; /* 奶油色背景 */
+  color: #333333;
+  line-height: 1.6;
+}
+
+/* 标题样式 */
+h1, h2, h3, h4, h5, h6 {
+  color: #FF6B6B; /* 柔和的红色，有食欲感 */
+  font-weight: bold;
+}
+
+.welcome-title {
+  font-size: 2.5em;
+  color: #FF6B6B;
+  margin-bottom: 0.5em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  border-bottom: 2px dotted #FFC107; /* 黄色点线 */
+  padding-bottom: 0.5em;
+  margin-top: 1.5em;
+}
+
+.subsection-title {
+  color: #FF7F50; /* 珊瑚色 */
+  border-left: 4px solid #FF7F50;
+  padding-left: 10px;
+}
+
+.hidden-section {
+  display: none; /* 隐藏不需要在报告中直接显示的节 */
+}
+
+/* 表格样式 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin-bottom: 1em;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+  background-color: #FF6B6B;
+  color: white;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: center;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #FFF0E6; /* 淡橙色 */
+}
+
+/* 图表和可视化样式 */
+.plot-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5em;
+}
+
+/* 食物图片容器 */
+.food-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 列布局调整 */
+.columns {
+  display: flex;
+  margin-bottom: 2em;
+}
+
+.column {
+  padding: 0 15px;
+}
+
+/* 美食提示框 */
+.food-note {
+  background-color: #FFF0E6;
+  border-left: 4px solid #FF7F50;
+  padding: 15px;
+  margin-bottom: 1em;
+  border-radius: 0 8px 8px 0;
+}
+
+/* 居中标题 */
+.centered-heading {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+/* 代码块样式 */
+pre {
+  background-color: #F8F8F8;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.9em;
+}
+
+/* 引用样式 */
+blockquote {
+  background-color: #F0F8FF;
+  border-left: 4px solid #87CEEB;
+  padding: 10px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+/* 导航目录样式 */
+#TOC {
+  background-color: #FFF0E6;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 2em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#TOC ul {
+  padding-left: 20px;
+}
+
+#TOC a {
+  color: #FF6B6B;
+  text-decoration: none;
+}
+
+#TOC a:hover {
+  text-decoration: underline;
+}
+
+/* 强调文本样式 */
+strong {
+  color: #FF6B6B;
+}
+
+/* 链接样式 */
+a {
+  color: #FF7F50;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 页脚样式 */
+footer {
+  margin-top: 3em;
+  padding-top: 1em;
+  border-top: 1px solid #FFC107;
+  font-size: 0.9em;
+  color: #666;
+  text-align: center;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 768px) {
+  .columns {
+    flex-direction: column;
+  }
+  
+  .column {
+    width: 100% !important;
+    padding: 0;
+  }
+  
+  .welcome-title {
+    font-size: 2em;
+  }
+}
+
+/* 打印优化 */
+@media print {
+  body {
+    background-color: white;
+  }
+  
+  .hidden-section {
+    display: none;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  table, figure {
+    page-break-inside: avoid;
+  }
+} 

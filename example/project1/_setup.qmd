@@ -1,0 +1,68 @@
+```{r setup, include=FALSE}
+# 加载必要的包
+# 使用pacman包更方便地加载和管理包
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+pacman::p_load(tidyverse, readr, ggplot2, showtext, patchwork, broom, knitr, emojifont, fontawesome, ggsci, ggimage, kableExtra, ggforce, ggridges, viridis, forcats, ggrepel)
+
+# 设置中文字体支持
+font_add_google("Noto Sans SC", "noto_sans")  # 思源黑体
+showtext_auto()
+
+# 自定义主题
+food_theme <- theme_minimal() +
+  theme(
+    text = element_text(family = "noto_sans", size = 12),
+    plot.title = element_text(family = "noto_sans", size = 16, face = "bold", color = "#333333"),
+    plot.subtitle = element_text(family = "noto_sans", size = 12, color = "#666666"),
+    axis.title = element_text(family = "noto_sans", size = 11, color = "#333333"),
+    axis.text = element_text(family = "noto_sans", size = 10, color = "#666666"),
+    legend.title = element_text(family = "noto_sans", size = 11, color = "#333333"),
+    legend.text = element_text(family = "noto_sans", size = 10, color = "#666666"),
+    panel.grid.major = element_line(color = "#DDDDDD"),
+    panel.grid.minor = element_line(color = "#EEEEEE"),
+    panel.background = element_rect(fill = "#FFFFFF"),
+    plot.background = element_rect(fill = "#FFFFFF", color = NA)
+  )
+
+# 设置美食相关的配色方案
+food_colors <- c(
+  "甜点" = "#FF9999",       # 粉红色 - 甜点
+  "肉类" = "#CD5C5C",       # 红色 - 肉类
+  "蔬果/素食" = "#90EE90",  # 绿色 - 蔬果
+  "快餐" = "#FFD700",       # 金色 - 快餐
+  "海鲜" = "#87CEEB",       # 蓝色 - 海鲜
+  "汤/饮品" = "#B0C4DE",    # 淡蓝色 - 汤/饮品
+  "动物性" = "#A52A2A",     # 棕色 - 动物性
+  "植物性" = "#228B22",     # 森林绿 - 植物性 
+  "混合/其他" = "#DDA0DD"   # 紫色 - 混合/其他
+)
+
+# 创建漂亮的表格函数
+pretty_table <- function(data, caption = NULL) {
+  data %>%
+    kbl(caption = caption, booktabs = TRUE, align = "c") %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                  full_width = FALSE, position = "center") %>%
+    row_spec(0, bold = TRUE, color = "#FFFFFF", background = "#FF6B6B")
+}
+
+# 自定义提示框函数
+food_note <- function(text) {
+  htmltools::div(
+    class = "food-note",
+    htmltools::HTML(paste0("🍽️ ", text))
+  )
+}
+
+# 设置图表保存路径
+if (!dir.exists("images")) {
+  dir.create("images")
+}
+
+# 自定义配色方案函数
+get_food_palette <- function(n) {
+  colorRampPalette(c("#FF9999", "#CD5C5C", "#90EE90", "#FFD700", "#87CEEB", "#B0C4DE"))(n)
+}
+``` 

@@ -1,0 +1,104 @@
+## 美食数据准备 {.section-title .hidden-section}
+
+```{r data-loading}
+# 读取数据
+food_data <- read_csv("food_with_chinese.csv", 
+                      col_names = c("food_name", "weight", "calories", "protein", 
+                                    "carbs", "fat", "fiber", "sugar", "sodium", 
+                                    "chinese_name", "food_category", "food_source"),
+                      skip = 1)
+
+# 初步了解数据
+food_summary <- summary(food_data)
+```
+
+```{r data-cleaning}
+# 数据预处理
+food_clean <- food_data %>%
+  # 检查并处理缺失值
+  drop_na() %>%
+  # 确保数值列是数值类型
+  mutate(across(c(weight, calories, protein, carbs, fat, fiber, sugar, sodium), as.numeric)) %>%
+  # 标准化到每100克的营养成分，以便比较
+  mutate(
+    calories_per_100g = calories / weight * 100,
+    protein_per_100g = protein / weight * 100,
+    carbs_per_100g = carbs / weight * 100,
+    fat_per_100g = fat / weight * 100,
+    fiber_per_100g = fiber / weight * 100,
+    sugar_per_100g = sugar / weight * 100,
+    sodium_per_100g = sodium / weight * 100
+  ) %>%
+  # 将食物类别和来源转换为因子型，以便后续分析
+  mutate(
+    food_category = factor(food_category),
+    food_source = factor(food_source)
+  )
+
+# 检查数据清理后的异常值
+outliers_check <- food_clean %>%
+  group_by(food_category) %>%
+  summarise(
+    max_calories = max(calories_per_100g),
+    min_calories = min(calories_per_100g),
+    max_protein = max(protein_per_100g),
+    min_protein = min(protein_per_100g)
+  )
+
+# 为分析准备多个数据视图
+# 1. 每种食物的平均营养成分
+food_avg_by_type <- food_clean %>%
+  group_by(food_name, chinese_name, food_category, food_source) %>%
+  summarise(
+    avg_calories = mean(calories_per_100g),
+    avg_protein = mean(protein_per_100g),
+    avg_carbs = mean(carbs_per_100g),
+    avg_fat = mean(fat_per_100g),
+    avg_fiber = mean(fiber_per_100g),
+    avg_sugar = mean(sugar_per_100g),
+    avg_sodium = mean(sodium_per_100g),
+    .groups = "drop"
+  )
+
+# 2. 按食物类别汇总
+food_by_category <- food_clean %>%
+  group_by(food_category) %>%
+  summarise(
+    count = n(),
+    avg_calories = mean(calories_per_100g),
+    avg_protein = mean(protein_per_100g),
+    avg_carbs = mean(carbs_per_100g),
+    avg_fat = mean(fat_per_100g),
+    avg_fiber = mean(fiber_per_100g),
+    avg_sugar = mean(sugar_per_100g),
+    avg_sodium = mean(sodium_per_100g),
+    .groups = "drop"
+  )
+
+# 3. 按食物来源汇总
+food_by_source <- food_clean %>%
+  group_by(food_source) %>%
+  summarise(
+    count = n(),
+    avg_calories = mean(calories_per_100g),
+    avg_protein = mean(protein_per_100g),
+    avg_carbs = mean(carbs_per_100g),
+    avg_fat = mean(fat_per_100g),
+    avg_fiber = mean(fiber_per_100g),
+    avg_sugar = mean(sugar_per_100g),
+    avg_sodium = mean(sodium_per_100g),
+    .groups = "drop"
+  )
+
+# 去重，只保留每种食物一个条目（取中间重量的那个）
+food_unique <- food_clean %>%
+  group_by(food_name) %>%
+  arrange(weight) %>%
+  slice(ceiling(n()/2)) %>%
+  ungroup()
+```
+
+```{r remove-analysis-objects, include=FALSE}
+# 移除不需要的分析对象，保持环境整洁
+rm(food_summary, outliers_check)
+``` 

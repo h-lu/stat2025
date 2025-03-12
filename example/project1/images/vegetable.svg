@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- 盘子 -->
+  <circle cx="256" cy="320" r="160" fill="#F5F5F5" />
+  <circle cx="256" cy="320" r="150" fill="#FFFFFF" />
+  <circle cx="256" cy="320" r="140" fill="#F8F8F8" />
+  
+  <!-- 各种蔬菜 -->
+  <!-- 生菜 -->
+  <path fill="#90EE90" d="M150,270 Q170,250 190,260 Q210,270 220,250 Q230,230 250,240 Q270,250 290,230 Q310,210 330,230 Q350,250 370,230 Q390,210 400,240 Q410,270 380,290 Q350,310 320,300 Q290,290 260,300 Q230,310 200,300 Q170,290 150,270 Z" />
+  
+  <!-- 番茄 -->
+  <circle cx="200" cy="230" r="25" fill="#FF6347" />
+  <path fill="#228B22" d="M200,205 Q210,195 215,200 L210,210 Z" />
+  
+  <!-- 胡萝卜 -->
+  <path fill="#FFA500" d="M310,260 L330,220 L350,260 Z" />
+  <path fill="#228B22" d="M330,220 L325,210 L335,210 Z" />
+  
+  <!-- 黄瓜 -->
+  <rect x="240" y="220" width="80" height="20" rx="10" fill="#66CDAA" />
+  
+  <!-- 青椒 -->
+  <path fill="#32CD32" d="M170,320 Q160,300 180,290 Q200,280 210,300 Q220,320 200,330 Q180,340 170,320 Z" />
+  
+  <!-- 红萝卜 -->
+  <circle cx="370" cy="320" r="20" fill="#B22222" />
+  <path fill="#228B22" d="M370,300 L365,290 L375,290 Z" />
+  
+  <!-- 豆子 -->
+  <circle cx="280" cy="320" r="10" fill="#4B0082" />
+  <circle cx="300" cy="330" r="10" fill="#4B0082" />
+  <circle cx="320" cy="340" r="10" fill="#4B0082" />
+  
+  <!-- 文字 -->
+  <text x="256" y="450" font-family="Arial" font-size="30" font-weight="bold" text-anchor="middle" fill="#4CAF50">蔬果沙拉</text>
+</svg> 

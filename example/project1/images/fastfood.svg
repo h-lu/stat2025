@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- 汉堡下层面包 -->
+  <path fill="#F8D568" d="M140,380 L372,380 C387,380 397,370 397,355 L397,340 L115,340 L115,355 C115,370 125,380 140,380 Z" />
+  
+  <!-- 肉饼 -->
+  <path fill="#8B4513" d="M115,310 L397,310 L397,340 L115,340 Z" />
+  
+  <!-- 生菜 -->
+  <path fill="#32CD32" d="M125,310 Q150,290 175,310 Q200,330 225,310 Q250,290 275,310 Q300,330 325,310 Q350,290 375,310 L385,310 L385,290 L127,290 L127,310 Z" />
+  
+  <!-- 奶酪 -->
+  <path fill="#FFA500" d="M115,280 L397,280 L397,290 L115,290 Z" />
+  
+  <!-- 番茄 -->
+  <path fill="#FF6347" d="M125,280 L140,260 L155,280 Z" />
+  <path fill="#FF6347" d="M195,280 L210,260 L225,280 Z" />
+  <path fill="#FF6347" d="M265,280 L280,260 L295,280 Z" />
+  <path fill="#FF6347" d="M335,280 L350,260 L365,280 Z" />
+  
+  <!-- 汉堡上层面包 -->
+  <path fill="#F8D568" d="M140,260 L372,260 C387,260 397,250 397,235 L397,220 C397,205 387,195 372,195 L140,195 C125,195 115,205 115,220 L115,235 C115,250 125,260 140,260 Z" />
+  
+  <!-- 芝麻 -->
+  <circle cx="150" cy="210" r="5" fill="#FFFFFF" />
+  <circle cx="180" cy="220" r="5" fill="#FFFFFF" />
+  <circle cx="210" cy="210" r="5" fill="#FFFFFF" />
+  <circle cx="240" cy="220" r="5" fill="#FFFFFF" />
+  <circle cx="270" cy="210" r="5" fill="#FFFFFF" />
+  <circle cx="300" cy="220" r="5" fill="#FFFFFF" />
+  <circle cx="330" cy="210" r="5" fill="#FFFFFF" />
+  <circle cx="360" cy="220" r="5" fill="#FFFFFF" />
+  
+  <!-- 薯条 -->
+  <rect x="420" y="250" width="10" height="80" rx="2" fill="#F8D568" />
+  <rect x="435" y="260" width="10" height="70" rx="2" fill="#F8D568" />
+  <rect x="450" y="240" width="10" height="90" rx="2" fill="#F8D568" />
+  <rect x="465" y="270" width="10" height="60" rx="2" fill="#F8D568" />
+  <rect x="480" y="250" width="10" height="80" rx="2" fill="#F8D568" />
+  
+  <!-- 薯条盒 -->
+  <path fill="#FF4444" d="M410,330 L495,330 L495,380 L410,380 Z" />
+  <path fill="#FFFFFF" d="M430,340 L475,340 L475,360 L430,360 Z" />
+  <text x="453" y="355" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#FF4444">薯条</text>
+  
+  <!-- 可乐 -->
+  <path fill="#8B4513" d="M60,280 L100,280 L105,375 L55,375 Z" />
+  <path fill="#FF4444" d="M65,290 L95,290 L100,370 L60,370 Z" />
+  <path fill="#EEEEEE" d="M60,280 L100,280 L105,265 L55,265 Z" />
+  <path fill="#FF4444" d="M75,265 L85,265 L85,255 L75,255 Z" />
+  <path fill="#444444" d="M75,255 L85,255 L85,250 L75,250 Z" />
+  
+  <!-- 吸管 -->
+  <path fill="#FFFFFF" d="M80,250 L83,250 L83,210 L80,210 Z" />
+  
+  <!-- 文字 -->
+  <text x="256" y="430" font-family="Arial" font-size="30" font-weight="bold" text-anchor="middle" fill="#D62828">汉堡套餐</text>
+</svg> 

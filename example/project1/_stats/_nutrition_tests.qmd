@@ -1,0 +1,214 @@
+### 营养成分之间的关联：揭示美食中的秘密规律 {.subsection-title}
+
+食物中的各种营养成分之间是否存在某种关联？例如，高蛋白质的食物是否也倾向于高脂肪？高碳水的食物中，糖分含量是否也更高？让我们通过数据来探索这些关系。
+
+```{r nutrition-relation-prep}
+# 准备营养成分之间关系的数据
+nutrition_pairs <- food_unique %>%
+  select(food_name, chinese_name, food_category, food_source,
+         calories_per_100g, protein_per_100g, carbs_per_100g, 
+         fat_per_100g, fiber_per_100g, sugar_per_100g)
+```
+
+```{r protein-fat-relation}
+# 分析蛋白质与脂肪的关系
+protein_fat_model <- lm(fat_per_100g ~ protein_per_100g, data = nutrition_pairs)
+protein_fat_summary <- summary(protein_fat_model)
+
+# 提取回归系数和p值
+protein_fat_coef <- coef(protein_fat_summary)
+protein_fat_r2 <- protein_fat_summary$r.squared
+protein_fat_p <- protein_fat_summary$coefficients[2, 4]
+
+# 创建蛋白质与脂肪相关性分析结果
+protein_fat_result <- tibble(
+  关系 = "蛋白质与脂肪",
+  斜率 = protein_fat_coef[2, 1],
+  截距 = protein_fat_coef[1, 1],
+  R平方 = protein_fat_r2,
+  p值 = protein_fat_p,
+  显著性 = ifelse(protein_fat_p < 0.05, "是", "否")
+) %>%
+  mutate(across(where(is.numeric), ~ round(., 3)))
+```
+
+```{r carbs-sugar-relation}
+# 分析碳水化合物与糖分的关系
+carbs_sugar_model <- lm(sugar_per_100g ~ carbs_per_100g, data = nutrition_pairs)
+carbs_sugar_summary <- summary(carbs_sugar_model)
+
+# 提取回归系数和p值
+carbs_sugar_coef <- coef(carbs_sugar_summary)
+carbs_sugar_r2 <- carbs_sugar_summary$r.squared
+carbs_sugar_p <- carbs_sugar_summary$coefficients[2, 4]
+
+# 创建碳水与糖分相关性分析结果
+carbs_sugar_result <- tibble(
+  关系 = "碳水化合物与糖分",
+  斜率 = carbs_sugar_coef[2, 1],
+  截距 = carbs_sugar_coef[1, 1],
+  R平方 = carbs_sugar_r2,
+  p值 = carbs_sugar_p,
+  显著性 = ifelse(carbs_sugar_p < 0.05, "是", "否")
+) %>%
+  mutate(across(where(is.numeric), ~ round(., 3)))
+```
+
+```{r nutrition-results-combine}
+# 合并结果
+nutrition_relation_results <- bind_rows(protein_fat_result, carbs_sugar_result)
+```
+
+```{r protein-fat-viz, fig.height=4.5}
+# 可视化蛋白质与脂肪的关系
+ggplot(nutrition_pairs, aes(x = protein_per_100g, y = fat_per_100g, color = food_category)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", color = "black", linetype = "dashed", se = TRUE) +
+  scale_color_manual(values = food_colors) +
+  labs(
+    title = "蛋白质与脂肪含量的关系",
+    subtitle = paste0("线性关系: R² = ", round(protein_fat_r2, 3), ", p = ", format.pval(protein_fat_p, digits = 3)),
+    x = "蛋白质 (克/100克)",
+    y = "脂肪 (克/100克)",
+    color = "食物类别"
+  ) +
+  food_theme +
+  # 添加回归方程
+  annotate("text", x = max(nutrition_pairs$protein_per_100g) * 0.8, 
+           y = max(nutrition_pairs$fat_per_100g) * 0.9,
+           label = paste0("脂肪 = ", round(protein_fat_coef[1, 1], 2), " + ", 
+                         round(protein_fat_coef[2, 1], 2), " × 蛋白质"),
+           hjust = 1, size = 4, family = "noto_sans", fontface = "bold", color = "#333333")
+```
+
+```{r carbs-sugar-viz, fig.height=4.5}
+# 可视化碳水化合物与糖分的关系
+ggplot(nutrition_pairs, aes(x = carbs_per_100g, y = sugar_per_100g, color = food_category)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", color = "black", linetype = "dashed", se = TRUE) +
+  scale_color_manual(values = food_colors) +
+  labs(
+    title = "碳水化合物与糖分含量的关系",
+    subtitle = paste0("线性关系: R² = ", round(carbs_sugar_r2, 3), ", p = ", format.pval(carbs_sugar_p, digits = 3)),
+    x = "碳水化合物 (克/100克)",
+    y = "糖分 (克/100克)",
+    color = "食物类别"
+  ) +
+  food_theme +
+  # 添加回归方程
+  annotate("text", x = max(nutrition_pairs$carbs_per_100g) * 0.8, 
+           y = max(nutrition_pairs$sugar_per_100g) * 0.9,
+           label = paste0("糖分 = ", round(carbs_sugar_coef[1, 1], 2), " + ", 
+                         round(carbs_sugar_coef[2, 1], 2), " × 碳水"),
+           hjust = 1, size = 4, family = "noto_sans", fontface = "bold", color = "#333333")
+```
+
+```{r nutrition-relation-table}
+# 使用自定义函数展示结果表格
+pretty_table(nutrition_relation_results, "营养成分关系的线性回归分析结果")
+```
+
+```{r correlation-heatmap, fig.height=6, fig.width=8}
+# 计算所有营养成分之间的相关系数
+nutrition_cor <- nutrition_pairs %>%
+  select(calories_per_100g, protein_per_100g, carbs_per_100g, 
+         fat_per_100g, fiber_per_100g, sugar_per_100g) %>%
+  rename("热量" = calories_per_100g,
+         "蛋白质" = protein_per_100g,
+         "碳水化合物" = carbs_per_100g,
+         "脂肪" = fat_per_100g,
+         "纤维" = fiber_per_100g,
+         "糖分" = sugar_per_100g) %>%
+  cor()
+
+# 计算p值矩阵
+cor_p_values <- nutrition_pairs %>%
+  select(calories_per_100g, protein_per_100g, carbs_per_100g, 
+         fat_per_100g, fiber_per_100g, sugar_per_100g) %>%
+  # 使用一个函数计算所有变量对之间的p值
+  as.matrix() %>%
+  {
+    n <- nrow(.)
+    m <- ncol(.)
+    p_matrix <- matrix(NA, m, m)
+    for (i in 1:m) {
+      for (j in 1:m) {
+        test <- cor.test(.[, i], .[, j])
+        p_matrix[i, j] <- test$p.value
+      }
+    }
+    p_matrix
+  }
+
+# 转换相关系数矩阵为长格式
+cor_long <- nutrition_cor %>%
+  as.data.frame() %>%
+  rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "correlation")
+
+# 添加p值和显著性标记
+cor_long$p_value <- c(p_values <- as.vector(cor_p_values))
+cor_long$significance <- ifelse(cor_long$p_value < 0.05, "*", "")
+cor_long$significance[cor_long$p_value < 0.01] <- "**"
+cor_long$significance[cor_long$p_value < 0.001] <- "***"
+
+# 创建相关性热图
+ggplot(cor_long, aes(x = var1, y = var2, fill = correlation)) +
+  geom_tile(color = "white") +
+  # 显示相关系数和显著性标记
+  geom_text(aes(label = paste0(round(correlation, 2), significance)), 
+            color = ifelse(abs(cor_long$correlation) > 0.5, "white", "black"),
+            size = 3.5, family = "noto_sans") +
+  # 使用更具美食感的配色
+  scale_fill_gradient2(low = "#8ECAE6", mid = "white", high = "#FF7F50", 
+                      midpoint = 0, limits = c(-1, 1)) +
+  labs(
+    title = "营养成分之间的相关系数矩阵",
+    subtitle = "* p<0.05, ** p<0.01, *** p<0.001",
+    x = NULL,
+    y = NULL,
+    fill = "相关系数"
+  ) +
+  food_theme +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid = element_blank()
+  )
+```
+
+```{r nutrition-relation-interpretation, results='asis'}
+# 蛋白质与脂肪关系的解释
+cat("**蛋白质与脂肪的关系分析：**\n\n")
+
+if (protein_fat_p < 0.05) {
+  if (protein_fat_coef[2, 1] > 0) {
+    cat("分析发现蛋白质含量与脂肪含量之间存在**显著正相关**关系 (p =", sprintf("%.3f", protein_fat_p), ")。这意味着，通常情况下，蛋白质含量高的食物，其脂肪含量也倾向于更高。这种关系的强度为 R² =", round(protein_fat_r2, 3), "，表明蛋白质含量可以解释脂肪含量变异的", paste0(round(protein_fat_r2 * 100, 1), "%"), "。")
+  } else {
+    cat("分析发现蛋白质含量与脂肪含量之间存在**显著负相关**关系 (p =", sprintf("%.3f", protein_fat_p), ")。这意味着，通常情况下，蛋白质含量高的食物，其脂肪含量反而倾向于更低。这种关系的强度为 R² =", round(protein_fat_r2, 3), "，表明蛋白质含量可以解释脂肪含量变异的", paste0(round(protein_fat_r2 * 100, 1), "%"), "。")
+  }
+} else {
+  cat("分析发现蛋白质含量与脂肪含量之间不存在显著相关关系 (p =", sprintf("%.3f", protein_fat_p), ")。这表明，在我们的食物样本中，无法确定蛋白质含量与脂肪含量之间有系统性的关联。")
+}
+
+cat("\n\n")
+
+# 碳水与糖分关系的解释
+cat("**碳水化合物与糖分的关系分析：**\n\n")
+
+if (carbs_sugar_p < 0.05) {
+  if (carbs_sugar_coef[2, 1] > 0) {
+    cat("分析发现碳水化合物含量与糖分含量之间存在**显著正相关**关系 (p =", sprintf("%.3f", carbs_sugar_p), ")。这意味着，通常情况下，碳水化合物含量高的食物，其糖分含量也倾向于更高。这种关系的强度为 R² =", round(carbs_sugar_r2, 3), "，表明碳水化合物含量可以解释糖分含量变异的", paste0(round(carbs_sugar_r2 * 100, 1), "%"), "。")
+  } else {
+    cat("分析发现碳水化合物含量与糖分含量之间存在**显著负相关**关系 (p =", sprintf("%.3f", carbs_sugar_p), ")。这意味着，通常情况下，碳水化合物含量高的食物，其糖分含量反而倾向于更低。这种关系的强度为 R² =", round(carbs_sugar_r2, 3), "，表明碳水化合物含量可以解释糖分含量变异的", paste0(round(carbs_sugar_r2 * 100, 1), "%"), "。")
+  }
+} else {
+  cat("分析发现碳水化合物含量与糖分含量之间不存在显著相关关系 (p =", sprintf("%.3f", carbs_sugar_p), ")。这表明，在我们的食物样本中，无法确定碳水化合物含量与糖分含量之间有系统性的关联。")
+}
+
+cat("\n\n")
+
+# 热图的总体解释
+cat("**营养成分相关性热图分析：**\n\n")
+
+cat("热图直观地展示了各营养成分之间的相关关系。从中我们可以观察到一些有趣的模式，例如热量与脂肪含量之间存在较强的正相关，这符合我们的日常经验——高脂肪食物通常也是高热量的。同时，我们也可以看到一些可能不那么明显的关系，例如蛋白质与碳水化合物之间的关系等。这些发现为我们理解食物营养结构提供了重要线索。")
+``` 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- 蛋糕底座 -->
+  <path fill="#F8D5A3" d="M100,300 L412,300 L432,380 L80,380 Z" />
+  <path fill="#E7C490" d="M80,380 L432,380 L442,420 L70,420 Z" />
+  
+  <!-- 奶油层 -->
+  <path fill="#FCFCFC" d="M120,260 L392,260 L412,300 L100,300 Z" />
+  
+  <!-- 蛋糕顶层 -->
+  <path fill="#FF9999" d="M140,210 L372,210 L392,260 L120,260 Z" />
+  
+  <!-- 樱桃装饰 -->
+  <circle cx="160" cy="210" r="15" fill="#E53935" />
+  <circle cx="210" cy="210" r="15" fill="#E53935" />
+  <circle cx="260" cy="210" r="15" fill="#E53935" />
+  <circle cx="310" cy="210" r="15" fill="#E53935" />
+  <circle cx="360" cy="210" r="15" fill="#E53935" />
+  
+  <!-- 高光效果 -->
+  <circle cx="160" cy="207" r="5" fill="#FFFFFF" opacity="0.7" />
+  <circle cx="210" cy="207" r="5" fill="#FFFFFF" opacity="0.7" />
+  <circle cx="260" cy="207" r="5" fill="#FFFFFF" opacity="0.7" />
+  <circle cx="310" cy="207" r="5" fill="#FFFFFF" opacity="0.7" />
+  <circle cx="360" cy="207" r="5" fill="#FFFFFF" opacity="0.7" />
+  
+  <!-- 蛋糕文字 -->
+  <text x="256" y="340" font-family="Arial" font-size="30" font-weight="bold" text-anchor="middle" fill="#8B4513">提拉米苏</text>
+</svg> 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- 碗 -->
+  <path fill="#FFFFFF" d="M140,320 Q140,390 256,390 Q372,390 372,320 L372,300 L140,300 Z" />
+  <path fill="#F0F0F0" d="M140,300 Q100,300 100,270 Q100,240 140,240 L372,240 Q412,240 412,270 Q412,300 372,300 Z" />
+  <ellipse cx="256" cy="300" rx="116" ry="20" fill="#E8E8E8" />
+  
+  <!-- 汤内容 -->
+  <path fill="#F8E0B0" d="M150,300 Q150,380 256,380 Q362,380 362,300 Z" />
+  
+  <!-- 葱花 -->
+  <path fill="#32CD32" d="M180,290 L170,270 L190,270 Z" />
+  <path fill="#32CD32" d="M230,290 L220,270 L240,270 Z" />
+  <path fill="#32CD32" d="M280,290 L270,270 L290,270 Z" />
+  <path fill="#32CD32" d="M330,290 L320,270 L340,270 Z" />
+  
+  <!-- 面条 -->
+  <path stroke="#FFF8DC" stroke-width="3" d="M180,310 Q200,320 220,310 Q240,300 260,310 Q280,320 300,310 Q320,300 340,310" fill="none" />
+  <path stroke="#FFF8DC" stroke-width="3" d="M190,330 Q210,340 230,330 Q250,320 270,330 Q290,340 310,330 Q330,320 350,330" fill="none" />
+  <path stroke="#FFF8DC" stroke-width="3" d="M170,350 Q190,360 210,350 Q230,340 250,350 Q270,360 290,350 Q310,340 330,350" fill="none" />
+  
+  <!-- 蒸汽 -->
+  <path stroke="#FFFFFF" stroke-width="2" d="M190,260 Q200,240 210,260" fill="none" opacity="0.6" />
+  <path stroke="#FFFFFF" stroke-width="2" d="M240,260 Q250,230 260,260" fill="none" opacity="0.6" />
+  <path stroke="#FFFFFF" stroke-width="2" d="M290,260 Q300,240 310,260" fill="none" opacity="0.6" />
+  
+  <!-- 筷子 -->
+  <rect x="190" y="230" width="5" height="150" rx="2" fill="#8B4513" transform="rotate(-15, 190, 230)" />
+  <rect x="205" y="230" width="5" height="150" rx="2" fill="#8B4513" transform="rotate(-15, 205, 230)" />
+  <rect x="310" y="230" width="5" height="150" rx="2" fill="#8B4513" transform="rotate(15, 310, 230)" />
+  <rect x="325" y="230" width="5" height="150" rx="2" fill="#8B4513" transform="rotate(15, 325, 230)" />
+  
+  <!-- 文字 -->
+  <text x="256" y="430" font-family="Arial" font-size="30" font-weight="bold" text-anchor="middle" fill="#8B4513">牛肉面</text>
+</svg> 

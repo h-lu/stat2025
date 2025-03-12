@@ -1,0 +1,328 @@
+---
+title: "第五周：方差分析"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+library(showtext)
+library(RColorBrewer)
+
+# 加载中文字体
+font_add_google("Noto Sans SC", "notosans")  # 思源黑体
+showtext_auto()
+
+# 设置ggplot2默认主题
+theme_set(
+  theme_minimal() +
+    theme(
+      text = element_text(family = "Noto Sans SC"),
+      plot.title = element_text(size = 16, face = "bold"),
+      plot.subtitle = element_text(size = 12),
+      axis.title = element_text(size = 10),
+      axis.text = element_text(size = 9),
+      legend.title = element_text(size = 10),
+      legend.text = element_text(size = 9),
+      panel.grid.major = element_line(color = "gray90"),
+      panel.grid.minor = element_line(color = "gray95")
+    )
+)
+
+```
+
+## 第九次课：项目一成果展示
+
+本课为项目一的成果展示环节，各小组依次进行项目一的汇报和答辩。
+
+## 第十次课：方差分析
+
+### 方差分析概述
+
+**方差分析(ANOVA)的核心目标**：
+
+- 检验多个总体均值是否相等
+- 将总变异分解为组间变异和组内变异
+- 通过比较组间变异与组内变异的大小，判断总体均值是否存在显著差异
+
+方差分析本质上是扩展的t检验，允许我们同时比较多个组别之间的差异。在商业分析中，我们经常需要比较多个处理或群体之间的效果差异，例如：
+
+```{r}
+# 创建示例数据
+marketing_data <- data.frame(
+  campaign = rep(c("A", "B", "C", "D"), each = 30),
+  sales = c(rnorm(30, 100, 15), rnorm(30, 110, 18), 
+            rnorm(30, 95, 20), rnorm(30, 115, 25))
+)
+
+# 绘制箱线图比较各营销活动的销售效果
+ggplot(marketing_data, aes(x = campaign, y = sales, fill = campaign)) +
+  geom_boxplot() +
+  labs(title = "不同营销活动的销售效果比较",
+       x = "营销活动", y = "销售额")
+```
+
+**应用场景**：
+
+- 市场营销：不同营销活动对销售额的影响比较
+- 用户体验：不同网站设计对用户停留时间的影响
+- 产品研发：不同配方对产品质量的影响
+- 人力资源：不同培训方法对员工绩效的影响
+
+**方差分析的基本假设条件**：
+
+- **正态性**：每个组别的数据都来自正态分布总体
+- **方差齐性**：各组别总体方差相等（可使用Levene's检验或Bartlett检验）
+- **独立性**：观测值之间相互独立（尤其是组间观测值）
+
+```{r}
+# 正态性检验
+#   - 原假设 (H0): 数据服从正态分布
+#   - 备择假设 (H1): 数据不服从正态分布
+marketing_data %>%
+  group_by(campaign) %>%
+  summarise(
+    shapiro_p_value = shapiro.test(sales)$p.value # 使用 Shapiro-Wilk 检验正态性
+  )
+
+# 检验方差齐性
+#   - 原假设 (H0): 各组别总体方差相等
+#   - 备择假设 (H1): 至少有一组别总体方差与其他组别总体方差不相等
+library(car)
+leveneTest(sales ~ campaign, data = marketing_data) # Levene's 检验 - 检验方差齐性
+```
+
+### 单因素方差分析
+
+**单因素方差分析的概念**：只有一个因素(自变量)的方差分析。
+
+**总体变异的分解**：
+
+- 总平方和(SST) = 组间平方和(SSB) + 组内平方和(SSW)
+- 组间平方和反映因素引起的变异
+- 组内平方和反映随机误差引起的变异
+
+**模型表示**：$y_{ij} = \mu + \tau_i + \epsilon_{ij}$
+
+- $y_{ij}$：第$i$组的第$j$个观测值
+- $\mu$：总体均值
+- $\tau_i$：第$i$组的效应（偏离总均值的程度）
+- $\epsilon_{ij}$：随机误差（假设服从正态分布$N(0, \sigma^2)$）
+
+**假设检验**：
+
+- 原假设(H0)：$\mu_1 = \mu_2 = \dots = \mu_k$ (所有组别总体均值相等)
+- 备择假设(H1)：至少有一对总体均值不相等
+- F统计量：$F = \frac{MSB}{MSW} = \frac{SSB/(k-1)}{SSW/(n-k)}$，其中：
+  - k是组数
+  - n是总样本量
+  - MSB是组间均方
+  - MSW是组内均方
+
+**方差分析表的解读**：
+
+| 变异来源 | 平方和 | 自由度 | 均方 | F值 | p值 |
+|---------|-------|--------|-----|-----|-----|
+| 组间    | SSB   | k-1    | MSB | F=MSB/MSW | p |
+| 组内    | SSW   | n-k    | MSW |     |     |
+| 总计    | SST   | n-1    |     |     |     |
+
+**R语言实现**：
+```{r}
+# 单因素方差分析
+aov_result <- aov(sales ~ campaign, data = marketing_data)
+summary(aov_result)
+
+# 如果方差分析结果表明组间存在显著差异，则需要进行多重比较，进一步分析哪些组别之间存在显著差异
+# TukeyHSD (Tukey's Honestly Significant Differences) 函数用于执行Tukey事后多重比较，
+# 它可以检验所有可能的组别配对之间的均值差异，并控制族错误率 (family-wise error rate)，
+# 从而避免由于进行多次比较而增加犯第一类错误的概率。
+TukeyHSD(aov_result)
+```
+
+**结果可视化**：
+```{r}
+# 可视化多重比较结果
+tukey_result <- TukeyHSD(aov_result)
+tukey_df <- as.data.frame(tukey_result$campaign)
+tukey_df$comparison <- rownames(tukey_df)
+
+ggplot(tukey_df, aes(x = comparison, y = diff)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = lwr, ymax = upr), width = 0.2) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Tukey多重比较结果",
+       x = "组间比较", y = "均值差异")
+```
+
+
+### 多因素方差分析
+
+**多因素方差分析的概念**：研究两个或多个因素(自变量)对因变量的影响，以及因素之间的交互作用。
+
+**双因素方差分析模型**：$y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \epsilon_{ijk}$
+
+- $\alpha_i$：因素A的第$i$个水平的主效应
+- $\beta_j$：因素B的第$j$个水平的主效应
+- $(\alpha\beta)_{ij}$：因素A和因素B的交互效应
+
+**交互效应的理解**：
+交互效应表示一个因素的效应会因另一个因素的不同水平而发生变化。例如，某款产品的价格效应可能在不同的消费者群体中有所不同（高收入群体对价格不敏感，低收入群体对价格敏感）。
+
+```{r}
+# 创建包含交互效应的示例数据
+pricing_data <- data.frame(
+  price_level = rep(c("低", "中", "高"), each = 60),
+  consumer_group = rep(rep(c("年轻人", "中年人"), each = 30), 3),
+  purchase_amount = c(
+    rnorm(30, 120, 20), rnorm(30, 100, 15),  # 低价格，两个消费群体
+    rnorm(30, 100, 25), rnorm(30, 110, 20),  # 中价格，两个消费群体
+    rnorm(30, 70, 30), rnorm(30, 130, 35)    # 高价格，两个消费群体
+  )
+)
+```
+
+**假设检验流程**：
+
+1. 检验交互效应是否显著
+2. 如果交互效应显著，分别在每个因素的不同水平下分析另一个因素的简单主效应
+3. 如果交互效应不显著，直接分析各因素的主效应
+
+**R语言实现**：
+```{r}
+# 双因素方差分析（包含交互效应）
+interaction_model <- aov(purchase_amount ~ price_level * consumer_group, 
+                         data = pricing_data)
+summary(interaction_model)
+
+# 不包含交互效应的模型
+main_effects_model <- aov(purchase_amount ~ price_level + consumer_group, 
+                          data = pricing_data)
+summary(main_effects_model)
+
+# 交互作用图
+ggplot(pricing_data, aes(x = price_level, y = purchase_amount, 
+                        color = consumer_group, group = consumer_group)) +
+  stat_summary(fun = mean, geom = "point", size = 3) +
+  stat_summary(fun = mean, geom = "line") +
+  labs(title = "价格水平与消费者群体的交互效应",
+       x = "价格水平", y = "购买金额")
+```
+
+### 单向重复测量方差分析
+
+当同一组受试者在不同条件下重复测量时，我们使用重复测量方差分析：
+
+```{r}
+# 重复测量方差分析示例
+library(ez)
+repeated_data <- data.frame(
+  subject = factor(rep(1:30, each = 3)),
+  time = factor(rep(c("before", "during", "after"), 30)),
+  performance = c(
+    rnorm(30, 70, 10),   # before
+    rnorm(30, 85, 12),   # during
+    rnorm(30, 75, 15)    # after
+  )
+)
+
+# 使用ezANOVA函数进行重复测量方差分析
+ezANOVA(
+  data = repeated_data,
+  dv = .(performance),
+  wid = .(subject),
+  within = .(time),
+  detailed = TRUE
+)
+```
+
+### 方差分析的替代方法
+
+当方差分析的假设不满足时，可以考虑以下替代方法：
+
+1. **数据转换**：对数转换、平方根转换等使数据更接近正态分布
+2. **稳健方差分析**：使用白化技术的修正方差分析
+3. **非参数方法**：Kruskal-Wallis检验（单因素方差分析的非参数替代）
+
+```{r}
+# Kruskal-Wallis检验
+kruskal.test(sales ~ campaign, data = marketing_data)
+```
+
+### 方差分析在R中的高级应用
+
+```{r, eval=FALSE}
+# 包含协变量的ANCOVA模型
+ancova_model <- aov(sales ~ campaign + customer_loyalty, data = marketing_extended)
+summary(ancova_model)
+
+# 嵌套设计方差分析
+nested_model <- aov(performance ~ treatment + Error(subject/time), 
+                   data = nested_data)
+summary(nested_model)
+
+# 多变量方差分析(MANOVA)
+manova_result <- manova(cbind(sales, satisfaction) ~ campaign, 
+                        data = multi_response_data)
+summary(manova_result)
+```
+
+### 综合练习与案例分析
+
+**练习1：市场营销策略评估**
+
+某电商平台测试了四种不同的营销策略（A：折扣优惠，B：会员积分，C：免费赠品，D：限时秒杀），每种策略在10个不同城市实施。收集了每种策略的点击率数据。
+
+任务：
+1. 使用单因素方差分析判断四种营销策略的点击率是否存在显著差异
+2. 如有显著差异，确定哪些策略间的差异显著
+3. 可视化分析结果
+
+**练习2：区域与季节对销售的影响**
+
+某连锁零售商收集了不同区域（北区、南区、东区、西区）在不同季节（春、夏、秋、冬）的销售数据。
+
+任务：
+1. 进行双因素方差分析，分析区域和季节对销售的主效应和交互效应
+2. 解释分析结果，并提出营销建议
+3. 使用交互作用图可视化区域与季节的交互关系
+
+**练习3：广告媒体效果分析**
+
+分析不同广告媒体（电视、广播、社交媒体、印刷媒体）对不同产品类别（电子产品、服装、食品）的广告效果数据。
+
+任务：
+1. 进行双因素方差分析
+2. 如果存在交互效应，分析不同产品类别下最有效的广告媒体
+3. 根据分析结果提出广告投放建议
+
+::: {.callout-tip appearance="simple"}
+## AI辅助学习建议（第五周）
+
+### 方差分析理解与应用
+- **请AI解释方差分析的直观含义**：要求AI使用简单的商业案例解释方差分析的本质
+- **让AI比较t检验与方差分析**：了解何时使用t检验，何时使用方差分析
+- **让AI解释交互效应**：用图形直观展示交互效应的概念
+
+### R代码编写与优化
+- **请AI生成方差分析的完整代码**：针对特定数据集自动生成包含数据检查、分析和可视化的完整代码
+- **让AI优化方差分析结果的可视化**：将默认图表优化为更专业的数据可视化
+- **请AI编写多重比较的代码**：生成不同类型的事后检验方法（如Tukey、Bonferroni等）
+
+### 方差分析结果解读
+- **让AI解释F统计量和p值**：将统计术语转化为商业语言
+- **请AI分析交互效应图**：解读交互图中的模式并给出业务建议
+- **要求AI解释方差分析的假设检验结果**：判断数据是否满足方差分析的基本假设
+
+### 方差分析应用场景
+- **请AI推荐适合方差分析的商业问题**：根据项目主题获取适合应用方差分析的具体问题建议
+- **让AI设计方差分析实验方案**：帮助设计合理的数据收集和分析方案
+- **要求AI分析方差分析的局限性**：了解何时应该考虑其他统计方法
+:::
+
+### 参考文献与扩展阅读
+
+1. Field, A. (2018). Discovering Statistics Using IBM SPSS Statistics (5th ed.). SAGE Publications.
+2. Fox, J. (2016). Applied Regression Analysis and Generalized Linear Models (3rd ed.). SAGE Publications.
+3. R Core Team. (2021). R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing.
+4. 黄湘通. (2019). 方差分析在商业数据分析中的应用. 统计与决策, 35(10), 98-101.
+5. 温忠麟, 许小苹. (2017). 交互效应的本质、检验与分析. 心理科学进展, 25(6), 951-965. 

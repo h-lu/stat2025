@@ -726,32 +726,172 @@ window.Quarto = {
 <li><strong>t检验的应用场景</strong>： 检验总体均值是否等于某个值，或检验两个总体的均值是否相等。</li>
 <li><strong>单样本t检验 (One-Sample t-test)</strong>：
 <ul>
-<li><strong>适用条件</strong>： 检验一个正态分布总体的均值是否等于某个已知值。</li>
-<li><strong>原假设 <span class="math inline">\(H_0：\mu = \mu_0\)</span>，备择假设 <span class="math inline">\(H_1：\mu \neq \mu_0\)</span> (双尾检验), <span class="math inline">\(\mu &gt; \mu_0\)</span> (右尾检验), <span class="math inline">\(\mu &lt; \mu_0\)</span> (左尾检验)。</strong></li>
-<li><strong>检验统计量：t统计量公式。</strong></li>
-<li><strong>自由度 (degrees of freedom, df) = n - 1。</strong></li>
-<li><strong>p值的计算：使用t分布的累积分布函数 (CDF) 或生存函数 (SF)。</strong></li>
-<li><strong>R语言实现：</strong> <code>t.test()</code> 函数，讲解 <code>t.test()</code> 函数的基本用法和参数 (例如 <code>mu</code>, <code>alternative</code>, <code>conf.level</code>)。</li>
+<li><p><strong>适用条件</strong>： 检验一个正态分布总体的均值是否等于某个已知值。</p></li>
+<li><p><strong>原假设 <span class="math inline">\(H_0：\mu = \mu_0\)</span>，备择假设 <span class="math inline">\(H_1：\mu \neq \mu_0\)</span> (双尾检验), <span class="math inline">\(\mu &gt; \mu_0\)</span> (右尾检验), <span class="math inline">\(\mu &lt; \mu_0\)</span> (左尾检验)。</strong></p></li>
+<li><p><strong>检验统计量：t统计量公式。</strong> <span class="math display">\[
+t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}
+\]</span> 其中，<span class="math inline">\(\bar{x}\)</span> 为样本均值，<span class="math inline">\(\mu_0\)</span> 为原假设下的总体均值，<span class="math inline">\(s\)</span> 为样本标准差，<span class="math inline">\(n\)</span> 为样本量。</p></li>
+<li><p><strong>自由度 (degrees of freedom, df) = n - 1。</strong></p></li>
+<li><p><strong>p值的计算：使用t分布的累积分布函数 (CDF) 或生存函数 (SF)。</strong></p></li>
+<li><p><strong>R语言实现：</strong> <code>t.test()</code> 函数是 R 中进行 t 检验的核心函数。</p>
+<ul>
+<li><p><strong>基本用法：</strong> <code>t.test(data, mu = ?, alternative = ?, conf.level = ?, ...)</code></p></li>
+<li><p><strong>主要参数：</strong></p>
+<ul>
+<li><code>data</code>: <strong>必需参数</strong>。 包含样本数据的<strong>数值向量</strong>。</li>
+<li><code>mu</code>: <strong>单样本 t 检验时使用</strong>。 原假设中总体均值 <span class="math inline">\(\mu_0\)</span> 的值。 默认为 <code>mu = 0</code>。</li>
+<li><code>alternative</code>: <strong>备择假设类型</strong>。 字符串，可选值包括：
+<ul>
+<li><code>"two.sided"</code> (默认值): 双尾检验，<span class="math inline">\(H_1: \mu \neq \mu_0\)</span>。</li>
+<li><code>"less"</code>: 左尾检验，<span class="math inline">\(H_1: \mu &lt; \mu_0\)</span>。</li>
+<li><code>"greater"</code>: 右尾检验，<span class="math inline">\(H_1: \mu &gt; \mu_0\)</span>。</li>
+</ul></li>
+<li><code>conf.level</code>: <strong>置信水平</strong>。 数值，介于 0 和 1 之间，表示置信区间的置信水平。 默认为 <code>conf.level = 0.95</code> (95% 置信区间)。</li>
+<li><code>paired</code>: <strong>配对样本 t 检验时使用</strong>。 逻辑值，<code>TRUE</code> 表示进行配对样本 t 检验，<code>FALSE</code> (默认值) 表示进行独立样本 t 检验。</li>
+<li><code>var.equal</code>: <strong>独立样本 t 检验时使用</strong>。 逻辑值，<code>TRUE</code> 表示假设两个总体的方差相等 (等方差 t 检验)，<code>FALSE</code> (默认值) 表示不假设方差相等 (Welch’s t 检验)。</li>
+</ul></li>
+<li><p><strong>示例 (单样本 t 检验):</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 示例数据 (电影评分)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>movie_ratings <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">4.5</span>, <span class="fl">4.2</span>, <span class="fl">3.8</span>, <span class="fl">4.7</span>, <span class="fl">4.0</span>, <span class="fl">4.3</span>, <span class="fl">3.9</span>, <span class="fl">4.6</span>, <span class="fl">4.1</span>, <span class="fl">4.4</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 进行单样本 t 检验，检验均值是否为 4.0</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(movie_ratings, <span class="at">mu =</span> <span class="fl">4.0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  movie_ratings
+t = 2.6112, df = 9, p-value = 0.02822
+alternative hypothesis: true mean is not equal to 4
+95 percent confidence interval:
+ 4.033415 4.466585
+sample estimates:
+mean of x 
+     4.25 </code></pre>
+</div>
+</div></li>
+</ul></li>
 </ul></li>
 <li><strong>双样本t检验 (Two-Sample t-test)</strong>：
 <ul>
 <li><strong>独立样本t检验 (Independent Samples t-test)</strong>：
 <ul>
-<li><strong>适用条件</strong>： 检验两个独立的正态分布总体的均值是否相等。</li>
-<li><strong>原假设 <span class="math inline">\(H_0：\mu_1 = \mu_2\)</span>，备择假设 <span class="math inline">\(H_1：\mu_1 \neq \mu_2\)</span> (双尾检验), <span class="math inline">\(\mu_1 &gt; \mu_2\)</span> (右尾检验), <span class="math inline">\(\mu_1 &lt; \mu_2\)</span> (左尾检验)。</strong></li>
-<li><strong>检验统计量：独立样本t统计量公式 (等方差和不等方差两种情况)。</strong></li>
-<li><strong>自由度 (df) 的计算 (等方差和不等方差两种情况)。</strong></li>
-<li><strong>R语言实现：</strong> <code>t.test()</code> 函数，设置 <code>paired = FALSE</code>，以及 <code>var.equal</code> 参数 (指定是否假设方差相等)。</li>
+<li><p><strong>适用条件</strong>： 检验两个独立的正态分布总体的均值是否相等。例如，比较<strong>不同类型电影的平均评分</strong>，<strong>不同超市的商品平均价格</strong>，<strong>不同学校学生的平均成绩</strong>等。</p></li>
+<li><p><strong>原假设 <span class="math inline">\(H_0：\mu_1 = \mu_2\)</span>，备择假设 <span class="math inline">\(H_1：\mu_1 \neq \mu_2\)</span> (双尾检验), <span class="math inline">\(\mu_1 &gt; \mu_2\)</span> (右尾检验), <span class="math inline">\(\mu_1 &lt; \mu_2\)</span> (左尾检验)。</strong></p></li>
+<li><p><strong>检验统计量：独立样本t统计量公式 (等方差和不等方差两种情况)。</strong></p>
+<ul>
+<li><strong>等方差 (Pooled Variance) t 检验</strong>: 假设两个总体的方差相等 (<span class="math inline">\(\sigma_1^2 = \sigma_2^2\)</span>)。 <span class="math display">\[
+t = \frac{(\bar{x}_1 - \bar{x}_2) - (\mu_1 - \mu_2)}{s_p \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}
+\]</span> 其中：
+<ul>
+<li><span class="math inline">\(\bar{x}_1, \bar{x}_2\)</span> 分别为两个样本的均值。</li>
+<li><span class="math inline">\(\mu_1 - \mu_2\)</span> 为原假设下两个总体均值之差，通常为 0。</li>
+<li><span class="math inline">\(n_1, n_2\)</span> 分别为两个样本的样本量。</li>
+<li><span class="math inline">\(s_p\)</span> 为合并样本标准差 (pooled standard deviation)，计算公式为： <span class="math display">\[
+s_p = \sqrt{\frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1 + n_2 - 2}}
+\]</span> 其中 <span class="math inline">\(s_1^2, s_2^2\)</span> 分别为两个样本的方差。</li>
 </ul></li>
+<li><strong>不等方差 (Welch’s) t 检验</strong>: 不假设两个总体的方差相等 (<span class="math inline">\(\sigma_1^2 \neq \sigma_2^2\)</span>)。 <span class="math display">\[
+t = \frac{(\bar{x}_1 - \bar{x}_2) - (\mu_1 - \mu_2)}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+\]</span> 其中：
+<ul>
+<li><span class="math inline">\(\bar{x}_1, \bar{x}_2\)</span> 分别为两个样本的均值。</li>
+<li><span class="math inline">\(\mu_1 - \mu_2\)</span> 为原假设下两个总体均值之差，通常为 0。</li>
+<li><span class="math inline">\(n_1, n_2\)</span> 分别为两个样本的样本量。</li>
+<li><span class="math inline">\(s_1^2, s_2^2\)</span> 分别为两个样本的方差。</li>
+</ul></li>
+</ul></li>
+<li><p><strong>自由度 (df) 的计算 (等方差和不等方差两种情况)。</strong></p></li>
+<li><p><strong>方差相等性检验</strong>: 在进行独立样本 t 检验时，需要考虑两个总体的方差是否相等。</p></li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+等方差假设 (Equal Variance)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>如果<strong>假设两个总体的方差相等</strong> (<span class="math inline">\(\sigma_1^2 = \sigma_2^2\)</span>)，则使用<strong>等方差 t 检验 (Pooled Variance t-test)</strong>。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+适用情况
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>当<strong>事先有理由相信</strong>两个总体的方差接近，或者通过<strong>方差相等性检验 (如 F 检验或 Levene 检验)</strong> 结果<strong>不拒绝方差相等的原假设</strong>时，可以使用等方差 t 检验。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+不等方差假设 (Unequal Variance)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>如果<strong>不能假设两个总体的方差相等</strong> (<span class="math inline">\(\sigma_1^2 \neq \sigma_2^2\)</span>)，或者<strong>方差相等性检验拒绝了方差相等的原假设</strong>，则使用 <strong>Welch’s t 检验 (Welch’s t-test)</strong>。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+适用情况
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>当<strong>不确定</strong>两个总体的方差是否相等，或者<strong>怀疑</strong>方差存在显著差异时，<strong>建议使用 Welch’s t 检验</strong>。 Welch’s t 检验对总体方差是否相等<strong>不敏感</strong>，适用性更广，<strong>通常作为默认选择</strong>。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+R 语言 <code>t.test()</code> 函数
+</div>
+</div>
+<div class="callout-body-container callout-body">
+通过 <code>var.equal</code> 参数指定是否假设方差相等。
+<ul>
+<li><code>var.equal = TRUE</code>: 进行等方差 t 检验。</li>
+<li><code>var.equal = FALSE</code> (默认值): 进行 Welch’s t 检验。</li>
+</ul>
+</div>
+</div>
+<ul>
 <li><strong>配对样本t检验 (Paired Samples t-test)</strong>：
 <ul>
-<li><strong>适用条件</strong>： 检验两个配对样本的均值差是否为零 (例如，同一组对象在处理前后的测量值)。</li>
+<li><strong>适用条件</strong>： 检验两个配对样本的均值差是否为零。<strong>例如，检验同一组用户对电影观看预告片前后的评分是否有显著差异。</strong></li>
 <li><strong>原假设 <span class="math inline">\(H_0：\mu_d = 0\)</span>，备择假设 <span class="math inline">\(H_1：\mu_d \neq 0\)</span> (双尾检验), <span class="math inline">\(\mu_d &gt; 0\)</span> (右尾检验), <span class="math inline">\(\mu_d &lt; 0\)</span> (左尾检验)，其中 <span class="math inline">\(\mu_d\)</span> 是配对样本差值的总体均值。</strong></li>
-<li><strong>检验统计量：配对样本t统计量公式。</strong></li>
+<li><strong>检验统计量：配对样本t统计量公式：</strong> <span class="math display">\[
+t = \frac{\bar{d} - \mu_{d0}}{s_d / \sqrt{n}}
+\]</span> 其中：
+<ul>
+<li><span class="math inline">\(\bar{d}\)</span> 为配对样本差值的均值。</li>
+<li><span class="math inline">\(\mu_{d0}\)</span> 为原假设下配对样本差值的总体均值，通常为 0。</li>
+<li><span class="math inline">\(s_d\)</span> 为配对样本差值的标准差。</li>
+<li><span class="math inline">\(n\)</span> 为配对样本的数量。</li>
+</ul></li>
 <li><strong>自由度 (df) = n - 1，其中 n 是配对样本的数量。</strong></li>
 <li><strong>R语言实现：</strong> <code>t.test()</code> 函数，设置 <code>paired = TRUE</code>。</li>
 </ul></li>
-<li><strong>演示：</strong> 使用 <code>t.test()</code> 函数对示例数据进行单样本t检验和双样本t检验 (独立样本和配对样本)。</li>
 </ul></li>
 </ul></li>
 <li><strong>t检验练习 (15分钟):</strong>
@@ -764,7 +904,7 @@ window.Quarto = {
 </ul>
 <p><strong>下半场 (项目一检查与汇报准备，约45分钟):</strong></p>
 <ul>
-<li><strong>项目一检查与中期汇报准备 (30分钟):</strong> {#week-4-project1-check-report-prep}
+<li><strong>项目一检查与中期汇报准备 (30分钟):</strong>
 <ul>
 <li><strong>各小组展示项目一的最终数据探索和可视化成果 (非正式展示)。</strong></li>
 <li><strong>教师检查各小组的项目进展情况，包括：</strong>

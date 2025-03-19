@@ -340,7 +340,10 @@ ggplot(marketing_data, aes(x = strategy_name, y = clickthrough_rate, fill = stra
 ```{r}
 # 读取区域销售数据
 regional_data <- read_csv("data/week5/regional_sales.csv") %>%
-  mutate(season = factor(season, levels = c("春", "夏", "秋", "冬")))
+  mutate(
+    season = factor(season, levels = c("春", "夏", "秋", "冬")),
+    region = factor(region, levels = c("东区", "南区",  "西区", "北区"))
+  )
 
 # 查看数据
 head(regional_data)

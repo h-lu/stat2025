@@ -244,6 +244,47 @@ ezANOVA(
 #
 #
 #
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 # Kruskal-Wallis检验
 kruskal.test(sales ~ campaign, data = marketing_data)
 #
@@ -273,6 +314,18 @@ summary(manova_result)
 #
 #
 #
+# 读取营销策略数据
+marketing_data <- read_csv("data/week5/marketing_strategy.csv")
+
+# 查看数据
+head(marketing_data)
+
+# 绘制四种策略的点击率箱线图
+ggplot(marketing_data, aes(x = strategy_name, y = clickthrough_rate, fill = strategy_name)) +
+  geom_boxplot() +
+  labs(title = "不同营销策略的点击率比较",
+       x = "营销策略", y = "点击率") +
+  theme(legend.position = "none")
 #
 #
 #
@@ -285,9 +338,60 @@ summary(manova_result)
 #
 #
 #
+# 读取区域销售数据
+regional_data <- read_csv("data/week5/regional_sales.csv") %>%
+  mutate(
+    season = factor(season, levels = c("春", "夏", "秋", "冬")),
+    region = factor(region, levels = c("东区", "南区",  "西区", "北区"))
+  )
+
+# 查看数据
+head(regional_data)
+
+# 计算每个区域和季节组合的平均销售额
+region_season_means <- regional_data %>%
+  group_by(region, season) %>%
+  summarise(mean_sales = mean(sales), .groups = "drop")
+
+# 绘制交互作用图
+ggplot(region_season_means, aes(x = season, y = mean_sales, 
+                               color = region, group = region)) +
+  geom_point(size = 3) +
+  geom_line() +
+  labs(title = "区域与季节对销售的交互效应",
+       x = "季节", y = "平均销售额") +
+  scale_color_brewer(palette = "Set1")
 #
 #
 #
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# 读取广告媒体效果数据
+ad_data <- read_csv("data/week5/ad_media_effect.csv")
+
+# 查看数据
+head(ad_data)
+
+# 计算每个媒体和产品类别组合的平均效果
+media_product_means <- ad_data %>%
+  group_by(media, product_category) %>%
+  summarise(mean_effect = mean(effect), .groups = "drop")
+
+# 绘制交互作用图
+ggplot(media_product_means, aes(x = product_category, y = mean_effect, 
+                               color = media, group = media)) +
+  geom_point(size = 3) +
+  geom_line() +
+  labs(title = "广告媒体与产品类别的交互效应",
+       x = "产品类别", y = "平均效果") +
+  scale_color_brewer(palette = "Set2")
 #
 #
 #

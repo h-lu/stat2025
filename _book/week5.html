@@ -357,10 +357,10 @@ window.Quarto = {
 <pre><code># A tibble: 4 × 2
   campaign shapiro_p_value
   &lt;chr&gt;              &lt;dbl&gt;
-1 A                  0.547
-2 B                  0.945
-3 C                  0.531
-4 D                  0.602</code></pre>
+1 A                  0.930
+2 B                  0.302
+3 C                  0.541
+4 D                  0.970</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检验方差齐性</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   - 原假设 (H0): 各组别总体方差相等</span></span>
@@ -369,11 +369,9 @@ window.Quarto = {
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(sales <span class="sc">~</span> campaign, <span class="at">data =</span> marketing_data) <span class="co"># Levene's 检验 - 检验方差齐性</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Levene's Test for Homogeneity of Variance (center = median)
-       Df F value   Pr(&gt;F)   
-group   3  5.1449 0.002242 **
-      116                    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+       Df F value Pr(&gt;F)
+group   3  1.4566 0.2301
+      116               </code></pre>
 </div>
 </div>
 </section>
@@ -450,9 +448,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>aov_result <span class="ot">&lt;-</span> <span class="fu">aov</span>(sales <span class="sc">~</span> campaign, <span class="at">data =</span> marketing_data)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aov_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
-campaign      3   6366  2122.1   5.313 0.00182 **
-Residuals   116  46330   399.4                   
+<pre><code>             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+campaign      3  11877    3959   10.75 2.74e-06 ***
+Residuals   116  42710     368                     
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -469,12 +467,12 @@ Fit: aov(formula = sales ~ campaign, data = marketing_data)
 
 $campaign
           diff         lwr       upr     p adj
-B-A   9.339435  -4.1112238 22.790093 0.2739193
-C-A  -4.714195 -18.1648531  8.736464 0.7976457
-D-A  13.646459   0.1958004 27.097117 0.0453828
-C-B -14.053629 -27.5042877 -0.602971 0.0369414
-D-B   4.307024  -9.1436342 17.757683 0.8378580
-D-C  18.360653   4.9099951 31.811312 0.0030071</code></pre>
+B-A   6.138836  -6.7756564 19.053328 0.6034096
+C-A  -8.235640 -21.1501326  4.678852 0.3483496
+D-A  19.028038   6.1135458 31.942530 0.0011363
+C-B -14.374476 -27.2889683 -1.459984 0.0227515
+D-B  12.889202  -0.0252899 25.803694 0.0506507
+D-C  27.263678  14.3491862 40.178171 0.0000013</code></pre>
 </div>
 </div>
 <p><strong>结果可视化</strong>：</p>
@@ -535,10 +533,10 @@ D-C  18.360653   4.9099951 31.811312 0.0030071</code></pre>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(interaction_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-price_level                  2   2168    1084   1.706 0.184575    
-consumer_group               1  10021   10021  15.771 0.000104 ***
-price_level:consumer_group   2  38363   19181  30.187 5.57e-12 ***
-Residuals                  174 110563     635                     
+price_level                  2   3775    1888   3.106   0.0473 *  
+consumer_group               1  14133   14133  23.252 3.09e-06 ***
+price_level:consumer_group   2  50542   25271  41.577 1.74e-15 ***
+Residuals                  174 105760     608                     
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -548,9 +546,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(main_effects_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-price_level      2   2168    1084   1.281 0.280264    
-consumer_group   1  10021   10021  11.843 0.000723 ***
-Residuals      176 148926     846                     
+price_level      2   3775    1888   2.126    0.122    
+consumer_group   1  14133   14133  15.914 9.71e-05 ***
+Residuals      176 156301     888                     
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -597,19 +595,19 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>$ANOVA
        Effect DFn DFd          SSn      SSd            F            p p&lt;.05
-1 (Intercept)   1  29 521993.30656 6686.126 2264.0622673 4.449626e-29     *
-2        time   2  58     41.23278 6028.308    0.1983559 8.206319e-01      
+1 (Intercept)   1  29 532851.79967 5555.766 2.781381e+03 2.326909e-30     *
+2        time   2  58     24.92404 9965.112 7.253277e-02 9.301195e-01      
           ges
-1 0.976221713
-2 0.003232507
+1 0.971696478
+2 0.001603265
 
 $`Mauchly's Test for Sphericity`
-  Effect         W         p p&lt;.05
-2   time 0.9723606 0.6754342      
+  Effect         W        p p&lt;.05
+2   time 0.9718508 0.670493      
 
 $`Sphericity Corrections`
-  Effect      GGe     p[GG] p[GG]&lt;.05      HFe     p[HF] p[HF]&lt;.05
-2   time 0.973104 0.8148575           1.042113 0.8206319          </code></pre>
+  Effect       GGe     p[GG] p[GG]&lt;.05      HFe     p[HF] p[HF]&lt;.05
+2   time 0.9726215 0.9260045           1.041541 0.9301195          </code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -674,7 +672,7 @@ $`Sphericity Corrections`
     Kruskal-Wallis rank sum test
 
 data:  sales by campaign
-Kruskal-Wallis chi-squared = 11.083, df = 3, p-value = 0.01128</code></pre>
+Kruskal-Wallis chi-squared = 22.747, df = 3, p-value = 4.56e-05</code></pre>
 </div>
 </div>
 </section>
@@ -737,14 +735,17 @@ Kruskal-Wallis chi-squared = 11.083, df = 3, p-value = 0.01128</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取区域销售数据</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>regional_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/week5/regional_sales.csv"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">season =</span> <span class="fu">factor</span>(season, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"春"</span>, <span class="st">"夏"</span>, <span class="st">"秋"</span>, <span class="st">"冬"</span>)))</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(regional_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">season =</span> <span class="fu">factor</span>(season, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"春"</span>, <span class="st">"夏"</span>, <span class="st">"秋"</span>, <span class="st">"冬"</span>)),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">factor</span>(region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"东区"</span>, <span class="st">"南区"</span>,  <span class="st">"西区"</span>, <span class="st">"北区"</span>))</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(regional_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
   region season store_id sales
-  &lt;chr&gt;  &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt;
+  &lt;fct&gt;  &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt;
 1 北区   春     北区-1   1396.
 2 北区   春     北区-2   1322.
 3 北区   春     北区-3   1285.

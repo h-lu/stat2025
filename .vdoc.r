@@ -171,7 +171,7 @@ ggplot(tukey_df, aes(x = comparison, y = diff)) +
 #
 # 创建包含交互效应的示例数据
 pricing_data <- data.frame(
-  price_level = rep(c("低", "中", "高"), each = 60),
+  price_level = factor(rep(c("低", "中", "高"), each = 60), levels = c("低", "中", "高")),
   consumer_group = rep(rep(c("年轻人", "中年人"), each = 30), 3),
   purchase_amount = c(
     rnorm(30, 120, 20), rnorm(30, 100, 15),  # 低价格，两个消费群体

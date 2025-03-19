@@ -171,7 +171,7 @@ ggplot(tukey_df, aes(x = comparison, y = diff)) +
 ```{r}
 # 创建包含交互效应的示例数据
 pricing_data <- data.frame(
-  price_level = rep(c("低", "中", "高"), each = 60),
+  price_level = factor(rep(c("低", "中", "高"), each = 60), levels = c("低", "中", "高")),
   consumer_group = rep(rep(c("年轻人", "中年人"), each = 30), 3),
   purchase_amount = c(
     rnorm(30, 120, 20), rnorm(30, 100, 15),  # 低价格，两个消费群体
@@ -210,7 +210,7 @@ ggplot(pricing_data, aes(x = price_level, y = purchase_amount,
 
 ### 单向重复测量方差分析
 
-当同一组受试者在不同条件下重复测量时，我们使用重复测量方差分析：
+当实验设计采用重复测量方法，意味着我们对同一批受试者在多个不同的处理条件（例如，不同的药物剂量、不同的刺激类型）下，或者在不同的时间点（例如，治疗前、治疗中、治疗后）进行多次测量。  在这种情况下，由于数据来自同一批受试者，观测值之间存在相关性，传统的独立样本方差分析不再适用。 为了正确分析这类数据，检验不同条件或时间点下受试者反应的平均水平是否存在显著差异，并有效控制受试者个体差异带来的影响，我们应当采用重复测量方差分析。
 
 ```{r}
 # 重复测量方差分析示例
@@ -234,6 +234,47 @@ ezANOVA(
   detailed = TRUE
 )
 ```
+
+::: {.callout-note}
+### `ezANOVA` 函数参数解释
+
+`ezANOVA` 函数用于执行重复测量方差分析。以下是常用参数的解释：
+
+*   `data`:  **数据框**，包含需要分析的数据。
+*   `dv`:  **因变量** (Dependent Variable)，需要分析的测量变量，使用 `.(变量名)` 的形式指定。例如，`. (performance)` 表示 `performance` 列是因变量。
+*   `wid`:  **被试者变量** (Within-Subject ID)，用于标识每个被试者的唯一ID，使用 `.(变量名)` 的形式指定。例如，`. (subject)` 表示 `subject` 列是被试者ID。
+*   `within`:  **组内变量** (Within-Subject Factors)，重复测量设计的组内因素，使用 `.(因素1, 因素2, ...)` 的形式指定。例如，`. (time)` 表示 `time` 列是组内因素。
+*   `detailed`:  **是否输出详细结果**，逻辑值 (`TRUE` 或 `FALSE`)。设置为 `TRUE` 时，输出更详细的方差分析结果，包括效应大小等信息。
+
+:::
+
+
+
+### `ezANOVA` 函数输出结果解读
+
+`ezANOVA` 函数的输出结果主要是一个详细的方差分析表，用于解读重复测量方差分析的结果。以下是表格中各列的含义：
+
+*   **Effect**:  效应名称，表示正在检验的效应。对于重复测量方差分析，主要关注组内因素（例如，示例中的 `time`）以及可能的交互效应。
+
+*   **DFn**:  分子自由度 (Degrees of Freedom numerator)。对于组内因素，其自由度通常是因素水平数减1。例如，如果 `time` 因素有三个水平 (before, during, after)，则 DFn 为 3 - 1 = 2。
+
+*   **DFd**:  分母自由度 (Degrees of Freedom denominator)。对于组内因素，分母自由度与被试者数量和组内因素水平数有关，更具体地说是 (被试者数量 - 1) * (组内因素水平数 - 1)。在 `ezANOVA` 的详细输出中，会使用更精确的计算方法来处理重复测量设计的自由度。
+
+*   **F**:  F 统计量。这是方差分析的核心统计量，用于检验组间方差与组内方差的比率。F 值越大，说明组间变异相对于组内变异越大，越有可能拒绝原假设。
+
+*   **p**:  p 值 (p-value)。这是在原假设成立的条件下，观察到当前样本结果或更极端结果的概率。**p 值是判断效应是否具有统计学显著性的关键指标**。
+    *   **如果 p 值小于预设的显著性水平 ($\alpha$，通常为 0.05)**，则**拒绝原假设**，认为该效应在统计上是显著的。例如，如果 `time` 效应的 p 值小于 0.05，则认为不同时间点（before, during, after）的平均 performance 存在显著差异。
+    *   **如果 p 值大于或等于 $\alpha$**，则**不拒绝原假设**，认为没有足够的证据表明该效应是显著的。
+
+*   **ges**:  广义效应量 (Generalized Eta-Squared)。用于衡量效应量的大小，即组内因素对因变量变异的解释程度。ges 的取值范围为 0 到 1，值越大表示效应量越大。
+    *   **ges 提供了一个关于效应实际大小的指标，而不仅仅是统计显著性**。即使 p 值很小，如果 ges 很小，也可能意味着效应在实际应用中意义不大。
+    *   通常，ges 的解释可以参考以下标准（Cohen, 1988）：
+        *   小效应：ges ≈ 0.01
+        *   中等效应：ges ≈ 0.06
+        *   大效应：ges ≈ 0.14
+
+
+
 
 ### 方差分析的替代方法
 
@@ -272,6 +313,21 @@ summary(manova_result)
 
 某电商平台测试了四种不同的营销策略（A：折扣优惠，B：会员积分，C：免费赠品，D：限时秒杀），每种策略在10个不同城市实施。收集了每种策略的点击率数据。
 
+```{r}
+# 读取营销策略数据
+marketing_data <- read_csv("data/week5/marketing_strategy.csv")
+
+# 查看数据
+head(marketing_data)
+
+# 绘制四种策略的点击率箱线图
+ggplot(marketing_data, aes(x = strategy_name, y = clickthrough_rate, fill = strategy_name)) +
+  geom_boxplot() +
+  labs(title = "不同营销策略的点击率比较",
+       x = "营销策略", y = "点击率") +
+  theme(legend.position = "none")
+```
+
 任务：
 1. 使用单因素方差分析判断四种营销策略的点击率是否存在显著差异
 2. 如有显著差异，确定哪些策略间的差异显著
@@ -281,6 +337,29 @@ summary(manova_result)
 
 某连锁零售商收集了不同区域（北区、南区、东区、西区）在不同季节（春、夏、秋、冬）的销售数据。
 
+```{r}
+# 读取区域销售数据
+regional_data <- read_csv("data/week5/regional_sales.csv") %>%
+  mutate(season = factor(season, levels = c("春", "夏", "秋", "冬")))
+
+# 查看数据
+head(regional_data)
+
+# 计算每个区域和季节组合的平均销售额
+region_season_means <- regional_data %>%
+  group_by(region, season) %>%
+  summarise(mean_sales = mean(sales), .groups = "drop")
+
+# 绘制交互作用图
+ggplot(region_season_means, aes(x = season, y = mean_sales, 
+                               color = region, group = region)) +
+  geom_point(size = 3) +
+  geom_line() +
+  labs(title = "区域与季节对销售的交互效应",
+       x = "季节", y = "平均销售额") +
+  scale_color_brewer(palette = "Set1")
+```
+
 任务：
 1. 进行双因素方差分析，分析区域和季节对销售的主效应和交互效应
 2. 解释分析结果，并提出营销建议
@@ -289,6 +368,28 @@ summary(manova_result)
 **练习3：广告媒体效果分析**
 
 分析不同广告媒体（电视、广播、社交媒体、印刷媒体）对不同产品类别（电子产品、服装、食品）的广告效果数据。
+
+```{r}
+# 读取广告媒体效果数据
+ad_data <- read_csv("data/week5/ad_media_effect.csv")
+
+# 查看数据
+head(ad_data)
+
+# 计算每个媒体和产品类别组合的平均效果
+media_product_means <- ad_data %>%
+  group_by(media, product_category) %>%
+  summarise(mean_effect = mean(effect), .groups = "drop")
+
+# 绘制交互作用图
+ggplot(media_product_means, aes(x = product_category, y = mean_effect, 
+                               color = media, group = media)) +
+  geom_point(size = 3) +
+  geom_line() +
+  labs(title = "广告媒体与产品类别的交互效应",
+       x = "产品类别", y = "平均效果") +
+  scale_color_brewer(palette = "Set2")
+```
 
 任务：
 1. 进行双因素方差分析

@@ -264,6 +264,7 @@ window.Quarto = {
   <li><a href="#单因素方差分析" id="toc-单因素方差分析" class="nav-link" data-scroll-target="#单因素方差分析">单因素方差分析</a></li>
   <li><a href="#多因素方差分析" id="toc-多因素方差分析" class="nav-link" data-scroll-target="#多因素方差分析">多因素方差分析</a></li>
   <li><a href="#单向重复测量方差分析" id="toc-单向重复测量方差分析" class="nav-link" data-scroll-target="#单向重复测量方差分析">单向重复测量方差分析</a></li>
+  <li><a href="#ezanova-函数输出结果解读" id="toc-ezanova-函数输出结果解读" class="nav-link" data-scroll-target="#ezanova-函数输出结果解读"><code>ezANOVA</code> 函数输出结果解读</a></li>
   <li><a href="#方差分析的替代方法" id="toc-方差分析的替代方法" class="nav-link" data-scroll-target="#方差分析的替代方法">方差分析的替代方法</a></li>
   <li><a href="#方差分析在r中的高级应用" id="toc-方差分析在r中的高级应用" class="nav-link" data-scroll-target="#方差分析在r中的高级应用">方差分析在R中的高级应用</a></li>
   <li><a href="#综合练习与案例分析" id="toc-综合练习与案例分析" class="nav-link" data-scroll-target="#综合练习与案例分析">综合练习与案例分析</a></li>
@@ -356,10 +357,10 @@ window.Quarto = {
 <pre><code># A tibble: 4 × 2
   campaign shapiro_p_value
   &lt;chr&gt;              &lt;dbl&gt;
-1 A                 0.931 
-2 B                 0.0467
-3 C                 0.548 
-4 D                 0.533 </code></pre>
+1 A                  0.547
+2 B                  0.945
+3 C                  0.531
+4 D                  0.602</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检验方差齐性</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   - 原假设 (H0): 各组别总体方差相等</span></span>
@@ -369,7 +370,7 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>Levene's Test for Homogeneity of Variance (center = median)
        Df F value   Pr(&gt;F)   
-group   3  3.9756 0.009743 **
+group   3  5.1449 0.002242 **
       116                    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
@@ -449,9 +450,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>aov_result <span class="ot">&lt;-</span> <span class="fu">aov</span>(sales <span class="sc">~</span> campaign, <span class="at">data =</span> marketing_data)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aov_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>             Df Sum Sq Mean Sq F value Pr(&gt;F)   
-campaign      3   4824    1608   4.429 0.0055 **
-Residuals   116  42114     363                  
+<pre><code>             Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+campaign      3   6366  2122.1   5.313 0.00182 **
+Residuals   116  46330   399.4                   
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -467,13 +468,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 Fit: aov(formula = sales ~ campaign, data = marketing_data)
 
 $campaign
-          diff          lwr       upr     p adj
-B-A   7.907891  -4.91607727 20.731860 0.3785066
-C-A  -3.183153 -16.00712173  9.640816 0.9163948
-D-A  12.863982   0.04001373 25.687951 0.0489779
-C-B -11.091044 -23.91501312  1.732924 0.1149768
-D-B   4.956091  -7.86787766 17.780060 0.7454122
-D-C  16.047135   3.22316680 28.871104 0.0078269</code></pre>
+          diff         lwr       upr     p adj
+B-A   9.339435  -4.1112238 22.790093 0.2739193
+C-A  -4.714195 -18.1648531  8.736464 0.7976457
+D-A  13.646459   0.1958004 27.097117 0.0453828
+C-B -14.053629 -27.5042877 -0.602971 0.0369414
+D-B   4.307024  -9.1436342 17.757683 0.8378580
+D-C  18.360653   4.9099951 31.811312 0.0030071</code></pre>
 </div>
 </div>
 <p><strong>结果可视化</strong>：</p>
@@ -511,7 +512,7 @@ D-C  16.047135   3.22316680 28.871104 0.0078269</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建包含交互效应的示例数据</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pricing_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">price_level =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"低"</span>, <span class="st">"中"</span>, <span class="st">"高"</span>), <span class="at">each =</span> <span class="dv">60</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">price_level =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"低"</span>, <span class="st">"中"</span>, <span class="st">"高"</span>), <span class="at">each =</span> <span class="dv">60</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"低"</span>, <span class="st">"中"</span>, <span class="st">"高"</span>)),</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">consumer_group =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"年轻人"</span>, <span class="st">"中年人"</span>), <span class="at">each =</span> <span class="dv">30</span>), <span class="dv">3</span>),</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">purchase_amount =</span> <span class="fu">c</span>(</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="dv">120</span>, <span class="dv">20</span>), <span class="fu">rnorm</span>(<span class="dv">30</span>, <span class="dv">100</span>, <span class="dv">15</span>),  <span class="co"># 低价格，两个消费群体</span></span>
@@ -534,10 +535,10 @@ D-C  16.047135   3.22316680 28.871104 0.0078269</code></pre>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(interaction_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
-price_level                  2   5443    2721   4.622  0.01108 *  
-consumer_group               1   5471    5471   9.291  0.00266 ** 
-price_level:consumer_group   2  35564   17782  30.198 5.52e-12 ***
-Residuals                  174 102458     589                     
+price_level                  2   2168    1084   1.706 0.184575    
+consumer_group               1  10021   10021  15.771 0.000104 ***
+price_level:consumer_group   2  38363   19181  30.187 5.57e-12 ***
+Residuals                  174 110563     635                     
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -546,10 +547,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> pricing_data)</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(main_effects_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                Df Sum Sq Mean Sq F value Pr(&gt;F)   
-price_level      2   5443    2721   3.470 0.0333 * 
-consumer_group   1   5471    5471   6.976 0.0090 **
-Residuals      176 138022     784                  
+<pre><code>                Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+price_level      2   2168    1084   1.281 0.280264    
+consumer_group   1  10021   10021  11.843 0.000723 ***
+Residuals      176 148926     846                     
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -571,7 +572,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="单向重复测量方差分析" class="level3">
 <h3 class="anchored" data-anchor-id="单向重复测量方差分析">单向重复测量方差分析</h3>
-<p>当同一组受试者在不同条件下重复测量时，我们使用重复测量方差分析：</p>
+<p>当实验设计采用重复测量方法，意味着我们对同一批受试者在多个不同的处理条件（例如，不同的药物剂量、不同的刺激类型）下，或者在不同的时间点（例如，治疗前、治疗中、治疗后）进行多次测量。 在这种情况下，由于数据来自同一批受试者，观测值之间存在相关性，传统的独立样本方差分析不再适用。 为了正确分析这类数据，检验不同条件或时间点下受试者反应的平均水平是否存在显著差异，并有效控制受试者个体差异带来的影响，我们应当采用重复测量方差分析。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 重复测量方差分析示例</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ez)</span>
@@ -595,22 +596,67 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$ANOVA
-       Effect DFn DFd        SSn      SSd          F            p p&lt;.05
-1 (Intercept)   1  29 498037.639 6443.067 2241.64860 5.131036e-29     *
-2        time   2  58    278.063 7865.999    1.02515 3.651503e-01      
-         ges
-1 0.97207152
-2 0.01906221
+       Effect DFn DFd          SSn      SSd            F            p p&lt;.05
+1 (Intercept)   1  29 521993.30656 6686.126 2264.0622673 4.449626e-29     *
+2        time   2  58     41.23278 6028.308    0.1983559 8.206319e-01      
+          ges
+1 0.976221713
+2 0.003232507
 
 $`Mauchly's Test for Sphericity`
-  Effect        W         p p&lt;.05
-2   time 0.927807 0.3502734      
+  Effect         W         p p&lt;.05
+2   time 0.9723606 0.6754342      
 
 $`Sphericity Corrections`
-  Effect       GGe     p[GG] p[GG]&lt;.05       HFe     p[HF] p[HF]&lt;.05
-2   time 0.9326679 0.3611791           0.9943015 0.3648299          </code></pre>
+  Effect      GGe     p[GG] p[GG]&lt;.05      HFe     p[HF] p[HF]&lt;.05
+2   time 0.973104 0.8148575           1.042113 0.8206319          </code></pre>
 </div>
 </div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>ezANOVA</code> 函数参数解释
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>ezANOVA</code> 函数用于执行重复测量方差分析。以下是常用参数的解释：</p>
+<ul>
+<li><code>data</code>: <strong>数据框</strong>，包含需要分析的数据。</li>
+<li><code>dv</code>: <strong>因变量</strong> (Dependent Variable)，需要分析的测量变量，使用 <code>.(变量名)</code> 的形式指定。例如，<code>. (performance)</code> 表示 <code>performance</code> 列是因变量。</li>
+<li><code>wid</code>: <strong>被试者变量</strong> (Within-Subject ID)，用于标识每个被试者的唯一ID，使用 <code>.(变量名)</code> 的形式指定。例如，<code>. (subject)</code> 表示 <code>subject</code> 列是被试者ID。</li>
+<li><code>within</code>: <strong>组内变量</strong> (Within-Subject Factors)，重复测量设计的组内因素，使用 <code>.(因素1, 因素2, ...)</code> 的形式指定。例如，<code>. (time)</code> 表示 <code>time</code> 列是组内因素。</li>
+<li><code>detailed</code>: <strong>是否输出详细结果</strong>，逻辑值 (<code>TRUE</code> 或 <code>FALSE</code>)。设置为 <code>TRUE</code> 时，输出更详细的方差分析结果，包括效应大小等信息。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="ezanova-函数输出结果解读" class="level3">
+<h3 class="anchored" data-anchor-id="ezanova-函数输出结果解读"><code>ezANOVA</code> 函数输出结果解读</h3>
+<p><code>ezANOVA</code> 函数的输出结果主要是一个详细的方差分析表，用于解读重复测量方差分析的结果。以下是表格中各列的含义：</p>
+<ul>
+<li><p><strong>Effect</strong>: 效应名称，表示正在检验的效应。对于重复测量方差分析，主要关注组内因素（例如，示例中的 <code>time</code>）以及可能的交互效应。</p></li>
+<li><p><strong>DFn</strong>: 分子自由度 (Degrees of Freedom numerator)。对于组内因素，其自由度通常是因素水平数减1。例如，如果 <code>time</code> 因素有三个水平 (before, during, after)，则 DFn 为 3 - 1 = 2。</p></li>
+<li><p><strong>DFd</strong>: 分母自由度 (Degrees of Freedom denominator)。对于组内因素，分母自由度与被试者数量和组内因素水平数有关，更具体地说是 (被试者数量 - 1) * (组内因素水平数 - 1)。在 <code>ezANOVA</code> 的详细输出中，会使用更精确的计算方法来处理重复测量设计的自由度。</p></li>
+<li><p><strong>F</strong>: F 统计量。这是方差分析的核心统计量，用于检验组间方差与组内方差的比率。F 值越大，说明组间变异相对于组内变异越大，越有可能拒绝原假设。</p></li>
+<li><p><strong>p</strong>: p 值 (p-value)。这是在原假设成立的条件下，观察到当前样本结果或更极端结果的概率。<strong>p 值是判断效应是否具有统计学显著性的关键指标</strong>。</p>
+<ul>
+<li><strong>如果 p 值小于预设的显著性水平 (<span class="math inline">\(\alpha\)</span>，通常为 0.05)</strong>，则<strong>拒绝原假设</strong>，认为该效应在统计上是显著的。例如，如果 <code>time</code> 效应的 p 值小于 0.05，则认为不同时间点（before, during, after）的平均 performance 存在显著差异。</li>
+<li><strong>如果 p 值大于或等于 <span class="math inline">\(\alpha\)</span></strong>，则<strong>不拒绝原假设</strong>，认为没有足够的证据表明该效应是显著的。</li>
+</ul></li>
+<li><p><strong>ges</strong>: 广义效应量 (Generalized Eta-Squared)。用于衡量效应量的大小，即组内因素对因变量变异的解释程度。ges 的取值范围为 0 到 1，值越大表示效应量越大。</p>
+<ul>
+<li><strong>ges 提供了一个关于效应实际大小的指标，而不仅仅是统计显著性</strong>。即使 p 值很小，如果 ges 很小，也可能意味着效应在实际应用中意义不大。</li>
+<li>通常，ges 的解释可以参考以下标准（Cohen, 1988）：
+<ul>
+<li>小效应：ges ≈ 0.01</li>
+<li>中等效应：ges ≈ 0.06</li>
+<li>大效应：ges ≈ 0.14</li>
+</ul></li>
+</ul></li>
+</ul>
 </section>
 <section id="方差分析的替代方法" class="level3">
 <h3 class="anchored" data-anchor-id="方差分析的替代方法">方差分析的替代方法</h3>
@@ -628,7 +674,7 @@ $`Sphericity Corrections`
     Kruskal-Wallis rank sum test
 
 data:  sales by campaign
-Kruskal-Wallis chi-squared = 11.113, df = 3, p-value = 0.01113</code></pre>
+Kruskal-Wallis chi-squared = 11.083, df = 3, p-value = 0.01128</code></pre>
 </div>
 </div>
 </section>
@@ -654,12 +700,120 @@ Kruskal-Wallis chi-squared = 11.113, df = 3, p-value = 0.01113</code></pre>
 <h3 class="anchored" data-anchor-id="综合练习与案例分析">综合练习与案例分析</h3>
 <p><strong>练习1：市场营销策略评估</strong></p>
 <p>某电商平台测试了四种不同的营销策略（A：折扣优惠，B：会员积分，C：免费赠品，D：限时秒杀），每种策略在10个不同城市实施。收集了每种策略的点击率数据。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取营销策略数据</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>marketing_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/week5/marketing_strategy.csv"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(marketing_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  strategy strategy_name city  clickthrough_rate
+  &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;             &lt;dbl&gt;
+1 A        折扣优惠      城市1            0.0875
+2 A        折扣优惠      城市2            0.0779
+3 A        折扣优惠      城市3            0.0897
+4 A        折扣优惠      城市4            0.103 
+5 A        折扣优惠      城市5            0.0765
+6 A        折扣优惠      城市6            0.0765</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制四种策略的点击率箱线图</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(marketing_data, <span class="fu">aes</span>(<span class="at">x =</span> strategy_name, <span class="at">y =</span> clickthrough_rate, <span class="at">fill =</span> strategy_name)) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"不同营销策略的点击率比较"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"营销策略"</span>, <span class="at">y =</span> <span class="st">"点击率"</span>) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="week5_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="2400"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>任务： 1. 使用单因素方差分析判断四种营销策略的点击率是否存在显著差异 2. 如有显著差异，确定哪些策略间的差异显著 3. 可视化分析结果</p>
 <p><strong>练习2：区域与季节对销售的影响</strong></p>
 <p>某连锁零售商收集了不同区域（北区、南区、东区、西区）在不同季节（春、夏、秋、冬）的销售数据。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取区域销售数据</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>regional_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/week5/regional_sales.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">season =</span> <span class="fu">factor</span>(season, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"春"</span>, <span class="st">"夏"</span>, <span class="st">"秋"</span>, <span class="st">"冬"</span>)))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(regional_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  region season store_id sales
+  &lt;chr&gt;  &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt;
+1 北区   春     北区-1   1396.
+2 北区   春     北区-2   1322.
+3 北区   春     北区-3   1285.
+4 北区   春     北区-4   1261.
+5 北区   春     北区-5   1108.
+6 北区   夏     北区-1   1299.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每个区域和季节组合的平均销售额</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>region_season_means <span class="ot">&lt;-</span> regional_data <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region, season) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_sales =</span> <span class="fu">mean</span>(sales), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制交互作用图</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(region_season_means, <span class="fu">aes</span>(<span class="at">x =</span> season, <span class="at">y =</span> mean_sales, </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">color =</span> region, <span class="at">group =</span> region)) <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"区域与季节对销售的交互效应"</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"季节"</span>, <span class="at">y =</span> <span class="st">"平均销售额"</span>) <span class="sc">+</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="week5_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="2400"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>任务： 1. 进行双因素方差分析，分析区域和季节对销售的主效应和交互效应 2. 解释分析结果，并提出营销建议 3. 使用交互作用图可视化区域与季节的交互关系</p>
 <p><strong>练习3：广告媒体效果分析</strong></p>
 <p>分析不同广告媒体（电视、广播、社交媒体、印刷媒体）对不同产品类别（电子产品、服装、食品）的广告效果数据。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取广告媒体效果数据</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>ad_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/week5/ad_media_effect.csv"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ad_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  media product_category campaign_id effect
+  &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;        &lt;dbl&gt;
+1 电视  电子产品         电电-1       10.1 
+2 电视  电子产品         电电-2        8.86
+3 电视  电子产品         电电-3       10.5 
+4 电视  电子产品         电电-4        8.52
+5 电视  电子产品         电电-5        9.91
+6 电视  电子产品         电电-6       11.0 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每个媒体和产品类别组合的平均效果</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>media_product_means <span class="ot">&lt;-</span> ad_data <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(media, product_category) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_effect =</span> <span class="fu">mean</span>(effect), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制交互作用图</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(media_product_means, <span class="fu">aes</span>(<span class="at">x =</span> product_category, <span class="at">y =</span> mean_effect, </span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">color =</span> media, <span class="at">group =</span> media)) <span class="sc">+</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"广告媒体与产品类别的交互效应"</span>,</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"产品类别"</span>, <span class="at">y =</span> <span class="st">"平均效果"</span>) <span class="sc">+</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="week5_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="2400"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>任务： 1. 进行双因素方差分析 2. 如果存在交互效应，分析不同产品类别下最有效的广告媒体 3. 根据分析结果提出广告投放建议</p>
 <div class="callout callout-style-simple callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">

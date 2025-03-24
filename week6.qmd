@@ -2,63 +2,100 @@
 title: "第六周：回归分析初步"
 ---
 
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(showtext)
+library(RColorBrewer)
+library(patchwork)
+library(pacman)
+
+# 加载中文字体
+font_add_google("Noto Sans SC", "notosans")  # 思源黑体
+showtext_auto()
+
+# 设置ggplot2默认主题
+theme_set(
+  theme_minimal() +
+    theme(
+      text = element_text(family = "Noto Sans SC"),
+      plot.title = element_text(size = 16, face = "bold"),
+      plot.subtitle = element_text(size = 12),
+      axis.title = element_text(size = 10),
+      axis.text = element_text(size = 9),
+      legend.title = element_text(size = 10),
+      legend.text = element_text(size = 9),
+      panel.grid.major = element_line(color = "gray90"),
+      panel.grid.minor = element_line(color = "gray95")
+    )
+)
+
+```
+
 ## 第十一次课：线性回归模型与最小二乘法
 
 ### 回归分析概述
+::: {.callout-note appearance="minimal"}
+## 回归分析的目的
 
-**回归分析的目的**：
-- 研究因变量与一个或多个自变量之间的关系
-- 建立模型进行预测和解释
-- 评估变量之间的关联程度和方向
+- **研究关系**：分析因变量与一个或多个自变量之间的关系。
+- **建立模型**：构建模型以进行预测和解释现象。
+- **评估关联**：评估变量之间关联的程度和方向。
 
-回归分析是商业分析中最常用的分析技术之一，它能够帮助我们回答以下问题：
-- 影响销售额的关键因素有哪些？每个因素的影响程度如何？
-- 如何根据产品特征预测价格？
-- 不同营销投入对业绩的边际贡献是多少？
+回归分析是商业分析中常用的核心技术之一，可以解答以下商业问题：
 
-**回归分析的应用场景**：
-- 预测销售额、房价、股票价格等
-- 分析影响消费者购买行为的因素
-- 评估营销活动的效果
-- 识别影响企业绩效的关键指标
+- 哪些因素关键影响销售额？各自的影响程度如何？
+- 如何通过产品特征预测产品价格？
+- 不同的营销投入对业绩的边际贡献是多少？
+:::
 
-**回归分析的类型**：
-- **线性回归**：因变量与自变量之间呈线性关系
-- **非线性回归**：因变量与自变量之间呈非线性关系
-- **简单线性回归**：只有一个自变量
-- **多元线性回归**：有多个自变量
+::: {.callout-tip appearance="minimal"}
+## 回归分析的应用场景
 
-**回归分析与其他统计方法的区别**：
-- 与相关分析相比：回归不仅描述关系，还建立预测模型
-- 与方差分析相比：回归处理连续自变量，方差分析处理分类自变量
+- **预测**：销售额预测、房价预测、股票价格预测等。
+- **行为分析**：分析影响消费者购买行为的因素。
+- **效果评估**：评估营销活动、政策实施等效果。
+- **绩效识别**：识别影响企业绩效的关键指标。
+:::
 
-**回归分析的基本步骤**：
-1. **确定回归模型**：选择合适的回归模型类型
-2. **估计模型参数**：使用样本数据估计模型中的未知参数
-3. **模型检验**：检验模型的拟合效果和显著性
-4. **模型应用**：使用建立的模型进行预测、解释和决策
+::: {.callout-warning appearance="minimal"}
+## 回归分析的类型
 
-```{r, eval=FALSE}
+- **按关系类型**
+    - **线性回归**：自变量与因变量之间呈线性关系。
+    - **非线性回归**：自变量与因变量之间呈非线性关系。
+- **按自变量数量**
+    - **简单线性回归**：仅有一个自变量。
+    - **多元线性回归**：有多个自变量。
+:::
+
+::: {.callout-important appearance="minimal"}
+## 回归分析与其他统计方法的区别
+
+- **与相关分析**：回归分析不仅描述变量间的关系，更侧重于建立预测模型。
+- **与方差分析**：回归分析主要处理连续型自变量，而方差分析侧重于分类自变量。
+:::
+
+::: {.callout-caution appearance="minimal"}
+## 回归分析的基本步骤
+
+1. **模型确定**：选择合适的回归模型类型 (线性/非线性，简单/多元)。
+2. **参数估计**：使用样本数据估计模型中的未知参数。
+3. **模型检验**：评估模型的拟合效果和统计显著性。
+4. **模型应用**：运用已建立的模型进行预测、解释和决策。
+:::
+
+```{r}
 # 创建示例数据
 set.seed(123)
-advertising_data <- data.frame(
+
+advertising_data <- tibble(
   TV = runif(100, 5, 50),
   Radio = runif(100, 1, 30),
-  Newspaper = runif(100, 0, 20)
+  Newspaper = runif(100, 0, 20),
+  Sales = 5 + 0.15 * TV + 0.3 * Radio + 0.1 * Newspaper + rnorm(100, 0, 2)
 )
-# 生成销售额数据，使其与广告投入有一定关系
-advertising_data$Sales <- 5 + 0.15 * advertising_data$TV + 
-                            0.3 * advertising_data$Radio + 
-                            0.1 * advertising_data$Newspaper + 
-                            rnorm(100, 0, 2)
 
-# 探索性数据分析
-summary(advertising_data)
-cor(advertising_data)
-
-# 可视化变量关系
-library(ggplot2)
-library(gridExtra)
 
 p1 <- ggplot(advertising_data, aes(x = TV, y = Sales)) +
   geom_point() +
@@ -75,12 +112,13 @@ p3 <- ggplot(advertising_data, aes(x = Newspaper, y = Sales)) +
   geom_smooth(method = "lm", se = FALSE) +
   labs(title = "报纸广告与销售额关系")
 
-grid.arrange(p1, p2, p3, ncol = 2)
+p1 + p2 + p3
 ```
 
 ### 简单线性回归模型
 
 **模型形式**：$y = \beta_0 + \beta_1 x + \epsilon$
+
 - $y$：因变量
 - $x$：自变量
 - $\beta_0$：截距，当$x=0$时，$y$的期望值
@@ -99,10 +137,12 @@ grid.arrange(p1, p2, p3, ncol = 2)
 - $\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i$是因变量$y_i$的预测值
 
 **最小二乘估计的公式**：
+
 - $\hat{\beta}_1 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n}(x_i - \bar{x})^2}$
 - $\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}$
 
 **回归系数的解释**：
+
 - $\hat{\beta}_0$：当自变量$x$为0时，因变量$y$的预测值（在实际情况中，自变量为0可能没有现实意义）
 - $\hat{\beta}_1$：自变量$x$每增加一个单位，因变量$y$的预测值平均增加$\hat{\beta}_1$个单位（边际效应）
 
@@ -118,95 +158,46 @@ grid.arrange(p1, p2, p3, ncol = 2)
    - $RSE = \sqrt{\frac{SSE}{n-2}} = \sqrt{\frac{\sum(y_i - \hat{y}_i)^2}{n-2}}$
 
 **回归模型的假设条件**：
+
 - **线性性**：因变量与自变量之间存在线性关系
 - **独立性**：误差项之间相互独立
 - **同方差性**：误差项的方差为常数（同质性）
 - **正态性**：误差项服从均值为0的正态分布
 
-```{r, eval=FALSE}
-# 简单线性回归示例：电视广告与销售额
-tv_model <- lm(Sales ~ TV, data = advertising_data)
-
-# 查看回归结果
-summary(tv_model)
-
-# 可视化回归线和预测区间
-ggplot(advertising_data, aes(x = TV, y = Sales)) +
-  geom_point() +
-  geom_smooth(method = "lm", level = 0.95) +
-  labs(title = "电视广告支出与销售额的简单线性回归",
-       x = "电视广告支出（千元）",
-       y = "销售额（万元）") +
-  theme_minimal()
-
-# 残差分析
-par(mfrow = c(2, 2))
-plot(tv_model)
-```
 
 ### R语言实现简单线性回归
 
 **基本函数**：
-```{r, eval=FALSE}
+```{r}
 # 建立简单线性回归模型
 lm_model <- lm(Sales ~ TV, data = advertising_data)
 
-# 查看模型摘要
-summary(lm_model)
+# 使用 broom 包获取模型摘要信息
+library(broom)
 
-# 提取回归系数
-coef(lm_model)
+# 获取整洁的模型系数
+tidy(lm_model, conf.int = TRUE)
 
-# 置信区间
-confint(lm_model, level = 0.95)
+# 获取整洁的模型摘要统计量
+glance(lm_model)
 
 # 模型预测
-new_data <- data.frame(TV = c(10, 20, 30, 40))
-predict(lm_model, newdata = new_data, interval = "confidence")
-predict(lm_model, newdata = new_data, interval = "prediction")
+new_data <- tibble(TV = c(10, 20, 30, 40))
 
-# 残差和拟合值
-residuals(lm_model)
-fitted(lm_model)
+# 使用 augment 获取带预测值和残差的数据框
+augmented_data <- augment(lm_model, newdata = new_data, interval = "confidence")
+augmented_prediction <- augment(lm_model, newdata = new_data, interval = "prediction")
+augmented_data
+augmented_prediction
 
 # 回归诊断图
-par(mfrow = c(2, 2))
-plot(lm_model)
-```
-
-**ggplot2进行回归可视化**：
-```{r, eval=FALSE}
-library(ggplot2)
-
-# 基本散点图和回归线
-ggplot(advertising_data, aes(x = TV, y = Sales)) +
-  geom_point(alpha = 0.6) +
-  geom_smooth(method = "lm", se = TRUE) +
-  labs(title = "电视广告支出与销售额关系",
-       x = "电视广告支出（千元）", 
-       y = "销售额（万元）") +
-  theme_minimal()
-
-# 回归残差可视化
-advertising_data$predicted <- fitted(lm_model)
-advertising_data$residuals <- residuals(lm_model)
-
-ggplot(advertising_data, aes(x = predicted, y = residuals)) +
-  geom_point() +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-  labs(title = "残差vs拟合值",
-       x = "拟合值", y = "残差") +
-  theme_minimal()
-
-# QQ图检验正态性
-ggplot(advertising_data, aes(sample = residuals)) +
-  stat_qq() +
-  stat_qq_line() +
-  labs(title = "残差QQ图") +
-  theme_minimal()
+# 使用 ggfortify 包可以绘制更美观的回归诊断图，它是 ggplot2 的扩展包
+library(ggfortify)
+autoplot(lm_model)
 ```
 
 **结果解读**：
+
 - **系数估计值**：截距($\hat{\beta}_0$)和斜率($\hat{\beta}_1$)的估计值
 - **标准误差**：系数估计值的标准误差，表示估计的精确度
 - **t值**：系数估计值与标准误差的比值，用于检验系数是否显著不为0
@@ -214,102 +205,89 @@ ggplot(advertising_data, aes(sample = residuals)) +
 - **R²值**：模型解释的方差比例，衡量拟合优度
 - **F统计量**：整个模型的显著性检验
 
-**案例解读**：
-```{r, eval=FALSE}
-# 假设这是summary(lm_model)的输出结果：
-# Coefficients:
-#             Estimate Std. Error t value Pr(>|t|)    
-# (Intercept)   7.0326     0.4578  15.361  < 2e-16 ***
-# TV            0.0475     0.0097   4.897 4.75e-06 ***
-# ---
-# R-squared: 0.612, Adjusted R-squared: 0.606 
-# F-statistic: 23.97 on 1 and 98 DF, p-value: 4.75e-06
-
-# 商业解读：
-# 1. 截距7.0326表示当电视广告支出为0时，预期销售额为7.0326万元
-# 2. 电视广告系数0.0475表示每增加1千元的电视广告支出，销售额平均增加0.0475万元
-# 3. 电视广告变量的p值非常小(<0.0001)，表示电视广告支出对销售额有显著影响
-# 4. R²值为0.612，说明模型解释了约61.2%的销售额变异
-# 5. 整体模型F检验显著(p<0.0001)，表明模型有统计学意义
-```
 
 ## 第十二次课：多元线性回归模型
 
 ### 多元线性回归模型
 
-**多元线性回归的意义**：
-在商业环境中，一个因变量往往受多个因素影响。例如，销售额不仅受电视广告的影响，还可能受广播、报纸、社交媒体等多种营销渠道的影响。多元线性回归能够同时考虑多个自变量的影响，更全面地分析因素间的关系。
+::: {.callout-note}
+## 多元线性回归的意义
 
-**模型形式**：$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_p x_p + \epsilon$
+在商业环境中，一个因变量往往受多个因素影响。例如，销售额不仅受电视广告的影响，还可能受广播、报纸、社交媒体等多种营销渠道的影响。多元线性回归能够同时考虑多个自变量的影响，更全面地分析因素间的关系。
+:::
+
+::: {.callout-important}
+## 模型形式
+
+$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_p x_p + \epsilon$
+
 - $y$：因变量
 - $x_1, x_2, \dots, x_p$：$p$个自变量
 - $\beta_0$：截距
 - $\beta_1, \beta_2, \dots, \beta_p$：偏回归系数，控制其他自变量不变时，每个自变量对因变量的边际影响
 - $\epsilon$：随机误差项
+:::
 
-**偏回归系数的解释**：
+::: {.callout-hint}
+## 偏回归系数的解释
+
 - $\beta_1$表示在其他自变量$x_2, \dots, x_p$保持不变的情况下，自变量$x_1$每增加一个单位，因变量$y$的平均变化量
 
-这个解释非常重要，因为它体现了"控制变量"的思想，即我们能够分离出单个自变量的"净效应"。这在商业分析中尤为有用，例如，我们可以分析在广播广告投入不变的情况下，增加电视广告对销售的边际贡献。
+这个解释非常重要，因为它体现了“控制变量”的思想，即我们能够分离出单个自变量的“净效应”。这在商业分析中尤为有用，例如，我们可以分析在广播广告投入不变的情况下，增加电视广告对销售的边际贡献。
+:::
 
-**参数估计**：
+::: {.callout-tip}
+## 参数估计
+
 - 同样使用最小二乘法(OLS)
 - 通过矩阵运算求解：$\hat{\beta} = (X^TX)^{-1}X^Ty$
 - 其中$X$是自变量矩阵，$y$是因变量向量
+:::
 
-**多元线性回归模型的假设条件**：
+::: {.callout-caution}
+## 模型假设
+
 - 线性性：因变量与每个自变量之间存在线性关系
 - 独立性：观测值之间相互独立
 - 同方差性：误差项方差恒定
 - 正态性：误差项服从正态分布
 - 无多重共线性：自变量之间不存在高度相关性
+:::
 
-**多重共线性问题**：
-- 定义：自变量之间存在强相关关系
-- 后果：回归系数估计不稳定，标准误增大
-- 诊断：方差膨胀因子(VIF)
-- 处理：变量选择、正则化、主成分分析等
+::: {.callout-warning}
+## 多重共线性问题
 
-```{r, eval=FALSE}
+- **定义**：自变量之间存在强相关关系
+- **后果**：回归系数估计不稳定，标准误增大
+- **诊断**：方差膨胀因子(VIF)
+- **处理**：变量选择、正则化、主成分分析等
+:::
+
+```{r}
 # 检测多重共线性
-library(car)
+p_load(car)
 multi_model <- lm(Sales ~ TV + Radio + Newspaper, data = advertising_data)
+
 vif(multi_model)
+# VIF > 5通常表示存在多重共线性
 # VIF > 10通常表示存在严重多重共线性
 ```
 
 **模型拟合与检验**：
+
 - **R²**：衡量模型对数据的拟合程度，取值范围[0,1]
 - **调整R²**：考虑自变量个数对R²的影响，防止过拟合
 - **F检验**：检验模型整体的显著性
 - **t检验**：检验每个偏回归系数的显著性
 
 **解释多元回归模型时需注意**：
+
 - 解释系数时必须强调"控制其他变量不变"
 - R²会随自变量增加而增加，应关注调整R²
 - 显著性水平应解释为"在控制了其他变量后"
 
-### R语言实现多元线性回归
-
-下面我们将使用广告投入数据集建立多元线性回归模型，分析不同广告渠道对销售额的影响：
-
-```{r, eval=FALSE}
-# 多元线性回归示例
-multi_model <- lm(Sales ~ TV + Radio + Newspaper, data = advertising_data)
-
-# 查看模型摘要
-summary(multi_model)
-
-# 方差分析表，展示模型整体显著性
-anova(multi_model)
-
-# 检验多重共线性
-library(car)
-vif(multi_model)
-```
-
 **嵌套模型比较**：
-```{r, eval=FALSE}
+```{r}
 # 构建不同的嵌套模型
 model1 <- lm(Sales ~ TV, data = advertising_data)
 model2 <- lm(Sales ~ TV + Radio, data = advertising_data)
@@ -324,22 +302,19 @@ BIC(model1, model2, model3)
 ```
 
 **偏回归图**：观察单个自变量的边际贡献
-```{r, eval=FALSE}
-library(car)
+```{r}
 avPlots(multi_model)
 ```
 
 **变量重要性评估**：
-```{r, eval=FALSE}
-library(relaimpo)
+```{r}
+p_load(relaimpo)
 calc.relimp(multi_model, type = "lmg", rela = TRUE)
 ```
 
 **多元回归的可视化**：
-```{r, eval=FALSE}
+```{r}
 # 可视化不同渠道的边际效应
-library(ggplot2)
-library(gridExtra)
 
 # 构建效应图
 effect_tv <- ggplot(advertising_data, aes(x = TV, y = Sales)) +
@@ -360,10 +335,10 @@ effect_newspaper <- ggplot(advertising_data, aes(x = Newspaper, y = Sales)) +
   labs(title = "报纸广告的边际效应") +
   theme_minimal()
 
-grid.arrange(effect_tv, effect_radio, effect_newspaper, ncol = 2)
+effect_tv + effect_radio + effect_newspaper
 
 # 3D可视化（针对两个自变量）
-library(plotly)
+p_load(plotly)
 fit <- lm(Sales ~ TV + Radio, data = advertising_data)
 
 # 创建网格点
@@ -393,7 +368,7 @@ plot_ly() %>%
 **变量选择方法**：
 当有多个潜在自变量时，我们需要选择一个最佳的变量子集：
 
-```{r, eval=FALSE}
+```{r}
 # 向前逐步回归
 null_model <- lm(Sales ~ 1, data = advertising_data)
 full_model <- lm(Sales ~ ., data = advertising_data)
@@ -408,7 +383,8 @@ stepwise_model <- step(null_model, scope = list(lower = null_model, upper = full
                      direction = "both")
 
 # 使用Leaps包进行最优子集选择
-library(leaps)
+p_load(leaps)
+
 subsets <- regsubsets(Sales ~ ., data = advertising_data, nvmax = ncol(advertising_data) - 1)
 summary(subsets)
 plot(subsets, scale = "r2")

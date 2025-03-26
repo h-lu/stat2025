@@ -93,15 +93,26 @@ theme_set(
 #
 #
 #
-# 加载波士顿房价数据集
+# 加载 Boston 房价数据集
+# 数据集介绍：Boston 数据集包含了波士顿郊区房价的中位数以及可能影响房价的 13 个变量。
+# 变量包括：
+# - crim：城镇人均犯罪率
+# - zn：住宅用地超过 25,000 平方英尺的比例
+# - indus：城镇非零售业务用地比例
+# - chas：查尔斯河虚拟变量（如果土地在河边，则为 1；否则为 0）
+# - nox：氮氧化物浓度（百万分之几）
+# - rm：每栋住宅的平均房间数
+# - age：1940 年之前建造的自住房屋比例
+# - dis：到五个波士顿就业中心的加权距离
+# - rad：到高速公路的可达性指数
+# - tax：每 10,000 美元的全额物业税率
+# - ptratio：城镇的师生比例
+# - black： 1000(Bk - 0.63)^2，其中 Bk 是城镇中黑人的比例
+# - lstat：人口中地位较低人群的百分比
+# - medv：自住房屋的中位数价值（单位：1000 美元）
+
 library(MASS)
 data(Boston)
-
-# 查看数据集结构
-str(Boston)
-
-# 数据集概要
-summary(Boston)
 
 # 探索性数据分析：房价与几个主要因素之间的关系
 p1 <- ggplot(Boston, aes(x = rm, y = medv)) +
@@ -126,8 +137,6 @@ p3 <- ggplot(Boston, aes(x = crim, y = medv)) +
        y = "房价（千美元）")
 
 p1 + p2 + p3
-#
-#
 #
 #
 #
@@ -450,6 +459,7 @@ data_ts <- data.frame(time = time, y = y)
 
 # 拟合简单线性模型
 ts_model <- lm(y ~ time, data = data_ts)
+summary(ts_model)
 
 # 检测自相关性
 library(lmtest)
@@ -471,6 +481,8 @@ summary(gls_model)
 # 重置图形参数
 par(mfrow = c(1, 1))
 ```
+#
+#
 #
 #
 #
@@ -516,6 +528,8 @@ library(MASS)
 robust_model <- rlm(medv ~ lstat, data = Boston)
 summary(robust_model)
 ```
+#
+#
 #
 #
 #

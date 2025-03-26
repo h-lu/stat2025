@@ -10,9 +10,9 @@ library(RColorBrewer)
 library(patchwork)
 library(pacman)
 
-# 加载中文字体
-font_add_google("Noto Sans SC", "notosans")  # 思源黑体
-showtext_auto()
+# # 加载中文字体
+# font_add_google("Noto Sans SC", "notosans")  # 思源黑体
+# showtext_auto()
 
 # 设置ggplot2默认主题
 theme_set(
@@ -35,6 +35,13 @@ theme_set(
 ## 第十一次课：线性回归模型与最小二乘法
 
 ### 回归分析概述
+
+::: {.callout-note appearance="minimal"}
+## 回归分析
+
+回归分析是统计分析中重要的工具，它用于描述变量之间的线性关系，并建立预测模型。
+:::
+
 ::: {.callout-note appearance="minimal"}
 ## 回归分析的目的
 
@@ -86,31 +93,37 @@ theme_set(
 :::
 
 ```{r}
-# 创建示例数据
-set.seed(123)
+# 加载波士顿房价数据集
+library(MASS)
+data(Boston)
 
-advertising_data <- tibble(
-  TV = runif(100, 5, 50),
-  Radio = runif(100, 1, 30),
-  Newspaper = runif(100, 0, 20),
-  Sales = 5 + 0.15 * TV + 0.3 * Radio + 0.1 * Newspaper + rnorm(100, 0, 2)
-)
+# 查看数据集结构
+str(Boston)
 
+# 数据集概要
+summary(Boston)
 
-p1 <- ggplot(advertising_data, aes(x = TV, y = Sales)) +
+# 探索性数据分析：房价与几个主要因素之间的关系
+p1 <- ggplot(Boston, aes(x = rm, y = medv)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "电视广告与销售额关系")
+  labs(title = "房间数与房价关系",
+       x = "平均房间数",
+       y = "房价（千美元）")
 
-p2 <- ggplot(advertising_data, aes(x = Radio, y = Sales)) +
+p2 <- ggplot(Boston, aes(x = lstat, y = medv)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "广播广告与销售额关系")
+  labs(title = "低收入人口比例与房价关系",
+       x = "低收入人口比例(%)",
+       y = "房价（千美元）")
 
-p3 <- ggplot(advertising_data, aes(x = Newspaper, y = Sales)) +
+p3 <- ggplot(Boston, aes(x = crim, y = medv)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "报纸广告与销售额关系")
+  labs(title = "犯罪率与房价关系",
+       x = "犯罪率",
+       y = "房价（千美元）")
 
 p1 + p2 + p3
 ```
@@ -125,52 +138,438 @@ p1 + p2 + p3
 - $\beta_1$：斜率，自变量$x$每增加一个单位，因变量$y$的平均变化量
 - $\epsilon$：随机误差项，反映模型无法解释的随机变异
 
-简单线性回归是理解回归分析的基础，它描述了一个自变量和一个因变量之间的线性关系。例如，我们可以建立一个模型来描述广告支出（自变量）与销售额（因变量）之间的关系。
+简单线性回归是理解回归分析的基础，它描述了一个自变量和一个因变量之间的线性关系。例如，我们可以建立一个模型来描述房屋平均房间数（自变量）与房价（因变量）之间的关系。
 
-**最小二乘法(OLS)**：
+### 最小二乘法的数学原理
 
-最小二乘法是一种估计回归系数的方法，其目标是找到能使误差平方和最小的回归线。
+::: {.callout-note}
+## 最小二乘法 (OLS) 的基本思想
 
-- 目标：使残差平方和(RSS)最小化
-- $\text{RSS} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \sum_{i=1}^{n} (y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i))^2$
-- $\hat{\beta}_0$和$\hat{\beta}_1$是$\beta_0$和$\beta_1$的估计值
-- $\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i$是因变量$y_i$的预测值
+最小二乘法的核心思想是找到一条直线，使得所有观测点到这条直线的垂直距离的平方和最小。这些垂直距离就是残差，代表了模型的预测误差。
+:::
 
-**最小二乘估计的公式**：
+**数学推导**：
 
-- $\hat{\beta}_1 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n}(x_i - \bar{x})^2}$
-- $\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}$
+1. **残差平方和表达式**：
+   - 给定数据点 $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$
+   - 回归直线为 $\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x$
+   - 残差平方和 $\text{RSS} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \sum_{i=1}^{n} (y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i))^2$
 
-**回归系数的解释**：
+2. **求最小值**：
+   - 对 $\hat{\beta}_0$ 和 $\hat{\beta}_1$ 分别求偏导数并令其等于零：
+   
+   $$\frac{\partial \text{RSS}}{\partial \hat{\beta}_0} = -2\sum_{i=1}^{n} (y_i - \hat{\beta}_0 - \hat{\beta}_1 x_i) = 0$$
+   
+   $$\frac{\partial \text{RSS}}{\partial \hat{\beta}_1} = -2\sum_{i=1}^{n} x_i(y_i - \hat{\beta}_0 - \hat{\beta}_1 x_i) = 0$$
+
+3. **解方程组**：
+   - 从第一个方程可得：$\sum_{i=1}^{n} y_i - n\hat{\beta}_0 - \hat{\beta}_1 \sum_{i=1}^{n} x_i = 0$
+   - 整理后得：$\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}$，其中 $\bar{y}$ 和 $\bar{x}$ 分别是 $y$ 和 $x$ 的平均值
+   
+   - 将 $\hat{\beta}_0$ 代入第二个方程：
+   $$\sum_{i=1}^{n} x_i(y_i - (\bar{y} - \hat{\beta}_1 \bar{x}) - \hat{\beta}_1 x_i) = 0$$
+   
+   - 化简后得：
+   $$\hat{\beta}_1 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n}(x_i - \bar{x})^2}$$
+
+4. **几何解释**：
+   - $\hat{\beta}_1$ 是 $x$ 和 $y$ 的协方差除以 $x$ 的方差
+   - 这使得回归线恰好穿过数据点的重心 $(\bar{x}, \bar{y})$
+
+5. **矩阵形式**：
+   - 对于多元线性回归，最小二乘估计可以表示为：$\hat{\beta} = (X^TX)^{-1}X^Ty$
+   - 其中 $X$ 是自变量的设计矩阵，$y$ 是因变量向量
+
+::: {.callout-note}
+## 最小二乘法求解的几何意义
+
+最小二乘法是在样本空间中寻找一个超平面，使得观测值与这个超平面之间的距离平方和最小。这相当于将因变量向量 $y$ 投影到自变量空间上，得到的投影向量就是预测值 $\hat{y}$。
+:::
+
+
+
+
+```{r}
+# 以rm(房间数)与medv(房价)为例应用最小二乘法
+# 计算均值
+x_mean <- mean(Boston$rm)
+y_mean <- mean(Boston$medv)
+
+# 计算β1（斜率）
+numerator <- sum((Boston$rm - x_mean) * (Boston$medv - y_mean))
+denominator <- sum((Boston$rm - x_mean)^2)
+beta1 <- numerator / denominator
+
+# 计算β0（截距）
+beta0 <- y_mean - beta1 * x_mean
+
+# 展示计算结果
+cat("手动计算的最小二乘估计值：\n")
+cat("斜率(β1) =", beta1, "\n")
+cat("截距(β0) =", beta0, "\n")
+
+# 使用lm函数验证结果
+model <- lm(medv ~ rm, data = Boston)
+cat("\nlm函数计算的结果：\n")
+print(coef(model))
+
+# 绘制回归线
+ggplot(Boston, aes(x = rm, y = medv)) +
+  geom_point(alpha = 0.5) +
+  geom_abline(intercept = beta0, slope = beta1, color = "red", size = 1.2) +
+  labs(title = "波士顿房价与平均房间数的关系",
+       subtitle = paste0("回归方程: 房价 = ", round(beta0, 2), " + ", round(beta1, 2), " × 房间数"),
+       x = "平均房间数(rm)",
+       y = "房价中位数(medv，千美元)") +
+  theme_minimal()
+```
+
+
+::: {.callout-note}
+## 回归系数的解释
 
 - $\hat{\beta}_0$：当自变量$x$为0时，因变量$y$的预测值（在实际情况中，自变量为0可能没有现实意义）
 - $\hat{\beta}_1$：自变量$x$每增加一个单位，因变量$y$的预测值平均增加$\hat{\beta}_1$个单位（边际效应）
+:::
 
-**回归模型的评估指标**：
 
-1. **拟合优度 $R^2$**：
-   - 表示模型解释的因变量方差比例
-   - 取值范围[0,1]，越接近1表示模型拟合越好
-   - $R^2 = 1 - \frac{SSE}{SST} = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}$
+## 回归模型的评估指标
 
-2. **残差标准误差(RSE)**：
-   - 衡量因变量实际值偏离预测值的平均程度
-   - $RSE = \sqrt{\frac{SSE}{n-2}} = \sqrt{\frac{\sum(y_i - \hat{y}_i)^2}{n-2}}$
+在构建回归模型后，我们需要评估模型的性能，以了解模型的预测能力和拟合程度。以下是一些常用的评估指标：
 
-**回归模型的假设条件**：
+- **决定系数 (R-squared, $R^2$)**：
+    - **定义**：衡量回归模型对因变量变异的解释程度。它表示模型可以解释因变量总变异的比例。
+    - **取值范围**：0 到 1 之间。
+    - **解释**：
+        - $R^2$ 越接近 1，表示模型拟合效果越好，模型能够解释因变量的大部分变异。
+        - $R^2$ 越接近 0，表示模型拟合效果越差，模型无法很好地解释因变量的变异。
+        - 例如，$R^2 = 0.75$ 表示模型可以解释 75% 的因变量变异。
+    - **优点**：直观易懂，可以直接衡量模型对数据的拟合程度。
+    - **缺点**：$R^2$ 会随着自变量数量的增加而增加，即使增加的自变量对模型并没有实际的改进作用。因此，在比较包含不同数量自变量的模型时，单独使用 $R^2$ 可能会误导。
 
-- **线性性**：因变量与自变量之间存在线性关系
-- **独立性**：误差项之间相互独立
-- **同方差性**：误差项的方差为常数（同质性）
-- **正态性**：误差项服从均值为0的正态分布
+- **调整决定系数 (Adjusted $R^2$)**：
+    - **定义**：在 $R^2$ 的基础上，考虑了模型中自变量的数量。当模型中增加新的自变量时，如果该自变量对提高模型解释能力没有显著作用，调整 $R^2$ 会降低，从而避免了 $R^2$ 随着自变量数量增加而虚假增高的问题。
+    - **计算方式**：调整 $R^2$ 在计算时会惩罚模型中自变量的数量。
+    - **解释**：
+        - 调整 $R^2$ 更适用于比较包含不同数量自变量的模型。
+        - 调整 $R^2$ 越高，模型拟合效果越好，同时考虑了模型的简洁性。
+    - **适用场景**：当需要在多个模型中选择最佳模型，且这些模型的自变量数量不同时，调整 $R^2$ 是一个更合适的指标。
 
+- **均方误差 (Mean Squared Error, MSE)**：
+    - **定义**：衡量预测值与真实值之间差异的平方的平均值。
+    - **计算公式**：$\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$，其中 $n$ 是样本量，$y_i$ 是真实值，$\hat{y}_i$ 是预测值。
+    - **单位**：MSE 的单位是因变量单位的平方。
+    - **解释**：
+        - MSE 越小，表示模型的预测值与真实值越接近，模型的预测精度越高。
+        - MSE 对误差进行平方，使得较大的误差在 MSE 中占有更大的权重，因此 MSE 对异常值比较敏感。
+
+- **均方根误差 (Root Mean Squared Error, RMSE)**：
+    - **定义**：均方误差 (MSE) 的平方根。
+    - **计算公式**：$\text{RMSE} = \sqrt{\text{MSE}} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}$
+    - **单位**：RMSE 的单位与因变量的单位相同，因此在解释上更直观。
+    - **解释**：
+        - RMSE 越小，表示模型的预测值与真实值越接近，模型的预测精度越高。
+        - RMSE 与 MSE 一样，对异常值比较敏感。
+        - 由于 RMSE 的单位与因变量相同，因此更容易解释预测误差的大小。例如，RMSE = 10 表示平均预测误差约为 10 个单位。
+
+- **平均绝对误差 (Mean Absolute Error, MAE)**：
+    - **定义**：衡量预测值与真实值之间差异的绝对值的平均值。
+    - **计算公式**：$\text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|$
+    - **单位**：MAE 的单位与因变量的单位相同。
+    - **解释**：
+        - MAE 越小，表示模型的预测值与真实值越接近，模型的预测精度越高。
+        - MAE 对所有误差都给予相同的权重，因此对异常值不如 MSE 和 RMSE 敏感，更加稳健。
+        - MAE 直接反映了预测值偏离真实值的平均程度，例如，MAE = 5 表示平均预测误差约为 5 个单位。
+    - **适用场景**：当数据中存在异常值，并且希望模型对异常值不那么敏感时，MAE 是一个比 MSE 和 RMSE 更好的选择。
+
+总而言之，选择合适的评估指标取决于具体的应用场景和对模型误差的关注重点。在实际应用中，通常会综合考虑多个评估指标来全面评价回归模型的性能。
+
+
+## 回归系数统计性质
+
+### 最小二乘估计的统计性质 (高斯-马尔可夫定理)
+
+在经典线性回归模型的假设条件下（线性性、随机抽样、严格外生性、完全共线性、球型扰动项），最小二乘估计 (OLS) 具有以下优良的统计性质：
+
+- **无偏性 (Unbiasedness)**：OLS估计的系数 $\hat{\beta}$ 的期望值等于真实系数 $\beta$，即 $E(\hat{\beta}) = \beta$。这意味着在多次抽样中，OLS估计的平均值会接近真实值。
+- **有效性 (Efficiency)**：在所有线性无偏估计量中，OLS估计量具有最小的方差。这意味着OLS估计是最精确的线性无偏估计量，也称为最佳线性无偏估计量 (BLUE, Best Linear Unbiased Estimator)。
+- **一致性 (Consistency)**：随着样本容量 $n$ 趋于无穷大，OLS估计量 $\hat{\beta}$ 依概率收敛于真实系数 $\beta$，即 $\text{plim}_{n\to\infty} \hat{\beta} = \beta$。这意味着当样本量足够大时，OLS估计会非常接近真实值。
+- **正态性 (Normality)**：在扰动项 $\epsilon$ 服从正态分布的假设下，OLS估计量 $\hat{\beta}$ 也服从正态分布。这一性质使得我们可以进行基于正态分布的假设检验和置信区间估计。
+
+
+### 假设检验
+
+在回归分析中，假设检验用于评估模型中自变量对因变量的影响是否显著，以及整个模型是否具有统计学意义。
+
+**1. 对单个回归系数的t检验**
+
+- **目的**：检验每个自变量的系数 $\beta_i$ 是否显著不为零，即该自变量是否对因变量有显著影响。
+- **零假设 ($H_0$)**：$\beta_i = 0$ (自变量 $x_i$ 对因变量 $y$ 没有线性影响)
+- **备择假设 ($H_1$)**：$\beta_i \neq 0$ (自变量 $x_i$ 对因变量 $y$ 有线性影响)
+- **检验统计量**：t统计量，通过系数估计值 $\hat{\beta}_i$ 除以其标准误差 $SE(\hat{\beta}_i)$ 计算得到。
+- **决策**：将计算得到的t统计量的p值与显著性水平 $\alpha$ (通常为0.05) 进行比较。若p值小于 $\alpha$，则拒绝零假设，认为自变量 $x_i$ 对因变量 $y$ 的影响在统计上是显著的。
+
+**2. 对整体模型显著性的F检验**
+
+- **目的**：检验模型中所有自变量是否作为一个整体对因变量有显著影响，即模型是否整体有效。
+- **零假设 ($H_0$)**：$\beta_1 = \beta_2 = ... = \beta_p = 0$ (所有自变量都对因变量没有线性影响，模型整体无效)
+- **备择假设 ($H_1$)**：$\beta_j \neq 0$ 至少存在一个 $j$ (至少有一个自变量对因变量有线性影响，模型整体有效)
+- **检验统计量**：F统计量，通过分析模型的方差分解得到，衡量模型解释的变异与未解释的变异之比。
+- **决策**：将计算得到的F统计量的p值与显著性水平 $\alpha$ 进行比较。若p值小于 $\alpha$，则拒绝零假设，认为模型作为一个整体对因变量的影响在统计上是显著的。
+
+
+这些性质保证了在满足经典线性回归模型假设的前提下，使用最小二乘法得到的回归系数估计是可靠和有效的。然而，在实际应用中，我们需要检验这些假设是否成立，并根据具体情况选择合适的回归方法。
+
+
+
+### 回归假设不满足时的问题及解决方法
+
+::: {.callout-warning appearance="minimal"}
+## 线性性假设不满足
+
+**问题**：
+
+- 若实际关系不是线性的，模型会系统性地预测不准
+- 残差图会呈现明显的非随机模式（如U形或倒U形）
+
+**解决方法**：
+
+- 对变量进行非线性变换（如对数、平方根、平方等）
+- 添加多项式项（如$x^2$、$x^3$等）
+- 使用样条函数或局部回归等非参数方法
+- 对具体业务关系，考虑使用非线性回归模型
+
+```{r}
+# 非线性关系示例：lstat与房价的关系更像指数关系
+# 比较线性模型与对数变换模型
+model_linear <- lm(medv ~ lstat, data = Boston)
+model_log <- lm(medv ~ log(lstat), data = Boston)
+
+# 创建预测值
+Boston$pred_linear <- predict(model_linear)
+Boston$pred_log <- predict(model_log)
+
+# 可视化比较
+p1 <- ggplot(Boston, aes(x = lstat, y = medv)) +
+  geom_point(alpha = 0.5) +
+  geom_line(aes(y = pred_linear), color = "red", size = 1) +
+  labs(title = "线性模型",
+       x = "低收入人口比例(%)",
+       y = "房价(千美元)")
+
+p2 <- ggplot(Boston, aes(x = lstat, y = medv)) +
+  geom_point(alpha = 0.5) +
+  geom_line(aes(y = pred_log), color = "blue", size = 1) +
+  labs(title = "对数变换模型",
+       x = "低收入人口比例(%)",
+       y = "房价(千美元)")
+
+p1 + p2
+
+# 比较模型拟合度
+cat("线性模型 R² =", summary(model_linear)$r.squared, "\n")
+cat("对数变换模型 R² =", summary(model_log)$r.squared, "\n")
+```
+:::
+
+::: {.callout-warning appearance="minimal"}
+## 同方差性假设不满足（异方差性）
+
+**问题**：
+
+- 误差的方差不恒定，在某些预测区间的预测更不准确
+- 标准误差估计有偏，导致置信区间和假设检验不可靠
+- 最小二乘估计虽然无偏但不再是最有效的
+
+**解决方法**：
+
+- 对因变量进行变换（如对数变换）
+- 使用加权最小二乘法(WLS)
+- 使用稳健标准误差(Robust Standard Errors)
+- 使用广义线性模型(GLM)
+
+```{r}
+# 检测异方差性
+plot(model_linear, which = 1)  # 残差图
+
+# 进行BP检验
+# 原假设H0：误差项具有同方差性
+# 备择假设H1：误差项不具有同方差性（存在异方差性）
+library(lmtest)
+bptest(model_linear)
+
+# 使用稳健标准误差
+# 当模型存在异方差性时，普通最小二乘法（OLS）系数的标准误差估计会失效，导致推断不可靠。
+# 稳健标准误差提供了一种有效的方法来估计系数的标准误差，即使存在异方差性。
+# 在R中，`sandwich` 包的 `vcovHC` 函数可以计算稳健的协方差矩阵，然后与 `lmtest` 包的 `coeftest` 函数结合使用，进行基于稳健标准误差的系数检验。
+# HC1 是一种常用的稳健标准误差类型。
+library(sandwich)
+coeftest(model_linear, vcov = vcovHC(model_linear, type = "HC1"))
+
+# 加权最小二乘法示例：当误差项方差不齐时，WLS通过赋予不同观测点不同的权重来优化模型，通常权重与方差成反比。
+# 计算残差的绝对值
+abs_resid <- abs(residuals(model_linear))
+# 基于预测值拟合残差模型
+weight_model <- lm(abs_resid ~ fitted(model_linear))
+# 计算权重
+weights <- 1 / (fitted(weight_model)^2)
+# 拟合WLS模型
+wls_model <- lm(medv ~ lstat, data = Boston, weights = weights)
+
+# 比较结果
+summary(model_linear)$coefficients
+summary(wls_model)$coefficients
+```
+:::
+
+::: {.callout-warning appearance="minimal"}
+## 独立性假设不满足（自相关）
+
+**问题**：
+
+- 误差项之间存在相关性，常见于时间序列数据
+- 标准误差估计有偏，影响推断的有效性
+- 预测区间不准确
+
+**解决方法**：
+
+- 增加漏掉的解释变量
+- 纳入滞后项或时间趋势
+- 使用广义最小二乘法(GLS)
+- 对时间序列数据使用ARIMA等专门模型
+
+```{r}
+# 创建一个人为的自相关序列
+set.seed(123)
+n <- 100
+time <- 1:n
+trend <- 0.5 * time
+error <- arima.sim(list(ar = 0.8), n)
+y <- trend + error
+data_ts <- data.frame(time = time, y = y)
+
+# 拟合简单线性模型
+ts_model <- lm(y ~ time, data = data_ts)
+summary(ts_model)
+
+# 检测自相关性
+library(lmtest)
+# Durbin-Watson检验
+# 原假设H0：误差项不存在自相关性
+# 备择假设H1：误差项存在自相关性
+dwtest(ts_model)  
+
+# 可视化残差
+par(mfrow = c(1, 2))
+plot(residuals(ts_model), type = "l", main = "残差时间序列")
+acf(residuals(ts_model), main = "残差自相关函数")
+
+# 使用广义最小二乘法纠正自相关
+library(nlme)
+gls_model <- gls(y ~ time, data = data_ts, correlation = corAR1())
+summary(gls_model)
+
+# 重置图形参数
+par(mfrow = c(1, 1))
+```
+:::
+
+::: {.callout-warning appearance="minimal"}
+## 正态性假设不满足
+
+**问题**：
+
+- 对小样本影响较大，使用t检验和F检验可能不可靠
+- 异常值对回归分析的影响过大
+
+**解决方法**：
+
+- 对异常值进行识别与处理
+- 尝试对因变量进行变换（如Box-Cox变换）
+- 使用非参数方法或稳健回归
+- 对大样本，由于中心极限定理，影响相对较小
+
+```{r}
+# 检验残差正态性
+shapiro.test(residuals(model_linear))
+
+# 残差QQ图
+qqnorm(residuals(model_linear))
+qqline(residuals(model_linear))
+
+# Box-Cox变换
+library(MASS)
+bc <- boxcox(model_linear)
+lambda <- bc$x[which.max(bc$y)]
+cat("最优Box-Cox变换参数λ =", lambda, "\n")
+
+# 应用Box-Cox变换
+if(abs(lambda) < 0.001) {
+  Boston$trans_medv <- log(Boston$medv)  # λ接近0时使用对数变换
+} else {
+  Boston$trans_medv <- (Boston$medv^lambda - 1) / lambda
+}
+
+# 拟合变换后的模型
+trans_model <- lm(trans_medv ~ lstat, data = Boston)
+shapiro.test(residuals(trans_model))
+
+# 稳健回归
+library(MASS)
+robust_model <- rlm(medv ~ lstat, data = Boston)
+summary(robust_model)
+```
+:::
+
+::: {.callout-warning appearance="minimal"}
+## 多重共线性（多元回归中的问题）
+
+**问题**：
+
+- 自变量之间高度相关，导致系数估计不稳定
+- 标准误差增大，显著性检验不可靠
+- 模型解释能力下降
+
+**解决方法**：
+
+- 删除高度相关的变量
+- 使用变量选择方法（如逐步回归）
+- 主成分回归或偏最小二乘回归
+- 岭回归或Lasso等正则化方法
+
+```{r}
+# 多元回归示例
+multi_model <- lm(medv ~ rm + lstat + crim + nox, data = Boston)
+
+# 检测多重共线性
+library(car)
+vif(multi_model)  # VIF > 10表示严重的多重共线性
+
+# 相关矩阵
+cor_matrix <- cor(Boston[, c("rm", "lstat", "crim", "nox")])
+print(cor_matrix)
+
+# 岭回归示例
+library(MASS)
+ridge_model <- lm.ridge(medv ~ rm + lstat + crim + nox, data = Boston, lambda = seq(0, 1, 0.01))
+plot(ridge_model)  # 绘制岭迹图
+
+# 选择最优lambda值
+optimal_lambda <- ridge_model$lambda[which.min(ridge_model$GCV)]
+cat("最优岭参数λ =", optimal_lambda, "\n")
+ridge_coef <- coef(ridge_model)[which(ridge_model$lambda == optimal_lambda), ]
+print(ridge_coef)
+```
+:::
 
 ### R语言实现简单线性回归
 
 **基本函数**：
+
 ```{r}
+# 以rm(房间数)预测房价为例
 # 建立简单线性回归模型
-lm_model <- lm(Sales ~ TV, data = advertising_data)
+lm_model <- lm(medv ~ rm, data = Boston)
 
 # 使用 broom 包获取模型摘要信息
 library(broom)
@@ -182,7 +581,7 @@ tidy(lm_model, conf.int = TRUE)
 glance(lm_model)
 
 # 模型预测
-new_data <- tibble(TV = c(10, 20, 30, 40))
+new_data <- tibble(rm = c(5, 6, 7, 8))
 
 # 使用 augment 获取带预测值和残差的数据框
 augmented_data <- augment(lm_model, newdata = new_data, interval = "confidence")
@@ -205,8 +604,15 @@ autoplot(lm_model)
 - **R²值**：模型解释的方差比例，衡量拟合优度
 - **F统计量**：整个模型的显著性检验
 
-
 ## 第十二次课：多元线性回归模型
+
+::: {.callout-note appearance="minimal"}
+## 本节课重点
+
+在上节课我们学习了线性回归的基本原理和简单线性回归模型。本节课我们将扩展到多元线性回归模型，并特别关注多变量回归分析中的一个核心问题：**变量选择**。
+
+在实际应用中，我们通常有很多潜在的自变量可以纳入模型。如何从众多变量中选择最优的变量组合，是构建高效回归模型的关键步骤。本节课将介绍各种变量选择的方法、标准和实用技巧，帮助我们构建既有预测能力又有解释力的回归模型。
+:::
 
 ### 多元线性回归模型
 
@@ -233,330 +639,376 @@ $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \dots + \beta_p x_p + \epsilon$
 
 - $\beta_1$表示在其他自变量$x_2, \dots, x_p$保持不变的情况下，自变量$x_1$每增加一个单位，因变量$y$的平均变化量
 
-这个解释非常重要，因为它体现了“控制变量”的思想，即我们能够分离出单个自变量的“净效应”。这在商业分析中尤为有用，例如，我们可以分析在广播广告投入不变的情况下，增加电视广告对销售的边际贡献。
+这个解释非常重要，因为它体现了"控制变量"的思想，即我们能够分离出单个自变量的"净效应"。这在商业分析中尤为有用，例如，我们可以分析在广播广告投入不变的情况下，增加电视广告对销售的边际贡献。
 :::
 
-::: {.callout-tip}
-## 参数估计
+### 变量选择问题
 
-- 同样使用最小二乘法(OLS)
-- 通过矩阵运算求解：$\hat{\beta} = (X^TX)^{-1}X^Ty$
-- 其中$X$是自变量矩阵，$y$是因变量向量
+::: {.callout-note}
+## 为什么需要变量选择
+
+在多元回归分析中，并非所有可能的自变量都对模型有显著贡献。变量选择旨在从众多潜在自变量中筛选出最重要的变量，构建既简洁又高效的模型。变量选择的主要目的包括：
+
+1. **提高模型解释力**：删除无关变量，使模型更聚焦于真正有影响的因素
+2. **增强预测能力**：简化模型可以减少过拟合风险，提高在新数据上的预测准确性
+3. **降低计算复杂度**：减少模型中的变量数量可以简化计算
+4. **避免多重共线性**：排除高度相关的变量，提高参数估计的稳定性
+5. **增强模型可解释性**：更少的变量意味着模型更易于理解和解释
 :::
 
 ::: {.callout-caution}
-## 模型假设
+## 变量选择的挑战
 
-- 线性性：因变量与每个自变量之间存在线性关系
-- 独立性：观测值之间相互独立
-- 同方差性：误差项方差恒定
-- 正态性：误差项服从正态分布
-- 无多重共线性：自变量之间不存在高度相关性
+- **组合爆炸**：对于p个自变量，存在$2^p$种可能的模型组合
+- **模型不确定性**：不同的选择标准可能导致不同的"最优"模型
+- **数据驱动vs理论驱动**：纯粹数据驱动的变量选择可能忽略重要的理论考量
+- **过度拟合风险**：过度使用统计标准进行变量选择可能导致过拟合
 :::
 
-::: {.callout-warning}
-## 多重共线性问题
+### 变量选择的方法
 
-- **定义**：自变量之间存在强相关关系
-- **后果**：回归系数估计不稳定，标准误增大
-- **诊断**：方差膨胀因子(VIF)
-- **处理**：变量选择、正则化、主成分分析等
+#### 传统变量选择方法
+
+```{r}
+# 使用波士顿房价数据集进行变量选择示例
+library(MASS)
+data(Boston)
+
+# 构建包含所有变量的完整模型
+full_model <- lm(medv ~ ., data = Boston)
+summary(full_model)
+```
+
+::: {.callout-tip}
+## 1. 向前逐步回归 (Forward Stepwise)
+
+从一个没有自变量的模型开始（只有截距），然后每次添加一个最能提高模型拟合度的变量，直到没有变量能显著改善模型或达到预定的停止标准。
 :::
-
-```{r}
-# 检测多重共线性
-p_load(car)
-multi_model <- lm(Sales ~ TV + Radio + Newspaper, data = advertising_data)
-
-vif(multi_model)
-# VIF > 5通常表示存在多重共线性
-# VIF > 10通常表示存在严重多重共线性
-```
-
-**模型拟合与检验**：
-
-- **R²**：衡量模型对数据的拟合程度，取值范围[0,1]
-- **调整R²**：考虑自变量个数对R²的影响，防止过拟合
-- **F检验**：检验模型整体的显著性
-- **t检验**：检验每个偏回归系数的显著性
-
-**解释多元回归模型时需注意**：
-
-- 解释系数时必须强调"控制其他变量不变"
-- R²会随自变量增加而增加，应关注调整R²
-- 显著性水平应解释为"在控制了其他变量后"
-
-**嵌套模型比较**：
-```{r}
-# 构建不同的嵌套模型
-model1 <- lm(Sales ~ TV, data = advertising_data)
-model2 <- lm(Sales ~ TV + Radio, data = advertising_data)
-model3 <- lm(Sales ~ TV + Radio + Newspaper, data = advertising_data)
-
-# 使用anova函数比较嵌套模型
-anova(model1, model2, model3)
-
-# 使用AIC比较模型
-AIC(model1, model2, model3)
-BIC(model1, model2, model3)
-```
-
-**偏回归图**：观察单个自变量的边际贡献
-```{r}
-avPlots(multi_model)
-```
-
-**变量重要性评估**：
-```{r}
-p_load(relaimpo)
-calc.relimp(multi_model, type = "lmg", rela = TRUE)
-```
-
-**多元回归的可视化**：
-```{r}
-# 可视化不同渠道的边际效应
-
-# 构建效应图
-effect_tv <- ggplot(advertising_data, aes(x = TV, y = Sales)) +
-  geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm") +
-  labs(title = "电视广告的边际效应") +
-  theme_minimal()
-
-effect_radio <- ggplot(advertising_data, aes(x = Radio, y = Sales)) +
-  geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm") +
-  labs(title = "广播广告的边际效应") +
-  theme_minimal()
-
-effect_newspaper <- ggplot(advertising_data, aes(x = Newspaper, y = Sales)) +
-  geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm") +
-  labs(title = "报纸广告的边际效应") +
-  theme_minimal()
-
-effect_tv + effect_radio + effect_newspaper
-
-# 3D可视化（针对两个自变量）
-p_load(plotly)
-fit <- lm(Sales ~ TV + Radio, data = advertising_data)
-
-# 创建网格点
-grid.lines = 50
-x.pred <- seq(min(advertising_data$TV), max(advertising_data$TV), length.out = grid.lines)
-y.pred <- seq(min(advertising_data$Radio), max(advertising_data$Radio), length.out = grid.lines)
-xy <- expand.grid(TV = x.pred, Radio = y.pred)
-
-# 预测z值
-z.pred <- matrix(predict(fit, newdata = xy), 
-                nrow = grid.lines, ncol = grid.lines)
-
-# 创建3D图
-plot_ly() %>%
-  add_trace(data = advertising_data, 
-            x = ~TV, y = ~Radio, z = ~Sales,
-            type = "scatter3d", mode = "markers",
-            marker = list(size = 5, color = "blue", opacity = 0.5)) %>%
-  add_surface(x = x.pred, y = y.pred, z = z.pred,
-              colorscale = "Viridis", opacity = 0.8) %>%
-  layout(title = "销售额与电视、广播广告投入的关系",
-         scene = list(xaxis = list(title = "电视广告"),
-                     yaxis = list(title = "广播广告"),
-                     zaxis = list(title = "销售额")))
-```
-
-**变量选择方法**：
-当有多个潜在自变量时，我们需要选择一个最佳的变量子集：
 
 ```{r}
 # 向前逐步回归
-null_model <- lm(Sales ~ 1, data = advertising_data)
-full_model <- lm(Sales ~ ., data = advertising_data)
+null_model <- lm(medv ~ 1, data = Boston)  # 仅含截距的模型
 forward_model <- step(null_model, scope = list(lower = null_model, upper = full_model), 
-                    direction = "forward")
+                    direction = "forward", trace = FALSE)
 
+# 查看最终模型
+summary(forward_model)
+
+# 查看选择过程
+step(null_model, scope = list(lower = null_model, upper = full_model), 
+    direction = "forward", trace = TRUE, steps = 2)  # 仅显示前两步以节省空间
+```
+
+::: {.callout-tip}
+## 2. 向后逐步回归 (Backward Stepwise)
+
+从一个包含所有自变量的模型开始，然后每次删除一个对模型贡献最小的变量，直到所有剩余变量都对模型有显著贡献。
+:::
+
+```{r}
 # 向后逐步回归
-backward_model <- step(full_model, direction = "backward")
+backward_model <- step(full_model, direction = "backward", trace = FALSE)
 
-# 双向逐步回归（同时考虑增加和删除变量）
+# 查看最终模型
+summary(backward_model)
+
+# 比较向前和向后方法的结果
+cat("向前逐步回归选择的变量：", 
+    paste(names(coef(forward_model))[-1], collapse = ", "), "\n")
+cat("向后逐步回归选择的变量：", 
+    paste(names(coef(backward_model))[-1], collapse = ", "), "\n")
+```
+
+::: {.callout-tip}
+## 3. 双向逐步回归 (Stepwise)
+
+结合向前和向后方法，每一步可以添加或删除变量。在每次添加变量后，会重新评估所有已经在模型中的变量，可能删除不再显著的变量。
+:::
+
+```{r}
+# 双向逐步回归
 stepwise_model <- step(null_model, scope = list(lower = null_model, upper = full_model), 
-                     direction = "both")
+                      direction = "both", trace = FALSE)
 
-# 使用Leaps包进行最优子集选择
-p_load(leaps)
-
-subsets <- regsubsets(Sales ~ ., data = advertising_data, nvmax = ncol(advertising_data) - 1)
-summary(subsets)
-plot(subsets, scale = "r2")
-plot(subsets, scale = "adjr2")
-plot(subsets, scale = "Cp")
-plot(subsets, scale = "bic")
+# 查看最终模型
+summary(stepwise_model)
 ```
 
-**正则化回归**：
-处理多重共线性和预防过拟合的现代方法：
+#### 最优子集选择 (Best Subset Selection)
 
-```{r, eval=FALSE}
-# 岭回归
-library(glmnet)
-x <- as.matrix(advertising_data[, c("TV", "Radio", "Newspaper")])
-y <- advertising_data$Sales
-ridge_model <- glmnet(x, y, alpha = 0)
-plot(ridge_model, xvar = "lambda", label = TRUE)
-cv_ridge <- cv.glmnet(x, y, alpha = 0)
-best_lambda <- cv_ridge$lambda.min
-ridge_coef <- coef(ridge_model, s = best_lambda)
+::: {.callout-important}
+## 最优子集选择
 
-# Lasso回归
-lasso_model <- glmnet(x, y, alpha = 1)
-plot(lasso_model, xvar = "lambda", label = TRUE)
-cv_lasso <- cv.glmnet(x, y, alpha = 1)
-best_lambda <- cv_lasso$lambda.min
-lasso_coef <- coef(lasso_model, s = best_lambda)
-```
+最优子集选择方法会考虑所有可能的模型组合，从中选择基于某些标准（如AIC、BIC、调整R²等）的最优模型。这种方法在计算上比逐步回归更为密集，但能找到全局最优解。
+:::
 
-### 回归分析的实际应用案例
+```{r}
+# 使用leaps包进行最优子集选择
+library(leaps)
 
-**案例1：房价预测模型**
+# 执行最优子集选择
+subsets <- regsubsets(medv ~ ., data = Boston, nvmax = 13)  # 最多考虑13个变量
+subset_summary <- summary(subsets)
 
-```{r, eval=FALSE}
-# 导入波士顿房价数据集
-library(MASS)
-data(Boston)
-head(Boston)
-
-# 变量说明
-# medv: 自住房屋的中位数价值（千美元）（因变量）
-# rm: 每套住宅的平均房间数
-# lstat: 人口中地位较低人群的百分比
-# crim: 城镇人均犯罪率
-# zn: 占地面积超过2.5万平方英尺的住宅用地比例
-# indus: 每个城镇非零售业务的比例
-# chas: 查尔斯河虚拟变量（1 = 边界在河边；0 = 否）
-# nox: 一氧化氮浓度（千万分之一）
-# ...
-
-# 探索性分析
-pairs(Boston[, c("medv", "rm", "lstat", "crim", "nox")])
-cor(Boston)
-
-# 建立模型
-model_all <- lm(medv ~ ., data = Boston)
-summary(model_all)
-
-# 变量选择
-step_model <- step(model_all, direction = "both")
-summary(step_model)
-
-# 最优模型解释与诊断
+# 比较不同标准下的最佳模型
 par(mfrow = c(2, 2))
-plot(step_model)
+plot(subset_summary$rss, xlab = "变量数量", ylab = "RSS", type = "b")
+plot(subset_summary$adjr2, xlab = "变量数量", ylab = "调整R²", type = "b")
+points(which.max(subset_summary$adjr2), subset_summary$adjr2[which.max(subset_summary$adjr2)], 
+       col = "red", cex = 2, pch = 20)
+plot(subset_summary$cp, xlab = "变量数量", ylab = "Cp", type = "b")
+points(which.min(subset_summary$cp), subset_summary$cp[which.min(subset_summary$cp)], 
+       col = "red", cex = 2, pch = 20)
+plot(subset_summary$bic, xlab = "变量数量", ylab = "BIC", type = "b")
+points(which.min(subset_summary$bic), subset_summary$bic[which.min(subset_summary$bic)], 
+       col = "red", cex = 2, pch = 20)
+par(mfrow = c(1, 1))
 
-# 预测
-new_house <- data.frame(
-  rm = 6.5,
-  lstat = 10,
-  crim = 0.5,
-  zn = 50,
-  indus = 5,
-  chas = 0,
-  nox = 0.5,
-  age = 50,
-  dis = 4,
-  rad = 6,
-  tax = 400,
-  ptratio = 15,
-  black = 380,
-  chas = 0
-)
+# 查看各标准下的最佳模型
+cat("调整R²最大的模型包含", which.max(subset_summary$adjr2), "个变量\n")
+cat("Cp最小的模型包含", which.min(subset_summary$cp), "个变量\n")
+cat("BIC最小的模型包含", which.min(subset_summary$bic), "个变量\n")
 
-predict(step_model, newdata = new_house, interval = "prediction")
+# 展示BIC最小模型的变量
+coef(subsets, which.min(subset_summary$bic))
 ```
 
-**案例2：销售额预测与营销投资优化**
+#### 正则化方法
 
-```{r, eval=FALSE}
-# 使用前面的广告数据
-# 假设我们有一个额外的数据集，包含不同产品线的广告效果
-product_data <- data.frame(
-  product = rep(c("A", "B", "C"), each = 30),
-  TV = runif(90, 5, 50),
-  Radio = runif(90, 1, 30),
-  Newspaper = runif(90, 0, 20)
+::: {.callout-warning}
+## 正则化方法的优势
+
+传统变量选择方法（如逐步回归和最优子集）存在一些局限性，如过拟合风险和不稳定性。正则化方法通过在模型中加入惩罚项，可以同时进行变量选择和系数收缩，解决这些问题。
+:::
+
+::: {.callout-tip}
+## 1. 岭回归 (Ridge Regression)
+
+岭回归通过添加基于系数平方和的惩罚项($L_2$范数)来控制系数大小，适用于处理多重共线性。岭回归不会将系数精确压缩到零，因此不直接进行变量选择，但可以显著减小无关变量的影响。
+
+$$\min_{\beta} \left\{ \sum_{i=1}^{n} (y_i - \beta_0 - \sum_{j=1}^{p} \beta_j x_{ij})^2 + \lambda \sum_{j=1}^{p} \beta_j^2 \right\}$$
+
+其中$\lambda$是调节惩罚强度的参数。
+:::
+
+```{r}
+# 岭回归示例
+library(glmnet)
+
+# 准备数据
+x <- as.matrix(Boston[, -14])  # 不包括medv变量的所有特征
+y <- Boston$medv
+
+# 执行岭回归
+set.seed(42)
+ridge_cv <- cv.glmnet(x, y, alpha = 0, nfolds = 10)  # alpha=0表示岭回归
+
+# 绘制交叉验证结果
+plot(ridge_cv)
+
+# 最优lambda值
+best_lambda_ridge <- ridge_cv$lambda.min
+cat("岭回归的最优lambda值:", best_lambda_ridge, "\n")
+
+# 使用最优lambda拟合模型
+ridge_model <- glmnet(x, y, alpha = 0, lambda = best_lambda_ridge)
+ridge_coef <- coef(ridge_model)
+print(ridge_coef)
+
+# 绘制系数变化路径
+lambda_seq <- 10^seq(2, -3, length = 100)
+ridge_path <- glmnet(x, y, alpha = 0, lambda = lambda_seq)
+plot(ridge_path, xvar = "lambda", label = TRUE)
+```
+
+::: {.callout-tip}
+## 2. Lasso回归 (Least Absolute Shrinkage and Selection Operator)
+
+Lasso回归添加基于系数绝对值和的惩罚项($L_1$范数)，可以将某些系数精确压缩到零，从而实现变量选择。这使得Lasso特别适用于高维数据的特征选择。
+
+$$\min_{\beta} \left\{ \sum_{i=1}^{n} (y_i - \beta_0 - \sum_{j=1}^{p} \beta_j x_{ij})^2 + \lambda \sum_{j=1}^{p} |\beta_j| \right\}$$
+:::
+
+```{r}
+# Lasso回归示例
+set.seed(42)
+lasso_cv <- cv.glmnet(x, y, alpha = 1, nfolds = 10)  # alpha=1表示Lasso回归
+
+# 绘制交叉验证结果
+plot(lasso_cv)
+
+# 最优lambda值
+best_lambda_lasso <- lasso_cv$lambda.min
+cat("Lasso回归的最优lambda值:", best_lambda_lasso, "\n")
+
+# 使用最优lambda拟合模型
+lasso_model <- glmnet(x, y, alpha = 1, lambda = best_lambda_lasso)
+lasso_coef <- coef(lasso_model)
+
+# 转换为矩阵后再进行操作
+lasso_coef_matrix <- as.matrix(lasso_coef)
+selected_vars <- rownames(lasso_coef_matrix)[lasso_coef_matrix != 0][-1]  # 去掉截距项
+cat("Lasso选择的变量:", paste(selected_vars, collapse = ", "), "\n")
+
+# 绘制系数变化路径
+lasso_path <- glmnet(x, y, alpha = 1, lambda = lambda_seq)
+plot(lasso_path, xvar = "lambda", label = TRUE)
+```
+
+::: {.callout-tip}
+## 3. 弹性网络 (Elastic Net)
+
+弹性网络结合了岭回归和Lasso回归的优点，同时使用$L_1$和$L_2$惩罚项。这种方法在处理高度相关变量时比Lasso更稳定，并保留了Lasso的变量选择能力。
+
+$$\min_{\beta} \left\{ \sum_{i=1}^{n} (y_i - \beta_0 - \sum_{j=1}^{p} \beta_j x_{ij})^2 + \lambda \left[ (1-\alpha) \sum_{j=1}^{p} \beta_j^2 + \alpha \sum_{j=1}^{p} |\beta_j| \right] \right\}$$
+
+其中$\alpha$是混合参数，控制$L_1$和$L_2$惩罚的比例。
+:::
+
+```{r}
+# 弹性网络示例
+set.seed(42)
+elastic_cv <- cv.glmnet(x, y, alpha = 0.5, nfolds = 10)  # alpha=0.5表示弹性网络
+
+# 绘制交叉验证结果
+plot(elastic_cv)
+
+# 最优lambda值
+best_lambda_elastic <- elastic_cv$lambda.min
+cat("弹性网络的最优lambda值:", best_lambda_elastic, "\n")
+
+# 使用最优lambda拟合模型
+elastic_model <- glmnet(x, y, alpha = 0.5, lambda = best_lambda_elastic)
+elastic_coef <- coef(elastic_model)
+
+# 转换为矩阵后再进行操作
+elastic_coef_matrix <- as.matrix(elastic_coef)
+
+# 计算非零系数的数量
+elastic_non_zero <- sum(elastic_coef_matrix[-1] != 0)
+cat("弹性网络选择的变量数量:", elastic_non_zero, "个\n")
+
+# 显示选择的变量
+elastic_selected_vars <- rownames(elastic_coef_matrix)[elastic_coef_matrix != 0][-1]  # 去掉截距项
+cat("弹性网络选择的变量:", paste(elastic_selected_vars, collapse = ", "), "\n")
+```
+
+### 变量选择方法的比较
+
+不同的变量选择方法各有优缺点，可能会选出不同的变量组合。下面我们比较一下前面介绍的几种方法：
+
+```{r}
+# 预处理数据，为交叉验证作准备
+set.seed(123)
+train_idx <- sample(nrow(Boston), 0.7 * nrow(Boston))
+train_data <- Boston[train_idx, ]
+test_data <- Boston[-train_idx, ]
+
+# 在训练集上拟合不同的模型
+# 1. 完整模型
+train_full <- lm(medv ~ ., data = train_data)
+
+# 2. 向前逐步回归
+train_forward <- step(lm(medv ~ 1, data = train_data), 
+                     scope = list(lower = lm(medv ~ 1, data = train_data), 
+                                  upper = lm(medv ~ ., data = train_data)), 
+                     direction = "forward", trace = FALSE)
+
+# 3. 准备Lasso和弹性网络的数据
+x_train <- as.matrix(train_data[, -14])  # 不包括medv的所有特征
+y_train <- train_data$medv
+x_test <- as.matrix(test_data[, -14])
+
+# 拟合Lasso模型
+set.seed(42)
+lasso_cv <- cv.glmnet(x_train, y_train, alpha = 1, nfolds = 10)
+train_lasso <- glmnet(x_train, y_train, alpha = 1, lambda = lasso_cv$lambda.min)
+
+# 拟合弹性网络模型
+set.seed(42)
+elastic_cv <- cv.glmnet(x_train, y_train, alpha = 0.5, nfolds = 10)
+train_elastic <- glmnet(x_train, y_train, alpha = 0.5, lambda = elastic_cv$lambda.min)
+
+# 在测试集上评估模型
+pred_full <- predict(train_full, newdata = test_data)
+pred_forward <- predict(train_forward, newdata = test_data)
+pred_lasso <- predict(train_lasso, newx = x_test)
+pred_elastic <- predict(train_elastic, newx = x_test)
+
+# 计算测试集上的RMSE
+rmse_full <- sqrt(mean((test_data$medv - pred_full)^2))
+rmse_forward <- sqrt(mean((test_data$medv - pred_forward)^2))
+rmse_lasso <- sqrt(mean((test_data$medv - pred_lasso)^2))
+rmse_elastic <- sqrt(mean((test_data$medv - pred_elastic)^2))
+
+# 计算各模型选择的变量数量
+lasso_coef_matrix <- as.matrix(coef(train_lasso))
+elastic_coef_matrix <- as.matrix(coef(train_elastic))
+
+# 比较结果
+results <- data.frame(
+  模型 = c("完整模型", "向前逐步回归", "Lasso回归", "弹性网络"),
+  变量数 = c(length(coef(train_full)) - 1, 
+            length(coef(train_forward)) - 1, 
+            sum(lasso_coef_matrix[-1] != 0),
+            sum(elastic_coef_matrix[-1] != 0)),
+  测试集RMSE = c(rmse_full, rmse_forward, rmse_lasso, rmse_elastic)
 )
-# 生成不同的效应模式
-product_data$Sales <- 5 + 
-  ifelse(product_data$product == "A", 0.2, 
-         ifelse(product_data$product == "B", 0.1, 0.05)) * product_data$TV +
-  ifelse(product_data$product == "A", 0.15, 
-         ifelse(product_data$product == "B", 0.3, 0.1)) * product_data$Radio +
-  ifelse(product_data$product == "A", 0.05, 
-         ifelse(product_data$product == "B", 0.1, 0.2)) * product_data$Newspaper +
-  rnorm(90, 0, 2)
 
-# 分析不同产品线的广告效果
-library(ggplot2)
-ggplot(product_data, aes(x = TV, y = Sales, color = product)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  facet_wrap(~product) +
-  labs(title = "不同产品线的电视广告效果") +
+print(results)
+```
+
+### 变量重要性可视化
+
+变量重要性可视化可以帮助我们直观地了解各个变量对模型的贡献程度：
+
+```{r}
+# 向前逐步回归的变量重要性
+coef_data <- data.frame(
+  变量 = names(coef(train_forward))[-1],
+  系数 = coef(train_forward)[-1]
+)
+coef_data <- coef_data[order(abs(coef_data$系数), decreasing = TRUE), ]
+
+ggplot(coef_data, aes(x = reorder(变量, abs(系数)), y = 系数)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "向前逐步回归选择的变量重要性",
+       x = "变量",
+       y = "系数") +
   theme_minimal()
 
-# 为每个产品线建立单独的模型
-product_models <- list()
-for(p in unique(product_data$product)) {
-  subset_data <- product_data[product_data$product == p, ]
-  product_models[[p]] <- lm(Sales ~ TV + Radio + Newspaper, data = subset_data)
-  print(paste("Product", p, "model:"))
-  print(summary(product_models[[p]]))
-}
+# Lasso回归的变量重要性
+lasso_coef_data <- data.frame(
+  变量 = rownames(lasso_coef_matrix)[-1],
+  系数 = lasso_coef_matrix[-1, 1]
+)
+lasso_coef_data <- lasso_coef_data[order(abs(lasso_coef_data$系数), decreasing = TRUE), ]
+lasso_coef_data <- lasso_coef_data[lasso_coef_data$系数 != 0, ]  # 只保留非零系数
 
-# 互动效应模型（产品与广告渠道的交互）
-interaction_model <- lm(Sales ~ product * (TV + Radio + Newspaper), 
-                        data = product_data)
-summary(interaction_model)
-
-# 营销预算优化：基于边际回报率
-# 根据回归系数计算每个渠道的投资回报率，优化预算分配
+ggplot(lasso_coef_data, aes(x = reorder(变量, abs(系数)), y = 系数)) +
+  geom_bar(stat = "identity", fill = "darkred") +
+  coord_flip() +
+  labs(title = "Lasso回归选择的变量重要性",
+       x = "变量",
+       y = "系数") +
+  theme_minimal()
 ```
 
-**案例3：市场细分分析**
+### 变量选择标准
 
-```{r, eval=FALSE}
-# 不同市场细分的回归分析
-segment_data <- data.frame(
-  customer_segment = rep(c("高收入", "中收入", "低收入"), each = 30),
-  price = runif(90, 50, 200),
-  promotion = runif(90, 0, 1),
-  store_quality = runif(90, 1, 5)
-)
-# 不同细分市场的消费者对价格和促销的敏感度不同
-segment_data$purchase <- 10 +
-  ifelse(segment_data$customer_segment == "高收入", -0.01, 
-         ifelse(segment_data$customer_segment == "中收入", -0.03, -0.05)) * segment_data$price +
-  ifelse(segment_data$customer_segment == "高收入", 1, 
-         ifelse(segment_data$customer_segment == "中收入", 2, 3)) * segment_data$promotion +
-  0.5 * segment_data$store_quality +
-  rnorm(90, 0, 1)
+::: {.callout-note}
+## 变量选择的标准
 
-# 分析不同细分市场的价格敏感度
-segment_models <- list()
-for(s in unique(segment_data$customer_segment)) {
-  subset_data <- segment_data[segment_data$customer_segment == s, ]
-  segment_models[[s]] <- lm(purchase ~ price + promotion + store_quality, 
-                           data = subset_data)
-  print(paste("Segment", s, "model:"))
-  print(summary(segment_models[[s]]))
-}
+在变量选择过程中，我们需要考虑以下几个标准：
 
-# 差异化定价策略建议
-price_sensitivity <- data.frame(
-  segment = names(segment_models),
-  price_effect = sapply(segment_models, function(model) coef(model)["price"])
-)
-print(price_sensitivity)
-```
+1. **解释力**：选择对因变量有显著影响的变量，以提高模型的解释力。
+2. **简洁性**：选择尽可能少的变量，以简化模型并避免过拟合。
+3. **稳定性**：选择对样本变化不敏感的变量，以提高模型的稳定性。
+4. **预测能力**：选择对新数据有良好预测能力的变量，以提高模型的泛化能力。
+
+这些标准需要在变量选择过程中进行权衡，以找到最优的变量组合。
+:::
 
 ::: {.callout-tip appearance="simple"}
 ## AI辅助学习建议（第六周）

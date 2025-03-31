@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="陆海波">
-<meta name="dcterms.date" content="2025-03-31">
 
-<title>统计学与R语言</title>
+<title>第六周练习：回归分析实践 – 统计学与R语言</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./syllbus.html" rel="next">
+<link href="./week7.html" rel="next">
+<link href="./week6.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -70,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles/custom.css">
 <link rel="stylesheet" href="styles/mermaid.css">
@@ -84,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-title">欢迎</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week5.html">项目二：商业数据分析与统计推断</a></li><li class="breadcrumb-item"><a href="./week6_lab.html"><span class="chapter-title">第六周练习：回归分析实践</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -114,7 +142,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">欢迎</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">欢迎</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -175,7 +203,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周练习：回归分析实践</span></a>
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第六周练习：回归分析实践</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -200,10 +228,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#欢迎" id="toc-欢迎" class="nav-link active" data-scroll-target="#欢迎">欢迎</a>
+  <li><a href="#练习背景波士顿房价预测" id="toc-练习背景波士顿房价预测" class="nav-link active" data-scroll-target="#练习背景波士顿房价预测">练习背景：波士顿房价预测</a></li>
+  <li><a href="#练习任务" id="toc-练习任务" class="nav-link" data-scroll-target="#练习任务">练习任务</a>
   <ul class="collapse">
-  <li><a href="#课程目标" id="toc-课程目标" class="nav-link" data-scroll-target="#课程目标">课程目标</a></li>
-  <li><a href="#使用说明" id="toc-使用说明" class="nav-link" data-scroll-target="#使用说明">使用说明</a></li>
+  <li><a href="#任务一简单线性回归" id="toc-任务一简单线性回归" class="nav-link" data-scroll-target="#任务一简单线性回归">任务一：简单线性回归</a></li>
+  <li><a href="#任务二多元线性回归" id="toc-任务二多元线性回归" class="nav-link" data-scroll-target="#任务二多元线性回归">任务二：多元线性回归</a></li>
+  <li><a href="#任务三模型评估与诊断" id="toc-任务三模型评估与诊断" class="nav-link" data-scroll-target="#任务三模型评估与诊断">任务三：模型评估与诊断</a></li>
+  <li><a href="#任务四变量选择" id="toc-任务四变量选择" class="nav-link" data-scroll-target="#任务四变量选择">任务四：变量选择</a></li>
+  <li><a href="#任务五模型解释与应用" id="toc-任务五模型解释与应用" class="nav-link" data-scroll-target="#任务五模型解释与应用">任务五：模型解释与应用</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -211,28 +243,16 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week5.html">项目二：商业数据分析与统计推断</a></li><li class="breadcrumb-item"><a href="./week6_lab.html"><span class="chapter-title">第六周练习：回归分析实践</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">统计学与R语言</h1>
+<h1 class="title"><span class="chapter-title">第六周练习：回归分析实践</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>陆海波 </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">March 31, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -242,25 +262,196 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="欢迎" class="level1">
-<h1>欢迎</h1>
-<p>这是统计学课程的在线教材。本教材包含了课程大纲和每周的课程内容。</p>
-<section id="课程目标" class="level2">
-<h2 class="anchored" data-anchor-id="课程目标">课程目标</h2>
-<p>本课程旨在帮助学生：</p>
-<ul>
-<li>掌握统计学的基本概念和方法</li>
-<li>学会使用统计软件进行数据分析</li>
-<li>培养统计思维和实践能力</li>
-</ul>
+<section id="练习背景波士顿房价预测" class="level2">
+<h2 class="anchored" data-anchor-id="练习背景波士顿房价预测">练习背景：波士顿房价预测</h2>
+<p>本练习将使用波士顿房价数据集（Boston），目标是建立回归模型来预测波士顿郊区的房价中位数 (<code>medv</code>)。</p>
+<p>数据集已经加载在 R 环境中。请使用 <code>?Boston</code> 命令查看数据集的详细信息，熟悉各个变量的含义。</p>
 </section>
-<section id="使用说明" class="level2">
-<h2 class="anchored" data-anchor-id="使用说明">使用说明</h2>
+<section id="练习任务" class="level2">
+<h2 class="anchored" data-anchor-id="练习任务">练习任务</h2>
+<section id="任务一简单线性回归" class="level3">
+<h3 class="anchored" data-anchor-id="任务一简单线性回归">任务一：简单线性回归</h3>
+<ol type="1">
+<li><strong>问题</strong>：建立一个简单线性回归模型，使用 <code>rm</code> (平均房间数) 预测 <code>medv</code> (房价中位数)。
 <ul>
-<li>左侧导航栏包含课程大纲和每周的课程内容</li>
-<li>代码块可以点击展开/折叠</li>
-<li>每章都有详细的目录导航</li>
-</ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>使用 <code>lm()</code> 函数创建线性回归模型。</li>
+<li>在 <code>lm()</code> 函数中，设定模型公式为 <code>medv ~ rm</code>，明确指出 <code>rm</code> 是自变量，<code>medv</code> 是因变量。</li>
+<li>将创建的模型对象命名为 <code>simple_lm</code>，方便后续引用。</li>
+<li>使用 <code>summary(simple_lm)</code> 函数，请求 R 输出模型摘要报告。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：解释模型摘要输出中 <code>rm</code> 变量的系数估计值。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>在 <code>summary(simple_lm)</code> 的输出结果中，找到名为 “Coefficients” 的部分。</li>
+<li>在 “Coefficients” 部分，找到 <code>rm</code> 变量对应的行。</li>
+<li>关注 “Estimate” 列，它给出了 <code>rm</code> 变量的系数估计值 (<span class="math inline">\(\hat{\beta}_1\)</span>)。理解这个数值的含义：当平均房间数 <code>rm</code> 增加一个单位时，房价中位数 <code>medv</code> 平均会发生怎样的变化？</li>
+<li>同时，查看 “Std. Error”、“t value” 和 “Pr(&gt;|t|)” 列。理解标准误差衡量系数估计的精确度，t 值用于检验系数是否显著不为零，而 p 值则给出了显著性检验的概率值。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：计算模型的 (R^2) 值，并解释其含义。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>在 <code>summary(simple_lm)</code> 的输出结果中，查找 “Multiple R-squared” 的值。</li>
+<li>记录下这个 (R^2) 值。思考并解释：这个值代表了什么？模型能够解释房价变异的程度是多少？</li>
+<li>理解 (R^2) 值的范围（0 到 1）以及值越高通常表示模型拟合效果越好的含义。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：绘制 <code>rm</code> 和 <code>medv</code> 的散点图，并添加回归线。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>使用 <code>ggplot()</code> 函数启动 ggplot2 绘图系统，并在其中指定数据集为 <code>Boston</code>，通过 <code>aes(x = rm, y = medv)</code> 设置 x 轴为 <code>rm</code>，y 轴为 <code>medv</code>。</li>
+<li>使用 <code>geom_point()</code> 图层添加散点，展示原始数据点的分布。</li>
+<li>使用 <code>geom_smooth(method = "lm", se = FALSE)</code> 图层添加线性回归线。设置 <code>method = "lm"</code> 指定添加线性回归线，<code>se = FALSE</code> 表示不显示回归线周围的置信区间阴影。</li>
+<li>使用 <code>labs()</code> 函数添加图表标题和坐标轴标签，使图表更易读。</li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+<section id="任务二多元线性回归" class="level3">
+<h3 class="anchored" data-anchor-id="任务二多元线性回归">任务二：多元线性回归</h3>
+<ol type="1">
+<li><strong>问题</strong>：建立一个多元线性回归模型，使用 <code>rm</code>、<code>lstat</code> (低收入人群比例) 和 <code>ptratio</code> (师生比例) 预测 <code>medv</code>。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>再次使用 <code>lm()</code> 函数创建回归模型，但这次使用多元回归公式 <code>medv ~ rm + lstat + ptratio</code>，表示使用 <code>rm</code>、<code>lstat</code> 和 <code>ptratio</code> 三个自变量共同预测 <code>medv</code>。</li>
+<li>将这个多元回归模型命名为 <code>multi_lm</code>。</li>
+<li>使用 <code>summary(multi_lm)</code> 查看新模型的摘要报告。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：比较简单线性回归和多元线性回归模型的 (R^2) 值。多元回归模型的拟合效果是否更好？为什么？
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>对比 <code>summary(simple_lm)</code> 和 <code>summary(multi_lm)</code> 输出结果中的 “Multiple R-squared” 值。</li>
+<li>观察多元回归模型的 (R^2) 值是否比简单线性回归模型更高。</li>
+<li>思考并解释：通常情况下，向模型中增加自变量会对 (R^2) 值产生什么影响？为什么多元回归模型可能提供更好的拟合效果？</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：解释多元线性回归模型中 <code>rm</code>、<code>lstat</code> 和 <code>ptratio</code> 变量的系数估计值。与简单线性回归中 <code>rm</code> 的系数有何不同？
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>在 <code>summary(multi_lm)</code> 的 “Coefficients” 部分，找到 <code>rm</code>、<code>lstat</code> 和 <code>ptratio</code> 各自对应的系数估计值。</li>
+<li>理解偏回归系数的概念。例如，对于 <code>rm</code> 的系数，其含义是在保持 <code>lstat</code> 和 <code>ptratio</code> 不变的条件下，<code>rm</code> 每增加一个单位，<code>medv</code> 的平均变化量。</li>
+<li>比较多元回归模型中 <code>rm</code> 的系数与之前简单线性回归模型中 <code>rm</code> 的系数。思考并解释：为什么同一个变量 <code>rm</code> 的系数在不同模型中会有所变化？</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：使用 <code>vif()</code> 函数检验多元线性回归模型中是否存在多重共线性问题。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>首先，确保加载了 <code>car</code> 包，因为 <code>vif()</code> 函数来自这个包。</li>
+<li>使用 <code>vif(multi_lm)</code> 函数，计算多元线性回归模型中各个自变量的方差膨胀因子 (VIF)。</li>
+<li>根据 VIF 值判断是否存在多重共线性。通常，VIF 值大于 10 被认为是一个信号，表明可能存在显著的多重共线性问题。</li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+<section id="任务三模型评估与诊断" class="level3">
+<h3 class="anchored" data-anchor-id="任务三模型评估与诊断">任务三：模型评估与诊断</h3>
+<ol type="1">
+<li><strong>问题</strong>：计算任务二中多元线性回归模型的均方误差 (MSE) 和均方根误差 (RMSE)。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>使用 <code>augment(multi_lm)</code> 函数，获取一个包含原始数据、预测值 (<code>.fitted</code>) 和残差 (<code>.resid</code>) 的增强型数据框。</li>
+<li>要手动计算 MSE，首先计算所有残差的平方，然后求这些平方值的平均数。公式为：<span class="math inline">\(\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2\)</span>，其中 (y_i) 是真实值，(_i) 是预测值，(n) 是样本量。</li>
+<li>RMSE 是 MSE 的平方根，计算公式为：<span class="math inline">\(\text{RMSE} = \sqrt{\text{MSE}}\)</span>。RMSE 的单位与因变量相同，更易于解释。</li>
+<li>或者，为了更方便地计算 MSE 和 RMSE，可以使用 <code>Metrics</code> 包中的 <code>mse()</code> 和 <code>rmse()</code> 函数。你需要提供真实值（<code>Boston$medv</code>）和模型的预测值（可以使用 <code>fitted(multi_lm)</code> 获取）。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：绘制多元线性回归模型的残差图 (Residual vs Fitted plot) 和 QQ 图，诊断模型是否满足线性性、同方差性和正态性假设。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>使用 <code>plot(multi_lm, which = 1)</code> 命令绘制残差图。观察图中残差点是否随机散布在水平 0 线上下，且没有明显的模式（如曲线、喇叭口形）。如果残差呈现一定的模式，可能表明模型不满足线性性或同方差性假设。</li>
+<li>使用 <code>plot(multi_lm, which = 2)</code> 命令绘制 QQ 图（正态分位数-分位数图）。观察图中残差点是否近似沿一条直线分布。如果残差点偏离直线较远，可能表明模型残差不满足正态性假设。</li>
+<li>或者，为了获得更美观且信息更丰富的诊断图，可以使用 <code>ggfortify</code> 包的 <code>autoplot(multi_lm)</code> 函数，它可以一次性生成包括残差图、QQ 图在内的多种诊断图。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：如果模型不满足某些假设，你认为可能的原因是什么？你会考虑采取哪些改进措施？
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>回顾回归分析的四大基本假设：线性性、同方差性、残差独立性、残差正态性。</li>
+<li>根据残差图和 QQ 图的诊断结果，判断模型可能违反了哪些假设。例如，残差图呈现漏斗状可能暗示异方差性，QQ 图尾部偏离直线可能暗示残差非正态。</li>
+<li>针对可能违反的假设，思考潜在原因。例如，非线性关系可能导致线性性假设不成立，变量量纲或数据生成过程的差异可能导致异方差性。</li>
+<li>考虑可以采取的改进措施。例如，对于非线性关系，可以尝试变量转换（如对数变换、平方项）或使用非线性模型；对于异方差性，可以考虑加权最小二乘法或稳健标准误；对于非正态性，如果问题不严重且样本量较大，中心极限定理可能在一定程度上缓解问题，否则可能需要考虑 Box-Cox 变换或非参数方法。</li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+<section id="任务四变量选择" class="level3">
+<h3 class="anchored" data-anchor-id="任务四变量选择">任务四：变量选择</h3>
+<ol type="1">
+<li><strong>问题</strong>：使用向前逐步回归、向后逐步回归和双向逐步回归方法，基于 AIC 准则，从 Boston 数据集的所有变量中选择最优的预测变量子集，建立回归模型预测 <code>medv</code>。比较这三种方法选择的变量有何异同？
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>首先，构建一个包含 Boston 数据集中所有自变量的完整模型，例如命名为 <code>full_model</code>。同时，构建一个仅包含截距项的零模型，例如命名为 <code>null_model</code>。</li>
+<li>使用 <code>step()</code> 函数执行向前逐步回归。以 <code>null_model</code> 为起始模型，设定搜索范围为 <code>full_model</code> 的公式，指定 <code>direction = "forward"</code> 和 <code>trace = 0</code>（不显示逐步过程）。将结果模型命名为 <code>forward_step</code>。</li>
+<li>使用 <code>step()</code> 函数执行向后逐步回归。以 <code>full_model</code> 为起始模型，指定 <code>direction = "backward"</code> 和 <code>trace = 0</code>。将结果模型命名为 <code>backward_step</code>。</li>
+<li>使用 <code>step()</code> 函数执行双向逐步回归。以 <code>null_model</code> 为起始模型，设定搜索范围为 <code>full_model</code> 的公式，指定 <code>direction = "both"</code> 和 <code>trace = 0</code>。将结果模型命名为 <code>both_step</code>。</li>
+<li>使用 <code>coef()</code> 函数分别提取 <code>forward_step</code>、<code>backward_step</code> 和 <code>both_step</code> 模型的系数，系数非零的变量即为被选入模型的变量。</li>
+<li>比较这三种逐步回归方法选出的变量集合，观察它们是否完全一致，或者存在哪些差异。同时，比较这三个模型的 AIC 值，AIC 值越小的模型通常被认为更好。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：使用 Lasso 回归进行变量选择。通过交叉验证确定最优的 () 值，并解释 Lasso 如何进行变量选择。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>准备 Lasso 回归所需的输入数据：将 Boston 数据集中除 <code>medv</code> 列外的所有列转换为矩阵形式，作为自变量矩阵 <code>x</code>；将 <code>medv</code> 列作为因变量向量 <code>y</code>。</li>
+<li>使用 <code>cv.glmnet()</code> 函数执行交叉验证，以选择最优的 () 值。设置 <code>alpha = 1</code> 以指定 Lasso 回归，<code>nfolds = 10</code> 表示进行 10 折交叉验证。将交叉验证的结果命名为 <code>lasso_cv</code>。</li>
+<li>从 <code>lasso_cv</code> 结果中提取最优的 () 值 (<code>lambda.min</code>)。</li>
+<li>使用 <code>glmnet()</code> 函数，用最优的 () 值拟合 Lasso 模型。同样设置 <code>alpha = 1</code> 和 <code>lambda = best_lambda</code>。将拟合的模型命名为 <code>lasso_model</code>。</li>
+<li>使用 <code>coef(lasso_model)</code> 查看 Lasso 模型的系数。Lasso 回归通过 L1 正则化，倾向于将一些不重要变量的系数压缩至 0，从而实现变量选择。系数为 0 的变量即被 Lasso 排除在模型之外。</li>
+<li>使用 <code>plot(lasso_cv)</code> 绘制交叉验证的结果图，观察 () 值与交叉验证误差之间的关系，以及最优 () 值是如何被确定的。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：比较逐步回归和 Lasso 回归选择的变量子集，以及模型的预测性能 (例如，在测试集上的 RMSE)。哪种方法更适合这个数据集？
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>首先，将 Boston 数据集划分为训练集和测试集。例如，可以随机抽取 70% 的数据作为训练集，剩余 30% 作为测试集。确保划分过程设置随机种子，以保证结果的可重复性。</li>
+<li>在训练集上，分别应用之前得到的逐步回归方法（例如，双向逐步回归得到的 <code>step_model_train</code>）和 Lasso 回归方法（<code>lasso_model_train</code>）进行模型训练。</li>
+<li>使用训练好的逐步回归模型和 Lasso 回归模型，分别对测试集进行房价预测。</li>
+<li>计算两种模型在测试集上的 RMSE 值。RMSE 值越小，表明模型在测试集上的预测性能越好。</li>
+<li>比较逐步回归和 Lasso 回归选择的变量子集，以及它们在测试集上的 RMSE 值。综合考虑模型的复杂程度（选择的变量数量）和预测性能，判断哪种变量选择方法更适合于当前的波士顿房价数据集。</li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+<section id="任务五模型解释与应用" class="level3">
+<h3 class="anchored" data-anchor-id="任务五模型解释与应用">任务五：模型解释与应用</h3>
+<ol type="1">
+<li><strong>问题</strong>：选择你认为最优的回归模型（例如，基于任务四的结果），解释模型中各个变量的系数。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>回顾任务四的结果，综合考虑变量选择方法、模型复杂度和预测性能等因素，选择你认为在这个数据集上表现最优的回归模型。</li>
+<li>如果你选择了逐步回归模型，使用 <code>summary()</code> 函数查看模型摘要，重点关注 “Coefficients” 部分，解释模型中每个被选入的变量的系数估计值。解释系数的符号（正负）和大小，以及对应的 p 值，判断变量对房价的影响方向和显著性水平。</li>
+<li>如果你选择了 Lasso 回归模型，使用 <code>coef()</code> 函数查看模型系数。解释所有非零系数的变量对房价的影响方向和大致程度。由于 Lasso 回归系数经过压缩，可能需要注意系数的实际经济意义。</li>
+<li>在解释系数时，务必结合变量的实际含义，用通俗易懂的语言描述每个变量对房价的影响，例如，“在其他条件不变的情况下，每增加一个单位的 XXX 变量，房价平均会增加/减少 YYY 千美元”。</li>
+</ul></li>
+</ul></li>
+<li><strong>问题</strong>：假设你想预测一个波士顿郊区房屋的房价，已知其 <code>rm = 6</code>，<code>lstat = 10</code>，<code>ptratio = 15</code>，使用你选择的模型进行预测，并给出预测结果的解释。
+<ul>
+<li><strong>详细步骤</strong>：
+<ul>
+<li>创建一个新的数据框，用于存放待预测房屋的特征数据。数据框的列名必须与模型训练时使用的自变量名称一致。例如，创建一个名为 <code>new_house</code> 的数据框，包含 <code>rm</code>、<code>lstat</code> 和 <code>ptratio</code> 三列，并填入给定的数值 (rm=6, lstat=10, ptratio=15)。</li>
+<li>如果你选择的是逐步回归模型，直接使用 <code>predict()</code> 函数，以训练好的模型和 <code>new_house</code> 数据框作为输入，进行预测。</li>
+<li>如果你选择的是 Lasso 回归模型，由于 <code>glmnet</code> 函数需要矩阵形式的输入，你需要先将 <code>new_house</code> 数据框转换为矩阵形式，例如 <code>new_x</code>，然后再使用 <code>predict()</code> 函数进行预测。</li>
+<li>获取模型的预测输出后，解释预测结果的含义。例如，说明预测的房价中位数是多少千美元，并简要解释模型是如何基于输入的房屋特征给出预测的。</li>
+</ul></li>
+</ul></li>
+</ol>
 
 
 </section>
@@ -689,10 +880,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./week6.html" class="pagination-link" aria-label="第六周：回归分析初步">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第六周：回归分析初步</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./syllbus.html" class="pagination-link" aria-label="课程概述">
-        <span class="nav-page-text">课程概述</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./week7.html" class="pagination-link" aria-label="第七周：分类数据分析">
+        <span class="nav-page-text"><span class="chapter-title">第七周：分类数据分析</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

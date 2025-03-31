@@ -20,6 +20,7 @@ book:
       chapters:
         - week5.qmd
         - week6.qmd
+        - week6_lab.qmd
         - week7.qmd
         - week8.qmd
         

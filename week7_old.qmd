@@ -1,0 +1,919 @@
+---
+title: "第七周：分类数据分析"
+---
+
+## 第十三次课：卡方检验-拟合优度检验
+
+### 分类数据分析概述
+
+**分类数据的特点**：
+- 取值是离散的类别，而非连续的数值
+- 例如：性别（男/女）、颜色（红/绿/蓝）、学历（本科/硕士/博士）等
+- 分类数据可分为名义变量（无序类别）和有序变量（有顺序等级）
+
+**分类数据分析的目的**：
+- 描述分类数据的分布特征（频率、比例）
+- 检验分类变量之间的关系（独立性、关联性）
+- 比较不同组别在分类变量上的分布差异
+- 构建模型预测分类变量的取值
+
+**常用分析方法**：
+- **频数分布表和条形图**：描述单个分类变量的分布
+- **列联表和卡方检验**：检验两个分类变量之间是否独立
+- **相关分析**：衡量有序分类变量之间的相关程度
+- **对数线性模型**：分析复杂的分类数据关系
+- **逻辑回归和判别分析**：预测分类变量
+
+**数据展示方式**：
+```{r, eval=FALSE}
+# 创建示例数据
+survey_data <- data.frame(
+  gender = sample(c("男", "女"), 200, replace = TRUE, prob = c(0.45, 0.55)),
+  education = sample(c("高中", "本科", "硕士", "博士"), 200, replace = TRUE, 
+                    prob = c(0.25, 0.45, 0.20, 0.10)),
+  satisfaction = sample(c("非常不满意", "不满意", "一般", "满意", "非常满意"), 
+                      200, replace = TRUE)
+)
+
+# 频数分布表
+table(survey_data$gender)
+table(survey_data$education)
+prop.table(table(survey_data$education)) # 比例
+
+# 图形展示
+library(ggplot2)
+
+# 条形图
+ggplot(survey_data, aes(x = education, fill = education)) +
+  geom_bar() +
+  labs(title = "受访者教育水平分布",
+       x = "教育水平", y = "频数") +
+  theme_minimal()
+
+# 饼图
+pie_data <- data.frame(
+  education = names(table(survey_data$education)),
+  count = as.numeric(table(survey_data$education))
+)
+
+ggplot(pie_data, aes(x = "", y = count, fill = education)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  labs(title = "受访者教育水平分布") +
+  theme_void() +
+  theme(legend.title = element_blank())
+
+# 马赛克图（两个分类变量的联合分布）
+library(ggmosaic)
+ggplot(survey_data) +
+  geom_mosaic(aes(x = product(gender), fill = education)) +
+  labs(title = "性别与教育水平的联合分布") +
+  theme_minimal()
+```
+
+### 卡方检验：拟合优度检验
+
+**拟合优度检验的目的**：
+- 检验观察频数分布与期望频数分布是否一致
+- 评估样本是否来自某个特定的理论分布
+- 判断数据是否符合预期的理论模型
+
+**应用场景**：
+- 检验观察数据是否符合均匀分布（如骰子是否公平）
+- 检验观察数据是否符合某个理论分布（如泊松分布）
+- 验证市场份额分布是否发生变化（如品牌偏好）
+- 产品质量控制（检验缺陷分布是否符合预期）
+- 消费者偏好测试（检验不同口味的受欢迎程度）
+
+**假设检验**：
+- 原假设(H0)：观察频数分布与期望频数分布一致
+- 备择假设(H1)：观察频数分布与期望频数分布不一致
+
+**检验统计量**：卡方统计量 ($\chi^2$)
+$\chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}$
+
+- $O_i$：第$i$个类别的观察频数
+- $E_i$：第$i$个类别的期望频数
+- $k$：类别个数
+
+**自由度**: df = 类别个数 - 1 = k - 1
+
+**决策规则**：
+- 如果$p值 < \alpha$（通常$\alpha = 0.05$），则拒绝原假设
+- 如果$p值 \geq \alpha$，则不拒绝原假设
+
+**检验步骤**：
+1. 收集观察频数数据
+2. 确定期望频数分布（基于理论模型或历史数据）
+3. 计算卡方统计量
+4. 确定自由度并查找临界值或计算p值
+5. 做出统计决策并进行业务解释
+
+### R语言实现拟合优度检验
+
+**基本语法**：
+```{r, eval=FALSE}
+# 语法结构
+chisq.test(x, p = NULL)
+
+# 参数说明
+# x：观察频率向量
+# p：期望概率向量（可选，默认为均匀分布）
+```
+
+**示例1：检验糖果颜色分布是否均匀**
+```{r, eval=FALSE}
+# 假设某品牌糖果有5种颜色，收集样本统计各颜色数量
+candy_colors <- c("红色", "黄色", "绿色", "蓝色", "紫色")
+observed_counts <- c(30, 25, 28, 32, 35)  # 观察频数
+
+# 创建数据框用于可视化
+candy_data <- data.frame(
+  color = candy_colors,
+  count = observed_counts
+)
+
+# 可视化观察频数
+ggplot(candy_data, aes(x = color, y = count, fill = color)) +
+  geom_bar(stat = "identity") +
+  labs(title = "糖果颜色分布",
+       x = "颜色", y = "频数") +
+  theme_minimal()
+
+# 执行卡方拟合优度检验（检验是否符合均匀分布）
+chi_result <- chisq.test(observed_counts)
+print(chi_result)
+
+# 解读结果
+# 如果p值小于0.05，则拒绝原假设，认为糖果颜色分布不均匀
+# 如果p值大于等于0.05，则不拒绝原假设，认为糖果颜色分布均匀
+```
+
+**示例2：检验销售数据是否符合预期分布**
+```{r, eval=FALSE}
+# 某公司四款产品的实际销售量（观察频数）
+products <- c("产品A", "产品B", "产品C", "产品D")
+observed_sales <- c(320, 210, 240, 130)
+
+# 根据历史数据或市场预测的期望销售比例
+expected_proportions <- c(0.35, 0.25, 0.25, 0.15)
+
+# 可视化观察与期望的比较
+sales_data <- data.frame(
+  product = rep(products, 2),
+  type = rep(c("观察销量", "期望销量"), each = 4),
+  count = c(observed_sales, expected_proportions * sum(observed_sales))
+)
+
+ggplot(sales_data, aes(x = product, y = count, fill = type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "产品销售量：观察值vs期望值",
+       x = "产品", y = "销售量") +
+  theme_minimal()
+
+# 执行卡方拟合优度检验
+chi_sales <- chisq.test(observed_sales, p = expected_proportions)
+print(chi_sales)
+
+# 计算残差（可识别哪些类别与期望差异显著）
+chi_sales$residuals
+```
+
+**示例3：问卷调查数据分析**
+```{r, eval=FALSE}
+# 某问卷调查对某商品的评价结果
+ratings <- c("非常好", "好", "一般", "差", "非常差")
+observed_ratings <- c(45, 80, 60, 25, 10)
+
+# 假设评价应该呈正态分布（公司期望）
+expected_prop <- c(0.15, 0.35, 0.30, 0.15, 0.05)
+
+# 创建数据框并可视化
+rating_data <- data.frame(
+  rating = ratings,
+  observed = observed_ratings,
+  expected = expected_prop * sum(observed_ratings)
+)
+
+# 转换为长格式进行可视化
+rating_long <- reshape2::melt(rating_data, id.vars = "rating", 
+                             variable.name = "type", value.name = "count")
+
+# 创建条形图比较观察值与期望值
+ggplot(rating_long, aes(x = rating, y = count, fill = type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "产品评价：观察值vs期望值",
+       x = "评价", y = "频数") +
+  scale_fill_manual(values = c("observed" = "steelblue", "expected" = "coral"),
+                   labels = c("观察值", "期望值")) +
+  theme_minimal()
+
+# 执行卡方拟合优度检验
+chi_rating <- chisq.test(observed_ratings, p = expected_prop)
+print(chi_rating)
+
+# 标准化残差（>1.96或<-1.96表示在5%水平上显著）
+round(chi_rating$residuals, 2)
+```
+
+### 拟合优度检验的注意事项
+
+1. **样本量要求**：
+   - 期望频数不应太小，通常要求所有类别的期望频数都大于等于5
+   - 如果有类别的期望频数小于5，可考虑合并类别或使用精确方法
+
+2. **类别选择**：
+   - 类别划分需合理，不应人为操纵以适应检验需要
+   - 类别间应互斥且完备（覆盖所有可能情况）
+
+3. **期望分布的确定**：
+   - 期望分布应基于合理的理论假设或历史数据
+   - 如果期望分布是从数据估计得出，则自由度需要相应调整
+
+4. **结果解释**：
+   - 拒绝原假设只能说明观察分布与期望分布存在显著差异
+   - 需要结合实际问题背景解释差异的实际意义和重要性
+
+### 商业案例分析：市场调研中的应用
+
+**案例背景**：
+某快餐连锁店通过市场调研收集了顾客对其五种主要产品的偏好数据。该公司希望验证实际消费者偏好是否与其市场定位一致。
+
+```{r, eval=FALSE}
+# 五种产品的实际偏好计数
+products <- c("汉堡", "炸鸡", "沙拉", "三明治", "披萨")
+observed_preferences <- c(250, 180, 120, 150, 300)
+
+# 公司的市场定位预期比例
+expected_proportions <- c(0.3, 0.2, 0.1, 0.15, 0.25)
+
+# 创建数据框用于分析和可视化
+preference_data <- data.frame(
+  product = products,
+  observed = observed_preferences,
+  expected = expected_proportions * sum(observed_preferences),
+  difference = observed_preferences - expected_proportions * sum(observed_preferences)
+)
+
+# 可视化比较
+ggplot(preference_data, aes(x = product, y = observed, fill = product)) +
+  geom_bar(stat = "identity") +
+  geom_point(aes(y = expected), shape = 18, size = 5, color = "red") +
+  geom_text(aes(label = paste0("+", round(difference))), 
+            position = position_dodge(width = 0.9), vjust = -0.5) +
+  labs(title = "消费者产品偏好: 观察vs期望",
+       subtitle = "红点表示期望频数，数字显示差异",
+       x = "产品", y = "偏好次数") +
+  theme_minimal()
+
+# 执行卡方拟合优度检验
+chi_preference <- chisq.test(observed_preferences, p = expected_proportions)
+print(chi_preference)
+
+# 分析结果
+if(chi_preference$p.value < 0.05) {
+  cat("消费者实际偏好与公司的市场定位存在显著差异。\n")
+  
+  # 找出差异最大的产品
+  largest_diff_idx <- which.max(abs(preference_data$difference))
+  if(preference_data$difference[largest_diff_idx] > 0) {
+    cat(paste0("产品 '", products[largest_diff_idx], 
+               "' 的实际偏好显著高于预期，可考虑增加投入。\n"))
+  } else {
+    cat(paste0("产品 '", products[largest_diff_idx], 
+               "' 的实际偏好显著低于预期，需要重新评估市场策略。\n"))
+  }
+} else {
+  cat("消费者实际偏好与公司的市场定位基本一致，当前营销策略有效。\n")
+}
+```
+
+**商业决策建议**：
+- 如果检验显示实际偏好与预期有显著差异，公司可能需要调整产品策略和市场营销计划
+- 对于偏好显著高于预期的产品，可考虑增加供应和营销资源
+- 对于偏好显著低于预期的产品，需要研究原因并改进产品或调整定位
+- 使用残差分析识别具体哪些产品与预期差异最大，优先处理这些产品
+
+## 第十四次课：卡方检验-独立性检验与相关分析
+
+### 卡方检验：独立性检验
+
+**独立性检验的目的**：
+- 检验两个分类变量之间是否独立
+- 评估一个分类变量的分布是否受另一个分类变量的影响
+- 判断两个分类变量是否存在关联关系
+
+**应用场景**：
+- 检验性别与购买偏好是否独立
+- 分析学历与收入水平是否相关
+- 评估地区与产品销量是否有关联
+- 研究营销渠道与转化率之间的关系
+- 分析产品特性与客户满意度之间的关系
+
+**假设检验**：
+- 原假设(H0)：两个分类变量之间独立
+- 备择假设(H1)：两个分类变量之间不独立（存在关联）
+
+**列联表**：用于展示两个分类变量频率分布的表格，又称为交叉表或者交互频数表
+
+**期望频率计算**：
+$E_{ij} = \frac{(\text{第 } i \text{ 行总和}) \times (\text{第 } j \text{ 列总和})}{\text{总样本量}}$
+
+**卡方统计量**：
+$\chi^2 = \sum_{i=1}^{r}\sum_{j=1}^{c} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
+
+- $O_{ij}$：第$i$行第$j$列的观察频数
+- $E_{ij}$：第$i$行第$j$列的期望频数
+- $r$：行数
+- $c$：列数
+
+**自由度**: df = (行数 - 1) × (列数 - 1)
+
+**决策规则**：
+- 如果$p值 < \alpha$（通常$\alpha = 0.05$），则拒绝原假设，认为两个变量不独立
+- 如果$p值 \geq \alpha$，则不拒绝原假设，认为两个变量独立
+
+### R语言实现独立性检验
+
+**基本实现步骤**：
+```{r, eval=FALSE}
+# 创建列联表
+contingency_table <- table(data$var1, data$var2)
+
+# 查看列联表
+contingency_table
+
+# 执行卡方独立性检验
+chi_result <- chisq.test(contingency_table)
+print(chi_result)
+
+# 查看卡方检验的详细结果
+chi_result$expected  # 期望频数
+chi_result$observed  # 观察频数
+chi_result$residuals  # 残差
+chi_result$stdres  # 标准化残差（>1.96或<-1.96表示在5%水平上显著）
+```
+
+**示例1：性别与产品偏好的关系**
+```{r, eval=FALSE}
+# 创建示例数据
+set.seed(123)
+n <- 500
+gender <- sample(c("男", "女"), n, replace = TRUE, prob = c(0.45, 0.55))
+product <- sample(c("A", "B", "C"), n, replace = TRUE)
+
+# 使偏好有一定关联性（非独立）
+product[gender == "男" & product == "A"] <- sample(
+  c("A", "B", "C"), sum(gender == "男" & product == "A"), 
+  replace = TRUE, prob = c(0.6, 0.3, 0.1))
+product[gender == "女" & product == "B"] <- sample(
+  c("A", "B", "C"), sum(gender == "女" & product == "B"), 
+  replace = TRUE, prob = c(0.3, 0.2, 0.5))
+
+# 创建数据框
+preference_data <- data.frame(gender = gender, product = product)
+
+# 创建列联表
+gender_product_table <- table(preference_data$gender, preference_data$product)
+print(gender_product_table)
+
+# 计算比例
+prop.table(gender_product_table, margin = 1)  # 行比例（按性别）
+prop.table(gender_product_table, margin = 2)  # 列比例（按产品）
+
+# 可视化列联表
+library(ggplot2)
+
+# 转换成数据框
+table_df <- as.data.frame(gender_product_table)
+names(table_df) <- c("gender", "product", "frequency")
+
+# 条形图
+ggplot(table_df, aes(x = product, y = frequency, fill = gender)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "性别与产品偏好的关系",
+       x = "产品", y = "频数") +
+  theme_minimal()
+
+# 马赛克图
+library(vcd)
+mosaic(gender_product_table, shade = TRUE, legend = TRUE)
+
+# 执行卡方独立性检验
+chi_gender_product <- chisq.test(gender_product_table)
+print(chi_gender_product)
+
+# 分析残差以确定哪些单元格对卡方统计量贡献最大
+round(chi_gender_product$stdres, 2)  # 标准化残差
+```
+
+**示例2：教育水平与收入等级的关系**
+```{r, eval=FALSE}
+# 创建更实际的示例数据
+set.seed(456)
+n <- 600
+
+# 教育水平与收入有一定关联（高教育水平对应高收入概率更大）
+education <- sample(c("高中", "本科", "硕士", "博士"), n, replace = TRUE, 
+                    prob = c(0.3, 0.4, 0.2, 0.1))
+
+# 基于教育水平生成收入水平
+income <- character(n)
+for(i in 1:n) {
+  if(education[i] == "高中") {
+    income[i] <- sample(c("低", "中", "高"), 1, prob = c(0.6, 0.3, 0.1))
+  } else if(education[i] == "本科") {
+    income[i] <- sample(c("低", "中", "高"), 1, prob = c(0.3, 0.5, 0.2))
+  } else if(education[i] == "硕士") {
+    income[i] <- sample(c("低", "中", "高"), 1, prob = c(0.1, 0.4, 0.5))
+  } else {  # 博士
+    income[i] <- sample(c("低", "中", "高"), 1, prob = c(0.05, 0.25, 0.7))
+  }
+}
+
+education_income_data <- data.frame(education = education, income = income)
+
+# 创建列联表
+education_income_table <- table(education_income_data$education, 
+                               education_income_data$income)
+print(education_income_table)
+
+# 转换教育水平和收入为有序因子
+education_income_data$education <- factor(education_income_data$education, 
+                                        levels = c("高中", "本科", "硕士", "博士"))
+education_income_data$income <- factor(education_income_data$income, 
+                                     levels = c("低", "中", "高"))
+
+# 创建堆叠条形图
+edu_inc_prop <- prop.table(table(education_income_data$education, 
+                               education_income_data$income), margin = 1)
+edu_inc_df <- as.data.frame(edu_inc_prop)
+names(edu_inc_df) <- c("education", "income", "proportion")
+
+ggplot(edu_inc_df, aes(x = education, y = proportion, fill = income)) +
+  geom_bar(stat = "identity") +
+  labs(title = "教育水平与收入等级的关系",
+       x = "教育水平", y = "比例") +
+  scale_fill_brewer(palette = "Blues") +
+  theme_minimal()
+
+# 执行卡方独立性检验
+chi_edu_income <- chisq.test(education_income_table)
+print(chi_edu_income)
+
+# 标准化残差分析
+round(chi_edu_income$stdres, 2)
+
+# 计算关联强度指标 - Cramer's V
+# Cramer's V取值范围为[0,1]，越接近1表示关联越强
+library(vcd)
+assocstats(education_income_table)
+```
+
+**示例3：营销渠道与转化率的关系**
+```{r, eval=FALSE}
+# 创建营销渠道与转化结果的数据
+channels <- c("社交媒体", "电子邮件", "搜索引擎", "展示广告", "推荐")
+conversions <- c("是", "否")
+
+# 创建有一定关联性的数据
+conversion_data <- data.frame(
+  channel = rep(channels, c(150, 200, 180, 120, 100)),
+  converted = c(
+    sample(conversions, 150, replace = TRUE, prob = c(0.15, 0.85)),  # 社交媒体
+    sample(conversions, 200, replace = TRUE, prob = c(0.25, 0.75)),  # 电子邮件
+    sample(conversions, 180, replace = TRUE, prob = c(0.20, 0.80)),  # 搜索引擎
+    sample(conversions, 120, replace = TRUE, prob = c(0.10, 0.90)),  # 展示广告
+    sample(conversions, 100, replace = TRUE, prob = c(0.30, 0.70))   # 推荐
+  )
+)
+
+# 创建列联表
+channel_conversion_table <- table(conversion_data$channel, conversion_data$converted)
+print(channel_conversion_table)
+
+# 计算转化率
+conversion_rates <- prop.table(channel_conversion_table, margin = 1)[, "是"]
+conversion_rates_df <- data.frame(
+  channel = names(conversion_rates),
+  rate = as.numeric(conversion_rates)
+)
+
+# 可视化转化率
+ggplot(conversion_rates_df, aes(x = channel, y = rate, fill = channel)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = sprintf("%.1f%%", rate * 100)), vjust = -0.5) +
+  labs(title = "不同营销渠道的转化率",
+       x = "营销渠道", y = "转化率") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# 执行卡方独立性检验
+chi_channel_conversion <- chisq.test(channel_conversion_table)
+print(chi_channel_conversion)
+
+# 标准化残差分析
+std_res <- round(chi_channel_conversion$stdres, 2)
+print(std_res)
+
+# 商业分析解读
+if(chi_channel_conversion$p.value < 0.05) {
+  cat("不同营销渠道的转化率存在显著差异。\n")
+  
+  # 找出转化率最高的渠道
+  best_channel <- conversion_rates_df$channel[which.max(conversion_rates_df$rate)]
+  cat(paste0("'", best_channel, "' 渠道有最高的转化率，应考虑增加在该渠道的投入。\n"))
+  
+  # 找出转化率最低的渠道
+  worst_channel <- conversion_rates_df$channel[which.min(conversion_rates_df$rate)]
+  cat(paste0("'", worst_channel, "' 渠道有最低的转化率，应重新评估或优化该渠道的营销策略。\n"))
+} else {
+  cat("不同营销渠道的转化率没有显著差异，可能需要检查其他因素。\n")
+}
+```
+
+### 独立性检验的注意事项
+
+1. **样本大小和期望频数**：
+   - 所有期望频数最好大于5
+   - 如果期望频数较小，可使用Fisher精确检验替代卡方检验
+
+2. **多重比较问题**：
+   - 进行多个独立卡方检验时，应考虑多重比较问题
+   - 可使用Bonferroni校正等方法调整显著性水平
+
+3. **因果关系推断限制**：
+   - 卡方检验只能说明变量间是否存在关联，不能确定因果关系
+   - 关联不等于因果，需要结合专业知识和其他研究方法确定因果关系
+
+4. **关联强度的衡量**：
+   - 卡方检验只能说明变量间是否存在关联，不能量化关联强度
+   - 可使用其他指标如Cramer's V、Phi系数、列联系数等量化关联强度
+
+### 相关分析（针对有序分类变量）
+
+**相关分析的目的**：
+- 衡量两个变量之间线性关系的强度和方向
+- 量化两个变量一起变化的程度和方式
+
+**Pearson相关系数**：
+- 适用于数值型变量（等距或比例尺度）
+- 衡量线性关系的强度和方向
+- 取值范围[-1, 1]
+  - 1表示完全正相关
+  - -1表示完全负相关
+  - 0表示无线性相关
+
+**Spearman相关系数**：
+- 适用于有序分类变量或非正态分布的数值型变量
+- 基于变量的秩（rank）计算相关系数，对异常值不敏感
+- 衡量单调关系（而非线性关系）
+- 取值范围与Pearson相关系数相同
+
+**Kendall's tau相关系数**：
+- 适用于有序变量，尤其是存在大量并列秩的情况
+- 测量配对观测值的一致性
+- 在小样本或存在并列值时比Spearman更稳健
+
+### R语言实现相关分析
+
+**基本实现方法**：
+```{r, eval=FALSE}
+# Pearson相关系数
+cor(x, y, method = "pearson")
+
+# Spearman相关系数
+cor(x, y, method = "spearman")
+
+# Kendall's tau相关系数
+cor(x, y, method = "kendall")
+
+# 相关性检验
+cor.test(x, y, method = "pearson")  # 也可以是"spearman"或"kendall"
+```
+
+**示例1：顾客满意度与购买金额的相关性**
+```{r, eval=FALSE}
+# 创建示例数据
+set.seed(789)
+n <- 100
+
+# 创建有序变量和连续变量
+satisfaction <- sample(1:5, n, replace = TRUE,
+                      prob = c(0.05, 0.15, 0.30, 0.35, 0.15))  # 1-5的满意度等级
+purchase_amount <- numeric(n)
+
+# 创建相关数据（满意度高的客户购买金额倾向于高）
+for(i in 1:n) {
+  base_amount <- 50 + satisfaction[i] * 10  # 基础金额随满意度增加
+  variation <- rnorm(1, 0, 15)  # 随机变异
+  purchase_amount[i] <- max(0, base_amount + variation)  # 确保金额为正
+}
+
+customer_data <- data.frame(
+  satisfaction = satisfaction,
+  purchase_amount = purchase_amount
+)
+
+# 可视化数据
+ggplot(customer_data, aes(x = factor(satisfaction), y = purchase_amount)) +
+  geom_boxplot(fill = "skyblue") +
+  labs(title = "不同满意度等级的购买金额分布",
+       x = "满意度等级", y = "购买金额") +
+  theme_minimal()
+
+# 散点图（加上抖动以显示相同等级的点）
+ggplot(customer_data, aes(x = satisfaction, y = purchase_amount)) +
+  geom_point(position = position_jitter(width = 0.2), alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "满意度与购买金额的关系",
+       x = "满意度等级", y = "购买金额") +
+  theme_minimal()
+
+# 计算Spearman相关系数（适用于有序变量）
+spearman_corr <- cor(customer_data$satisfaction, 
+                    customer_data$purchase_amount, 
+                    method = "spearman")
+print(paste("Spearman相关系数:", round(spearman_corr, 3)))
+
+# 相关性显著性检验
+spearman_test <- cor.test(customer_data$satisfaction, 
+                         customer_data$purchase_amount, 
+                         method = "spearman")
+print(spearman_test)
+
+# 如果满意度编码为因子，可以先转换为数值
+# customer_data$satisfaction_num <- as.numeric(as.character(customer_data$satisfaction))
+```
+
+**示例2：多变量相关性分析**
+```{r, eval=FALSE}
+# 创建包含多个变量的示例数据集
+set.seed(101)
+n <- 150
+
+# 创建变量
+age <- sample(18:65, n, replace = TRUE)
+income <- 20000 + age * 500 + rnorm(n, 0, 5000)  # 收入与年龄正相关
+education_years <- 9 + sample(0:12, n, replace = TRUE, 
+                            prob = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05))
+spending <- income * 0.2 + rnorm(n, 0, 2000)  # 支出与收入正相关
+satisfaction <- sample(1:10, n, replace = TRUE)  # 1-10的产品满意度
+loyalty_score <- satisfaction * 0.8 + rnorm(n, 0, 1.5)  # 忠诚度与满意度正相关
+loyalty_score <- pmax(1, pmin(10, round(loyalty_score)))  # 限制在1-10范围
+
+multi_var_data <- data.frame(
+  age = age,
+  income = income,
+  education_years = education_years,
+  spending = spending,
+  satisfaction = satisfaction,
+  loyalty_score = loyalty_score
+)
+
+# 计算相关矩阵
+correlation_matrix <- cor(multi_var_data, method = "spearman")
+print(round(correlation_matrix, 2))
+
+# 可视化相关矩阵
+library(corrplot)
+corrplot(correlation_matrix, method = "circle", type = "upper", 
+         order = "hclust", tl.col = "black", tl.srt = 45)
+
+# 另一种可视化方式
+library(ggcorrplot)
+ggcorrplot(correlation_matrix, hc.order = TRUE, type = "lower",
+           lab = TRUE, lab_size = 3,
+           colors = c("#6D9EC1", "white", "#E46726"))
+
+# 检验相关系数的显著性
+corr_test_matrix <- matrix(NA, nrow = ncol(multi_var_data), 
+                         ncol = ncol(multi_var_data))
+for(i in 1:ncol(multi_var_data)) {
+  for(j in 1:ncol(multi_var_data)) {
+    if(i != j) {
+      test_result <- cor.test(multi_var_data[,i], multi_var_data[,j], 
+                             method = "spearman")
+      corr_test_matrix[i,j] <- test_result$p.value
+    }
+  }
+}
+colnames(corr_test_matrix) <- rownames(corr_test_matrix) <- names(multi_var_data)
+print(corr_test_matrix < 0.05)  # TRUE表示相关性显著（p < 0.05）
+```
+
+**示例3：有序分类变量的相关分析**
+```{r, eval=FALSE}
+# 创建两个有序分类变量的示例数据
+set.seed(123)
+n <- 120
+
+# 教育水平（1=高中, 2=本科, 3=硕士, 4=博士）
+education_level <- sample(1:4, n, replace = TRUE, prob = c(0.3, 0.4, 0.2, 0.1))
+
+# 职业等级（1=初级, 2=中级, 3=高级, 4=管理）- 与教育水平存在相关性
+job_level <- numeric(n)
+for(i in 1:n) {
+  if(education_level[i] == 1) {
+    job_level[i] <- sample(1:4, 1, prob = c(0.6, 0.3, 0.08, 0.02))
+  } else if(education_level[i] == 2) {
+    job_level[i] <- sample(1:4, 1, prob = c(0.3, 0.4, 0.25, 0.05))
+  } else if(education_level[i] == 3) {
+    job_level[i] <- sample(1:4, 1, prob = c(0.1, 0.3, 0.4, 0.2))
+  } else { # education_level = 4
+    job_level[i] <- sample(1:4, 1, prob = c(0.05, 0.15, 0.4, 0.4))
+  }
+}
+
+ordinal_data <- data.frame(
+  education_level = factor(education_level, levels = 1:4,
+                          labels = c("高中", "本科", "硕士", "博士")),
+  job_level = factor(job_level, levels = 1:4,
+                    labels = c("初级", "中级", "高级", "管理"))
+)
+
+# 创建列联表
+ordinal_table <- table(ordinal_data$education_level, ordinal_data$job_level)
+print(ordinal_table)
+
+# 可视化
+ggplot(ordinal_data, aes(x = education_level, fill = job_level)) +
+  geom_bar(position = "fill") +
+  labs(title = "教育水平与职业等级的关系",
+       x = "教育水平", y = "比例",
+       fill = "职业等级") +
+  theme_minimal()
+
+# 将有序因子转换为数值以进行相关分析
+education_num <- as.numeric(ordinal_data$education_level)
+job_num <- as.numeric(ordinal_data$job_level)
+
+# 计算Spearman相关系数
+spearman_ordinal <- cor.test(education_num, job_num, method = "spearman")
+print(paste("Spearman相关系数:", round(spearman_ordinal$estimate, 3)))
+print(paste("p值:", spearman_ordinal$p.value))
+
+# 计算Kendall's tau相关系数
+kendall_ordinal <- cor.test(education_num, job_num, method = "kendall")
+print(paste("Kendall's tau相关系数:", round(kendall_ordinal$estimate, 3)))
+print(paste("p值:", kendall_ordinal$p.value))
+
+# 解释结果
+if(spearman_ordinal$p.value < 0.05) {
+  if(spearman_ordinal$estimate > 0) {
+    cat("教育水平与职业等级存在显著的正相关关系。教育水平越高，获得高职业等级的可能性越大。\n")
+  } else {
+    cat("教育水平与职业等级存在显著的负相关关系。这一发现可能需要进一步调查。\n")
+  }
+  
+  # 相关强度解释
+  corr_strength <- abs(spearman_ordinal$estimate)
+  if(corr_strength < 0.3) {
+    cat("相关强度弱。\n")
+  } else if(corr_strength < 0.7) {
+    cat("相关强度中等。\n")
+  } else {
+    cat("相关强度强。\n")
+  }
+} else {
+  cat("教育水平与职业等级之间没有显著的相关关系。\n")
+}
+```
+
+### 分类数据分析在商业中的实际应用
+
+**市场研究案例**：
+```{r, eval=FALSE}
+# 市场细分分析 - 检验年龄段与购买渠道的关系
+age_groups <- c("18-24岁", "25-34岁", "35-44岁", "45-54岁", "55岁以上")
+channels <- c("实体店", "官方网站", "电商平台", "社交媒体")
+
+# 创建观察数据（基于真实市场研究）
+market_data <- matrix(c(
+  45, 80, 65, 30,    # 18-24岁各渠道购买人数
+  70, 120, 90, 50,   # 25-34岁各渠道购买人数
+  90, 85, 70, 25,    # 35-44岁各渠道购买人数
+  75, 45, 40, 10,    # 45-54岁各渠道购买人数
+  60, 20, 15, 5      # 55岁以上各渠道购买人数
+), nrow = 5, byrow = TRUE)
+
+rownames(market_data) <- age_groups
+colnames(market_data) <- channels
+
+# 转换为数据框用于可视化
+market_df <- as.data.frame.table(market_data)
+names(market_df) <- c("age_group", "channel", "frequency")
+
+# 各年龄段的渠道偏好可视化
+ggplot(market_df, aes(x = age_group, y = frequency, fill = channel)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "不同年龄段的购买渠道偏好",
+       x = "年龄段", y = "购买人数") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# 各年龄段的渠道比例可视化
+ggplot(market_df, aes(x = age_group, y = frequency, fill = channel)) +
+  geom_bar(stat = "identity", position = "fill") +
+  labs(title = "不同年龄段的购买渠道比例",
+       x = "年龄段", y = "比例") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# 执行卡方独立性检验
+chi_market <- chisq.test(market_data)
+print(chi_market)
+
+# 分析残差
+round(chi_market$stdres, 2)
+
+# 可视化标准化残差
+residual_df <- as.data.frame.table(chi_market$stdres)
+names(residual_df) <- c("age_group", "channel", "stdres")
+
+ggplot(residual_df, aes(x = age_group, y = channel, fill = stdres)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                      midpoint = 0, limit = c(-4, 4)) +
+  geom_text(aes(label = round(stdres, 1))) +
+  labs(title = "年龄段与购买渠道关系的标准化残差",
+       subtitle = "正值(红色)表示频率高于期望，负值(蓝色)表示频率低于期望",
+       x = "年龄段", y = "购买渠道") +
+  theme_minimal()
+
+# 基于分析结果的营销策略建议
+cat("市场细分分析结果与营销策略建议：\n\n")
+
+if(chi_market$p.value < 0.05) {
+  cat("年龄段与购买渠道之间存在显著关联。\n")
+  
+  # 分析每个年龄段的主要渠道
+  for(i in 1:length(age_groups)) {
+    preferred_channel <- channels[which.max(market_data[i,])]
+    cat(paste0(age_groups[i], "顾客更偏好通过", preferred_channel, 
+              "购买，应针对性地在该渠道增加对应年龄段的营销投入。\n"))
+  }
+  
+  # 分析每个渠道的主要年龄段
+  for(j in 1:length(channels)) {
+    main_age <- age_groups[which.max(market_data[,j])]
+    cat(paste0(channels[j], "渠道主要吸引", main_age, 
+              "顾客，可针对这一年龄段特点优化该渠道的用户体验和产品展示。\n"))
+  }
+  
+  # 发现潜在机会
+  neg_res <- which(chi_market$stdres < -2, arr.ind = TRUE)
+  if(nrow(neg_res) > 0) {
+    for(k in 1:nrow(neg_res)) {
+      cat(paste0(age_groups[neg_res[k,1]], "在", channels[neg_res[k,2]], 
+                "渠道的使用显著低于预期，这可能是一个需要探索的市场机会。\n"))
+    }
+  }
+} else {
+  cat("年龄段与购买渠道之间没有显著关联，可能需要考虑其他因素进行市场细分。\n")
+}
+```
+
+### 综合练习
+
+**练习1：拟合优度检验**
+分析某地区人口不同年龄段的分布是否符合历史数据
+
+**练习2：独立性检验**
+分析用户学历与对某品牌产品满意度是否独立
+
+**练习3：相关分析**
+分析有序变量（如满意度等级、教育水平、收入水平）之间的关系
+
+::: {.callout-tip appearance="simple"}
+## AI辅助学习建议（第七周）
+
+### 分类数据理解与解释
+- **请AI解释分类数据特点**：要求AI比较分类数据与连续数据的区别及分析方法差异
+- **让AI解释卡方检验原理**：通过通俗易懂的例子理解卡方检验的统计思想
+- **要求AI解释统计显著性与业务显著性**：理解p值小于0.05但实际业务影响可能不大的情况
+
+### R代码编写与应用
+- **请AI生成完整的卡方检验分析流程**：从数据探索、检验假设到结果解释的全流程代码
+- **让AI编写更高级的可视化代码**：创建更专业的分类数据可视化图表
+- **要求AI编写残差分析代码**：通过残差分析找出对总体关系贡献最大的类别组合
+
+### 结果解读与决策支持
+- **请AI解释卡方检验结果**：将统计输出转化为业务语言和建议
+- **让AI分析相关系数的实际意义**：解释不同强度相关系数的业务含义
+- **要求AI提供基于分析结果的具体行动建议**：将统计分析转化为可执行的商业决策
+
+### 分类数据分析应用场景
+- **请AI推荐适合的业务问题**：根据项目主题获取适合应用分类数据分析的问题建议
+- **让AI设计市场调研问卷**：针对特定业务问题设计合适的分类数据收集方案
+- **要求AI解释分类数据分析的局限性**：了解何时需要补充其他分析方法
+:::
+
+### 参考文献与扩展阅读
+
+1. Agresti, A. (2018). An Introduction to Categorical Data Analysis (3rd ed.). Wiley.
+2. Friendly, M. (2000). Visualizing Categorical Data. SAS Institute.
+3. R Core Team. (2021). R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing.
+4. Meyer, D., Zeileis, A., & Hornik, K. (2006). The Strucplot Framework: Visualizing Multi-way Contingency Tables with vcd. Journal of Statistical Software.
+5. 张敏杰. (2019). 分类数据分析在市场研究中的应用. 统计与信息论坛, 34(8), 102-107.
+</rewritten_file> 

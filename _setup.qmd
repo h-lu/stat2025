@@ -1,0 +1,39 @@
+```{r setup, include=FALSE}
+# 加载常用R包
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(scales)
+library(patchwork)
+library(showtext)
+
+# Mac字体设置
+font_add("PingFang", "/System/Library/Fonts/PingFang.ttc")
+font_add("Helvetica", "/System/Library/Fonts/Helvetica.ttc")
+showtext_auto()
+
+# ggplot主题设置
+theme_set(
+  theme_minimal(base_family = "PingFang") +
+  theme(
+    text = element_text(family = "PingFang"),
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(size = 11),
+    axis.text = element_text(size = 10),
+    legend.title = element_text(size = 11),
+    legend.text = element_text(size = 10),
+    panel.grid.minor = element_blank()
+  )
+)
+
+# 表格默认设置
+options(knitr.kable.NA = "")
+
+# 数据处理设置
+options(dplyr.print_min = 6, dplyr.print_max = 10)
+options(scipen = 999, digits = 3)
+
+# 随机数种子设置
+set.seed(42)
+``` 

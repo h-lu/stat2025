@@ -1,0 +1,30 @@
+execute: 
+  echo: true
+  message: false
+  warning: false
+  error: false
+  cache: false
+
+knitr: 
+  opts_chunk: 
+    comment: "#>"
+    fig.align: "center"
+    fig.width: 8
+    fig.height: 6
+    out.width: "90%"
+    dpi: 300
+
+format:
+  html:
+    theme: cosmo
+    css:
+      - styles/custom.css
+    toc: true
+    number-sections: false
+    code-fold: false
+    callout-appearance: "none"
+    message: false
+    warning: false
+    include-in-header:
+      - text: |
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer"> 

@@ -1,6 +1,7 @@
 project:
   type: book
   output-dir: _book
+  pre-render: R/pre-render.R
 
 book:
   title: "统计学与R语言"
@@ -44,6 +45,7 @@ knitr:
     fig.height: 6
     out.width: "90%"
     dpi: 300
+    dev: "ragg_png"
 
 format:
   html:

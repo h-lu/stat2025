@@ -1,0 +1,234 @@
+---
+title: "第十三周实验：AI 辅助与 Quarto 报告实践"
+---
+
+## 1. 目标
+
+本实验旨在练习如何有效地利用 AI 助手辅助数据分析任务，并实践使用 Quarto 创建可重复的分析报告。
+
+*   练习使用 AI 助手生成 R 代码（`dplyr`, `ggplot2`）并进行验证和修改。
+*   练习使用 AI 助手解释 R 代码、函数或统计概念，并进行批判性评估。
+*   练习使用 AI 助手辅助调试 R 代码错误。
+*   掌握 Quarto 文档的基本结构（YAML 头、Markdown 文本、代码块）。
+*   熟练使用 Quarto 代码块选项控制代码和输出的显示。
+*   将之前的分析步骤（例如，数据导入、描述统计、可视化、模型拟合）整合到一个 Quarto 文档中，并渲染生成报告。
+
+## 2. AI 辅助实践
+
+选择以下至少**两个**场景，使用你选择的 AI 助手（如 ChatGPT, Copilot Chat, Claude 等）进行尝试。**关键在于记录你的 Prompt、AI 的回答、你对其的评估以及最终你采纳或修改的内容。**
+
+### 场景一：生成绘图代码
+
+**任务:**
+假设你想使用 `mpg` 数据集绘制一个分组箱线图，比较不同 `class` (车辆类别) 的 `hwy` (高速公路里程)，并按 `drv` (驱动方式) 进行分面 (facet)。
+
+1.  **设计 Prompt:** 向 AI 请求生成实现此功能的 `ggplot2` 代码。你的 Prompt 应该包含数据集名称 (`mpg`)、变量名 (`hwy`, `class`, `drv`)、图形类型（箱线图）、分组变量 (`class`)、分面变量 (`drv`)。
+2.  **获取并评估代码:** 运行 AI 生成的代码。
+    *   代码是否能成功运行？
+    *   生成的图形是否符合你的预期？
+    *   代码是否清晰易懂？是否有可以改进的地方？
+3.  **记录:** 记下你的 Prompt、AI 的原始代码、你的评估和（如果需要）你修改后的最终代码。
+
+**示例 Prompt (非唯一):**
+"Generate R code using ggplot2 to create a boxplot of highway mileage (`hwy`) grouped by vehicle class (`class`) from the `mpg` dataset. Also, facet the plot by drive train (`drv`). Add appropriate labels."
+
+```{r ai-practice-plot, eval=FALSE}
+# 在这里粘贴并运行 AI 生成的代码，然后进行评估和修改
+# 示例 AI 可能生成的代码 (需要验证):
+library(ggplot2)
+ggplot(mpg, aes(x = class, y = hwy, fill = class)) +
+  geom_boxplot() +
+  facet_wrap(~ drv) + # 或 facet_grid(drv ~ .)
+  labs(title = "Highway Mileage by Vehicle Class and Drive Train",
+       x = "Vehicle Class",
+       y = "Highway Mileage (MPG)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # 可能需要旋转标签
+
+# 你的评估: ...
+# 修改后的代码 (如果需要): ...
+```
+
+### 场景二：解释统计输出
+
+**任务:**
+假设你拟合了之前的多元 Logistic 回归模型 `logistic_multi` (`default ~ balance + income + student`)，并得到了 `summary()` 输出。
+
+1.  **设计 Prompt:** 向 AI 请求解释 `studentYes` 系数的**优势比 (Odds Ratio)** 含义。确保提供足够的上下文（模型公式、因变量是什么、`student` 变量的含义和参照组）。
+2.  **获取并评估解释:** 阅读 AI 的解释。
+    *   解释是否准确？是否正确使用了“优势比”而不是“概率比”或“风险比”？
+    *   是否提到了“控制其他变量”？
+    *   解释是否清晰易懂？
+3.  **记录:** 记下你的 Prompt、AI 的解释、你的评估。
+
+**示例 Prompt:**
+"I fitted a logistic regression model in R: `glm(default ~ balance + income + student, data = Default, family = binomial)`. The `default` variable is 'Yes' (1) or 'No' (0). The `student` variable is a factor with levels 'No' (reference) and 'Yes'. The summary output shows a coefficient for `studentYes` of approximately -0.647. Please explain the meaning of the **Odds Ratio** for this `studentYes` coefficient in the context of this model."
+
+```{r ai-practice-interpret, eval=FALSE}
+# 记录 AI 的解释和你的评估
+# AI 的解释: ...
+# 你的评估: ...
+```
+
+### 场景三：代码调试
+
+**任务:**
+假设你有以下 R 代码片段，它尝试计算每个 `cyl` (气缸数) 在 `mpg` 数据集中的占比，但运行时可能会出错或结果不理想。
+
+```R
+# 错误或不理想的代码示例
+library(dplyr)
+data(mpg)
+mpg %>%
+  group_by(cyl) %>%
+  summarise(count = n) %>% # 错误：n 是函数，需要写 n()
+  mutate(proportion = count / sum(count) * 100)
+```
+
+1.  **运行代码并获取错误信息 (如果有)。**
+2.  **设计 Prompt:** 向 AI 提供代码片段和错误信息（或描述不符合预期的结果），请求帮助调试。
+3.  **获取并评估建议:** 查看 AI 提出的修改建议。
+    *   建议是否解决了问题？
+    *   修改后的代码是否能正确计算出每个气缸数所占的百分比？
+4.  **记录:** 记下原始代码、错误信息、你的 Prompt、AI 的建议、你的评估和最终正确的代码。
+
+```{r ai-practice-debug, eval=TRUE} # eval=TRUE 以便演示错误和正确代码
+# 原始代码 (会出错)
+print("--- Running original (potentially faulty) code ---")
+faulty_result <- tryCatch({
+  mpg %>%
+    group_by(cyl) %>%
+    summarise(count = n) %>% # 错误在这里
+    mutate(proportion = count / sum(count) * 100)
+}, error = function(e) {
+  print(paste("Error:", e$message))
+  return(NULL)
+})
+if (!is.null(faulty_result)) print(faulty_result)
+
+
+# 错误信息 (如果有): Error in `summarise()`:... Caused by error in `n()`: ! `n()` must be used inside dplyr verbs.
+# 你的 Prompt: "My R code `mpg %>% group_by(cyl) %>% summarise(count = n) %>% mutate(proportion = count / sum(count) * 100)` gives an error 'n() must be used inside dplyr verbs'. How can I fix this to calculate the proportion of each cylinder count?"
+# AI 的建议: (可能建议使用 n() 或 count())
+# 你的评估: (AI 应该能指出 n 需要写成 n())
+
+# 正确的代码:
+print("--- Running corrected code ---")
+correct_result <- mpg %>%
+  count(cyl) %>% # 使用 count() 更简洁
+  mutate(proportion = n / sum(n) * 100)
+print(correct_result)
+
+```
+
+## 4. Quarto 报告实践
+
+**任务:**
+创建一个新的 Quarto 文档 (`.qmd`)，将你**第二周实验**（数据导入与描述性统计）的主要分析步骤整合进去。
+
+1.  **创建文件:** 新建一个名为 `week2_report.qmd` 的文件。
+2.  **添加 YAML 头:** 设置 `title`, `author`, `date`, 和 `format: html` (可以添加 `toc: true`, `code-fold: true`)。
+3.  **编写 Markdown 文本:** 添加必要的标题和说明文字，解释每个分析步骤的目的。例如：
+    *   "# 第二周实验报告"
+    *   "## 1. 数据导入"
+    *   "首先，我们加载必要的 `tidyverse` 包，并读入 `grades.csv` 数据集。"
+    *   "## 2. 数据结构探索"
+    *   "接下来，我们使用 `glimpse` 和 `summary` 查看数据结构和基本统计。"
+    *   "## 3. 描述性统计"
+    *   "计算主要成绩列的描述性统计量..."
+    *   "## 4. 初步筛选"
+    *   "使用 `filter` 筛选出特定专业的学生..."
+4.  **插入代码块:** 将第二周实验中的 R 代码复制到相应的代码块中。
+5.  **设置代码块选项:**
+    *   对于加载包的代码块，可以设置 `include=FALSE` 或 `message=FALSE, warning=FALSE`。
+    *   对于展示数据或结果的代码块，确保 `echo=TRUE` (显示代码) 和 `eval=TRUE` (执行代码)。
+    *   根据需要调整其他选项。
+6.  **渲染报告:** 点击 "Render" 按钮（或使用 `quarto::quarto_render("week2_report.qmd")`），生成 HTML 报告。
+7.  **检查报告:** 打开生成的 HTML 文件，检查：
+    *   文本、代码、输出是否都正确显示？
+    *   代码块选项是否按预期工作？
+    *   报告整体是否清晰、易读？
+
+```{r quarto-example-structure, eval=FALSE, engine='markdown'}
+# --- week2_report.qmd 示例内容 ---
+---
+title: "第二周实验报告 (Quarto 示例)"
+author: "你的名字"
+date: today
+format:
+  html:
+    toc: true
+    code-fold: true
+    theme: cosmo
+editor: visual
+---
+
+# 第二周实验报告
+
+## 1. 引言
+
+本报告重现了第二周实验的主要步骤，包括数据导入、结构探索、描述性统计计算和初步的数据筛选。
+
+## 2. 数据准备
+
+首先，加载必要的 `tidyverse` 包。
+
+```{r load-packages, include=FALSE}
+library(tidyverse)
+```
+
+接下来，读入 `grades.csv` 数据集。假设该文件位于当前工作目录。
+
+```{r import-data-report, echo=TRUE, eval=TRUE}
+grades_file <- "grades.csv"
+if (!file.exists(grades_file)) {
+  grades_csv_content <- "StudentID,Name,Major,Exam1,Exam2,FinalProject,Attendance\nS001,Alice,Statistics,85,88,92,Present\nS002,Bob,CompSci,92,NA,85,Present\nS003,Charlie,Math,78,82,75,Absent\nS004,David,Statistics,88,90,95,Present\nS005,Eve,CompSci,75,80,NA,Absent\nS006,Frank,Statistics,95,98,96,Present\nS007,Grace,Math,NA,75,80,Present\nS008,Heidi,CompSci,81,84,88,Present"
+  writeLines(grades_csv_content, grades_file)
+}
+grades_data <- read_csv(grades_file)
+print(grades_data)
+```
+
+## 3. 数据结构探索
+
+使用 `glimpse` 和 `summary` 查看数据结构。
+
+```{r explore-structure-report}
+glimpse(grades_data)
+summary(grades_data)
+```
+
+## 4. 描述性统计
+
+计算 `Exam1` 的主要描述性统计量。
+
+```{r descriptive-stats-report}
+grades_data %>%
+  summarise(
+    Mean = mean(Exam1, na.rm = TRUE),
+    Median = median(Exam1, na.rm = TRUE),
+    SD = sd(Exam1, na.rm = TRUE),
+    IQR = IQR(Exam1, na.rm = TRUE),
+    Min = min(Exam1, na.rm = TRUE),
+    Max = max(Exam1, na.rm = TRUE)
+  )
+```
+
+## 5. 初步筛选
+
+筛选出专业为 "Statistics" 的学生。
+
+```{r filter-report}
+grades_data %>%
+  filter(Major == "Statistics")
+```
+
+## 6. 结论
+
+本报告演示了基本的数据导入和探索步骤。
+
+```
+
+## 5. 实验总结
+
+在本实验中，我们通过具体场景练习了如何利用 AI 助手辅助 R 编程、概念理解和调试，并强调了批判性评估 AI 输出的重要性。我们还实践了 Quarto 的基本用法，学习了如何将 R 代码、结果和叙述性文本结合起来，创建可重复的动态报告。掌握 AI 辅助和可重复报告的技能将极大提升你未来数据分析工作的效率和规范性。

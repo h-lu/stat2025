@@ -1,0 +1,328 @@
+---
+title: "第二周：数据的语言：获取、导入与初步描述"
+execute:
+  echo: true
+  message: false
+  warning: false
+  error: false
+  cache: false
+---
+
+## 1. 数据从何而来？
+
+数据分析的第一步是获取数据。数据可以来自各种来源，并以不同的格式存储。
+
+-   **常见数据来源:**
+    -   **文件:** CSV (逗号分隔值), Excel (.xlsx), TXT (纯文本), JSON, XML 等。这是最常见的形式。
+    -   **数据库:** SQL 数据库 (如 PostgreSQL, MySQL), NoSQL 数据库。
+    -   **API (应用程序编程接口):** 从网站或服务（如社交媒体、天气服务）获取实时数据。
+    -   **网页抓取:** 从网页 HTML 中提取数据（需要注意合法性和道德规范）。
+-   **常见数据格式:**
+    -   **表格数据 (Tabular Data):** 行代表观测 (Observations)，列代表变量 (Variables)。这是我们本课程主要处理的格式。CSV 和 Excel 文件通常存储表格数据。
+    -   **非结构化数据:** 文本、图像、音频等。
+    -   **半结构化数据:** JSON, XML 等，具有一定的结构但不如表格数据规整。
+
+::: {.callout-note title="本周目标"}
+-   了解常见的数据来源和格式。
+-   使用 `readr` 包高效导入 CSV 等文本文件。
+-   理解 R 中核心的表格数据结构：数据框 (Data Frame) 和 Tibble。
+-   认识并处理一种重要的变量类型：因子 (Factor)。
+-   计算并解释描述性统计量，包括集中趋势和离散趋势。
+-   初步掌握 `dplyr` 包中的数据筛选和选择功能。
+:::
+
+## 2. `readr`：高效导入数据
+
+`tidyverse` 中的 `readr` 包提供了快速、友好的函数来读取矩形数据（如 CSV 和 TSV）。
+
+-   **核心函数:**
+
+    -   `read_csv()`: 读取逗号分隔的文件。
+    -   `read_tsv()`: 读取制表符分隔的文件。
+    -   `read_delim()`: 读取使用任意分隔符的文件。
+    -   `read_fwf()`: 读取固定宽度文件。
+    -   `read_log()`: 读取 Apache 风格的日志文件。
+    -   `read_excel()`: (来自 `readxl` 包，通常与 `tidyverse` 一起使用) 读取 Excel 文件。
+
+-   **`read_csv()` 示例:** 假设我们有一个名为 `students.csv` 的文件：
+
+    ```csv
+        Name,Age,Major,GPA
+        Alice,21,Statistics,3.8
+        Bob,22,Computer Science,3.5
+        Charlie,20,Mathematics,3.9
+        David,21,Statistics,3.6
+    ```
+
+    在 R 中读取：
+    ```{r}
+    library(tidyverse) # 加载tidyverse通常也会加载readr
+
+    # 假设 students.csv 在当前工作目录下
+    # 如果不在，需要提供完整或相对路径
+    # students_data <- read_csv("path/to/your/students.csv")
+
+    # 为了演示，我们直接用文本创建数据
+    csv_text <- "Name,Age,Major,GPA\nAlice,21,Statistics,3.8\nBob,22,Computer Science,3.5\nCharlie,20,Mathematics,3.9\nDavid,21,Statistics,3.6"
+
+    students_data <- read_csv(csv_text)
+
+    print(students_data)
+    ```
+
+    `read_csv()` 会自动猜测列的类型，并返回一个 Tibble 对象。
+
+-   **常用参数:**
+
+    -   `file`: 文件路径或 URL。
+    -   `col_names`: 是否包含列名 (默认为 `TRUE`)。如果文件没有列名，设为 `FALSE`，`readr` 会自动生成 `X1`, `X2`...
+    -   `col_types`: 手动指定列类型，提高稳定性和速度。
+    -   `na`: 指定哪些字符串应被视作缺失值 (默认识别 "NA")。
+    -   `skip`: 跳过文件开头的行数。
+    -   `n_max`: 最多读取的行数。
+
+    ```r
+    # 示例：指定列类型，将 "N/A" 视作缺失值
+    students_data_spec <- read_csv(
+      "students.csv",
+      col_types = cols(
+        Name = col_character(),
+        Age = col_integer(),
+        Major = col_character(),
+        GPA = col_double()
+      ),
+      na = c("NA", "N/A")
+    )
+    ```
+
+## 3. 数据框 (Data Frame) 与 Tibble
+
+-   **数据框 (Data Frame):** R 中存储表格数据的标准结构。
+    -   本质上是一个**等长**向量的列表。
+    -   每一列是一个向量，必须包含**相同类型**的数据。
+    -   不同列可以包含不同类型的数据。
+    -   创建示例： 
+    ```{r}
+    df <- data.frame(
+      ID = c(101, 102, 103),
+      Product = c("A", "B", "A"),
+      Price = c(15.5, 20.0, 16.0),
+      InStock = c(TRUE, FALSE, TRUE)
+    )
+
+    print(df)
+    str(df) # 查看数据框结构
+    ```
+-   **Tibble:** `tidyverse` 对数据框的现代优化版本。
+    -   `readr` 函数默认返回 Tibble。
+    -   **优点:**
+        -   打印更友好：只显示前 10 行和适合屏幕的列。
+        -   不会自动将字符串转换为因子 (Factor)。
+        -   不会改变列名（例如，不允许非法字符）。
+        -   子集提取 (`[`) 行为更一致。
+    -   大多数情况下，可以像使用数据框一样使用 Tibble。
+    -   `tibble()` 函数创建 Tibble，`as_tibble()` 将数据框转换为 Tibble。
+    ```{r}
+    library(tibble)
+
+    tb <- tibble(
+      ID = c(101, 102, 103),
+      Product = c("A", "B", "A"),
+      Price = c(15.5, 20.0, 16.0),
+      InStock = c(TRUE, FALSE, TRUE)
+    )
+
+    print(tb)
+    str(tb)
+    ```
+
+## 4. 变量类型：因子 (Factor)
+
+因子是 R 中用来表示**分类变量** (Categorical Variable) 的特殊数据类型。分类变量的值来自一个固定的、已知的集合，称为**水平 (Levels)**。
+
+-   **应用场景:** 性别 (男/女)、学历 (本科/硕士/博士)、产品类别 (A/B/C) 等。
+
+-   **为何使用因子？**
+
+    -   节省内存（内部存储为整数）。
+    -   在统计建模和绘图中（如 `ggplot2`）通常需要因子类型来正确处理分类变量。
+    -   可以指定水平的顺序（例如，教育程度：小学 \< 中学 \< 大学）。
+
+-   **创建和使用:**
+
+    ```{r}
+    # 假设有一个字符向量表示教育程度
+    education_char <- c("Bachelor", "Master", "Bachelor", "PhD", "Master")
+
+    # 将其转换为因子
+    education_factor <- factor(education_char)
+    print(education_factor)
+    levels(education_factor) # 查看水平
+
+    # 查看内部存储 (整数)
+    as.numeric(education_factor)
+
+    # 创建有序因子 (指定水平顺序)
+    education_ordered <- factor(
+      education_char,
+      levels = c("Bachelor", "Master", "PhD"), # 指定顺序
+      ordered = TRUE
+    )
+
+    print(education_ordered)
+    education_ordered[1] < education_ordered[2] # 可以比较顺序
+    ```
+
+    ::: {.callout-important title="`stringsAsFactors`"}
+    在旧版本的 R (\< 4.0) 中，`data.frame()` 默认会将字符向量转换为因子。`tidyverse` (包括 `readr` 和 `tibble`) **不会**自动这样做，这通常是更期望的行为。如果需要因子，请显式转换。
+    :::
+
+## 5. 描述性统计 I：数据的“中心”在哪里？(集中趋势)
+
+描述性统计用于总结和描述数据集的主要特征。集中趋势度量了数据的中心位置。
+
+-   **均值 (Mean):** 数据的算术平均值。对异常值敏感。
+    -   公式: $\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}$
+
+    -   R 实现: `mean()`
+
+        ```{r}
+        scores <- c(85, 92, 78, 88, 95, 72)
+        mean(scores)
+
+        # 处理缺失值 (NA)
+        scores_na <- c(85, 92, NA, 88, 95, 72)
+        mean(scores_na) # 结果是 NA
+        mean(scores_na, na.rm = TRUE) # 移除 NA 后计算
+        ```
+-   **中位数 (Median):** 将数据排序后位于中间位置的值。对异常值不敏感（稳健）。
+    -   如果 n 为奇数，中位数是第 $\frac{n+1}{2}$ 个值。
+
+    -   如果 n 为偶数，中位数是第 $\frac{n}{2}$ 和第 $\frac{n}{2}+1$ 个值的平均值。
+
+    -   R 实现: `median()`
+
+        ```{r}
+        median(scores)
+        median(scores_na, na.rm = TRUE)
+
+        # 比较均值和中位数 (异常值影响)
+        scores_outlier <- c(85, 92, 78, 88, 95, 72, 200)
+        mean(scores_outlier)
+        median(scores_outlier)
+        ```
+-   **众数 (Mode):** 数据集中出现次数最多的值。适用于分类数据，也可用于数值数据。R 基础包没有直接计算众数的函数，通常需要自定义或使用其他包。
+
+## 6. 描述性统计 II：数据的“散布”程度如何？(离散趋势)
+
+离散趋势度量了数据围绕中心值的散布或变异程度。
+
+-   **极差 (Range):** 最大值与最小值的差。简单但易受异常值影响。
+    -   R 实现: `range()` 返回最小值和最大值，`diff(range(x))` 计算极差。
+    ```{r}
+    range(scores)
+    diff(range(scores))
+    ```
+-   **分位数 (Quantiles):** 将数据排序后，按特定比例分割数据的值。
+    -   **四分位数 (Quartiles):** 将数据分为四等份的点。
+        -   Q1 (第一四分位数): 25% 的数据小于该值。
+        -   Q2 (第二四分位数): 50% 的数据小于该值，即**中位数**。
+        -   Q3 (第三四分位数): 75% 的数据小于该值。
+    -   **四分位距 (Interquartile Range, IQR):** Q3 与 Q1 的差 ($IQR = Q3 - Q1$)。衡量数据中间 50% 的散布范围，对异常值稳健。
+    -   R 实现: `quantile()`, `IQR()`
+
+    ```{r}
+    quantile(scores) # 默认计算 0%, 25%, 50%, 75%, 100% 分位数
+    quantile(scores, probs = c(0.1, 0.9)) # 计算 10% 和 90% 分位数
+    IQR(scores)
+    ```
+
+-   **方差 (Variance):** 数据点与其均值之差的平方的平均值。度量数据偏离均值的平均程度。单位是原始数据的平方。
+    -   样本方差公式: $s^2 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1}$ (注意分母是 n-1，无偏估计)
+    -   R 实现: `var()`
+
+    ```{r}
+    var(scores)
+    ```
+-   **标准差 (Standard Deviation):** 方差的平方根。与原始数据具有相同的单位，更易于解释。
+    -   样本标准差公式: $s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1}}$
+    -   R 实现: `sd()`
+    ```{r}
+    sd(scores)
+    sqrt(var(scores)) # 结果与 sd(scores) 相同
+    ```
+
+::: {.callout-info title="选择哪个度量？"}
+-   **集中趋势:**
+    -   数据对称且无极端异常值：均值。
+    -   数据偏斜或有异常值：中位数。
+-   **离散趋势:**
+    -   数据对称且无极端异常值：标准差（结合均值）。
+    -   数据偏斜或有异常值：IQR（结合中位数）。
+:::
+
+## 7. `dplyr` 初步：数据操作的瑞士军刀
+
+`dplyr` 是 `tidyverse` 的核心包之一，提供了用于数据操作（筛选、选择、变换、汇总、排序）的一致且高效的函数（称为 "verbs"）。
+
+-   **核心思想:** 每个函数只做一件事，通过管道 (`%>%`) 连接起来完成复杂操作。
+
+-   **管道操作符 (`%>%`):** 将左侧对象作为右侧函数的第一个参数传递。读作 "then"。
+
+    -   `x %>% f(y)` 等价于 `f(x, y)`
+    -   `x %>% f(y) %>% g(z)` 等价于 `g(f(x, y), z)`
+
+-   **本周学习的 `dplyr` 动词:**
+
+    -   `select()`: 按名称选择列。
+    -   `filter()`: 根据条件筛选行。
+
+-   **`select()` 示例:** (使用之前创建的 `students_data` Tibble)
+
+    ```{r}
+    library(dplyr)
+
+    # 选择 Name 和 GPA 列
+    select(students_data, Name, GPA)
+
+    # 选择除 Major 之外的所有列
+    select(students_data, -Major)
+
+    # 选择从 Name 到 Major 的所有列
+    select(students_data, Name:Major)
+
+    # 使用管道
+    students_data %>% select(Name, Age)
+    ```
+
+-   **`filter()` 示例:**
+
+    ```{r}
+    # 筛选 Major 为 Statistics 的学生
+    filter(students_data, Major == "Statistics")
+
+    # 筛选 Age 大于 20 的学生
+    filter(students_data, Age > 20)
+
+    # 筛选 Major 为 Statistics 且 GPA 大于 3.7 的学生
+    filter(students_data, Major == "Statistics", GPA > 3.7) # 逗号表示 "与"
+    # 或者使用 &
+    filter(students_data, Major == "Statistics" & GPA > 3.7)
+
+    # 筛选 Major 为 Statistics 或 Mathematics 的学生
+    filter(students_data, Major == "Statistics" | Major == "Mathematics")
+    # 或者使用 %in%
+    filter(students_data, Major %in% c("Statistics", "Mathematics"))
+
+    # 结合管道
+    students_data %>%
+      filter(Age >= 21) %>%
+      select(Name, GPA)
+    ```
+
+## 8. 项目相关与本周总结
+
+-   **项目任务:** 尝试使用 `readr` 函数导入一份真实数据（如果是 CSV 或类似格式）。检查导入后的数据结构 (`str()`, `glimpse()`)，看看列类型是否符合预期。
+-   **本周回顾:** 我们学习了如何将数据读入 R，理解了数据框和 Tibble，认识了因子类型，并掌握了计算基本描述性统计量和使用 `dplyr` 进行初步筛选和选择的方法。这些是进行任何数据分析的基础。
+
+**下周预告:** 我们将深入学习 `dplyr` 和 `tidyr`，掌握更多数据整理和变形的强大技术，为更复杂的数据分析和可视化做准备。

@@ -1,0 +1,9 @@
+StudentID,Name,Major,Exam1,Exam2,FinalProject,Attendance
+S001,Alice,Statistics,85,88,92,Present
+S002,Bob,CompSci,92,NA,85,Present
+S003,Charlie,Math,78,82,75,Absent
+S004,David,Statistics,88,90,95,Present
+S005,Eve,CompSci,75,80,NA,Absent
+S006,Frank,Statistics,95,98,96,Present
+S007,Grace,Math,NA,75,80,Present
+S008,Heidi,CompSci,81,84,88,Present

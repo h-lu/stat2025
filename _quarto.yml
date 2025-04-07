@@ -1,0 +1,102 @@
+project:
+  type: book
+
+book:
+  title: "统计学与R语言"
+  author: "陆海波"
+  date: today
+  chapters:
+    - index.qmd
+    - part: "讲义"
+      chapters:
+        - week1_lecture.qmd
+        - week2_lecture.qmd
+        - week3_lecture.qmd
+        - week4_lecture.qmd
+        - week5_lecture.qmd
+        - week6_lecture.qmd
+        - week7_lecture.qmd
+        - week8_lecture.qmd
+    - part: "实验"
+      chapters:
+        - week1_lab.qmd
+        - week2_lab.qmd
+        - week3_lab.qmd
+        - week4_lab.qmd
+        - week5_lab.qmd
+        - week6_lab.qmd
+        - week7_lab.qmd
+        - week8_lab.qmd
+
+format:
+  html:
+    theme: cosmo
+    css:
+      - styles/custom.css
+    toc: true
+    number-sections: false
+    code-fold: false
+    callout-appearance: "none"
+    message: false
+    warning: false
+    include-in-header:
+      - text: |
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+execute:
+  echo: true
+  message: false
+  warning: false
+  error: false
+  cache: false
+
+knitr:
+  opts_chunk:
+    comment: "#>"
+    fig.align: "center"
+    fig.width: 8
+    fig.height: 6
+    out.width: "90%"
+    dpi: 300
+
+# R设置，会在每个文档开头运行
+before-body-text: |
+  ```{r setup, include=FALSE}
+  # 加载常用R包
+  library(tidyverse)
+  library(knitr)
+  library(kableExtra)
+  library(scales)
+  library(patchwork)
+  library(showtext)
+  
+  # Mac字体设置
+  font_add("PingFang", "/System/Library/Fonts/PingFang.ttc")
+  font_add("Helvetica", "/System/Library/Fonts/Helvetica.ttc")
+  showtext_auto()
+  
+  # ggplot主题设置
+  theme_set(
+    theme_minimal(base_family = "PingFang") +
+    theme(
+      text = element_text(family = "PingFang"),
+      plot.title = element_text(face = "bold", size = 14),
+      plot.subtitle = element_text(size = 12),
+      axis.title = element_text(size = 11),
+      axis.text = element_text(size = 10),
+      legend.title = element_text(size = 11),
+      legend.text = element_text(size = 10),
+      panel.grid.minor = element_blank()
+    )
+  )
+  
+  # 表格默认设置
+  options(knitr.kable.NA = "")
+  
+  # 数据处理设置
+  options(dplyr.print_min = 6, dplyr.print_max = 10)
+  options(scipen = 999, digits = 3)
+  
+  # 随机数种子设置
+  set.seed(42)
+  ```

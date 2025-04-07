@@ -1,0 +1,1451 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "统计学与R语言",
+    "section": "",
+    "text": "课程目标\n本课程旨在帮助你掌握统计学的基础知识，并使用R语言进行数据分析。",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>课程介绍</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#课程内容",
+    "href": "index.html#课程内容",
+    "title": "统计学与R语言",
+    "section": "课程内容",
+    "text": "课程内容",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>课程介绍</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#考核方式",
+    "href": "index.html#考核方式",
+    "title": "统计学与R语言",
+    "section": "考核方式",
+    "text": "考核方式\n\n课堂参与 (20%)： 出勤、课堂互动、课堂表现\n小组项目1次 (10%)： 包括项目选题、数据收集、统计分析、结果解释和结论。\n最终项目1次 (20%)： 包括项目选题、数据收集、统计分析、结果解释和结论。\n期末考试 (50%)： 闭卷考试，考察学生对统计学基本概念、原理和方法的掌握程度。",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>课程介绍</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lecture.html",
+    "href": "week1_lecture.html",
+    "title": "第一周：启程：统计思维、R与数据世界",
+    "section": "",
+    "text": "1. 欢迎来到统计学与R的世界！\n本周我们将开启一段探索数据奥秘的旅程。统计学不仅仅是数学公式，更是一种理解世界、做出明智决策的思维方式。而 R 语言，则是我们探索数据、实践统计思维的强大工具。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>第一周：启程：统计思维、R与数据世界</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lecture.html#欢迎来到统计学与r的世界",
+    "href": "week1_lecture.html#欢迎来到统计学与r的世界",
+    "title": "第一周：启程：统计思维、R与数据世界",
+    "section": "",
+    "text": "本周目标\n\n\n\n\n理解统计学的基本概念和重要性。\n熟悉 R 和 RStudio 的基本操作环境。\n掌握 R 的基础语法，为后续学习打下基础。\n初步了解 AI 助手在学习和数据分析中的潜力。\n明确课程目标、学习方式和最终项目要求。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>第一周：启程：统计思维、R与数据世界</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lecture.html#统计思维超越直觉",
+    "href": "week1_lecture.html#统计思维超越直觉",
+    "title": "第一周：启程：统计思维、R与数据世界",
+    "section": "2. 统计思维：超越直觉",
+    "text": "2. 统计思维：超越直觉\n\n什么是统计学？\n\n收集、处理、分析、解释数据，并从中得出结论的科学。\n在不确定性中寻找规律，量化证据。\n\n为何学习统计学？\n\n培养数据驱动的决策能力。\n批判性地评估信息和研究。\n解决现实世界中的复杂问题（商业、科研、医疗等）。\n\n统计思维的核心：\n\n变异性 (Variation): 认识到数据总是存在差异。\n随机性 (Randomness): 理解概率在抽样和推断中的作用。\n模型 (Models): 使用简化的数学表示来理解复杂现象。\n推断 (Inference): 从样本信息推广到总体特征。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>第一周：启程：统计思维、R与数据世界</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lecture.html#r-与-rstudio你的数据科学工作台",
+    "href": "week1_lecture.html#r-与-rstudio你的数据科学工作台",
+    "title": "第一周：启程：统计思维、R与数据世界",
+    "section": "3. R 与 RStudio：你的数据科学工作台",
+    "text": "3. R 与 RStudio：你的数据科学工作台\n\nR 语言简介:\n\n开源、免费、强大的统计计算和图形绘制语言。\n拥有庞大的社区和丰富的扩展包 (Packages)。\n\nRStudio IDE:\n\n集成开发环境 (Integrated Development Environment)，让 R 的使用更便捷。\n主要窗口：脚本编辑器、控制台、环境/历史记录、文件/图形/包/帮助。\n\n环境搭建:\n\n安装 R: https://cran.r-project.org/\n安装 RStudio Desktop: https://posit.co/download/rstudio-desktop/\n\ntidyverse 包介绍与安装:\n\ntidyverse 是一个包含了一系列用于数据科学的 R 包的集合（如 ggplot2, dplyr, tidyr, readr 等），它们共享一致的设计哲学、语法和数据结构。\n安装命令：\n\n# install.packages(\"tidyverse\") # 如果尚未安装，取消注释并运行\nlibrary(tidyverse) # 加载包",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>第一周：启程：统计思维、R与数据世界</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lecture.html#r-基础语法入门",
+    "href": "week1_lecture.html#r-基础语法入门",
+    "title": "第一周：启程：统计思维、R与数据世界",
+    "section": "4. R 基础语法入门",
+    "text": "4. R 基础语法入门\n\nR 作为计算器:\n1 + 1\n5 * 3\n10 / 2\n2 ^ 3 # 幂运算\n变量赋值: 使用 &lt;- 或 = (推荐 &lt;-)\nx &lt;- 5\ny &lt;- x * 2\nx\ny\n数据类型初识:\n\nnumeric: 数值型 (包括整数和浮点数)\ncharacter: 字符型 (文本，用引号括起来)\nlogical: 逻辑型 (TRUE 或 FALSE)\n\na &lt;- 10.5\nb &lt;- \"Hello, R!\"\nc &lt;- TRUE\nclass(a) # 查看变量类型\nclass(b)\nclass(c)\n向量 (Vector): R中最基本的数据结构，存储相同类型元素的序列。使用 c() 函数创建。\nnumeric_vector &lt;- c(1, 3, 5, 7)\nchar_vector &lt;- c(\"apple\", \"banana\", \"cherry\")\nlogical_vector &lt;- c(TRUE, FALSE, TRUE, TRUE)\n\nnumeric_vector\nchar_vector[1] # 访问第一个元素 (R的索引从1开始)\nlength(numeric_vector) # 查看向量长度\n\n\n\n\n\n\n向量类型一致性\n\n\n\n一个向量中的所有元素必须是相同的数据类型。如果混合不同类型，R 会进行强制类型转换（通常转换为字符型）。\nmixed_vector &lt;- c(1, \"two\", TRUE)\nmixed_vector # 查看结果\nclass(mixed_vector)",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>第一周：启程：统计思维、R与数据世界</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lecture.html#ai-助手初识你的智能学习伙伴",
+    "href": "week1_lecture.html#ai-助手初识你的智能学习伙伴",
+    "title": "第一周：启程：统计思维、R与数据世界",
+    "section": "5. AI 助手初识：你的智能学习伙伴",
+    "text": "5. AI 助手初识：你的智能学习伙伴\n现代 AI 工具（如 ChatGPT、Copilot 等）可以在学习 R 和统计学过程中提供巨大帮助。\n\n\n\n\n\n\nAI 辅助演示\n\n\n\n\n查询 R 语法: “如何在 R 中创建数值向量？” 或 “解释 R 中 class() 函数的作用。”\n解释统计概念: “请解释统计学中变异的概念” 或 “平均数和中位数有什么区别？”\n代码调试: (后续会涉及) 粘贴错误信息，询问可能的错误原因。\n生成示例代码: “请给我一个在 R 中使用 dplyr 包 filter() 函数的示例。”\n\n重要提示: AI 是强大的助手，但并非绝对权威。务必批判性地看待 AI 的回答，并通过官方文档、书籍或老师进行验证。 它的主要价值在于快速获取信息、启发思路和辅助编程，而非替代独立思考和深入理解。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>第一周：启程：统计思维、R与数据世界</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lecture.html#课程与项目介绍",
+    "href": "week1_lecture.html#课程与项目介绍",
+    "title": "第一周：启程：统计思维、R与数据世界",
+    "section": "6. 课程与项目介绍",
+    "text": "6. 课程与项目介绍\n\n课程目标: 掌握数据处理、可视化和常用统计推断方法，能够使用 R 语言独立完成基本的数据分析任务。\n教学方式: 理论讲解 + R 代码演示 + 案例分析 + 动手练习 + Capstone 项目。\n评估方式: 平时作业、期中/期末考试、Capstone 项目。\nCapstone 项目: (后续详细介绍) 一个综合性的数据分析项目，要求应用课程所学知识解决一个实际或模拟的问题。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>第一周：启程：统计思维、R与数据世界</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lecture.html#本周小结与预告",
+    "href": "week1_lecture.html#本周小结与预告",
+    "title": "第一周：启程：统计思维、R与数据世界",
+    "section": "7. 本周小结与预告",
+    "text": "7. 本周小结与预告\n本周我们了解了统计学的基本思想，安装并熟悉了 R 和 RStudio 环境，掌握了 R 的基础语法，并认识了 AI 助手。下周我们将深入学习如何获取和导入数据，并开始进行数据的初步描述性分析。\n思考题:\n\n尝试使用 R 进行一些基本的数学运算。\n创建不同类型的向量（数值、字符、逻辑），并尝试访问其中的元素。\n思考一个你感兴趣的、可以用数据来回答的问题。这个问题可能涉及哪些变量？",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>第一周：启程：统计思维、R与数据世界</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html",
+    "href": "week2_lecture.html",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "",
+    "text": "1. 数据从何而来？\n数据分析的第一步是获取数据。数据可以来自各种来源，并以不同的格式存储。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html#数据从何而来",
+    "href": "week2_lecture.html#数据从何而来",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "",
+    "text": "常见数据来源:\n\n文件: CSV (逗号分隔值), Excel (.xlsx), TXT (纯文本), JSON, XML 等。这是最常见的形式。\n数据库: SQL 数据库 (如 PostgreSQL, MySQL), NoSQL 数据库。\nAPI (应用程序编程接口): 从网站或服务（如社交媒体、天气服务）获取实时数据。\n网页抓取: 从网页 HTML 中提取数据（需要注意合法性和道德规范）。\n\n常见数据格式:\n\n表格数据 (Tabular Data): 行代表观测 (Observations)，列代表变量 (Variables)。这是我们本课程主要处理的格式。CSV 和 Excel 文件通常存储表格数据。\n非结构化数据: 文本、图像、音频等。\n半结构化数据: JSON, XML 等，具有一定的结构但不如表格数据规整。\n\n\n\n\n\n\n\n\n本周目标\n\n\n\n\n了解常见的数据来源和格式。\n使用 readr 包高效导入 CSV 等文本文件。\n理解 R 中核心的表格数据结构：数据框 (Data Frame) 和 Tibble。\n认识并处理一种重要的变量类型：因子 (Factor)。\n计算并解释描述性统计量，包括集中趋势和离散趋势。\n初步掌握 dplyr 包中的数据筛选和选择功能。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html#readr高效导入数据",
+    "href": "week2_lecture.html#readr高效导入数据",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "2. readr：高效导入数据",
+    "text": "2. readr：高效导入数据\ntidyverse 中的 readr 包提供了快速、友好的函数来读取矩形数据（如 CSV 和 TSV）。\n\n核心函数:\n\nread_csv(): 读取逗号分隔的文件。\nread_tsv(): 读取制表符分隔的文件。\nread_delim(): 读取使用任意分隔符的文件。\nread_fwf(): 读取固定宽度文件。\nread_log(): 读取 Apache 风格的日志文件。\nread_excel(): (来自 readxl 包，通常与 tidyverse 一起使用) 读取 Excel 文件。\n\nread_csv() 示例: 假设我们有一个名为 students.csv 的文件：\n    Name,Age,Major,GPA\n    Alice,21,Statistics,3.8\n    Bob,22,Computer Science,3.5\n    Charlie,20,Mathematics,3.9\n    David,21,Statistics,3.6\n在 R 中读取：\n\nlibrary(tidyverse) # 加载tidyverse通常也会加载readr\n\n# 假设 students.csv 在当前工作目录下\n# 如果不在，需要提供完整或相对路径\n# students_data &lt;- read_csv(\"path/to/your/students.csv\")\n\n# 为了演示，我们直接用文本创建数据\ncsv_text &lt;- \"Name,Age,Major,GPA\\nAlice,21,Statistics,3.8\\nBob,22,Computer Science,3.5\\nCharlie,20,Mathematics,3.9\\nDavid,21,Statistics,3.6\"\n\nstudents_data &lt;- read_csv(csv_text)\n\nprint(students_data)\n\n#&gt; # A tibble: 4 × 4\n#&gt;   Name      Age Major              GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics         3.8\n#&gt; 2 Bob        22 Computer Science   3.5\n#&gt; 3 Charlie    20 Mathematics        3.9\n#&gt; 4 David      21 Statistics         3.6\n\n\nread_csv() 会自动猜测列的类型，并返回一个 Tibble 对象。\n常用参数:\n\nfile: 文件路径或 URL。\ncol_names: 是否包含列名 (默认为 TRUE)。如果文件没有列名，设为 FALSE，readr 会自动生成 X1, X2…\ncol_types: 手动指定列类型，提高稳定性和速度。\nna: 指定哪些字符串应被视作缺失值 (默认识别 “NA”)。\nskip: 跳过文件开头的行数。\nn_max: 最多读取的行数。\n\n# 示例：指定列类型，将 \"N/A\" 视作缺失值\nstudents_data_spec &lt;- read_csv(\n  \"students.csv\",\n  col_types = cols(\n    Name = col_character(),\n    Age = col_integer(),\n    Major = col_character(),\n    GPA = col_double()\n  ),\n  na = c(\"NA\", \"N/A\")\n)",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html#数据框-data-frame-与-tibble",
+    "href": "week2_lecture.html#数据框-data-frame-与-tibble",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "3. 数据框 (Data Frame) 与 Tibble",
+    "text": "3. 数据框 (Data Frame) 与 Tibble\n\n数据框 (Data Frame): R 中存储表格数据的标准结构。\n\n本质上是一个等长向量的列表。\n每一列是一个向量，必须包含相同类型的数据。\n不同列可以包含不同类型的数据。\n创建示例：\n\n\ndf &lt;- data.frame(\n  ID = c(101, 102, 103),\n  Product = c(\"A\", \"B\", \"A\"),\n  Price = c(15.5, 20.0, 16.0),\n  InStock = c(TRUE, FALSE, TRUE)\n)\n\nprint(df)\n\n#&gt;    ID Product Price InStock\n#&gt; 1 101       A  15.5    TRUE\n#&gt; 2 102       B  20.0   FALSE\n#&gt; 3 103       A  16.0    TRUE\n\nstr(df) # 查看数据框结构\n\n#&gt; 'data.frame':    3 obs. of  4 variables:\n#&gt;  $ ID     : num  101 102 103\n#&gt;  $ Product: chr  \"A\" \"B\" \"A\"\n#&gt;  $ Price  : num  15.5 20 16\n#&gt;  $ InStock: logi  TRUE FALSE TRUE\n\n\nTibble: tidyverse 对数据框的现代优化版本。\n\nreadr 函数默认返回 Tibble。\n优点:\n\n打印更友好：只显示前 10 行和适合屏幕的列。\n不会自动将字符串转换为因子 (Factor)。\n不会改变列名（例如，不允许非法字符）。\n子集提取 ([) 行为更一致。\n\n大多数情况下，可以像使用数据框一样使用 Tibble。\ntibble() 函数创建 Tibble，as_tibble() 将数据框转换为 Tibble。\n\n\nlibrary(tibble)\n\ntb &lt;- tibble(\n  ID = c(101, 102, 103),\n  Product = c(\"A\", \"B\", \"A\"),\n  Price = c(15.5, 20.0, 16.0),\n  InStock = c(TRUE, FALSE, TRUE)\n)\n\nprint(tb)\n\n#&gt; # A tibble: 3 × 4\n#&gt;      ID Product Price InStock\n#&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;lgl&gt;  \n#&gt; 1   101 A        15.5 TRUE   \n#&gt; 2   102 B        20   FALSE  \n#&gt; 3   103 A        16   TRUE\n\nstr(tb)\n\n#&gt; tibble [3 × 4] (S3: tbl_df/tbl/data.frame)\n#&gt;  $ ID     : num [1:3] 101 102 103\n#&gt;  $ Product: chr [1:3] \"A\" \"B\" \"A\"\n#&gt;  $ Price  : num [1:3] 15.5 20 16\n#&gt;  $ InStock: logi [1:3] TRUE FALSE TRUE",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html#变量类型因子-factor",
+    "href": "week2_lecture.html#变量类型因子-factor",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "4. 变量类型：因子 (Factor)",
+    "text": "4. 变量类型：因子 (Factor)\n因子是 R 中用来表示分类变量 (Categorical Variable) 的特殊数据类型。分类变量的值来自一个固定的、已知的集合，称为水平 (Levels)。\n\n应用场景: 性别 (男/女)、学历 (本科/硕士/博士)、产品类别 (A/B/C) 等。\n为何使用因子？\n\n节省内存（内部存储为整数）。\n在统计建模和绘图中（如 ggplot2）通常需要因子类型来正确处理分类变量。\n可以指定水平的顺序（例如，教育程度：小学 &lt; 中学 &lt; 大学）。\n\n创建和使用:\n\n# 假设有一个字符向量表示教育程度\neducation_char &lt;- c(\"Bachelor\", \"Master\", \"Bachelor\", \"PhD\", \"Master\")\n\n# 将其转换为因子\neducation_factor &lt;- factor(education_char)\nprint(education_factor)\n\n#&gt; [1] Bachelor Master   Bachelor PhD      Master  \n#&gt; Levels: Bachelor Master PhD\n\nlevels(education_factor) # 查看水平\n\n#&gt; [1] \"Bachelor\" \"Master\"   \"PhD\"\n\n# 查看内部存储 (整数)\nas.numeric(education_factor)\n\n#&gt; [1] 1 2 1 3 2\n\n# 创建有序因子 (指定水平顺序)\neducation_ordered &lt;- factor(\n  education_char,\n  levels = c(\"Bachelor\", \"Master\", \"PhD\"), # 指定顺序\n  ordered = TRUE\n)\n\nprint(education_ordered)\n\n#&gt; [1] Bachelor Master   Bachelor PhD      Master  \n#&gt; Levels: Bachelor &lt; Master &lt; PhD\n\neducation_ordered[1] &lt; education_ordered[2] # 可以比较顺序\n\n#&gt; [1] TRUE\n\n\n\n\n\n\n\n\nstringsAsFactors\n\n\n\n在旧版本的 R (&lt; 4.0) 中，data.frame() 默认会将字符向量转换为因子。tidyverse (包括 readr 和 tibble) 不会自动这样做，这通常是更期望的行为。如果需要因子，请显式转换。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html#描述性统计-i数据的中心在哪里集中趋势",
+    "href": "week2_lecture.html#描述性统计-i数据的中心在哪里集中趋势",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "5. 描述性统计 I：数据的“中心”在哪里？(集中趋势)",
+    "text": "5. 描述性统计 I：数据的“中心”在哪里？(集中趋势)\n描述性统计用于总结和描述数据集的主要特征。集中趋势度量了数据的中心位置。\n\n均值 (Mean): 数据的算术平均值。对异常值敏感。\n\n公式: \\(\\bar{x} = \\frac{\\sum_{i=1}^{n} x_i}{n}\\)\nR 实现: mean()\n\nscores &lt;- c(85, 92, 78, 88, 95, 72)\nmean(scores)\n\n#&gt; [1] 85\n\n# 处理缺失值 (NA)\nscores_na &lt;- c(85, 92, NA, 88, 95, 72)\nmean(scores_na) # 结果是 NA\n\n#&gt; [1] NA\n\nmean(scores_na, na.rm = TRUE) # 移除 NA 后计算\n\n#&gt; [1] 86.4\n\n\n\n中位数 (Median): 将数据排序后位于中间位置的值。对异常值不敏感（稳健）。\n\n如果 n 为奇数，中位数是第 \\(\\frac{n+1}{2}\\) 个值。\n如果 n 为偶数，中位数是第 \\(\\frac{n}{2}\\) 和第 \\(\\frac{n}{2}+1\\) 个值的平均值。\nR 实现: median()\n\nmedian(scores)\n\n#&gt; [1] 86.5\n\nmedian(scores_na, na.rm = TRUE)\n\n#&gt; [1] 88\n\n# 比较均值和中位数 (异常值影响)\nscores_outlier &lt;- c(85, 92, 78, 88, 95, 72, 200)\nmean(scores_outlier)\n\n#&gt; [1] 101.4286\n\nmedian(scores_outlier)\n\n#&gt; [1] 88\n\n\n\n众数 (Mode): 数据集中出现次数最多的值。适用于分类数据，也可用于数值数据。R 基础包没有直接计算众数的函数，通常需要自定义或使用其他包。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html#描述性统计-ii数据的散布程度如何离散趋势",
+    "href": "week2_lecture.html#描述性统计-ii数据的散布程度如何离散趋势",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "6. 描述性统计 II：数据的“散布”程度如何？(离散趋势)",
+    "text": "6. 描述性统计 II：数据的“散布”程度如何？(离散趋势)\n离散趋势度量了数据围绕中心值的散布或变异程度。\n\n极差 (Range): 最大值与最小值的差。简单但易受异常值影响。\n\nR 实现: range() 返回最小值和最大值，diff(range(x)) 计算极差。\n\n\nrange(scores)\n\n#&gt; [1] 72 95\n\ndiff(range(scores))\n\n#&gt; [1] 23\n\n\n分位数 (Quantiles): 将数据排序后，按特定比例分割数据的值。\n\n四分位数 (Quartiles): 将数据分为四等份的点。\n\nQ1 (第一四分位数): 25% 的数据小于该值。\nQ2 (第二四分位数): 50% 的数据小于该值，即中位数。\nQ3 (第三四分位数): 75% 的数据小于该值。\n\n四分位距 (Interquartile Range, IQR): Q3 与 Q1 的差 (\\(IQR = Q3 - Q1\\))。衡量数据中间 50% 的散布范围，对异常值稳健。\nR 实现: quantile(), IQR()\n\n\nquantile(scores) # 默认计算 0%, 25%, 50%, 75%, 100% 分位数\n\n#&gt;    0%   25%   50%   75%  100% \n#&gt; 72.00 79.75 86.50 91.00 95.00\n\nquantile(scores, probs = c(0.1, 0.9)) # 计算 10% 和 90% 分位数\n\n#&gt;  10%  90% \n#&gt; 75.0 93.5\n\nIQR(scores)\n\n#&gt; [1] 11.25\n\n\n方差 (Variance): 数据点与其均值之差的平方的平均值。度量数据偏离均值的平均程度。单位是原始数据的平方。\n\n样本方差公式: \\(s^2 = \\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n-1}\\) (注意分母是 n-1，无偏估计)\nR 实现: var()\n\n\nvar(scores)\n\n#&gt; [1] 75.2\n\n\n标准差 (Standard Deviation): 方差的平方根。与原始数据具有相同的单位，更易于解释。\n\n样本标准差公式: \\(s = \\sqrt{s^2} = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n-1}}\\)\nR 实现: sd()\n\n\nsd(scores)\n\n#&gt; [1] 8.671793\n\nsqrt(var(scores)) # 结果与 sd(scores) 相同\n\n#&gt; [1] 8.671793\n\n\n\n\n\n集中趋势:\n\n数据对称且无极端异常值：均值。\n数据偏斜或有异常值：中位数。\n\n离散趋势:\n\n数据对称且无极端异常值：标准差（结合均值）。\n数据偏斜或有异常值：IQR（结合中位数）。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html#dplyr-初步数据操作的瑞士军刀",
+    "href": "week2_lecture.html#dplyr-初步数据操作的瑞士军刀",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "7. dplyr 初步：数据操作的瑞士军刀",
+    "text": "7. dplyr 初步：数据操作的瑞士军刀\ndplyr 是 tidyverse 的核心包之一，提供了用于数据操作（筛选、选择、变换、汇总、排序）的一致且高效的函数（称为 “verbs”）。\n\n核心思想: 每个函数只做一件事，通过管道 (%&gt;%) 连接起来完成复杂操作。\n管道操作符 (%&gt;%): 将左侧对象作为右侧函数的第一个参数传递。读作 “then”。\n\nx %&gt;% f(y) 等价于 f(x, y)\nx %&gt;% f(y) %&gt;% g(z) 等价于 g(f(x, y), z)\n\n本周学习的 dplyr 动词:\n\nselect(): 按名称选择列。\nfilter(): 根据条件筛选行。\n\nselect() 示例: (使用之前创建的 students_data Tibble)\n\nlibrary(dplyr)\n\n# 选择 Name 和 GPA 列\nselect(students_data, Name, GPA)\n\n#&gt; # A tibble: 4 × 2\n#&gt;   Name      GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt;\n#&gt; 1 Alice     3.8\n#&gt; 2 Bob       3.5\n#&gt; 3 Charlie   3.9\n#&gt; 4 David     3.6\n\n# 选择除 Major 之外的所有列\nselect(students_data, -Major)\n\n#&gt; # A tibble: 4 × 3\n#&gt;   Name      Age   GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;\n#&gt; 1 Alice      21   3.8\n#&gt; 2 Bob        22   3.5\n#&gt; 3 Charlie    20   3.9\n#&gt; 4 David      21   3.6\n\n# 选择从 Name 到 Major 的所有列\nselect(students_data, Name:Major)\n\n#&gt; # A tibble: 4 × 3\n#&gt;   Name      Age Major           \n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;           \n#&gt; 1 Alice      21 Statistics      \n#&gt; 2 Bob        22 Computer Science\n#&gt; 3 Charlie    20 Mathematics     \n#&gt; 4 David      21 Statistics\n\n# 使用管道\nstudents_data %&gt;% select(Name, Age)\n\n#&gt; # A tibble: 4 × 2\n#&gt;   Name      Age\n#&gt;   &lt;chr&gt;   &lt;dbl&gt;\n#&gt; 1 Alice      21\n#&gt; 2 Bob        22\n#&gt; 3 Charlie    20\n#&gt; 4 David      21\n\n\nfilter() 示例:\n\n# 筛选 Major 为 Statistics 的学生\nfilter(students_data, Major == \"Statistics\")\n\n#&gt; # A tibble: 2 × 4\n#&gt;   Name    Age Major        GPA\n#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;\n#&gt; 1 Alice    21 Statistics   3.8\n#&gt; 2 David    21 Statistics   3.6\n\n# 筛选 Age 大于 20 的学生\nfilter(students_data, Age &gt; 20)\n\n#&gt; # A tibble: 3 × 4\n#&gt;   Name    Age Major              GPA\n#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;\n#&gt; 1 Alice    21 Statistics         3.8\n#&gt; 2 Bob      22 Computer Science   3.5\n#&gt; 3 David    21 Statistics         3.6\n\n# 筛选 Major 为 Statistics 且 GPA 大于 3.7 的学生\nfilter(students_data, Major == \"Statistics\", GPA &gt; 3.7) # 逗号表示 \"与\"\n\n#&gt; # A tibble: 1 × 4\n#&gt;   Name    Age Major        GPA\n#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;\n#&gt; 1 Alice    21 Statistics   3.8\n\n# 或者使用 &\nfilter(students_data, Major == \"Statistics\" & GPA &gt; 3.7)\n\n#&gt; # A tibble: 1 × 4\n#&gt;   Name    Age Major        GPA\n#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;\n#&gt; 1 Alice    21 Statistics   3.8\n\n# 筛选 Major 为 Statistics 或 Mathematics 的学生\nfilter(students_data, Major == \"Statistics\" | Major == \"Mathematics\")\n\n#&gt; # A tibble: 3 × 4\n#&gt;   Name      Age Major         GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics    3.8\n#&gt; 2 Charlie    20 Mathematics   3.9\n#&gt; 3 David      21 Statistics    3.6\n\n# 或者使用 %in%\nfilter(students_data, Major %in% c(\"Statistics\", \"Mathematics\"))\n\n#&gt; # A tibble: 3 × 4\n#&gt;   Name      Age Major         GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics    3.8\n#&gt; 2 Charlie    20 Mathematics   3.9\n#&gt; 3 David      21 Statistics    3.6\n\n# 结合管道\nstudents_data %&gt;%\n  filter(Age &gt;= 21) %&gt;%\n  select(Name, GPA)\n\n#&gt; # A tibble: 3 × 2\n#&gt;   Name    GPA\n#&gt;   &lt;chr&gt; &lt;dbl&gt;\n#&gt; 1 Alice   3.8\n#&gt; 2 Bob     3.5\n#&gt; 3 David   3.6",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lecture.html#项目相关与本周总结",
+    "href": "week2_lecture.html#项目相关与本周总结",
+    "title": "第二周：数据的语言：获取、导入与初步描述",
+    "section": "8. 项目相关与本周总结",
+    "text": "8. 项目相关与本周总结\n\n项目任务: 尝试使用 readr 函数导入一份真实数据（如果是 CSV 或类似格式）。检查导入后的数据结构 (str(), glimpse())，看看列类型是否符合预期。\n本周回顾: 我们学习了如何将数据读入 R，理解了数据框和 Tibble，认识了因子类型，并掌握了计算基本描述性统计量和使用 dplyr 进行初步筛选和选择的方法。这些是进行任何数据分析的基础。\n\n下周预告: 我们将深入学习 dplyr 和 tidyr，掌握更多数据整理和变形的强大技术，为更复杂的数据分析和可视化做准备。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>第二周：数据的语言：获取、导入与初步描述</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lecture.html",
+    "href": "week3_lecture.html",
+    "title": "第三周：数据整形：tidyverse 的核心技艺",
+    "section": "",
+    "text": "1. dplyr 进阶：更强大的数据操作\n上周我们学习了 dplyr 的 select() 和 filter()。本周我们将学习更多核心动词，让数据操作如虎添翼。\n我们将继续使用上周创建的 students_data Tibble，并可能引入新的示例数据。\nlibrary(tidyverse)\n\n# 回顾上周数据 (或重新创建)\ncsv_text &lt;- \"Name,Age,Major,GPA\\nAlice,21,Statistics,3.8\\nBob,22,Computer Science,3.5\\nCharlie,20,Mathematics,3.9\\nDavid,21,Statistics,3.6\"\nstudents_data &lt;- read_csv(csv_text)\n\n# 引入一个更复杂的数据集用于演示 group_by 和 summarise\nexam_scores &lt;- tibble(\n  StudentID = c(101, 102, 101, 103, 102, 103, 101),\n  Exam = c(\"Midterm\", \"Midterm\", \"Final\", \"Midterm\", \"Final\", \"Final\", \"Quiz1\"),\n  Score = c(85, 90, 88, 75, 92, 80, 95)\n)\n\nprint(students_data)\n\n#&gt; # A tibble: 4 × 4\n#&gt;   Name      Age Major              GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics         3.8\n#&gt; 2 Bob        22 Computer Science   3.5\n#&gt; 3 Charlie    20 Mathematics        3.9\n#&gt; 4 David      21 Statistics         3.6\n\nprint(exam_scores)\n\n#&gt; # A tibble: 7 × 3\n#&gt;   StudentID Exam    Score\n#&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;\n#&gt; 1       101 Midterm    85\n#&gt; 2       102 Midterm    90\n#&gt; 3       101 Final      88\n#&gt; 4       103 Midterm    75\n#&gt; 5       102 Final      92\n#&gt; 6       103 Final      80\n#&gt; 7       101 Quiz1      95",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>第三周：数据整形：`tidyverse` 的核心技艺</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lecture.html#dplyr-进阶更强大的数据操作",
+    "href": "week3_lecture.html#dplyr-进阶更强大的数据操作",
+    "title": "第三周：数据整形：tidyverse 的核心技艺",
+    "section": "",
+    "text": "本周目标\n\n\n\n\n掌握 dplyr 的核心数据转换动词：mutate(), arrange(), group_by(), summarise()。\n理解并应用 tidyr 进行数据长宽格式转换：pivot_longer(), pivot_wider()。\n掌握”整洁数据” (Tidy Data) 的核心原则。\n学习处理数据中的缺失值 (NA)。\n熟练运用管道 (%&gt;%) 连接多步数据处理操作。\n\n\n\n\n\n\nmutate(): 创建或修改列\n\n基于现有列计算新列，或修改现有列。\n新列会添加到数据框的末尾。\n\n\n# 示例1: 计算 GPA 相对于 4.0 的差距\nstudents_data %&gt;%\n  mutate(GPA_diff = 4.0 - GPA)\n\n#&gt; # A tibble: 4 × 5\n#&gt;   Name      Age Major              GPA GPA_diff\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics         3.8    0.200\n#&gt; 2 Bob        22 Computer Science   3.5    0.5  \n#&gt; 3 Charlie    20 Mathematics        3.9    0.100\n#&gt; 4 David      21 Statistics         3.6    0.4\n\n# 示例2: 创建一个表示年龄是否大于21岁的逻辑列\nstudents_data %&gt;%\n  mutate(Is_Over_21 = Age &gt; 21)\n\n#&gt; # A tibble: 4 × 5\n#&gt;   Name      Age Major              GPA Is_Over_21\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;lgl&gt;     \n#&gt; 1 Alice      21 Statistics         3.8 FALSE     \n#&gt; 2 Bob        22 Computer Science   3.5 TRUE      \n#&gt; 3 Charlie    20 Mathematics        3.9 FALSE     \n#&gt; 4 David      21 Statistics         3.6 FALSE\n\n# 示例3: 同时创建多个列\nstudents_data %&gt;%\n  mutate(\n    GPA_diff = 4.0 - GPA,\n    Birth_Year = 2024 - Age # 假设当前是2024年\n  )\n\n#&gt; # A tibble: 4 × 6\n#&gt;   Name      Age Major              GPA GPA_diff Birth_Year\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics         3.8    0.200       2003\n#&gt; 2 Bob        22 Computer Science   3.5    0.5         2002\n#&gt; 3 Charlie    20 Mathematics        3.9    0.100       2004\n#&gt; 4 David      21 Statistics         3.6    0.4         2003\n\n# 示例4: 修改现有列 (例如，将 GPA 乘以 25 得到百分制)\nstudents_data %&gt;%\n  mutate(GPA_percent = GPA * 25) # 创建新列\n\n#&gt; # A tibble: 4 × 5\n#&gt;   Name      Age Major              GPA GPA_percent\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;       &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics         3.8        95  \n#&gt; 2 Bob        22 Computer Science   3.5        87.5\n#&gt; 3 Charlie    20 Mathematics        3.9        97.5\n#&gt; 4 David      21 Statistics         3.6        90\n\n# 示例5: 直接修改原列 (需谨慎)\nstudents_data %&gt;%\n  mutate(GPA = GPA * 25)\n\n#&gt; # A tibble: 4 × 4\n#&gt;   Name      Age Major              GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics        95  \n#&gt; 2 Bob        22 Computer Science  87.5\n#&gt; 3 Charlie    20 Mathematics       97.5\n#&gt; 4 David      21 Statistics        90\n\n\narrange(): 按列排序行\n\n默认升序排列。\n使用 desc() 进行降序排列。\n可以按多个列排序。\n\n\n# 按年龄升序排序\nstudents_data %&gt;% arrange(Age)\n\n#&gt; # A tibble: 4 × 4\n#&gt;   Name      Age Major              GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;\n#&gt; 1 Charlie    20 Mathematics        3.9\n#&gt; 2 Alice      21 Statistics         3.8\n#&gt; 3 David      21 Statistics         3.6\n#&gt; 4 Bob        22 Computer Science   3.5\n\n# 按 GPA 降序排序\nstudents_data %&gt;% arrange(desc(GPA))\n\n#&gt; # A tibble: 4 × 4\n#&gt;   Name      Age Major              GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;\n#&gt; 1 Charlie    20 Mathematics        3.9\n#&gt; 2 Alice      21 Statistics         3.8\n#&gt; 3 David      21 Statistics         3.6\n#&gt; 4 Bob        22 Computer Science   3.5\n\n# 先按专业升序，再按 GPA 降序\nstudents_data %&gt;% arrange(Major, desc(GPA))\n\n#&gt; # A tibble: 4 × 4\n#&gt;   Name      Age Major              GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;\n#&gt; 1 Bob        22 Computer Science   3.5\n#&gt; 2 Charlie    20 Mathematics        3.9\n#&gt; 3 Alice      21 Statistics         3.8\n#&gt; 4 David      21 Statistics         3.6\n\n\ngroup_by(): 按分类变量分组\n\n本身不改变数据外观，但会为后续操作（主要是 summarise()）添加分组信息。\n后续操作将在每个分组内部独立进行。\n\n\n# 按专业分组 (输出看起来没变，但内部结构变了)\nstudents_data %&gt;% group_by(Major)\n\n#&gt; # A tibble: 4 × 4\n#&gt; # Groups:   Major [3]\n#&gt;   Name      Age Major              GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics         3.8\n#&gt; 2 Bob        22 Computer Science   3.5\n#&gt; 3 Charlie    20 Mathematics        3.9\n#&gt; 4 David      21 Statistics         3.6\n\n# 按学生ID分组 exam_scores 数据\nexam_scores %&gt;% group_by(StudentID)\n\n#&gt; # A tibble: 7 × 3\n#&gt; # Groups:   StudentID [3]\n#&gt;   StudentID Exam    Score\n#&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;\n#&gt; 1       101 Midterm    85\n#&gt; 2       102 Midterm    90\n#&gt; 3       101 Final      88\n#&gt; 4       103 Midterm    75\n#&gt; 5       102 Final      92\n#&gt; 6       103 Final      80\n#&gt; 7       101 Quiz1      95\n\n\nsummarise() (或 summarize()): 数据汇总\n\n通常与 group_by() 结合使用，对每个分组进行汇总计算。\n创建包含汇总统计量的新数据框。\n常用的汇总函数：mean(), median(), sd(), var(), min(), max(), n() (计算行数/观测数), n_distinct() (计算唯一值数量)。\n\n\n# 计算所有学生的平均年龄和最高 GPA (没有 group_by)\nstudents_data %&gt;%\n  summarise(\n    Avg_Age = mean(Age),\n    Max_GPA = max(GPA)\n  )\n\n#&gt; # A tibble: 1 × 2\n#&gt;   Avg_Age Max_GPA\n#&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n#&gt; 1      21     3.9\n\n# 计算每个专业的学生人数和平均 GPA\nstudents_data %&gt;%\n  group_by(Major) %&gt;%\n  summarise(\n    Num_Students = n(), # n() 计算当前分组的行数\n    Avg_GPA = mean(GPA, na.rm = TRUE) # 好习惯：处理可能的NA\n  )\n\n#&gt; # A tibble: 3 × 3\n#&gt;   Major            Num_Students Avg_GPA\n#&gt;   &lt;chr&gt;                   &lt;int&gt;   &lt;dbl&gt;\n#&gt; 1 Computer Science            1     3.5\n#&gt; 2 Mathematics                 1     3.9\n#&gt; 3 Statistics                  2     3.7\n\n# 计算每个学生的考试次数和平均分\nexam_scores %&gt;%\n  group_by(StudentID) %&gt;%\n  summarise(\n    Num_Exams = n(),\n    Avg_Score = mean(Score),\n    Min_Score = min(Score),\n    Max_Score = max(Score)\n  )\n\n#&gt; # A tibble: 3 × 5\n#&gt;   StudentID Num_Exams Avg_Score Min_Score Max_Score\n#&gt;       &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n#&gt; 1       101         3      89.3        85        95\n#&gt; 2       102         2      91          90        92\n#&gt; 3       103         2      77.5        75        80\n\n# 计算每门考试的参加人数和最高分\nexam_scores %&gt;%\n  group_by(Exam) %&gt;%\n  summarise(\n    Num_Participants = n_distinct(StudentID), # 统计不重复的学生ID数\n    Highest_Score = max(Score)\n  )\n\n#&gt; # A tibble: 3 × 3\n#&gt;   Exam    Num_Participants Highest_Score\n#&gt;   &lt;chr&gt;              &lt;int&gt;         &lt;dbl&gt;\n#&gt; 1 Final                  3            92\n#&gt; 2 Midterm                3            90\n#&gt; 3 Quiz1                  1            95\n\n\n\n\n\n\n\n\nungroup()\n\n\n\n使用 group_by() 后，数据会保持分组状态。如果后续操作希望在整个数据集上进行，而不是分组进行，需要使用 ungroup() 取消分组。\n\nstudents_data %&gt;%\n  group_by(Major) %&gt;%\n  mutate(Major_Avg_GPA = mean(GPA)) %&gt;% # 在分组内计算平均GPA\n  ungroup() %&gt;% # 取消分组\n  mutate(Overall_Avg_GPA = mean(GPA)) # 在全体数据上计算总平均GPA\n\n#&gt; # A tibble: 4 × 6\n#&gt;   Name      Age Major              GPA Major_Avg_GPA Overall_Avg_GPA\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;         &lt;dbl&gt;           &lt;dbl&gt;\n#&gt; 1 Alice      21 Statistics         3.8           3.7             3.7\n#&gt; 2 Bob        22 Computer Science   3.5           3.5             3.7\n#&gt; 3 Charlie    20 Mathematics        3.9           3.9             3.7\n#&gt; 4 David      21 Statistics         3.6           3.7             3.7",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>第三周：数据整形：`tidyverse` 的核心技艺</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lecture.html#整洁数据-tidy-data-的理念",
+    "href": "week3_lecture.html#整洁数据-tidy-data-的理念",
+    "title": "第三周：数据整形：tidyverse 的核心技艺",
+    "section": "2. 整洁数据 (Tidy Data) 的理念",
+    "text": "2. 整洁数据 (Tidy Data) 的理念\n“整洁数据” 是由 Hadley Wickham 提出的数据组织标准，旨在简化数据分析流程。遵循整洁数据原则的数据更易于使用 tidyverse 工具进行处理和可视化。\n\n三条核心原则:\n\n每个变量构成一列 (Each variable forms a column)。\n每个观测构成一行 (Each observation forms a row)。\n每种类型的观测单元构成一个表格 (Each type of observational unit forms a table)。\n\n为何重要？\n\ntidyverse 中的函数（dplyr, ggplot2 等）都设计为处理整洁数据。\n使数据结构标准化，便于理解和协作。\n简化数据清理和转换步骤。\n\n不整洁数据的常见形式:\n\n列名是变量值，而不是变量名 (例如，年份作为列名)。\n一个单元格中存储了多个值。\n变量同时存储在行和列中。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>第三周：数据整形：`tidyverse` 的核心技艺</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lecture.html#tidyr-让数据更整洁",
+    "href": "week3_lecture.html#tidyr-让数据更整洁",
+    "title": "第三周：数据整形：tidyverse 的核心技艺",
+    "section": "3. tidyr: 让数据更整洁",
+    "text": "3. tidyr: 让数据更整洁\ntidyr 包提供了将数据在”宽”格式和”长”格式之间转换的函数，帮助我们将数据整理成”整洁”的形式。\n\n宽数据 (Wide Data): 通常人类阅读更友好，但不利于计算。变量值可能作为列名。\n长数据 (Long Data): 通常更符合整洁数据原则，便于 tidyverse 处理。每个观测的关键信息都在行内，变量名在列中。\n核心函数:\n\npivot_longer(): 将宽数据变长。将多个列”融合”成键-值对的两列。\npivot_wider(): 将长数据变宽。根据键-值对将数据”展开”到多个列。\n\npivot_longer() 示例: 假设我们有如下”宽”格式数据，记录了不同季度销售额：\n\nsales_wide &lt;- tibble(\n  Product = c(\"A\", \"B\"),\n  Qtr1 = c(100, 150),\n  Qtr2 = c(110, 160),\n  Qtr3 = c(120, 170),\n  Qtr4 = c(130, 180)\n  )\n\n  print(sales_wide)\n\n#&gt; # A tibble: 2 × 5\n#&gt;   Product  Qtr1  Qtr2  Qtr3  Qtr4\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n#&gt; 1 A         100   110   120   130\n#&gt; 2 B         150   160   170   180\n\n\n这里的列名 Qtr1 到 Qtr4 实际上是”季度”这个变量的值。我们希望将其转换为整洁的长格式：\n\nsales_long &lt;- sales_wide %&gt;%\n  pivot_longer(\n    cols = Qtr1:Qtr4, # 指定哪些列需要被转换 (这里是 Qtr1 到 Qtr4) \n    names_to = \"Quarter\",  # 新列名，用于存储原来的列名 (Qtr1, Qtr2...)\n    values_to = \"Sales\"    # 新列名，用于存储原来的单元格值\n  )\n\nprint(sales_long)\n\n#&gt; # A tibble: 8 × 3\n#&gt;   Product Quarter Sales\n#&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;\n#&gt; 1 A       Qtr1      100\n#&gt; 2 A       Qtr2      110\n#&gt; 3 A       Qtr3      120\n#&gt; 4 A       Qtr4      130\n#&gt; 5 B       Qtr1      150\n#&gt; 6 B       Qtr2      160\n#&gt; 7 B       Qtr3      170\n#&gt; 8 B       Qtr4      180\n\n\n现在，每个观测（某个产品在某个季度的销售额）都独占一行，变量（产品、季度、销售额）各自成列。\npivot_wider() 示例: 将刚才的长数据 sales_long 转换回宽数据：\n\nsales_regained_wide &lt;- sales_long %&gt;%\n  pivot_wider(\n    names_from = Quarter, # 指定包含新列名的列 (Quarter)\n    values_from = Sales   # 指定包含新单元格值的列 (Sales)\n    )\n\nprint(sales_regained_wide)\n\n#&gt; # A tibble: 2 × 5\n#&gt;   Product  Qtr1  Qtr2  Qtr3  Qtr4\n#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n#&gt; 1 A         100   110   120   130\n#&gt; 2 B         150   160   170   180",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>第三周：数据整形：`tidyverse` 的核心技艺</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lecture.html#处理缺失值-na",
+    "href": "week3_lecture.html#处理缺失值-na",
+    "title": "第三周：数据整形：tidyverse 的核心技艺",
+    "section": "4. 处理缺失值 (NA)",
+    "text": "4. 处理缺失值 (NA)\n缺失值 (NA, Not Available) 在真实数据中非常常见。dplyr 和 tidyr 以及 R 基础函数提供了处理它们的方法。\n\n识别缺失值: is.na() 函数返回一个逻辑向量，TRUE 表示对应位置是 NA。\n\nx &lt;- c(1, 2, NA, 4, NA)\nis.na(x)\n\n#&gt; [1] FALSE FALSE  TRUE FALSE  TRUE\n\n# 在数据框中使用 (例如，检查 exam_scores 中是否有 NA)\nis.na(exam_scores) # 返回一个与数据框同样大小的逻辑矩阵\n\n#&gt;      StudentID  Exam Score\n#&gt; [1,]     FALSE FALSE FALSE\n#&gt; [2,]     FALSE FALSE FALSE\n#&gt; [3,]     FALSE FALSE FALSE\n#&gt; [4,]     FALSE FALSE FALSE\n#&gt; [5,]     FALSE FALSE FALSE\n#&gt; [6,]     FALSE FALSE FALSE\n#&gt; [7,]     FALSE FALSE FALSE\n\nany(is.na(exam_scores)) # 检查整个数据框是否有任何 NA\n\n#&gt; [1] FALSE\n\ncolSums(is.na(exam_scores)) # 计算每列的 NA 数量\n\n#&gt; StudentID      Exam     Score \n#&gt;         0         0         0\n\n\n处理策略:\n\n删除:\n\nna.omit() (基础 R): 删除任何列包含 NA 的整行。简单粗暴，可能丢失过多信息。\ndrop_na() (tidyr): 功能类似 na.omit(), 但可以指定只检查某些列的 NA。\n\n\n\nscores_na_df &lt;- tibble(ID = 1:6, Score = c(85, 92, NA, 88, 95, 72))\nprint(scores_na_df)\n\n#&gt; # A tibble: 6 × 2\n#&gt;      ID Score\n#&gt;   &lt;int&gt; &lt;dbl&gt;\n#&gt; 1     1    85\n#&gt; 2     2    92\n#&gt; 3     3    NA\n#&gt; 4     4    88\n#&gt; 5     5    95\n#&gt; 6     6    72\n\nna.omit(scores_na_df) # 删除包含 NA 的行\n\n#&gt; # A tibble: 5 × 2\n#&gt;      ID Score\n#&gt;   &lt;int&gt; &lt;dbl&gt;\n#&gt; 1     1    85\n#&gt; 2     2    92\n#&gt; 3     4    88\n#&gt; 4     5    95\n#&gt; 5     6    72\n\nlibrary(tidyr)\nscores_na_df %&gt;% drop_na() # 同上\n\n#&gt; # A tibble: 5 × 2\n#&gt;      ID Score\n#&gt;   &lt;int&gt; &lt;dbl&gt;\n#&gt; 1     1    85\n#&gt; 2     2    92\n#&gt; 3     4    88\n#&gt; 4     5    95\n#&gt; 5     6    72\n\n# 假设有另一列，我们只想删除 Score 为 NA 的行\nscores_na_df2 &lt;- tibble(\n  ID = 1:6,\n  Score = c(85, 92, NA, 88, 95, 72),\n  Group = c(\"A\", \"B\", \"A\", NA, \"B\", \"A\")\n  )\nprint(scores_na_df2)\n\n#&gt; # A tibble: 6 × 3\n#&gt;      ID Score Group\n#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;\n#&gt; 1     1    85 A    \n#&gt; 2     2    92 B    \n#&gt; 3     3    NA A    \n#&gt; 4     4    88 &lt;NA&gt; \n#&gt; 5     5    95 B    \n#&gt; 6     6    72 A\n\nscores_na_df2 %&gt;% drop_na(Score) # 只检查 Score 列的 NA\n\n#&gt; # A tibble: 5 × 3\n#&gt;      ID Score Group\n#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;\n#&gt; 1     1    85 A    \n#&gt; 2     2    92 B    \n#&gt; 3     4    88 &lt;NA&gt; \n#&gt; 4     5    95 B    \n#&gt; 5     6    72 A\n\n\n\n填充/插补 (Imputation): 用某个值（如均值、中位数、众数或模型预测值）替换 NA。这更复杂，需要根据具体情况选择合适的方法（后续课程可能涉及）。\n\n\nreplace_na() (tidyr): 用指定值替换 NA。\n\n\nscores_na_df %&gt;%\n  mutate(Score_filled = replace_na(Score, mean(Score, na.rm = TRUE))) # 用均值填充\n\n#&gt; # A tibble: 6 × 3\n#&gt;      ID Score Score_filled\n#&gt;   &lt;int&gt; &lt;dbl&gt;        &lt;dbl&gt;\n#&gt; 1     1    85         85  \n#&gt; 2     2    92         92  \n#&gt; 3     3    NA         86.4\n#&gt; 4     4    88         88  \n#&gt; 5     5    95         95  \n#&gt; 6     6    72         72\n\n\n\n在计算中忽略: 许多函数（如 mean(), sum(), sd() 等）有 na.rm = TRUE 参数。\n\n\nmean(scores_na_df$Score) # NA\n\n#&gt; [1] NA\n\nmean(scores_na_df$Score, na.rm = TRUE) # 正确计算\n\n#&gt; [1] 86.4\n\n\n\n\n\n\n\n\n\n处理 NA 的重要性\n\n\n\n不恰当处理 NA 会导致分析结果偏差甚至错误。选择哪种策略取决于数据的性质、缺失的原因以及分析的目标。删除是最简单的方法，但只有在 NA 占比很小或确定该观测无效时才推荐。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>第三周：数据整形：`tidyverse` 的核心技艺</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lecture.html#管道-连接多步操作",
+    "href": "week3_lecture.html#管道-连接多步操作",
+    "title": "第三周：数据整形：tidyverse 的核心技艺",
+    "section": "5. 管道 (%>%) 连接多步操作",
+    "text": "5. 管道 (%&gt;%) 连接多步操作\n管道使得复杂的数据处理流程清晰易读。\n\n示例： 从 exam_scores 数据中，找出每个学生（StudentID）的最高分（Max_Score），并按最高分降序排列，最后只显示 StudentID 和 Max_Score。\n\nexam_scores %&gt;%\n  group_by(StudentID) %&gt;% # 按学生分组\n  summarise(Max_Score = max(Score)) %&gt;% # 计算每个学生的最高分\n  arrange(desc(Max_Score)) %&gt;% # 按最高分降序排列\n  ungroup() # 最好取消分组（虽然这里影响不大）\n\n#&gt; # A tibble: 3 × 2\n#&gt;   StudentID Max_Score\n#&gt;       &lt;dbl&gt;     &lt;dbl&gt;\n#&gt; 1       101        95\n#&gt; 2       102        92\n#&gt; 3       103        80\n\n\n对比不使用管道的代码：\n\ngrouped_data &lt;- group_by(exam_scores, StudentID)\nsummary_data &lt;- summarise(grouped_data, Max_Score = max(Score))\narranged_data &lt;- arrange(summary_data, desc(Max_Score))\nungroup(arranged_data)\n\n#&gt; # A tibble: 3 × 2\n#&gt;   StudentID Max_Score\n#&gt;       &lt;dbl&gt;     &lt;dbl&gt;\n#&gt; 1       101        95\n#&gt; 2       102        92\n#&gt; 3       103        80\n\n\n\n管道显然更简洁、更符合思维流程。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>第三周：数据整形：`tidyverse` 的核心技艺</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lecture.html#项目相关与本周总结",
+    "href": "week3_lecture.html#项目相关与本周总结",
+    "title": "第三周：数据整形：tidyverse 的核心技艺",
+    "section": "6. 项目相关与本周总结",
+    "text": "6. 项目相关与本周总结\n\n项目任务:\n\n应用本周学到的 dplyr 动词（mutate, arrange, group_by, summarise）对你的项目数据进行初步的探索性分析。例如，计算分组统计量，创建新变量，按特定条件排序。\n检查你的项目数据是否符合”整洁数据”原则。如果不符合，思考如何使用 pivot_longer 或 pivot_wider 进行转换（如果适用）。\n检查项目数据中的缺失值 (is.na(), colSums(is.na()))。思考初步的处理策略（暂时可以先记录下来，不一定立即处理）。\n\n本周回顾: 我们掌握了 dplyr 的核心转换函数和 tidyr 的长宽格式转换，理解了整洁数据的重要性，并学习了处理缺失值的基本方法。通过管道，我们可以将这些操作流畅地组合起来，高效地完成数据整形任务。\n\n下周预告: 数据准备就绪，是时候让数据”说话”了！我们将学习强大的可视化工具 ggplot2，探索如何通过图形发现数据中的模式和洞见，并初步接触推断统计的思想。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>第三周：数据整形：`tidyverse` 的核心技艺</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html",
+    "href": "week4_lecture.html",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "",
+    "text": "1. 为何需要数据可视化？\n我们已经学会了如何整理数据和计算描述性统计量，但数字往往难以直观地揭示数据背后的模式、趋势和异常。数据可视化通过图形将数据呈现出来，帮助我们：",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#为何需要数据可视化",
+    "href": "week4_lecture.html#为何需要数据可视化",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "",
+    "text": "探索性数据分析 (Exploratory Data Analysis, EDA): 快速理解数据分布、变量间关系、发现异常点。\n沟通发现: 清晰有效地向他人展示数据洞见。\n模型诊断: (后续课程) 检查统计模型的假设是否成立。\n\n\n\n\n\n\n\n本周目标\n\n\n\n\n理解数据可视化的基本原则。\n掌握 ggplot2 的核心语法和图层叠加思想。\n能够绘制常用的单变量和双变量图形。\n对图形进行基本的定制（标签、主题）。\n初步理解推断统计的核心思想：从样本推断总体。\n理解点估计和区间估计的概念。\n掌握置信区间的概念和正确解释。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#数据可视化原则",
+    "href": "week4_lecture.html#数据可视化原则",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "2. 数据可视化原则",
+    "text": "2. 数据可视化原则\n有效的可视化不仅仅是绘制图形，更要遵循一定的原则，确保图形清晰、准确、不误导。\n\n清晰性: 图形元素（点、线、条）易于区分，标签、坐标轴清晰明了。\n准确性: 图形真实反映数据特征，避免扭曲（如不恰当的坐标轴范围）。\n简洁性: 避免不必要的图形元素（“图表垃圾”），突出核心信息。\n目的性: 图形应服务于特定的分析或沟通目的。选择合适的图形类型。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#ggplot2图形的语法",
+    "href": "week4_lecture.html#ggplot2图形的语法",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "3. ggplot2：图形的语法",
+    "text": "3. ggplot2：图形的语法\nggplot2 是 tidyverse 中的旗舰级可视化包，它基于“图形语法”(Grammar of Graphics) 的理念，提供了一种强大而灵活的方式来创建各种复杂的图形。\n\n核心理念：图层叠加 (Layers) 一个 ggplot2 图形由若干图层叠加而成，每个图层包含：\n\n数据 (Data): 要可视化的数据框或 Tibble。\n映射 (Aesthetic Mappings, aes()): 将数据中的变量映射到图形的视觉属性（如 x 轴位置、y 轴位置、颜色、形状、大小等）。\n几何对象 (Geometric Objects, geom_...): 定义了使用哪种图形来表示数据（如点、线、条形、箱线等）。\n统计变换 (Statistical Transformations, stat_...): 对数据进行统计汇总（如计算频数、密度、均值等），geom 通常有默认的 stat。\n位置调整 (Position Adjustments, position_...): 处理图形元素重叠问题（如堆叠、并列）。\n坐标系 (Coordinate System, coord_...): 控制坐标轴（如笛卡尔坐标、极坐标）。\n分面 (Faceting, facet_...): 将数据按某个分类变量分割成多个子图。\n\n基本语法模板: r     ggplot(data = &lt;DATA_FRAME&gt;) +       geom_xxx(mapping = aes(&lt;MAPPINGS&gt;)) +       # 其他图层、设定...\n示例数据准备: 我们将使用 ggplot2 内置的 mpg 数据集（关于不同汽车型号燃油效率等信息）。\n\nlibrary(tidyverse)     \nglimpse(mpg) # 快速查看数据结构\n\n#&gt; Rows: 234\n#&gt; Columns: 11\n#&gt; $ manufacturer &lt;chr&gt; \"audi\", \"audi\", \"audi\", \"audi\", \"audi\", \"audi\", \"audi\", \"…\n#&gt; $ model        &lt;chr&gt; \"a4\", \"a4\", \"a4\", \"a4\", \"a4\", \"a4\", \"a4\", \"a4 quattro\", \"…\n#&gt; $ displ        &lt;dbl&gt; 1.8, 1.8, 2.0, 2.0, 2.8, 2.8, 3.1, 1.8, 1.8, 2.0, 2.0, 2.…\n#&gt; $ year         &lt;int&gt; 1999, 1999, 2008, 2008, 1999, 1999, 2008, 1999, 1999, 200…\n#&gt; $ cyl          &lt;int&gt; 4, 4, 4, 4, 6, 6, 6, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 8, 8, …\n#&gt; $ trans        &lt;chr&gt; \"auto(l5)\", \"manual(m5)\", \"manual(m6)\", \"auto(av)\", \"auto…\n#&gt; $ drv          &lt;chr&gt; \"f\", \"f\", \"f\", \"f\", \"f\", \"f\", \"f\", \"4\", \"4\", \"4\", \"4\", \"4…\n#&gt; $ cty          &lt;int&gt; 18, 21, 20, 21, 16, 18, 18, 18, 16, 20, 19, 15, 17, 17, 1…\n#&gt; $ hwy          &lt;int&gt; 29, 29, 31, 30, 26, 26, 27, 26, 25, 28, 27, 25, 25, 25, 2…\n#&gt; $ fl           &lt;chr&gt; \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p…\n#&gt; $ class        &lt;chr&gt; \"compact\", \"compact\", \"compact\", \"compact\", \"compact\", \"c…\n\n# ?mpg # 查看数据集帮助文档",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#常用单变量图形",
+    "href": "week4_lecture.html#常用单变量图形",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "4. 常用单变量图形",
+    "text": "4. 常用单变量图形\n用于探索单个变量的分布特征。\n\n直方图 (Histogram): geom_histogram()\n\n展示连续变量的分布情况。将变量范围分成若干区间 (bins)，计算落在每个区间的观测数量。\naes(): 通常只需要映射 x 轴。\n\n\n# 探索发动机排量 (displ) 的分布\nggplot(data = mpg) +\n  geom_histogram(mapping = aes(x = displ), binwidth = 0.5, fill = \"skyblue\", color = \"black\")\n\n\n\n\n\n\n\n  # binwidth 控制区间的宽度，可以调整以观察不同粒度的分布\n  # fill 设置填充色, color 设置边框色\n\n密度图 (Density Plot): geom_density()\n\n直方图的平滑版本，更清晰地展示分布形状。\naes(): 通常只需要映射 x 轴。\n\n\n# 探索发动机排量 (displ) 的分布\nggplot(data = mpg) +\n  geom_density(mapping = aes(x = displ), fill = \"lightgreen\", alpha = 0.7)\n\n\n\n\n\n\n\n  # alpha 控制填充透明度\n\n箱线图 (Boxplot): geom_boxplot()\n\n展示连续变量的分布概要（中位数、四分位数、异常值）。\naes(): 通常映射 y 轴（或 x 轴，如果想画水平箱线图）。可以映射 x 轴为分类变量来分组比较。\n\n\n# 探索每加仑高速公路行驶英里数 (hwy) 的分布\nggplot(data = mpg) +\n  geom_boxplot(mapping = aes(y = hwy), fill = \"orange\")\n\n\n\n\n\n\n\n# 查看不同驱动方式 (drv: f=前驱, r=后驱, 4=四驱) 的 hwy 分布\nggplot(data = mpg) +\n  geom_boxplot(mapping = aes(x = drv, y = hwy, fill = drv)) # 按 drv 分组并用颜色区分\n\n\n\n\n\n\n\n\n\n\n箱体：覆盖 IQR (Q1 到 Q3)。\n箱内粗线：中位数 (Q2)。\n触须 (Whiskers)：通常延伸到距离箱体 1.5 倍 IQR 范围内的最远点。\n点：超出触须范围的潜在异常值。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#常用双变量图形",
+    "href": "week4_lecture.html#常用双变量图形",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "5. 常用双变量图形",
+    "text": "5. 常用双变量图形\n用于探索两个变量之间的关系。\n\n散点图 (Scatter Plot): geom_point()\n\n展示两个连续变量之间的关系。\naes(): 映射 x 和 y 轴。可以映射其他属性（如 color, shape, size）到第三个变量。\n\n\n# 探索发动机排量 (displ) 与高速公路里程 (hwy) 的关系\nggplot(data = mpg) +\n  geom_point(mapping = aes(x = displ, y = hwy))\n\n\n\n\n\n\n\n# 将颜色映射到车辆类别 (class)\nggplot(data = mpg) +\n  geom_point(mapping = aes(x = displ, y = hwy, color = class))\n\n\n\n\n\n\n\n# 将点的大小映射到气缸数 (cyl)\nggplot(data = mpg) +\n  geom_point(mapping = aes(x = displ, y = hwy, size = cyl, color = class), alpha = 0.6)\n\n\n\n\n\n\n\n\n分组箱线图/小提琴图 (Grouped Boxplot/Violin Plot)\n\n比较一个连续变量在不同分类变量组别下的分布。\ngeom_boxplot() 或 geom_violin() (小提琴图结合了箱线图和密度图)。\naes(): 映射 x 到分类变量，y 到连续变量。\n\n\n# 比较不同车辆类别 (class) 的高速公路里程 (hwy) 分布 (箱线图)\nggplot(data = mpg) +\n  geom_boxplot(mapping = aes(x = class, y = hwy, fill = class)) +\n  coord_flip() # 翻转坐标轴，让类别标签更易读\n\n\n\n\n\n\n\n# 比较不同车辆类别 (class) 的高速公路里程 (hwy) 分布 (小提琴图)\nggplot(data = mpg) +\n  geom_violin(mapping = aes(x = class, y = hwy, fill = class)) +\n  geom_boxplot(mapping = aes(x = class, y = hwy), width = 0.1, fill = \"white\", alpha = 0.5) + # 叠加箱线图\n  coord_flip()\n\n\n\n\n\n\n\n\n条形图 (Bar Plot): geom_bar() / geom_col()\n\ngeom_bar(): 统计分类变量的频数。aes() 只需要映射 x。\ngeom_col(): 直接绘制已计算好的高度值。aes() 需要映射 x 和 y。\n\n\n# 统计不同车辆类别 (class) 的数量\nggplot(data = mpg) +\n  geom_bar(mapping = aes(x = class, fill = class)) +\n  coord_flip()\n\n\n\n\n\n\n\n# 统计不同类型车辆的平均油耗 (hwy)\nvehicle_summary &lt;- mpg %&gt;%\n  group_by(class) %&gt;%\n  summarise(Avg_hwy = mean(hwy))\n\n# 绘制每个车辆类别的平均油耗 (hwy)\nggplot(data = vehicle_summary) +\n  geom_col(mapping = aes(x = class, y = Avg_hwy, fill = class))",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#图形定制初步",
+    "href": "week4_lecture.html#图形定制初步",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "6. 图形定制初步",
+    "text": "6. 图形定制初步\nggplot2 提供了丰富的定制选项。\n\n标签 (Labels): labs()\n\n修改标题、副标题、坐标轴标签、图例标题等。\n\n\np &lt;- ggplot(data = mpg) +\n  geom_point(mapping = aes(x = displ, y = hwy, color = class))\n\np + labs(\n  title = \"发动机排量与高速公路里程关系\",\n  subtitle = \"数据来源：mpg 数据集\",\n  x = \"发动机排量 (升)\",\n  y = \"高速公路里程 (英里/加仑)\",\n  color = \"车辆类别\",\n  caption = \"图形由 ggplot2 生成\"\n)\n\n\n\n\n\n\n\n\n主题 (Themes): theme_...()\n\n快速改变图形的整体外观（背景、网格线、字体等）。\n内置主题：theme_bw(), theme_minimal(), theme_classic(), theme_light(), theme_dark() 等。\ntheme() 函数可以进行更细致的调整。\n\n\np + labs(\n  title = \"发动机排量与高速公路里程关系\",\n  x = \"发动机排量 (升)\",\n  y = \"高速公路里程 (英里/加仑)\",\n  color = \"车辆类别\"\n) +\ntheme_minimal() # 应用 minimal 主题",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#推断统计思想初步",
+    "href": "week4_lecture.html#推断统计思想初步",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "7. 推断统计思想初步",
+    "text": "7. 推断统计思想初步\n到目前为止，我们主要关注描述统计（描述已有数据的特征）和探索性分析（发现数据中的模式）。推断统计则更进一步，试图从样本 (Sample) 数据推断总体 (Population) 的特征。\n\n总体 vs 样本:\n\n总体: 我们感兴趣的所有个体或对象的集合（例如，所有中国大学生的身高）。总体通常太大而无法完全测量。\n样本: 从总体中抽取的一部分个体或对象的集合（例如，随机抽取 1000 名中国大学生的身高）。我们通过分析样本来了解总体。\n\n抽样分布 (Sampling Distribution):\n\n想象一下，我们反复从同一个总体中抽取多个大小相同的样本，并计算每个样本的某个统计量（如样本均值 \\(\\bar{x}\\)）。\n这些样本统计量的分布就称为该统计量的抽样分布。\n抽样分布描述了样本统计量本身的不确定性或变异性。\n\n中心极限定理 (Central Limit Theorem, CLT) 直观理解:\n\nCLT 是统计学中最重要的定理之一。\n核心思想: 无论总体本身的分布形状如何（只要不是太极端），当样本量 \\(n\\) 足够大时，样本均值 \\(\\bar{x}\\) 的抽样分布近似服从正态分布。\n这个正态分布的均值等于总体均值 \\(\\mu\\)，标准差（称为标准误 Standard Error, SE）等于总体标准差 \\(\\sigma\\) 除以 \\(\\sqrt{n}\\) (\\(SE = \\frac{\\sigma}{\\sqrt{n}}\\))。\n意义: 使得我们可以利用正态分布的性质来对总体均值进行推断，即使我们不知道总体的具体分布。\n\n\n\nCLT 是许多统计推断方法（如 t 检验、置信区间）的理论基础。它告诉我们，即使原始数据不是正态的，样本均值在多次抽样下也会趋向于正态分布，这极大地简化了推断过程。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#参数估计点估计-vs-区间估计",
+    "href": "week4_lecture.html#参数估计点估计-vs-区间估计",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "8. 参数估计：点估计 vs 区间估计",
+    "text": "8. 参数估计：点估计 vs 区间估计\n我们通常希望估计总体的某个参数（如总体均值 \\(\\mu\\)、总体比例 \\(p\\)）。\n\n点估计 (Point Estimate): 用样本统计量直接作为总体参数的估计值。\n\n例如，用样本均值 \\(\\bar{x}\\) 估计总体均值 \\(\\mu\\)。\n用样本比例 \\(\\hat{p}\\) 估计总体比例 \\(p\\)。\n优点: 简单直观。\n缺点: 几乎不可能精确等于总体参数，且没有提供估计的不确定性信息。由于抽样误差，每次抽样的点估计值都会有所不同。\n\n区间估计 (Interval Estimate): 给出一个包含总体参数真实值的可能范围，并附带一定的置信水平 (Confidence Level)。\n\n最常见的区间估计是置信区间 (Confidence Interval, CI)。\n优点: 提供了估计的不确定性度量。\n缺点: 理解和解释比点估计复杂。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#置信区间-confidence-interval",
+    "href": "week4_lecture.html#置信区间-confidence-interval",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "9. 置信区间 (Confidence Interval)",
+    "text": "9. 置信区间 (Confidence Interval)\n\n概念: 基于样本数据构造的一个区间，我们有一定程度的信心（由置信水平决定）认为该区间包含了未知的总体参数。\n置信水平 (Confidence Level): 通常表示为 \\((1-\\alpha) \\times 100\\%\\)，常用 95%。\n\n95% 置信区间的含义 (重要！): 如果我们反复从总体中抽取无数个相同大小的样本，并为每个样本构造一个 95% 置信区间，那么大约有 95% 的这些区间会包含真实的总体参数。\n错误理解: 不能说“总体参数有 95% 的概率落在这个具体的区间内”。总体参数是一个固定的值，它要么在区间内，要么不在。置信水平描述的是构造区间这个方法的长期可靠性。\n\n置信区间的构成 (以总体均值 \\(\\mu\\) 为例，假设 \\(\\sigma\\) 已知或 \\(n\\) 很大):\n\n置信区间 = 点估计 \\(\\pm\\) 边际误差 (Margin of Error, MOE)\n\\(CI = \\bar{x} \\pm Z_{\\alpha/2} \\times SE = \\bar{x} \\pm Z_{\\alpha/2} \\times \\frac{\\sigma}{\\sqrt{n}}\\)\n\\(Z_{\\alpha/2}\\) 是标准正态分布上侧 \\(\\alpha/2\\) 分位数（例如，95% 置信水平对应 \\(\\alpha=0.05\\), \\(Z_{0.025} \\approx 1.96\\)）。\n边际误差取决于：\n\n置信水平: 水平越高，区间越宽。\n数据变异性 (\\(\\sigma\\)): 变异性越大，区间越宽。\n样本量 (\\(n\\)): 样本量越大，区间越窄（估计越精确）。\n\n\n解释示例: 假设我们计算出某产品用户满意度的 95% 置信区间为 [8.2, 8.8]。\n\n正确解释: 我们有 95% 的信心认为，该产品用户的真实平均满意度介于 8.2 和 8.8 之间。或者说，如果我们重复抽样并构造区间，预计 95% 的区间会包含真实的平均满意度。\n错误解释:\n\n“用户的满意度有 95% 的概率在 8.2 到 8.8 之间。” (概率是针对区间的构造方法，不是针对具体区间或参数)\n“95% 的用户满意度在 8.2 到 8.8 之间。” (置信区间是关于总体均值，不是关于个体数据)",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lecture.html#项目相关与本周总结",
+    "href": "week4_lecture.html#项目相关与本周总结",
+    "title": "第四周：眼见为实：ggplot2 可视化探索与推断初步",
+    "section": "10. 项目相关与本周总结",
+    "text": "10. 项目相关与本周总结\n\n项目任务:\n\n使用 ggplot2 对你的项目数据进行深入的探索性数据分析 (EDA)。尝试绘制各种单变量和双变量图形，探索变量分布和关系。\n思考你的项目中可能需要进行参数估计的问题。例如，你想估计某个群体的平均值、比例或两个变量间的关系强度吗？这些估计是点估计还是区间估计更有意义？\n\n本周回顾: 我们学习了数据可视化的重要性和 ggplot2 的强大功能，能够绘制和定制常见的统计图形。同时，我们初步踏入了推断统计的大门，理解了从样本推断总体的基本思想、抽样分布、CLT 的直观意义，以及点估计和置信区间的概念与解释。\n\n下周预告: 我们将正式学习假设检验，这是推断统计的另一个核心工具，用于基于样本证据对关于总体的某个断言（假设）做出决策。我们将学习单样本和双样本 t 检验，以及方差分析 (ANOVA)。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>第四周：眼见为实：`ggplot2` 可视化探索与推断初步</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html",
+    "href": "week5_lecture.html",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "",
+    "text": "1. 假设检验：基于证据做决策\n上周我们学习了如何用置信区间来估计总体参数的范围。假设检验 (Hypothesis Testing) 是推断统计的另一个核心工具，它提供了一个正式的框架，用于利用样本数据来判断关于总体的某个断言（假设）是否可信。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#假设检验基于证据做决策",
+    "href": "week5_lecture.html#假设检验基于证据做决策",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "",
+    "text": "核心思想: 我们想检验一个关于总体的原假设 (Null Hypothesis, \\(H_0\\))。我们收集样本数据，看样本证据在多大程度上反对 \\(H_0\\)。如果证据足够强（即样本结果在 \\(H_0\\) 成立的条件下非常罕见），我们就拒绝 \\(H_0\\)，并接受与之对立的备择假设 (Alternative Hypothesis, \\(H_1\\) 或 \\(H_a\\))。\n\n\n\n\n\n\n\n本周目标\n\n\n\n\n理解假设检验的基本逻辑：原假设、备择假设、P 值、显著性水平、决策规则。\n区分并理解两类错误。\n掌握单样本 t 检验的应用场景、假设、R 实现和结果解读。\n掌握双独立样本 t 检验的应用场景、假设（特别是方差齐性）、R 实现和结果解读。\n掌握配对样本 t 检验的应用场景、与独立样本的区别、R 实现和结果解读。\n理解为何需要方差分析 (ANOVA) 来比较多组均值。\n掌握单因素 ANOVA 的应用场景、假设、R 实现和结果解读（ANOVA 表）。\n理解事后检验的必要性，并掌握 Tukey’s HSD 的 R 实现和解读。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#假设检验的逻辑步骤",
+    "href": "week5_lecture.html#假设检验的逻辑步骤",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "2. 假设检验的逻辑步骤",
+    "text": "2. 假设检验的逻辑步骤\n一个典型的假设检验包含以下步骤：\n\n陈述假设:\n\n原假设 (\\(H_0\\)): 通常是表示“没有效应”、“没有差异”或维持现状的陈述。它包含等号（=, ≤, ≥）。我们总是假设 \\(H_0\\) 为真开始分析。\n\n例：新药无效 (\\(μ_{新药} = μ_{安慰剂}\\))。\n例：产品合格率不低于 95% (\\(p \\ge 0.95\\))。\n\n备择假设 (\\(H_1\\) 或 \\(H_a\\)): 我们希望找到证据支持的陈述，通常是表示“有效应”、“有差异”或我们怀疑的情况。它不包含等号（≠, &lt;, &gt;）。\n\n例：新药有效 (\\(μ_{新药} \\ne μ_{安慰剂}\\)，双侧检验；或 \\(μ_{新药} &gt; μ_{安慰剂}\\)，单侧检验)。\n例：产品合格率低于 95% (\\(p &lt; 0.95\\))。\n\n\n选择显著性水平 (\\(\\alpha\\)):\n\n\\(\\alpha\\) 是我们愿意承担的犯第一类错误的概率（见下文）。\n它代表了我们拒绝 \\(H_0\\) 所需的证据强度阈值。\n常用值：0.05 (5%)，有时也用 0.01 或 0.10。需要在分析前确定。\n\n计算检验统计量 (Test Statistic):\n\n根据样本数据计算一个值，该值衡量了样本结果与 \\(H_0\\) 预期结果之间的差异程度（考虑了抽样变异性）。\n不同的检验方法有不同的检验统计量（如 t 值, F 值, \\(\\chi^2\\) 值）。\n\n计算 P 值 (P-value):\n\n核心概念: P 值是在假设 \\(H_0\\) 为真的前提下，观察到当前样本结果或更极端结果的概率。\nP 值越小，表示样本结果在 \\(H_0\\) 下越不可能发生，反对 \\(H_0\\) 的证据越强。\n\n做出决策:\n\n将 P 值与显著性水平 \\(\\alpha\\) 进行比较：\n\n如果 P 值 ≤ \\(\\alpha\\): 结果具有统计显著性 (Statistically Significant)。我们拒绝 \\(H_0\\)，接受 \\(H_1\\)。有足够证据反对原假设。\n如果 P 值 &gt; \\(\\alpha\\): 结果不具有统计显著性。我们未能拒绝 (Fail to Reject) \\(H_0\\)。没有足够证据反对原假设。\n\n注意: 未能拒绝 \\(H_0\\) 不等于 证明 \\(H_0\\) 为真，只是证据不足以推翻它。\n\n解释结果: 结合具体问题情境，用通俗语言解释决策的含义。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#两类错误",
+    "href": "week5_lecture.html#两类错误",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "3. 两类错误",
+    "text": "3. 两类错误\n在假设检验中，我们可能做出错误的决策：\n\n第一类错误 (Type I Error, \\(\\alpha\\) 错误, 弃真错误):\n\n当 \\(H_0\\) 实际上为真时，我们却拒绝了它。\n发生概率为 \\(\\alpha\\) (显著性水平)。\n后果：错误地认为有效应或差异（例如，认为无效药有效）。\n\n第二类错误 (Type II Error, \\(\\beta\\) 错误, 取伪错误):\n\n当 \\(H_0\\) 实际上为假（\\(H_1\\) 为真）时，我们却未能拒绝它。\n发生概率为 \\(\\beta\\)。\n统计功效 (Power) = \\(1 - \\beta\\)，即当 \\(H_1\\) 为真时，正确拒绝 \\(H_0\\) 的概率。\n后果：未能发现存在的效应或差异（例如，未能发现有效药物的效果）。\n\n\n\n\n\n\n\n\n错误权衡\n\n\n\n\\(\\alpha\\) 和 \\(\\beta\\) 通常是相互制约的。降低 \\(\\alpha\\)（减少犯第一类错误的风险）通常会增加 \\(\\beta\\)（增加犯第二类错误的风险），反之亦然。选择 \\(\\alpha\\) 需要权衡两类错误的相对严重性。统计功效受样本量、效应大小、\\(\\alpha\\) 水平和数据变异性影响。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#单样本-t-检验-one-sample-t-test",
+    "href": "week5_lecture.html#单样本-t-检验-one-sample-t-test",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "4. 单样本 t 检验 (One-Sample t-test)",
+    "text": "4. 单样本 t 检验 (One-Sample t-test)\n\n目的: 检验单个总体的均值 \\(\\mu\\) 是否等于某个已知的特定值 \\(\\mu_0\\)。\n应用场景:\n\n某品牌矿泉水声称每瓶含钠量为 20mg，检验是否属实？(\\(H_0: \\mu = 20\\))\n某地区去年人均收入为 50000 元，今年是否有显著变化？(\\(H_0: \\mu = 50000\\))\n\n假设条件:\n\n样本是随机从总体中抽取的。\n总体分布近似正态，或者样本量足够大（通常 n ≥ 30，中心极限定理保证样本均值的抽样分布近似正态）。可以通过 QQ 图或 Shapiro-Wilk 检验来检查正态性。\n\n检验统计量 (t 值): \\[ t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}} \\] 其中 \\(\\bar{x}\\) 是样本均值，\\(\\mu_0\\) 是假设的总体均值， \\(s\\) 是样本标准差， \\(n\\) 是样本量。该统计量服从自由度为 \\(df = n-1\\) 的 t 分布。\nR 实现: t.test()\n\nlibrary(tidyverse)\n\n# 示例：检验一批灯泡的平均寿命是否显著不等于 1000 小时\nlifespan &lt;- c(980, 1020, 1010, 995, 970, 1035, 1005, 960, 1015, 990)\nsample_mean &lt;- mean(lifespan)\nsample_sd &lt;- sd(lifespan)\nn &lt;- length(lifespan)\nprint(paste(\"Sample Mean:\", sample_mean, \"Sample SD:\", sample_sd, \"n:\", n))\n\n#&gt; [1] \"Sample Mean: 998 Sample SD: 23.4757558155453 n: 10\"\n\n# H0: mu = 1000\n# H1: mu != 1000 (双侧检验)\nt_test_result &lt;- t.test(lifespan, mu = 1000)\nprint(t_test_result)\n\n#&gt; \n#&gt;  One Sample t-test\n#&gt; \n#&gt; data:  lifespan\n#&gt; t = -0.26941, df = 9, p-value = 0.7937\n#&gt; alternative hypothesis: true mean is not equal to 1000\n#&gt; 95 percent confidence interval:\n#&gt;   981.2065 1014.7935\n#&gt; sample estimates:\n#&gt; mean of x \n#&gt;       998\n\n# 访问结果的关键信息\nt_test_result$statistic # t 值\n\n#&gt;         t \n#&gt; -0.269408\n\nt_test_result$parameter # 自由度 (df)\n\n#&gt; df \n#&gt;  9\n\nt_test_result$p.value   # P 值\n\n#&gt; [1] 0.7936906\n\nt_test_result$conf.int  # 总体均值的置信区间 (默认 95%)\n\n#&gt; [1]  981.2065 1014.7935\n#&gt; attr(,\"conf.level\")\n#&gt; [1] 0.95\n\nt_test_result$estimate  # 样本均值\n\n#&gt; mean of x \n#&gt;       998\n\n\n结果解读:\n\n查看 P 值。如果 P 值 &lt; \\(\\alpha\\) (例如 0.05)，则拒绝 \\(H_0\\)。\n在上面的例子中，如果 P 值 &lt; 0.05，我们可以说：有统计学证据表明这批灯泡的平均寿命显著不等于 1000 小时 (在 \\(\\alpha=0.05\\) 水平下)。\n查看置信区间。如果 \\(\\mu_0\\) (这里是 1000) 不包含在置信区间内，也支持拒绝 \\(H_0\\)。置信区间给出了总体均值可能的范围。\n单侧检验: 如果想检验平均寿命是否大于 1000 (\\(H_1: \\mu &gt; 1000\\))，使用 alternative = \"greater\"；如果想检验是否小于 1000 (\\(H_1: \\mu &lt; 1000\\))，使用 alternative = \"less\"。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#双独立样本-t-检验-two-independent-samples-t-test",
+    "href": "week5_lecture.html#双独立样本-t-检验-two-independent-samples-t-test",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "5. 双独立样本 t 检验 (Two-Independent-Samples t-test)",
+    "text": "5. 双独立样本 t 检验 (Two-Independent-Samples t-test)\n\n目的: 比较两个独立总体的均值 \\(\\mu_1\\) 和 \\(\\mu_2\\) 是否相等。\n应用场景:\n\n比较两种不同教学方法下学生的平均成绩是否有差异？(\\(H_0: \\mu_1 = \\mu_2\\))\n比较男性和女性的平均工资是否有差异？(\\(H_0: \\mu_{male} = \\mu_{female}\\))\n\n假设条件:\n\n两个样本是独立随机抽取的。\n两个总体都近似正态分布，或者两个样本量都足够大 (n1 ≥ 30, n2 ≥ 30)。\n方差齐性 (Homogeneity of Variances): 两个总体的方差 \\(\\sigma_1^2\\) 和 \\(\\sigma_2^2\\) 相等。这是传统 Student’s t-test 的要求。\n\n检验方差齐性: 可以使用 Levene’s test 或 F 检验 (var.test())。\\(H_0\\): 方差相等。如果 P 值 &gt; \\(\\alpha\\) (如 0.05)，则不能拒绝方差齐性的假设。\n方差不齐怎么办？ R 中的 t.test() 默认使用 Welch’s t-test，它不要求方差齐性，是对自由度进行了调整的 t 检验，通常更推荐使用。\n\n\nR 实现: t.test() (使用公式语法或分别传入两个向量)\n\n# 示例：比较两种肥料对作物产量的影响\nyield_A &lt;- c(25, 28, 22, 30, 26)\nyield_B &lt;- c(32, 35, 29, 38, 31, 33)\n\n# 1. (可选但推荐) 检查方差齐性\nvar_test_result &lt;- var.test(yield_A, yield_B)\nprint(var_test_result) # 查看 P 值\n\n#&gt; \n#&gt;  F test to compare two variances\n#&gt; \n#&gt; data:  yield_A and yield_B\n#&gt; F = 0.92, num df = 4, denom df = 5, p-value = 0.9625\n#&gt; alternative hypothesis: true ratio of variances is not equal to 1\n#&gt; 95 percent confidence interval:\n#&gt;  0.1245282 8.6153132\n#&gt; sample estimates:\n#&gt; ratio of variances \n#&gt;               0.92\n\n# 2. 执行 t 检验\n# H0: mu_A = mu_B (或 mu_A - mu_B = 0)\n# H1: mu_A != mu_B\n# 默认使用 Welch's t-test (var.equal = FALSE)\nt_test_ind_welch &lt;- t.test(yield_A, yield_B)\nprint(t_test_ind_welch)\n\n#&gt; \n#&gt;  Welch Two Sample t-test\n#&gt; \n#&gt; data:  yield_A and yield_B\n#&gt; t = -3.6313, df = 8.7711, p-value = 0.005715\n#&gt; alternative hypothesis: true difference in means is not equal to 0\n#&gt; 95 percent confidence interval:\n#&gt;  -11.053048  -2.546952\n#&gt; sample estimates:\n#&gt; mean of x mean of y \n#&gt;      26.2      33.0\n\n# 如果方差齐性检验 P 值很大 (如 &gt; 0.1 或 0.05)，且你坚持使用 Student's t-test\n# t_test_ind_student &lt;- t.test(yield_A, yield_B, var.equal = TRUE)\n# print(t_test_ind_student)\n\n# 使用公式语法 (数据需要是长格式)\nyield_data &lt;- tibble(\n  Yield = c(yield_A, yield_B),\n  Fertilizer = factor(rep(c(\"A\", \"B\"), times = c(length(yield_A), length(yield_B))))\n)\nprint(yield_data)\n\n#&gt; # A tibble: 11 × 2\n#&gt;    Yield Fertilizer\n#&gt;    &lt;dbl&gt; &lt;fct&gt;     \n#&gt;  1    25 A         \n#&gt;  2    28 A         \n#&gt;  3    22 A         \n#&gt;  4    30 A         \n#&gt;  5    26 A         \n#&gt;  6    32 B         \n#&gt;  7    35 B         \n#&gt;  8    29 B         \n#&gt;  9    38 B         \n#&gt; 10    31 B         \n#&gt; 11    33 B\n\nt.test(Yield ~ Fertilizer, data = yield_data) # 默认 Welch\n\n#&gt; \n#&gt;  Welch Two Sample t-test\n#&gt; \n#&gt; data:  Yield by Fertilizer\n#&gt; t = -3.6313, df = 8.7711, p-value = 0.005715\n#&gt; alternative hypothesis: true difference in means between group A and group B is not equal to 0\n#&gt; 95 percent confidence interval:\n#&gt;  -11.053048  -2.546952\n#&gt; sample estimates:\n#&gt; mean in group A mean in group B \n#&gt;            26.2            33.0\n\n# t.test(Yield ~ Fertilizer, data = yield_data, var.equal = TRUE) # Student's\n\n结果解读:\n\n同样关注 P 值。如果 P 值 &lt; \\(\\alpha\\)，拒绝 \\(H_0\\)，认为两个总体的均值有显著差异。\n查看置信区间 (针对均值差 \\(\\mu_1 - \\mu_2\\))。如果区间不包含 0，也支持拒绝 \\(H_0\\)。区间给出了两个总体均值差异的可能范围。\n同样可以进行单侧检验 (alternative = \"greater\" 或 \"less\")。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#配对样本-t-检验-paired-samples-t-test",
+    "href": "week5_lecture.html#配对样本-t-检验-paired-samples-t-test",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "6. 配对样本 t 检验 (Paired-Samples t-test)",
+    "text": "6. 配对样本 t 检验 (Paired-Samples t-test)\n\n目的: 比较同一个对象在两种不同条件下或两个不同时间点的均值是否存在差异。本质上是检验差值的均值是否等于 0。\n应用场景:\n\n比较同一批患者服药前后的血压平均值是否有变化？\n比较同一组学生使用两种不同学习方法后的测试成绩是否有差异？\n比较同一块土地使用两种不同肥料的产量是否有差异（需要配对设计）？\n\n与独立样本的区别: 独立样本是比较两个不同组的对象；配对样本是比较同一组对象的两次测量。配对设计可以有效控制个体差异。\n假设条件:\n\n样本是配对的。\n配对差值 (Differences) 来自的总体近似正态分布，或者配对数量足够大 (n_pairs ≥ 30)。\n\n检验统计量: 对差值进行单样本 t 检验，检验差值的均值 \\(\\mu_d\\) 是否等于 0。 \\[ t = \\frac{\\bar{d} - 0}{s_d / \\sqrt{n_{pairs}}} \\] 其中 \\(\\bar{d}\\) 是差值的样本均值，\\(s_d\\) 是差值的样本标准差，\\(n_{pairs}\\) 是配对数量。自由度 \\(df = n_{pairs}-1\\)。\nR 实现: t.test() (设置 paired = TRUE)\n\n# 示例：比较 10 名学生使用新旧两种教学方法后的测试得分\nscore_old &lt;- c(75, 82, 68, 79, 88, 72, 90, 85, 77, 81)\nscore_new &lt;- c(80, 85, 75, 81, 92, 78, 93, 88, 80, 84)\n\n# H0: mu_diff = 0 (两种方法得分均值无差异)\n# H1: mu_diff != 0\nt_test_paired &lt;- t.test(score_new, score_old, paired = TRUE)\nprint(t_test_paired)\n\n#&gt; \n#&gt;  Paired t-test\n#&gt; \n#&gt; data:  score_new and score_old\n#&gt; t = 7.7316, df = 9, p-value = 2.904e-05\n#&gt; alternative hypothesis: true mean difference is not equal to 0\n#&gt; 95 percent confidence interval:\n#&gt;  2.758912 5.041088\n#&gt; sample estimates:\n#&gt; mean difference \n#&gt;             3.9\n\n# 也可以先计算差值，再做单样本 t 检验\n# differences &lt;- score_new - score_old\n# t.test(differences, mu = 0) # 结果与上面相同\n\n结果解读:\n\n关注 P 值。如果 P 值 &lt; \\(\\alpha\\)，拒绝 \\(H_0\\)，认为两种条件下或两个时间点的均值存在显著差异。\n查看置信区间 (针对差值的均值 \\(\\mu_d\\))。如果区间不包含 0，也支持拒绝 \\(H_0\\)。区间给出了均值差异的可能范围。\n同样可以进行单侧检验。例如，检验新方法是否优于旧方法 (\\(H_1: \\mu_d &gt; 0\\))，使用 alternative = \"greater\"。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#单因素方差分析-one-way-anova",
+    "href": "week5_lecture.html#单因素方差分析-one-way-anova",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "7. 单因素方差分析 (One-Way ANOVA)",
+    "text": "7. 单因素方差分析 (One-Way ANOVA)\n\n动机: 当我们要比较三个或更多独立组的均值时，如果两两进行 t 检验，会增加犯第一类错误的概率（多重比较问题）。例如，比较 3 组，需要做 3 次 t 检验，总体 \\(\\alpha\\) 会膨胀。ANOVA 提供了一种一次性检验所有组均值是否完全相等的方法。\n目的: 检验三个或更多独立总体的均值是否全部相等。\n应用场景:\n\n比较三种不同肥料对作物产量的平均影响是否相同？\n比较四种不同教学方法下学生的平均成绩是否都一样？\n比较不同地区（≥3个）的平均房价是否相同？\n\n基本思想: 比较组间变异 (Between-group Variation) 与组内变异 (Within-group Variation)。\n\n如果组间变异显著大于组内变异，则说明各组均值之间可能存在显著差异。\n\n假设条件:\n\n各样本是独立随机抽取的。\n各总体都近似正态分布。\n方差齐性: 各总体的方差相等。这对 ANOVA 比较重要，可以用 Levene’s test 检验。\n\n假设陈述:\n\n\\(H_0: \\mu_1 = \\mu_2 = ... = \\mu_k\\) (所有 k 个总体的均值都相等)\n\\(H_1:\\) 至少有一个总体的均值与其他总体不相等 (注意：不是所有均值都不等)。\n\n检验统计量 (F 值): \\[ F = \\frac{\\text{组间均方 (Mean Square Between, MSB)}}{\\text{组内均方 (Mean Square Within, MSW)}} \\]\n\nMSB 度量了各样本均值相对于总均值的变异。\nMSW 度量了每个样本内部数据的变异（是总体方差的估计）。\nF 值服从 F 分布，具有两个自由度：\\(df_1 = k-1\\) (组间自由度) 和 \\(df_2 = N-k\\) (组内自由度)，其中 k 是组数，N 是总样本量。\n\nR 实现: aov() (Analysis of Variance)\n\n# 示例：比较三种不同教学方法 (A, B, C) 的学生成绩\nscores_methodA &lt;- c(78, 85, 82, 79, 88)\nscores_methodB &lt;- c(88, 92, 90, 86, 94)\nscores_methodC &lt;- c(72, 78, 75, 80, 70)\n\n# 准备长格式数据\nanova_data &lt;- tibble(\n  Score = c(scores_methodA, scores_methodB, scores_methodC),\n  Method = factor(rep(c(\"A\", \"B\", \"C\"), each = 5))\n)\nprint(anova_data)\n\n#&gt; # A tibble: 15 × 2\n#&gt;    Score Method\n#&gt;    &lt;dbl&gt; &lt;fct&gt; \n#&gt;  1    78 A     \n#&gt;  2    85 A     \n#&gt;  3    82 A     \n#&gt;  4    79 A     \n#&gt;  5    88 A     \n#&gt;  6    88 B     \n#&gt;  7    92 B     \n#&gt;  8    90 B     \n#&gt;  9    86 B     \n#&gt; 10    94 B     \n#&gt; 11    72 C     \n#&gt; 12    78 C     \n#&gt; 13    75 C     \n#&gt; 14    80 C     \n#&gt; 15    70 C\n\n# (可选) 检查方差齐性 (例如使用 car 包的 leveneTest)\n# library(car)\n# leveneTest(Score ~ Method, data = anova_data)\n\n# 执行 ANOVA\n# H0: mu_A = mu_B = mu_C\n# H1: 至少有一个 mu 不相等\nanova_result &lt;- aov(Score ~ Method, data = anova_data)\n\n# 查看 ANOVA 表\nsummary(anova_result)\n\n#&gt;             Df Sum Sq Mean Sq F value   Pr(&gt;F)    \n#&gt; Method       2  562.5  281.27   19.05 0.000189 ***\n#&gt; Residuals   12  177.2   14.77                     \n#&gt; ---\n#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\n解读 ANOVA 表 (summary(anova_result))\n\nDf: 自由度 (\\(k-1\\) 和 \\(N-k\\))。\nSum Sq: 平方和 (组间 SSb, 组内 SSw)。\nMean Sq: 均方 (MSB = SSb/df1, MSW = SSw/df2)。\nF value: F 统计量 (\\(F = MSB / MSW\\))。\nPr(&gt;F): P 值。\n决策: 查看 P 值。如果 P 值 &lt; \\(\\alpha\\) (如 0.05)，则拒绝 \\(H_0\\)。\n结论: 在上面的例子中，P 值 (0.000311) 远小于 0.05，因此我们拒绝 \\(H_0\\)，认为至少有一种教学方法的平均成绩与其他方法存在显著差异。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#事后检验-post-hoc-tests",
+    "href": "week5_lecture.html#事后检验-post-hoc-tests",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "8. 事后检验 (Post-hoc Tests)",
+    "text": "8. 事后检验 (Post-hoc Tests)\n\n为何需要？ ANOVA 检验的 P 值 &lt; \\(\\alpha\\) 只能告诉我们至少有一组均值不同，但不能告诉我们具体是哪些组之间存在差异。\n目的: 在 ANOVA 拒绝 \\(H_0\\) 后，进行两两比较，找出具体哪些组的均值存在显著差异。\n常用方法：Tukey’s Honest Significant Difference (HSD)\n\n控制了进行所有可能两两比较时的总体第一类错误率。\n计算每对组均值差的置信区间和调整后的 P 值。\n\nR 实现: TukeyHSD() (需要先运行 aov())\n\n# 对之前的 anova_result 进行 Tukey HSD 检验\ntukey_result &lt;- TukeyHSD(anova_result)\nprint(tukey_result)\n\n#&gt;   Tukey multiple comparisons of means\n#&gt;     95% family-wise confidence level\n#&gt; \n#&gt; Fit: aov(formula = Score ~ Method, data = anova_data)\n#&gt; \n#&gt; $Method\n#&gt;      diff        lwr        upr     p adj\n#&gt; B-A   7.6   1.116122 14.0838784 0.0220746\n#&gt; C-A  -7.4 -13.883878 -0.9161216 0.0255847\n#&gt; C-B -15.0 -21.483878 -8.5161216 0.0001311\n\n# 绘制置信区间图\nplot(tukey_result)\n\n\n\n\n\n\n\n\n解读 TukeyHSD() 结果:\n\ndiff: 两组样本均值的差。\nlwr, upr: 均值差的 95% 置信区间下限和上限。\np adj: 调整后的 P 值 (Adjusted P-value)。\n决策: 查看 p adj。如果 p adj &lt; \\(\\alpha\\) (如 0.05)，则认为该对组的均值存在显著差异。\n结论: 从上面的结果看，方法 B 的平均成绩显著高于方法 A 和方法 C；方法 C 和方法 A 之间没有显著差异 (在 \\(\\alpha=0.05\\) 水平下)。\n置信区间图：如果区间不包含 0，则表示差异显著。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lecture.html#项目相关与本周总结",
+    "href": "week5_lecture.html#项目相关与本周总结",
+    "title": "第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用",
+    "section": "9. 项目相关与本周总结",
+    "text": "9. 项目相关与本周总结\n\n项目任务:\n\n根据你的项目问题和数据类型，判断是否需要进行 t 检验或 ANOVA。\n如果需要比较两组（独立或配对），选择合适的 t 检验，执行并解释结果。\n如果需要比较三组或更多组，执行 ANOVA。如果 ANOVA 结果显著，进行 Tukey’s HSD 事后检验，并解释具体哪些组之间存在差异。\n注意检查相应检验的假设条件（特别是正态性和方差齐性），可以在报告中提及检查结果或局限性。\n\n本周回顾: 本周内容非常关键且密集。我们系统学习了假设检验的完整逻辑，并掌握了应用最广泛的几种检验方法：单样本 t 检验、双独立样本 t 检验、配对样本 t 检验和单因素方差分析 (ANOVA) 及其事后检验。理解每种检验的应用场景、假设条件、R 实现和结果解读至关重要。\n\n下周预告: 我们将转向探索变量之间的关系，学习相关分析和简单线性回归，了解如何量化和描述两个连续变量之间的线性关联程度。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lecture.html",
+    "href": "week6_lecture.html",
+    "title": "第六周：探索关系：相关与简单线性回归入门",
+    "section": "",
+    "text": "1. 变量之间的关系\n前几周我们关注于描述单个变量的特征（分布）或比较不同组别在某个变量上的差异（均值比较）。本周我们将开始探索两个或多个变量之间是否存在关联，以及如何量化和描述这种关联。\n我们将继续使用 mpg 数据集，并可能引入其他示例。\nlibrary(tidyverse)\n\n# glimpse(mpg)",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>第六周：探索关系：相关与简单线性回归入门</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lecture.html#变量之间的关系",
+    "href": "week6_lecture.html#变量之间的关系",
+    "title": "第六周：探索关系：相关与简单线性回归入门",
+    "section": "",
+    "text": "本周目标\n\n\n\n\n理解相关性分析的目的和局限性（相关不等于因果）。\n掌握 Pearson 和 Spearman 相关系数的适用场景、计算和显著性检验。\n能够结合散点图直观理解相关性。\n理解简单线性回归 (SLR) 的基本概念、模型形式和系数含义。\n了解最小二乘法 (OLS) 的基本思想。\n能够使用 R 的 lm() 函数拟合 SLR 模型并解读基本输出（系数、R²）。\n初步了解多元线性回归 (MLR) 的动机和“偏回归系数”的概念。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>第六周：探索关系：相关与简单线性回归入门</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lecture.html#相关分析-correlation-analysis",
+    "href": "week6_lecture.html#相关分析-correlation-analysis",
+    "title": "第六周：探索关系：相关与简单线性回归入门",
+    "section": "2. 相关分析 (Correlation Analysis)",
+    "text": "2. 相关分析 (Correlation Analysis)\n相关分析用于衡量两个连续变量之间线性关联的强度和方向。\n\n相关不等于因果 (Correlation does not imply causation!)\n\n\n\n\n\n\n\n相关不等于因果\n\n\n\n在统计分析中，相关关系与因果关系是截然不同的概念。当我们观察到两个变量之间存在相关性时，可能有以下四种解释：\n\n直接因果：X 直接导致 Y 的变化。\n反向因果：Y 的变化反过来影响 X。\n共同原因：存在第三方变量 Z 同时影响 X 和 Y。\n随机巧合：变量间的关联纯属偶然。\n\n需要特别注意的是，相关分析仅能揭示变量是否共同变化，而无法证明因果关系。要确定因果关系，通常需要借助更严谨的研究设计（如随机对照实验）或坚实的理论依据。\n\n\n\n\n\n\n\n\n相关不等于因果的典型案例\n\n\n\n\n冰淇淋与溺水：冰淇淋销量与溺水人数高度相关。但这并非因为吃冰淇淋导致溺水，而是因为两者都与夏天/高温这个混淆变量相关。\n雨伞与感冒：雨伞销量与感冒人数呈正相关。这并不意味着使用雨伞会导致感冒，而是因为两者都与雨天这个共同因素相关。\n鞋子尺寸与阅读能力：儿童的鞋子尺寸与其阅读能力呈正相关。这显然不是因果关系，而是因为两者都与年龄这个变量相关。\n医院数量与犯罪率：一个城市的医院数量与犯罪率呈正相关。这并不意味着医院导致犯罪，而是因为两者都与城市人口规模相关。\n\n\n\n\n相关系数 (Correlation Coefficient, \\(r\\)):\n\n衡量线性关联强度和方向的数值，范围在 \\(-1\\) 到 \\(+1\\) 之间。\n符号表示方向：\n\n\\(r &gt; 0\\): 正相关 (一个变量增加，另一个变量倾向于增加)。\n\\(r &lt; 0\\): 负相关 (一个变量增加，另一个变量倾向于减少)。\n\\(r = 0\\): 无线性相关 (注意：可能存在非线性关系)。\n\n绝对值表示强度：\n\n\\(|r|\\) 接近 1: 强线性相关。\n\\(|r|\\) 接近 0: 弱线性相关或无线性相关。\n强度划分没有绝对标准，通常：0.1-0.3 (弱), 0.4-0.6 (中), 0.7-1.0 (强)。\n\n\n常用相关系数:\n\n皮尔逊积矩相关系数 (Pearson Product-Moment Correlation Coefficient, \\(r\\)):\n\n最常用的相关系数。\n衡量两个连续变量之间线性关联的强度和方向。\n假设条件:\n\n变量是连续的。\n变量之间存在线性关系（可通过散点图初步判断）。\n数据近似服从二元正态分布（或样本量足够大）。对异常值比较敏感。\n\n公式: \\(r = \\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})(y_i - \\bar{y})}{\\sqrt{\\sum_{i=1}^{n}(x_i - \\bar{x})^2 \\sum_{i=1}^{n}(y_i - \\bar{y})^2}}\\)\n\n斯皮尔曼等级相关系数 (Spearman Rank Correlation Coefficient, \\(\\rho\\) 或 \\(r_s\\)):\n\n基于变量值的秩次 (Rank) 计算的相关系数。\n衡量两个变量之间单调关系 (Monotonic Relationship) 的强度和方向（即一个变量增加，另一个变量也倾向于增加或减少，但不一定是直线）。\n适用场景:\n\n变量是有序分类变量 (Ordinal)。\n连续变量不满足 Pearson 相关系数的正态性或线性假设。\n数据中存在异常值（对异常值不敏感）。\n\n计算方法：先将两个变量的数据分别排序并转换为秩次，然后计算秩次的 Pearson 相关系数。\n\n\n可视化：散点图 (Scatter Plot) 散点图是判断两个连续变量关系类型（线性、非线性、无关系）和观察异常值的最佳工具。\n\n# 探索发动机排量 (displ) 与高速公路里程 (hwy) 的关系\nggplot(mpg, aes(x = displ, y = hwy)) +\n    geom_point(aes(color = class)) + # 用颜色区分车辆类别\n    geom_smooth(method = \"lm\", se = FALSE, color = \"red\") + # 添加线性拟合线 (后面会讲)\n    geom_smooth(se = FALSE, color = \"blue\", linetype = \"dashed\") + # 添加非线性平滑曲线 (LOESS)\n    labs(title = \"发动机排量 vs 高速公路里程\", x = \"排量 (升)\", y = \"里程 (MPG)\") +       theme_minimal()     # 从图中可以看出，两者大致呈负相关关系，可能略带曲线。\n\n\n\n\n\n\n\n\nR 实现:\n\ncor(x, y, method = ...): 计算相关系数。\n\nmethod: “pearson” (默认), “spearman”, “kendall”。\n\ncor.test(x, y, method = ...): 计算相关系数，并进行显著性检验。\n\n显著性检验的原假设 \\(H_0\\): 两个变量之间没有相关性 (总体相关系数 \\(\\rho = 0\\))。\n备择假设 \\(H_1\\): 两个变量之间存在相关性 (\\(\\rho \\ne 0\\))。\n返回结果包括相关系数估计值、P 值和置信区间。\n\n\n\n# 计算 displ 和 hwy 的 Pearson 相关系数\ncor(mpg$displ, mpg$hwy, method = \"pearson\")\n\n#&gt; [1] -0.76602\n\n# 进行 Pearson 相关性检验\npearson_test &lt;- cor.test(mpg$displ, mpg$hwy, method = \"pearson\")\nprint(pearson_test)\n\n#&gt; \n#&gt;  Pearson's product-moment correlation\n#&gt; \n#&gt; data:  mpg$displ and mpg$hwy\n#&gt; t = -18.151, df = 232, p-value &lt; 2.2e-16\n#&gt; alternative hypothesis: true correlation is not equal to 0\n#&gt; 95 percent confidence interval:\n#&gt;  -0.8142727 -0.7072539\n#&gt; sample estimates:\n#&gt;      cor \n#&gt; -0.76602\n\n# 解读:\n# r 约 -0.76 (强负相关)\n# P 值非常小 (&lt; 2.2e-16)，远小于 0.05，拒绝 H0，认为 displ 和 hwy 之间存在显著的线性相关性。\n# 95% 置信区间 [-0.81, -0.71]，不包含 0，也支持拒绝 H0。\n\n# 计算 displ 和 hwy 的 Spearman 相关系数 (对非线性关系和异常值更稳健)\ncor(mpg$displ, mpg$hwy, method = \"spearman\")\n\n#&gt; [1] -0.8266576\n\n# 进行 Spearman 相关性检验\nspearman_test &lt;- cor.test(mpg$displ, mpg$hwy, method = \"spearman\")\nprint(spearman_test)\n\n#&gt; \n#&gt;  Spearman's rank correlation rho\n#&gt; \n#&gt; data:  mpg$displ and mpg$hwy\n#&gt; S = 3900727, p-value &lt; 2.2e-16\n#&gt; alternative hypothesis: true rho is not equal to 0\n#&gt; sample estimates:\n#&gt;        rho \n#&gt; -0.8266576\n\n# 解读:\n# rho 约 -0.83 (强负单调关系)\n# P 值也非常小，拒绝 H0，认为存在显著的单调关系。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>第六周：探索关系：相关与简单线性回归入门</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lecture.html#简单线性回归-simple-linear-regression-slr",
+    "href": "week6_lecture.html#简单线性回归-simple-linear-regression-slr",
+    "title": "第六周：探索关系：相关与简单线性回归入门",
+    "section": "3. 简单线性回归 (Simple Linear Regression, SLR)",
+    "text": "3. 简单线性回归 (Simple Linear Regression, SLR)\n相关分析告诉我们变量间关联的强度和方向，而回归分析 (Regression Analysis) 则更进一步，试图建立一个数学模型来描述一个或多个自变量 (Independent Variable / Predictor) 如何影响一个因变量 (Dependent Variable / Response)。\n简单线性回归是其中最基础的形式，用于描述一个连续自变量 X 如何线性地影响一个连续因变量 Y。\n\n概念引入: 我们试图找到一条最佳拟合直线，来概括散点图中两个连续变量 (X, Y) 之间的关系。这条直线可以用来：\n\n描述 X 对 Y 的影响程度（斜率）。\n基于 X 的值来预测 Y 的值。\n\n模型形式: \\[ Y = \\beta_0 + \\beta_1 X + \\epsilon \\]\n\n\\(Y\\): 因变量 (Response)。\n\\(X\\): 自变量 (Predictor)。\n\\(\\beta_0\\): 截距 (Intercept)。当 \\(X=0\\) 时，Y 的期望值。有时没有实际意义（例如 X 不能取 0）。\n\\(\\beta_1\\): 斜率 (Slope)。X 每增加一个单位时，Y 的期望平均变化量。这是衡量 X 对 Y 线性影响的关键系数。\n\\(\\epsilon\\): 误差项 (Error Term) / 残差 (Residual)。代表了除 X 之外所有其他影响 Y 的因素，以及模型本身的随机性。假设误差项是独立的，且服从均值为 0，方差为 \\(\\sigma^2\\) 的正态分布 (\\(N(0, \\sigma^2)\\))。\n\n系数含义解释 (重要！):\n\n\\(\\beta_0\\) (截距): 当自变量 X 为 0 时，因变量 Y 的预测值。\n\\(\\beta_1\\) (斜率): 自变量 X 每变化一个单位，因变量 Y 平均变化 \\(\\beta_1\\) 个单位。\n\n最小二乘法 (Ordinary Least Squares, OLS) 思想:\n\n如何找到“最佳”拟合直线？OLS 的目标是找到一条直线，使得所有实际观测值 \\(y_i\\) 与直线上预测值 \\(\\hat{y}_i = \\hat{\\beta}_0 + \\hat{\\beta}_1 x_i\\) 之间的纵向距离（残差 \\(e_i = y_i - \\hat{y}_i\\)）的平方和最小。\n即最小化：\\(\\sum_{i=1}^{n} e_i^2 = \\sum_{i=1}^{n} (y_i - \\hat{y}_i)^2 = \\sum_{i=1}^{n} (y_i - (\\hat{\\beta}_0 + \\hat{\\beta}_1 x_i))^2\\)\n通过微积分可以推导出 \\(\\hat{\\beta}_0\\) 和 \\(\\hat{\\beta}_1\\) 的估计公式。\n\nR 实现: lm() (Linear Model)\n\n使用公式语法 Y ~ X。\n\n\n# 拟合一个用 displ 预测 hwy 的简单线性回归模型\n# hwy = beta0 + beta1 * displ + epsilon\nslr_model &lt;- lm(hwy ~ displ, data = mpg)\n\n# 查看模型基本信息\nprint(slr_model)\n\n#&gt; \n#&gt; Call:\n#&gt; lm(formula = hwy ~ displ, data = mpg)\n#&gt; \n#&gt; Coefficients:\n#&gt; (Intercept)        displ  \n#&gt;      35.698       -3.531\n\n# 查看详细的汇总统计信息 (最常用)\nsummary_slr &lt;- summary(slr_model)\nprint(summary_slr)\n\n#&gt; \n#&gt; Call:\n#&gt; lm(formula = hwy ~ displ, data = mpg)\n#&gt; \n#&gt; Residuals:\n#&gt;     Min      1Q  Median      3Q     Max \n#&gt; -7.1039 -2.1646 -0.2242  2.0589 15.0105 \n#&gt; \n#&gt; Coefficients:\n#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    \n#&gt; (Intercept)  35.6977     0.7204   49.55   &lt;2e-16 ***\n#&gt; displ        -3.5306     0.1945  -18.15   &lt;2e-16 ***\n#&gt; ---\n#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n#&gt; \n#&gt; Residual standard error: 3.836 on 232 degrees of freedom\n#&gt; Multiple R-squared:  0.5868, Adjusted R-squared:  0.585 \n#&gt; F-statistic: 329.5 on 1 and 232 DF,  p-value: &lt; 2.2e-16\n\n\n基本输出解读 (summary(slr_model))\n\nCoefficients 表:\n\nEstimate: 系数的点估计值 (\\(\\hat{\\beta}_0\\) 和 \\(\\hat{\\beta}_1\\))。\n\n\\(\\hat{\\beta}_0 \\approx 35.70\\): 当发动机排量为 0 时，预测的高速公路里程约为 35.7 MPG (这里截距可能没有实际意义)。\n\\(\\hat{\\beta}_1 \\approx -3.53\\): 发动机排量每增加 1 升，高速公路里程平均减少约 3.53 MPG。\n\nStd. Error: 系数估计值的标准误，衡量估计的不确定性。\nt value: 检验系数是否显著不为 0 的 t 统计量 (\\(t = \\frac{\\hat{\\beta}}{\\text{Std. Error}}\\))。\\(H_0: \\beta = 0\\) vs \\(H_1: \\beta \\ne 0\\)。\nPr(&gt;|t|): 对应 t 检验的 P 值。如果 P 值 &lt; \\(\\alpha\\)，则认为该系数显著不为 0，即该自变量对因变量有显著的线性影响。在本例中，displ 的 P 值远小于 0.05，说明排量对高速里程有显著的负向影响。\n\nR-squared (\\(R^2\\)) (决定系数 Coefficient of Determination):\n\n表示因变量 Y 的总变异中，能被自变量 X (模型) 解释的比例。范围在 0 到 1 之间。\n\\(R^2 = 1 - \\frac{\\sum e_i^2}{\\sum (y_i - \\bar{y})^2} = \\frac{\\text{模型解释的平方和}}{\\text{总平方和}}\\)\n这里的 Multiple R-squared: 0.5868 意味着发动机排量 (displ) 解释了高速公路里程 (hwy) 变异的约 58.7%。\nAdjusted R-squared: 对自变量个数进行惩罚的 R²，在多元回归中更有用，用于模型比较。\n\nF-statistic 和 p-value: 对整个模型整体显著性的检验。\\(H_0\\): 所有回归系数（除截距外）都为 0。在 SLR 中，它等价于对 \\(\\beta_1\\) 的 t 检验。如果 P 值 &lt; \\(\\alpha\\)，则认为模型整体是显著的。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>第六周：探索关系：相关与简单线性回归入门</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lecture.html#多元线性回归-multiple-linear-regression-mlr-概念初步引入",
+    "href": "week6_lecture.html#多元线性回归-multiple-linear-regression-mlr-概念初步引入",
+    "title": "第六周：探索关系：相关与简单线性回归入门",
+    "section": "4. 多元线性回归 (Multiple Linear Regression, MLR) 概念初步引入",
+    "text": "4. 多元线性回归 (Multiple Linear Regression, MLR) 概念初步引入\n现实世界中，一个因变量往往受到多个自变量的影响。MLR 将 SLR 扩展到包含两个或更多自变量的情况。\n\n动机:\n\n更准确地预测 Y（包含更多相关信息）。\n控制其他变量的影响，估计某个特定自变量对 Y 的独立效应 (Independent Effect)。\n\n模型形式: \\[ Y = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + ... + \\beta_k X_k + \\epsilon \\]\n\n\\(X_1, X_2, ..., X_k\\): k 个自变量。\n\\(\\beta_0\\): 截距。当所有自变量都为 0 时，Y 的期望值。\n\\(\\beta_1, \\beta_2, ..., \\beta_k\\): 偏回归系数 (Partial Regression Coefficients)。\n\n核心概念：偏回归系数 \\(\\beta_j\\)\n\n\\(\\beta_j\\) 表示在控制住模型中所有其他自变量 (\\(X_1, ..., X_{j-1}, X_{j+1}, ..., X_k\\)) 不变的情况下，自变量 \\(X_j\\) 每增加一个单位时，因变量 Y 的期望平均变化量。\n重要区别: MLR 中的 \\(\\beta_j\\) 不等于 单独做 Y 对 \\(X_j\\) 的 SLR 时的斜率！因为它考虑并剔除了其他自变量的影响。这使得我们能更准确地评估 \\(X_j\\) 对 Y 的独立贡献。\n\nR 实现: 仍然使用 lm() 函数，在公式中加入更多自变量。 (我们将在后续课程中深入学习 MLR 的模型构建、诊断和选择。)\n后续重要性: 拟合 MLR 模型只是第一步。后续需要进行模型诊断（检查假设是否满足）、模型选择（选择最佳的自变量组合）等，这些是阶段二的核心内容。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>第六周：探索关系：相关与简单线性回归入门</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lecture.html#项目相关与本周总结",
+    "href": "week6_lecture.html#项目相关与本周总结",
+    "title": "第六周：探索关系：相关与简单线性回归入门",
+    "section": "5. 项目相关与本周总结",
+    "text": "5. 项目相关与本周总结\n\n项目任务:\n\n计算你项目中连续变量之间的相关系数（Pearson 或 Spearman，根据情况选择），并进行显著性检验。结合散点图进行解释。\n如果你的项目问题涉及用一个连续变量预测另一个连续变量，尝试构建一个简单线性回归模型。解释模型的系数 (\\(\\hat{\\beta}_0, \\hat{\\beta}_1\\)) 和 R²。\n思考你的项目中，是否需要考虑多个自变量来预测因变量？如果是，初步设想一个 MLR 模型（写下公式即可），并思考每个自变量的偏效应可能是什么含义。\n\n本周回顾: 我们学习了如何使用相关分析来量化两个连续变量的线性关联强度，并强调了相关不等于因果。接着，我们入门了简单线性回归，学习了如何用一条直线来建模和预测，理解了 OLS 原理、模型系数的含义以及 R² 的解释。最后，我们初步接触了多元线性回归的核心思想——控制变量和偏效应，为后续更复杂的模型学习打下了基础。\n\n下周预告: 我们将回到分类数据，学习如何分析两个或多个分类变量之间的关联性，主要工具是卡方检验 (Chi-squared Test)。同时，我们将对第一阶段（第 1-7 周）所学知识进行小结，梳理各种统计方法的适用场景。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>第六周：探索关系：相关与简单线性回归入门</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lecture.html",
+    "href": "week7_lecture.html",
+    "title": "第七周：分类数据的智慧：卡方检验与阶段总结",
+    "section": "",
+    "text": "1. 回顾分类变量与列联表\n前几周我们主要关注连续变量的分析（描述统计、t 检验、ANOVA、相关、回归）。本周我们将重点转向分类变量 (Categorical Variables)，特别是分析两个或多个分类变量之间是否存在关联。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>第七周：分类数据的智慧：卡方检验与阶段总结</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lecture.html#回顾分类变量与列联表",
+    "href": "week7_lecture.html#回顾分类变量与列联表",
+    "title": "第七周：分类数据的智慧：卡方检验与阶段总结",
+    "section": "",
+    "text": "分类变量: 其值表示类别或标签，而不是数值大小（尽管有时用数字编码）。\n\n名义变量 (Nominal): 类别之间没有内在顺序（如性别、血型、产品颜色）。\n有序变量 (Ordinal): 类别之间存在逻辑顺序（如教育程度、满意度评分、衣服尺码）。我们在第二周学习的因子 (Factor) 类型常用于表示分类变量，特别是需要指定顺序时。\n\n列联表 (Contingency Table) / 交叉表 (Cross-Tabulation):\n\n用于展示两个或多个分类变量频数分布的表格。\n行代表一个变量的类别，列代表另一个变量的类别，单元格中的数值是对应组合的频数 (Frequency) 或计数。\n是分析分类变量关系的基础。\n\nR 实现: table() (基础 R 函数)\n\nlibrary(tidyverse)\n\n# 使用 ggplot2 内置的 diamonds 数据集的部分数据\n# (为了简化，只选 GIA 评级和切割质量)\nset.seed(123) # 为了结果可重复\ndiamonds_sample &lt;- diamonds %&gt;% \n  sample_n(500) %&gt;%\n  select(cut, color)\n\n# 创建两个分类变量的列联表\ncontingency_table &lt;- table(diamonds_sample$cut, diamonds_sample$color)\nprint(contingency_table)\n\n#&gt;            \n#&gt;              D  E  F  G  H  I  J\n#&gt;   Fair       2  1  5  2  6  1  1\n#&gt;   Good       8  7 12  9  3  3  1\n#&gt;   Very Good 14 22 24 16 17 12  7\n#&gt;   Premium    8 17 26 26 27 11 10\n#&gt;   Ideal     21 40 31 50 36 17  7\n\n# 也可以使用 dplyr 的 count() 来创建类似的表格 (长格式)\ndiamonds_sample %&gt;% \n  count(cut, color) %&gt;%\npivot_wider(names_from = color, values_from = n, values_fill = 0)\n\n#&gt; # A tibble: 5 × 8\n#&gt;   cut           D     E     F     G     H     I     J\n#&gt;   &lt;ord&gt;     &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;\n#&gt; 1 Fair          2     1     5     2     6     1     1\n#&gt; 2 Good          8     7    12     9     3     3     1\n#&gt; 3 Very Good    14    22    24    16    17    12     7\n#&gt; 4 Premium       8    17    26    26    27    11    10\n#&gt; 5 Ideal        21    40    31    50    36    17     7\n\n# 计算行百分比、列百分比或总百分比 (使用 prop.table())\nprop.table(contingency_table) # 占总数的百分比\n\n#&gt;            \n#&gt;                 D     E     F     G     H     I     J\n#&gt;   Fair      0.004 0.002 0.010 0.004 0.012 0.002 0.002\n#&gt;   Good      0.016 0.014 0.024 0.018 0.006 0.006 0.002\n#&gt;   Very Good 0.028 0.044 0.048 0.032 0.034 0.024 0.014\n#&gt;   Premium   0.016 0.034 0.052 0.052 0.054 0.022 0.020\n#&gt;   Ideal     0.042 0.080 0.062 0.100 0.072 0.034 0.014\n\nprop.table(contingency_table, margin = 1) # 行百分比 (每行和为 1)\n\n#&gt;            \n#&gt;                      D          E          F          G          H          I\n#&gt;   Fair      0.11111111 0.05555556 0.27777778 0.11111111 0.33333333 0.05555556\n#&gt;   Good      0.18604651 0.16279070 0.27906977 0.20930233 0.06976744 0.06976744\n#&gt;   Very Good 0.12500000 0.19642857 0.21428571 0.14285714 0.15178571 0.10714286\n#&gt;   Premium   0.06400000 0.13600000 0.20800000 0.20800000 0.21600000 0.08800000\n#&gt;   Ideal     0.10396040 0.19801980 0.15346535 0.24752475 0.17821782 0.08415842\n#&gt;            \n#&gt;                      J\n#&gt;   Fair      0.05555556\n#&gt;   Good      0.02325581\n#&gt;   Very Good 0.06250000\n#&gt;   Premium   0.08000000\n#&gt;   Ideal     0.03465347\n\nprop.table(contingency_table, margin = 2) # 列百分比 (每列和为 1)\n\n#&gt;            \n#&gt;                      D          E          F          G          H          I\n#&gt;   Fair      0.03773585 0.01149425 0.05102041 0.01941748 0.06741573 0.02272727\n#&gt;   Good      0.15094340 0.08045977 0.12244898 0.08737864 0.03370787 0.06818182\n#&gt;   Very Good 0.26415094 0.25287356 0.24489796 0.15533981 0.19101124 0.27272727\n#&gt;   Premium   0.15094340 0.19540230 0.26530612 0.25242718 0.30337079 0.25000000\n#&gt;   Ideal     0.39622642 0.45977011 0.31632653 0.48543689 0.40449438 0.38636364\n#&gt;            \n#&gt;                      J\n#&gt;   Fair      0.03846154\n#&gt;   Good      0.03846154\n#&gt;   Very Good 0.26923077\n#&gt;   Premium   0.38461538\n#&gt;   Ideal     0.26923077\n\n\n\n\n\n\n\n\n\n本周目标\n\n\n\n\n熟练创建和解读列联表。\n理解卡方检验（特别是独立性检验）的原理、目的和应用场景。\n掌握卡方独立性检验的 R 实现 (chisq.test())、假设条件和结果解读。\n（可选）了解卡方拟合优度检验。\n能够根据问题选择合适的统计检验方法（t 检验、ANOVA、卡方、相关/回归）。\n对第一阶段所学的数据处理、可视化和推断统计知识进行系统性总结。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>第七周：分类数据的智慧：卡方检验与阶段总结</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lecture.html#卡方检验-chi2-test",
+    "href": "week7_lecture.html#卡方检验-chi2-test",
+    "title": "第七周：分类数据的智慧：卡方检验与阶段总结",
+    "section": "2. 卡方检验 (\\(\\chi^2\\) Test)",
+    "text": "2. 卡方检验 (\\(\\chi^2\\) Test)\n卡方检验是一类用于分析分类数据的非参数检验方法。它比较观测频数 (Observed Frequencies) 与基于某个假设计算出的期望频数 (Expected Frequencies) 之间的差异。差异越大，越倾向于拒绝原假设。\n本周我们重点关注卡方独立性检验。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>第七周：分类数据的智慧：卡方检验与阶段总结</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lecture.html#卡方独立性检验-chi-squared-test-of-independence",
+    "href": "week7_lecture.html#卡方独立性检验-chi-squared-test-of-independence",
+    "title": "第七周：分类数据的智慧：卡方检验与阶段总结",
+    "section": "3. 卡方独立性检验 (Chi-squared Test of Independence)",
+    "text": "3. 卡方独立性检验 (Chi-squared Test of Independence)\n\n目的: 判断两个分类变量是否相互独立 (Independent)。换句话说，一个变量的取值是否与另一个变量的取值无关。\n应用场景:\n\n吸烟状况（是/否）与是否患有某种呼吸系统疾病（是/否）之间是否存在关联？\n不同教育水平（小学/中学/大学）的人群在对某项政策的支持度（支持/反对/中立）上是否存在差异？\n产品颜色（红/蓝/绿）的选择是否与消费者性别（男/女）有关？\n\n假设陈述:\n\n\\(H_0\\): 两个变量相互独立 (没有关联)。\n\\(H_1\\): 两个变量不独立 (存在关联)。\n\n期望频数 (Expected Frequency, E) 的思想:\n\n如果 \\(H_0\\) 为真（即两个变量独立），那么某个单元格 \\((i, j)\\)（第 i 行, 第 j 列）的期望频数可以通过以下方式计算： \\[ E_{ij} = \\frac{(\\text{第 } i \\text{ 行的总频数}) \\times (\\text{第 } j \\text{ 列的总频数})}{\\text{总样本量 } N} \\]\n期望频数代表了在变量独立的假设下，我们期望在每个单元格中看到的频数。\n\n检验统计量 (\\(\\chi^2\\) 值):\n\n衡量所有单元格的观测频数 (Observed Frequency, O) 与期望频数 (Expected Frequency, E) 之间总差异的度量。 \\[ \\chi^2 = \\sum_{\\text{所有单元格}} \\frac{(O_{ij} - E_{ij})^2}{E_{ij}} \\]\n\\(\\chi^2\\) 值越大，表示观测频数与独立假设下的期望频数差异越大，越倾向于拒绝 \\(H_0\\)。\n该统计量近似服从卡方分布，自由度 \\(df = (\\text{行数} - 1) \\times (\\text{列数} - 1)\\)。\n\n假设条件 (重要！):\n\n数据是频数数据（计数）。\n样本是随机抽取的。\n期望频数的要求:\n\n所有单元格的期望频数 \\(E_{ij}\\) 通常要求大于等于 5。这是卡方分布近似有效的关键条件。\n如果期望频数过小（例如，小于 5 的单元格超过 20%），卡方检验的结果可能不可靠。可以考虑：\n\n合并类别: 将频数较少的行或列合并。\n使用 Fisher 精确检验 (Fisher’s Exact Test): 特别适用于 2x2 列联表，或者当期望频数很小时。fisher.test() 在 R 中实现。\n增加样本量。\n\n\n\nR 实现: chisq.test()\n\n# 使用之前的 diamonds 列联表 contingency_table\nprint(contingency_table)\n\n#&gt;            \n#&gt;              D  E  F  G  H  I  J\n#&gt;   Fair       2  1  5  2  6  1  1\n#&gt;   Good       8  7 12  9  3  3  1\n#&gt;   Very Good 14 22 24 16 17 12  7\n#&gt;   Premium    8 17 26 26 27 11 10\n#&gt;   Ideal     21 40 31 50 36 17  7\n\n# 执行卡方独立性检验\n# H0: 切割质量 (cut) 与 颜色 (color) 相互独立\n# H1: 切割质量 (cut) 与 颜色 (color) 不独立 (存在关联)\nchisq_result &lt;- chisq.test(contingency_table)\nprint(chisq_result)\n\n#&gt; \n#&gt;  Pearson's Chi-squared test\n#&gt; \n#&gt; data:  contingency_table\n#&gt; X-squared = 29.085, df = 24, p-value = 0.217\n\n# 查看期望频数 (如果需要检查假设条件)\nchisq_result$expected\n\n#&gt;            \n#&gt;                  D      E      F      G      H      I      J\n#&gt;   Fair       1.908  3.132  3.528  3.708  3.204  1.584  0.936\n#&gt;   Good       4.558  7.482  8.428  8.858  7.654  3.784  2.236\n#&gt;   Very Good 11.872 19.488 21.952 23.072 19.936  9.856  5.824\n#&gt;   Premium   13.250 21.750 24.500 25.750 22.250 11.000  6.500\n#&gt;   Ideal     21.412 35.148 39.592 41.612 35.956 17.776 10.504\n\n\n结果解读:\n\nX-squared: 计算得到的 \\(\\chi^2\\) 统计量值 (29.085)。\ndf: 自由度 (df = (5-1) * (7-1) = 4 * 6 = 24)。\np-value: P 值 (0.217)。\n决策: 将 P 值与 \\(\\alpha\\) (例如 0.05) 比较。\n\n在这个例子中，P 值 (0.217) &gt; 0.05。\n\n结论: 我们未能拒绝原假设 \\(H_0\\)。没有足够的统计证据表明钻石的切割质量和颜色之间存在显著关联 (在 \\(\\alpha=0.05\\) 水平下)。\n注意: 如果 P 值小于 \\(\\alpha\\)，我们会拒绝 \\(H_0\\)，结论是两个变量之间存在显著关联。但卡方检验本身不能告诉我们关联的具体模式（哪些类别组合的差异最大）或强度。需要结合观察列联表的百分比或计算其他关联度量（如 Cramer’s V）。\n\nFisher 精确检验 (Fisher’s Exact Test): fisher.test()\n\n当期望频数过小时，Fisher 检验是更准确的选择，尤其对于 2x2 表。\n\n\n# 假设有一个 2x2 表，期望频数可能较小\ntreatment_data &lt;- matrix(c(3, 1, 8, 7), nrow = 2, byrow = TRUE)\nrownames(treatment_data) &lt;- c(\"Treatment\", \"Control\")\ncolnames(treatment_data) &lt;- c(\"Improved\", \"Not Improved\")\nprint(treatment_data)\n\n#&gt;           Improved Not Improved\n#&gt; Treatment        3            1\n#&gt; Control          8            7\n\n# chisq.test(treatment_data) # 可能会有警告关于近似无效\n\nfisher_result &lt;- fisher.test(treatment_data)\nprint(fisher_result) # P 值通常更可靠\n\n#&gt; \n#&gt;  Fisher's Exact Test for Count Data\n#&gt; \n#&gt; data:  treatment_data\n#&gt; p-value = 0.6027\n#&gt; alternative hypothesis: true odds ratio is not equal to 1\n#&gt; 95 percent confidence interval:\n#&gt;    0.1561786 156.9964265\n#&gt; sample estimates:\n#&gt; odds ratio \n#&gt;   2.502087",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>第七周：分类数据的智慧：卡方检验与阶段总结</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lecture.html#可选-卡方拟合优度检验-chi-squared-goodness-of-fit-test",
+    "href": "week7_lecture.html#可选-卡方拟合优度检验-chi-squared-goodness-of-fit-test",
+    "title": "第七周：分类数据的智慧：卡方检验与阶段总结",
+    "section": "4. (可选) 卡方拟合优度检验 (Chi-squared Goodness-of-Fit Test)",
+    "text": "4. (可选) 卡方拟合优度检验 (Chi-squared Goodness-of-Fit Test)\n\n目的: 检验单个分类变量的观测频数分布是否与某个理论或期望的分布相符。\n应用场景:\n\n掷一个骰子 120 次，检验骰子是否均匀（即每个点数出现的期望频数都是 120/6 = 20）？\n某地区人口普查的民族构成比例是否与全国的民族构成比例一致？\n\n假设陈述:\n\n\\(H_0\\): 观测频数分布符合期望分布。\n\\(H_1\\): 观测频数分布不符合期望分布。\n\nR 实现: chisq.test() (传入观测频数向量 x 和期望概率向量 p)\n\n# 示例：掷骰子 120 次的观测结果\nobserved_counts &lt;- c(18, 22, 19, 21, 23, 17) # 各点数出现次数\n# 期望概率 (均匀骰子)\nexpected_probs &lt;- rep(1/6, 6)\n\n# H0: 骰子是均匀的 (观测分布符合期望概率)\n# H1: 骰子不均匀\ngof_result &lt;- chisq.test(x = observed_counts, p = expected_probs)\nprint(gof_result)\n\n#&gt; \n#&gt;  Chi-squared test for given probabilities\n#&gt; \n#&gt; data:  observed_counts\n#&gt; X-squared = 1.4, df = 5, p-value = 0.9243\n\n# 解读: P 值很大 (0.92)，未能拒绝 H0，没有证据表明骰子不均匀。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>第七周：分类数据的智慧：卡方检验与阶段总结</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lecture.html#实践应用选择合适的检验方法",
+    "href": "week7_lecture.html#实践应用选择合适的检验方法",
+    "title": "第七周：分类数据的智慧：卡方检验与阶段总结",
+    "section": "5. 实践应用：选择合适的检验方法",
+    "text": "5. 实践应用：选择合适的检验方法\n现在我们已经学习了多种推断统计方法，关键在于根据研究问题和数据类型选择合适的方法。\n\n\n\n\n\n\n方法选择总结\n\n\n\n\n比较单个总体的均值 vs 已知值:\n\n单样本 t 检验 (总体近似正态或 n≥30)\n\n比较两个独立总体的均值:\n\n双独立样本 t 检验 (总体近似正态或 n1,n2≥30；Welch’s test 默认，不要求方差齐性)\n\n比较同一个对象两次测量的均值 (配对数据):\n\n配对样本 t 检验 (差值近似正态或 n_pairs≥30)\n\n比较三个或更多独立总体的均值:\n\n单因素 ANOVA (总体近似正态，方差齐性)\n如果 ANOVA 显著，用 Tukey’s HSD 等事后检验看具体差异。\n\n检验两个分类变量是否独立/关联:\n\n卡方独立性检验 (期望频数 E≥5)\n(期望频数小或 2x2 表: Fisher 精确检验)\n\n检验单个分类变量的分布 vs 期望分布:\n\n卡方拟合优度检验 (期望频数 E≥5)\n\n衡量两个连续变量的线性关联强度:\n\nPearson 相关系数 (线性关系，近似二元正态)\n\n衡量两个变量的单调关联强度 (含定序变量或非正态连续变量):\n\nSpearman 相关系数\n\n用一个连续变量预测另一个连续变量 (线性关系):\n\n简单线性回归 (SLR)\n\n用多个变量预测一个连续变量:\n\n多元线性回归 (MLR) (阶段二内容)\n\n用多个变量预测一个分类变量:\n\nLogistic 回归 等分类模型 (阶段二内容)\n\n\n\n\n思考流程:\n\n你的研究问题是什么？（比较均值？检验关联？预测？）\n涉及几个变量？变量是什么类型？（连续？分类？名义？有序？）\n数据是独立的还是配对的？\n满足哪些统计假设？（正态性？方差齐性？线性关系？期望频数？）",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>第七周：分类数据的智慧：卡方检验与阶段总结</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lecture.html#阶段一知识小结",
+    "href": "week7_lecture.html#阶段一知识小结",
+    "title": "第七周：分类数据的智慧：卡方检验与阶段总结",
+    "section": "6. 阶段一知识小结",
+    "text": "6. 阶段一知识小结\n恭喜你完成了统计学与 R 语言学习的第一阶段！让我们回顾一下核心技能和知识点：\n\n数据处理与整形 (tidyverse: dplyr, tidyr):\n\n数据导入 (readr)\n数据框与 Tibble\n选择列 (select)\n筛选行 (filter)\n创建/修改列 (mutate)\n排序 (arrange)\n分组计算 (group_by, summarise, n())\n长宽格式转换 (pivot_longer, pivot_wider)\n处理缺失值 (is.na, drop_na, replace_na, na.rm=TRUE)\n管道操作 (%&gt;%)\n整洁数据原则\n\n数据可视化 (ggplot2):\n\n图形语法核心：数据、映射 (aes)、几何对象 (geom_...)\n常用图形：直方图、密度图、箱线图、散点图、条形图、小提琴图\n图形定制：标签 (labs)、主题 (theme_...)\n\n描述性统计:\n\n集中趋势：均值 (mean)、中位数 (median)\n离散趋势：极差 (range)、分位数/IQR (quantile, IQR)、方差 (var)、标准差 (sd)\n\n推断统计基础:\n\n总体与样本\n抽样分布与中心极限定理 (CLT)\n参数估计：点估计 vs 区间估计 (置信区间 conf.int)\n假设检验逻辑：\\(H_0\\)/\\(H_1\\), \\(\\alpha\\), P 值, 决策规则, 两类错误\n\n常用推断检验方法:\n\nt 检验 (t.test: 单样本, 双独立样本, 配对样本)\n方差分析 (aov, summary, TukeyHSD)\n卡方检验 (chisq.test, fisher.test)\n相关性检验 (cor.test)\n简单线性回归 (lm, summary)\n\n\n掌握这些基础知识，你已经具备了进行基本数据分析的能力！",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>第七周：分类数据的智慧：卡方检验与阶段总结</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lecture.html#项目相关与本周总结",
+    "href": "week7_lecture.html#项目相关与本周总结",
+    "title": "第七周：分类数据的智慧：卡方检验与阶段总结",
+    "section": "7. 项目相关与本周总结",
+    "text": "7. 项目相关与本周总结\n\n项目任务:\n\n分析你项目中分类变量之间的关系。使用列联表和卡方独立性检验（或 Fisher 检验）来判断它们之间是否存在显著关联。\n开始整合阶段一所学的所有知识，构建你的项目的整体分析框架。建议从以下几个方面进行思考：\n\n数据预处理：需要进行哪些数据清理和转换？（如处理缺失值、异常值、数据类型转换等）\n探索性分析：哪些描述性统计量（如均值、中位数、标准差等）和可视化图表（如直方图、散点图、箱线图等）最能揭示数据特征？\n推断分析：根据研究问题，需要采用哪些统计推断方法？（如 t 检验、方差分析、卡方检验、回归分析等）\n结果呈现：如何清晰有效地展示分析结果？（如使用表格、图形、统计报告等） （以上内容可先进行初步构思，后续逐步完善）\n\n\n本周回顾: 我们学习了如何使用列联表和卡方检验来分析分类变量之间的关系，并重点掌握了独立性检验。同时，我们对第一阶段的核心内容进行了梳理和总结，强调了根据问题选择合适统计方法的重要性。\n\n阶段二预告: 下周我们将进入课程的第二阶段。首先会系统回顾第一阶段的核心内容，然后深入探讨多元线性回归，学习如何构建、诊断和解释包含多个自变量的模型，这是统计建模中非常重要的一环。准备好迎接更复杂的模型世界吧！",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>第七周：分类数据的智慧：卡方检验与阶段总结</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lecture.html",
+    "href": "week8_lecture.html",
+    "title": "第八周：承前启后：阶段回顾与多元回归再探",
+    "section": "",
+    "text": "1. 欢迎来到第二阶段！\n本周我们正式进入课程的第二阶段。在深入学习更高级的统计模型之前，我们需要系统地回顾和巩固第一阶段（第 1-7 周）的核心知识，并在此基础上，重新审视和深入理解多元线性回归 (Multiple Linear Regression, MLR)。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>第八周：承前启后：阶段回顾与多元回归再探</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lecture.html#欢迎来到第二阶段",
+    "href": "week8_lecture.html#欢迎来到第二阶段",
+    "title": "第八周：承前启后：阶段回顾与多元回归再探",
+    "section": "",
+    "text": "本周目标\n\n\n\n\n系统回顾第一阶段核心内容：数据处理与可视化 (tidyverse, ggplot2)；描述统计；参数估计（点估计与置信区间）；假设检验逻辑；常用检验方法 (t 检验, ANOVA, 卡方检验)；相关分析；简单线性回归 (SLR) 基础与多元线性回归 (MLR) 初步概念。\n深入理解 MLR 中偏回归系数的意义：控制变量与独立效应。\n反复练习对 lm() 输出中 MLR 系数的业务含义解释。\n区分统计显著性与实际重要性。\n回顾线性回归的 L.I.N.E. 假设，理解其重要性及违背后果。\n（演示）利用 AI 辅助回顾概念、解释 MLR 系数，并强调验证其准确性。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>第八周：承前启后：阶段回顾与多元回归再探</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lecture.html#阶段一知识回顾-重点环节",
+    "href": "week8_lecture.html#阶段一知识回顾-重点环节",
+    "title": "第八周：承前启后：阶段回顾与多元回归再探",
+    "section": "2. 阶段一知识回顾 (重点环节)",
+    "text": "2. 阶段一知识回顾 (重点环节)\n让我们通过互动问答、知识点串讲和快速练习，快速回顾一下前七周的核心内容。\n\n数据处理与可视化描述统计与参数估计假设检验逻辑与常用方法\n\n\n\ntidyverse 核心包: dplyr, tidyr, readr, ggplot2 等。\ndplyr 动词:\n\nselect(): 选择列。\nfilter(): 筛选行。\nmutate(): 创建/修改列。\narrange(): 排序。\ngroup_by() + summarise(): 分组汇总 (常用 n(), mean(), sd(), min(), max(), n_distinct())。\n管道 %&gt;%: 连接操作。\n\ntidyr 动词:\n\npivot_longer(): 宽数据变长。\npivot_wider(): 长数据变宽。\ndrop_na(): 删除含 NA 的行。\nreplace_na(): 替换 NA。\n\n整洁数据原则: 每个变量一列，每个观测一行，每种观测一个表。\nggplot2 图形语法:\n\nggplot(data, aes(x=..., y=..., color=...)) + geom_xxx(...)\n常用 geom: geom_point, geom_line, geom_histogram, geom_density, geom_boxplot, geom_violin, geom_bar, geom_col, geom_smooth。\n定制: labs(), theme_...(), coord_flip()。\n\n\n快速练习:\n\n如何筛选 mpg 数据集中 manufacturer 为 “audi” 且 year 为 2008 的车辆？\n如何计算 mpg 数据集中每个 manufacturer 的平均城市里程 (cty)？\n如何用 ggplot2 绘制 mpg 数据集中 cty (城市里程) 与 hwy (高速里程) 的散点图，并按 drv (驱动方式) 区分颜色？\n\n\n\n\n描述统计:\n\n集中趋势: 均值 (mean), 中位数 (median)。\n离散趋势: 标准差 (sd), 方差 (var), IQR (IQR), 范围 (range)。\n\n参数估计:\n\n点估计: 用样本统计量估计总体参数 (如 \\(\\bar{x}\\) 估计 \\(\\mu\\))。\n区间估计: 置信区间 (CI)。\n\n置信区间:\n\n提供总体参数可能范围的估计，并附带置信水平。\n95% CI 含义：重复抽样构造区间，约 95% 的区间会包含真值。\n解读：我们有 XX% 的信心认为总体参数落在 [下限, 上限] 之间。\n影响因素：置信水平、样本量、数据变异性。\n\n\n快速思考:\n\n什么时候应该使用中位数而不是均值来描述数据的中心？\n99% 置信区间与 95% 置信区间相比，哪个更宽？为什么？\n增加样本量会对置信区间的宽度产生什么影响？\n\n\n\n\n假设检验逻辑:\n\n\\(H_0\\) (原假设) vs \\(H_1\\) (备择假设)。\n\\(\\alpha\\) (显著性水平，第一类错误概率)。\n检验统计量。\nP 值 (在 \\(H_0\\) 为真的条件下，观测到当前或更极端结果的概率)。\n决策：P ≤ \\(\\alpha\\) -&gt; 拒绝 \\(H_0\\)；P &gt; \\(\\alpha\\) -&gt; 未能拒绝 \\(H_0\\)。\n两类错误：Type I (\\(\\alpha\\)) vs Type II (\\(\\beta\\))；Power = \\(1-\\beta\\)。\n\n常用检验方法回顾 (见第七周总结):\n\nt 检验 (t.test): 比较 1 或 2 组均值 (单样本, 双独立样本, 配对样本)。\nANOVA (aov, TukeyHSD): 比较 3+ 组均值。\n卡方检验 (chisq.test, fisher.test): 分析分类变量关联性 (独立性检验) 或分布拟合 (拟合优度检验)。\n相关检验 (cor.test): 检验两个连续 (或有序) 变量的相关性是否显著。\nSLR (lm): 检验单个自变量对因变量的线性影响是否显著 (看系数的 P 值)。\n\n\n快速判断:\n\n想比较两种不同减肥方法的效果（体重减少量），应使用哪种检验？(假设满足条件)\n想调查某大学男女生对食堂满意度（满意/不满意）是否存在差异，应使用哪种检验？\n想研究广告投入（连续变量）与产品销量（连续变量）之间是否存在线性关系，应使用哪种分析？\n想比较三种不同品牌灯泡的平均寿命是否有差异，应使用哪种检验？如果结果显著，下一步该做什么？",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>第八周：承前启后：阶段回顾与多元回归再探</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lecture.html#多元回归再认识深入理解偏回归系数",
+    "href": "week8_lecture.html#多元回归再认识深入理解偏回归系数",
+    "title": "第八周：承前启后：阶段回顾与多元回归再探",
+    "section": "3. 多元回归“再认识”：深入理解偏回归系数",
+    "text": "3. 多元回归“再认识”：深入理解偏回归系数\n我们在第六周初步接触了 MLR。现在，我们要深入理解其核心——偏回归系数 (Partial Regression Coefficient)。\n\n回顾模型形式: \\(Y = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + ... + \\beta_k X_k + \\epsilon\\)\n偏回归系数 \\(\\beta_j\\) 的意义 (核心！):\n\n\\(\\beta_j\\) 衡量的是，在保持模型中所有其他自变量 (\\(X_1, ..., X_{j-1}, X_{j+1}, ..., X_k\\)) 数值不变 (或称“控制住” Control For) 的条件下，自变量 \\(X_j\\) 每增加一个单位时，因变量 Y 的期望**平均变化量。\n它反映了 \\(X_j\\) 对 Y 的独立效应 (Independent Effect) 或调整后效应 (Adjusted Effect)。\n\n为何重要？\n\n现实世界中变量往往相互关联（存在混淆 Confounding）。如果不控制其他相关变量，我们可能会错误地估计某个变量的真实影响（遗漏变量偏误 Omitted Variable Bias）。\nMLR 通过将多个相关变量纳入模型，可以分离出每个自变量在控制了其他变量影响后的净效应 (Net Effect)。\n\n示例：预测汽车高速里程 (hwy)\n\nSLR: lm(hwy ~ displ, data = mpg)\n\ndispl 的系数 \\(\\hat{\\beta}_1 \\approx -3.53\\)。这表示排量每增加 1 升，hwy 平均减少 3.53 MPG，但这个估计可能混杂了其他与排量相关的因素（如气缸数、车重等）的影响。\n\nMLR: lm(hwy ~ displ + cyl + drv, data = mpg) (加入气缸数 cyl 和驱动方式 drv)\n\nlibrary(tidyverse)\nmlr_model_mpg &lt;- lm(hwy ~ displ + cyl + drv, data = mpg)\nsummary(mlr_model_mpg)\n\n#&gt; \n#&gt; Call:\n#&gt; lm(formula = hwy ~ displ + cyl + drv, data = mpg)\n#&gt; \n#&gt; Residuals:\n#&gt;     Min      1Q  Median      3Q     Max \n#&gt; -8.7095 -2.0282 -0.1297  1.3760 13.8110 \n#&gt; \n#&gt; Coefficients:\n#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    \n#&gt; (Intercept)  33.0915     1.0306  32.108  &lt; 2e-16 ***\n#&gt; displ        -1.1245     0.4614  -2.437   0.0156 *  \n#&gt; cyl          -1.4526     0.3334  -4.357 1.99e-05 ***\n#&gt; drvf          5.0446     0.5134   9.826  &lt; 2e-16 ***\n#&gt; drvr          4.8851     0.7116   6.864 6.20e-11 ***\n#&gt; ---\n#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n#&gt; \n#&gt; Residual standard error: 2.968 on 229 degrees of freedom\n#&gt; Multiple R-squared:  0.7559, Adjusted R-squared:  0.7516 \n#&gt; F-statistic: 177.2 on 4 and 229 DF,  p-value: &lt; 2.2e-16\n\n\n\n解读 displ 的偏回归系数 \\(\\hat{\\beta}_{displ} \\approx -1.1245\\):\n\n在保持气缸数 (cyl) 和驱动方式 (drv) 不变的情况下，发动机排量 (displ) 每增加 1 升，高速公路里程 (hwy) 平均减少约 1.12 MPG。\n对比 SLR: 这个系数 (-1.1245) 的绝对值小于 SLR 中的系数 (-3.53)。这表明，排量对里程的部分负面影响实际上是通过气缸数等其他因素体现的。控制了这些因素后，排量本身的独立负面影响变小了。\n\n解读 cyl 的偏回归系数 \\(\\hat{\\beta}_{cyl} \\approx -1.4509\\):\n\n在保持排量 (displ) 和驱动方式 (drv) 不变的情况下，气缸数 (cyl) 每增加 1 个，高速公路里程 (hwy) 平均减少约 1.45 MPG。\n\n解读分类变量 drv (因子): R 自动进行了虚拟编码 (Dummy Coding)。它选择一个参照组（这里是 drv = '4' 四驱），其他组别的系数表示相对于参照组的平均差异。\n\ndrvf (\\(\\hat{\\beta}_{drvf} \\approx 5.04\\)): 在保持排量和气缸数不变的情况下，前驱 (drv='f') 车辆的平均高速里程比四驱 (drv='4') 车辆高约 5.04 MPG (且 P &lt; 0.05，差异显著)。\ndrvr (\\(\\hat{\\beta}_{drvr} \\approx 4.9\\)): 在保持排量和气缸数不变的情况下，后驱 (drv='r') 车辆的平均高速里程比四驱 (drv='4') 车辆高约 4.9 MPG (且 P &lt; 0.05，差异显著)。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>第八周：承前启后：阶段回顾与多元回归再探</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lecture.html#统计显著性-vs-实际重要性",
+    "href": "week8_lecture.html#统计显著性-vs-实际重要性",
+    "title": "第八周：承前启后：阶段回顾与多元回归再探",
+    "section": "4. 统计显著性 vs 实际重要性",
+    "text": "4. 统计显著性 vs 实际重要性\n\n统计显著性 (Statistical Significance): 由 P 值决定。P 值 &lt; \\(\\alpha\\) 意味着我们有足够证据拒绝 \\(H_0\\)（例如，系数不为 0，或组间均值有差异）。它表明观察到的效应不太可能仅仅由随机抽样误差引起。\n实际重要性 (Practical Significance / Effect Size): 指效应的大小或幅度在现实世界中是否有意义或值得关注。\n区分:\n\n大样本量可能导致非常小的效应也具有统计显著性（P 值很小），但这个效应在实际应用中可能微不足道。\n小样本量可能导致很大的效应却不具有统计显著性（P 值较大），因为证据不足。\n\n评估实际重要性:\n\n回归系数的大小: \\(\\beta_j\\) 的值本身有多大？结合业务背景判断这个变化量是否有意义。\nR²: 模型解释了多少变异？(虽然 R² 高不代表模型一定好或有因果关系)。\n置信区间: 系数的置信区间宽度和位置提供了效应大小不确定性的信息。\n标准化系数 (Standardized Coefficients, Betas): (后续可能涉及) 将所有变量标准化后进行回归，得到的系数可以比较不同自变量的相对重要性（因为它们在同一尺度上）。\n领域知识 (Domain Knowledge): 结合专业背景判断效应是否重要。\n\n\n\n\n\n\n\n\n警惕 P 值崇拜\n\n\n\n不要仅仅根据 P 值 &lt; 0.05 就认为结果一定重要。要结合效应大小、置信区间、研究背景和实际影响来综合判断。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>第八周：承前启后：阶段回顾与多元回归再探</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lecture.html#回归模型的假设-l.i.n.e.",
+    "href": "week8_lecture.html#回归模型的假设-l.i.n.e.",
+    "title": "第八周：承前启后：阶段回顾与多元回归再探",
+    "section": "5. 回归模型的假设 (L.I.N.E.)",
+    "text": "5. 回归模型的假设 (L.I.N.E.)\n线性回归模型（包括 SLR 和 MLR）的有效性依赖于一些关键假设。如果这些假设严重违背，模型的预测和推断结果可能不可靠。\n\n线性性 (Linearity): 因变量 \\(Y\\) 与每个自变量 \\(X_j\\) 之间的关系是线性的（在控制其他变量后）。\n\n检查: 残差图 (Residuals vs Fitted plot)，残差应该随机散布在 0 附近，没有明显模式（如曲线）。也可以绘制部分残差图 (Partial Residual Plots)。\n后果: 如果关系是非线性的，线性模型拟合会很差，预测不准。\n处理: 变量变换（如 \\(\\log(Y)\\), \\(X^2\\)），加入非线性项，使用非线性模型。\n\n独立性 (Independence): 误差项 \\(\\epsilon_i\\) (或观测值 \\(Y_i\\)) 之间相互独立。\n\n检查: 通常根据研究设计判断（如时间序列数据、聚类数据可能违背）。也可以检查残差的自相关性 (Durbin-Watson test)。\n后果: 标准误估计偏低，导致 P 值偏小，容易犯第一类错误。\n处理: 使用考虑了依赖性的模型（如时间序列模型、多层模型）。\n\n正态性 (Normality): 误差项 \\(\\epsilon\\) 服从正态分布。注意：是误差项，不是 \\(Y\\) 或 \\(X\\) 本身！\n\n检查: 残差的正态 QQ 图 (Normal Q-Q plot)，点应大致落在直线上；残差的直方图；Shapiro-Wilk 检验。\n后果: 在小样本下，系数的置信区间和 P 值可能不准确。但在大样本下（CLT），t 检验和 F 检验对轻微偏离正态性比较稳健。\n处理: 变量变换，使用稳健回归方法。\n\n等方差性 (Equal Variance / Homoscedasticity): 误差项 \\(\\epsilon\\) 的方差对于所有自变量的取值水平都是恒定的 (\\(\\sigma^2\\))。\n\n检查: 残差图 (Residuals vs Fitted plot)，点的散布宽度应该大致均匀，没有喇叭形或扇形。也可以用 Breusch-Pagan 检验等。\n后果: OLS 估计仍然是无偏的，但标准误和 P 值不准确。\n处理: 变量变换（如 \\(\\log(Y)\\)），使用加权最小二乘法 (WLS) 或稳健标准误。\n\n\n\nLinearity, Independence, Normality, Equal Variance. 这些是经典 OLS 回归的核心假设。我们将在下一周学习如何通过模型诊断来检查这些假设。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>第八周：承前启后：阶段回顾与多元回归再探</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lecture.html#ai-辅助理解与验证",
+    "href": "week8_lecture.html#ai-辅助理解与验证",
+    "title": "第八周：承前启后：阶段回顾与多元回归再探",
+    "section": "6. AI 辅助理解与验证",
+    "text": "6. AI 辅助理解与验证\nAI 工具可以帮助我们回顾概念和解释结果，但务必谨慎使用。\n\n\n\n\n\n\nAI 辅助演示 (需验证！)\n\n\n\n\n回顾概念: “请解释多元线性回归中偏回归系数的概念” 或 “线性回归的假设(LINE)有哪些？”\n解释 MLR 系数: (提供 summary() 输出) “请解释这个 R 回归输出中 ‘displ’ 的系数，并考虑模型中的其他变量”\n比较 SLR 和 MLR 系数: “为什么在简单线性回归(hwy ~ displ)和多元线性回归(hwy ~ displ + cyl + drv)中，‘displ’ 的系数会不同？”\n\n特别提醒： AI生成的内容可能存在不准确或不够细致的问题。请务必结合课堂所学知识和教材内容进行批判性思考和验证。 切勿直接将AI的解释作为最终答案直接使用。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>第八周：承前启后：阶段回顾与多元回归再探</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lecture.html#本周总结与预告",
+    "href": "week8_lecture.html#本周总结与预告",
+    "title": "第八周：承前启后：阶段回顾与多元回归再探",
+    "section": "7. 本周总结与预告",
+    "text": "7. 本周总结与预告\n本周我们系统回顾了第一阶段的知识体系，并深入探讨了多元线性回归的核心——偏回归系数的意义和解释，以及统计显著性与实际重要性的区别。我们还重温了线性回归的关键假设 (L.I.N.E.)，为下周的模型诊断打下基础。\n下周预告: 模型拟合好了，但它可靠吗？下周我们将学习回归模型诊断的实战技术，利用各种图形和检验方法来检查 L.I.N.E. 假设是否满足，并识别模型中可能存在的问题（如异常值、强影响点、多重共线性）。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>第八周：承前启后：阶段回顾与多元回归再探</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html",
+    "href": "week1_lab.html",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "",
+    "text": "1. 目标\n本实验旨在帮助你熟悉 R 和 RStudio 环境，练习基本的 R 语法，并为后续的数据分析打下基础。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html#目标",
+    "href": "week1_lab.html#目标",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "",
+    "text": "熟悉 RStudio 界面。\n练习使用 R 作为计算器。\n掌握变量赋值。\n理解并创建不同类型的向量。\n安装并加载 tidyverse 包。\n(可选) 尝试使用 AI 助手查询简单问题。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html#rstudio-环境熟悉",
+    "href": "week1_lab.html#rstudio-环境熟悉",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "2. RStudio 环境熟悉",
+    "text": "2. RStudio 环境熟悉\n打开 RStudio，花几分钟熟悉以下几个主要窗口：\n\n脚本编辑器 (Script Editor / Source Pane): 左上角。用于编写和保存 R 代码脚本 (.R 文件) 或 Quarto/R Markdown 文档 (.qmd / .Rmd)。\n控制台 (Console): 左下角。用于直接输入和执行 R 命令，查看输出结果和错误信息。&gt; 符号是命令提示符。\n环境/历史记录 (Environment/History): 右上角。\n\nEnvironment: 显示当前工作空间中已创建的对象（变量、数据框、函数等）。\nHistory: 显示你之前在控制台中执行过的命令。\n\n文件/图形/包/帮助 (Files/Plots/Packages/Help/Viewer): 右下角。\n\nFiles: 浏览你的计算机文件系统。\nPlots: 显示生成的图形。\nPackages: 查看已安装的 R 包，加载或卸载包，安装新包。\nHelp: 查看 R 函数或数据集的帮助文档。\nViewer: 显示本地网页内容（例如 shiny 应用或 htmlwidgets）。\n\n\n尝试:\n\n在控制台中输入 1 + 1 并按 Enter。\n在脚本编辑器中输入 x &lt;- 5，然后选中这行代码，点击 “Run” 按钮（或使用快捷键 Cmd/Ctrl + Enter）。观察环境窗口中是否出现了变量 x。\n在控制台中输入 ?mean 查看 mean 函数的帮助文档，观察帮助窗口的变化。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html#r-作为计算器",
+    "href": "week1_lab.html#r-作为计算器",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "3. R 作为计算器",
+    "text": "3. R 作为计算器\n在控制台中尝试执行以下计算：\n# 加法\n5 + 12\n\n# 减法\n100 - 45\n\n# 乘法\n6 * 7\n\n# 除法\n50 / 4\n\n# 幂运算 (2 的 5 次方)\n2 ^ 5\n\n# 模运算 (取余数)\n17 %% 5\n\n# 整数除法\n17 %/% 5\n\n# 复杂表达式 (注意运算优先级)\n(5 + 3) * 2 / 4 - 1",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html#变量赋值与基本类型",
+    "href": "week1_lab.html#变量赋值与基本类型",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "4. 变量赋值与基本类型",
+    "text": "4. 变量赋值与基本类型\n\n使用 &lt;- 将计算结果赋值给变量。\n变量名可以包含字母、数字、点 (.) 和下划线 (_)，但必须以字母或点开头（如果以点开头，后面不能是数字）。区分大小写。\n\n# 将 10 赋值给变量 a\na &lt;- 10\n\n# 将 \"Hello\" 赋值给变量 message\nmessage &lt;- \"Hello, R learners!\"\n\n# 创建一个逻辑变量\nis_learning &lt;- TRUE\n\n# 查看变量的值\na\nmessage\nis_learning\n\n# 对变量进行运算\nb &lt;- a * 3\nb\n\n# 查看变量的数据类型\nclass(a)\nclass(message)\nclass(is_learning)\n练习:\n\n创建一个变量 my_age 并存储你的年龄。\n创建一个变量 course_name 并存储课程名称 “STAT & R”。\n计算 my_age 的 5 年后年龄，并将结果存储在 age_in_5_years 中。\n查看 age_in_5_years 的值和类型。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html#向量-vectors",
+    "href": "week1_lab.html#向量-vectors",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "5. 向量 (Vectors)",
+    "text": "5. 向量 (Vectors)\n向量是 R 中最基本的数据结构，用于存储相同类型的元素序列。使用 c() 函数创建。\n# 数值向量\nnumeric_vec &lt;- c(10.5, 5.2, 8.0, 1.5)\nnumeric_vec\nclass(numeric_vec)\nlength(numeric_vec) # 查看向量长度\n\n# 整数向量 (可以在数字后加 L)\ninteger_vec &lt;- c(1L, 5L, 10L, -2L)\ninteger_vec\nclass(integer_vec)\n\n# 字符向量\nchar_vec &lt;- c(\"apple\", \"banana\", \"cherry\", \"date\")\nchar_vec\nclass(char_vec)\n\n# 逻辑向量\nlogical_vec &lt;- c(TRUE, FALSE, FALSE, TRUE, TRUE)\nlogical_vec\nclass(logical_vec)\n\n# 访问向量元素 (索引从 1 开始)\nchar_vec[1]       # 第一个元素\nnumeric_vec[3]    # 第三个元素\nnumeric_vec[c(1, 4)] # 第一个和第四个元素\nnumeric_vec[2:4]    # 第二个到第四个元素\n\n# 向量运算 (通常是元素级别的)\nvec1 &lt;- c(1, 2, 3)\nvec2 &lt;- c(4, 5, 6)\nvec1 + vec2\nvec1 * 2\nvec1 &gt; 1\n\n# 向量类型强制转换\nmixed_vec &lt;- c(1, \"two\", TRUE)\nmixed_vec # 所有元素都变成了字符型\nclass(mixed_vec)\n练习:\n\n创建包含你最喜欢的 3 部电影名称的字符向量 favorite_movies。\n创建包含这 3 部电影大致评分（1-10）的数值向量 movie_ratings。\n访问 favorite_movies 中的第二部电影名称。\n访问 movie_ratings 中评分大于 8 的所有评分。 (提示: 可以使用逻辑索引 movie_ratings[movie_ratings &gt; 8])",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html#安装与加载-tidyverse",
+    "href": "week1_lab.html#安装与加载-tidyverse",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "6. 安装与加载 tidyverse",
+    "text": "6. 安装与加载 tidyverse\ntidyverse 是我们进行数据科学工作流的核心工具集。\n# 1. 安装 tidyverse (如果尚未安装)\n# 你只需要在你的 R 环境中执行一次这个命令。\n# 如果不确定是否安装过，可以先尝试加载，如果报错再安装。\n# install.packages(\"tidyverse\")\n\n# 2. 加载 tidyverse\n# 每次启动新的 R 会话 (Session) 时，如果需要使用 tidyverse 中的函数，\n# 都需要先加载它。\nlibrary(tidyverse)\n\n# 加载成功后，会显示 tidyverse 包含的核心包及其版本信息。\n检查: 加载 tidyverse 后，在控制台中输入 dplyr:: 并按 Tab 键，是否能看到 dplyr 包中的函数列表（如 filter, mutate 等）？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html#可选-尝试-ai-助手",
+    "href": "week1_lab.html#可选-尝试-ai-助手",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "7. (可选) 尝试 AI 助手",
+    "text": "7. (可选) 尝试 AI 助手\n打开你选择的 AI 助手（如 ChatGPT 网页版，或 VS Code 中的 Copilot Chat）。\n尝试提问:\n\n“如何在 R 中创建从 1 到 10 的数字序列？” (提示: 答案可能是 1:10 或 seq(1, 10))\n“R 中的 length() 函数有什么作用？”\n“请举例说明如何在 R 中将计算结果赋值给变量。”\n\n思考:\n\nAI 的回答是否准确？\nAI 的解释是否清晰？\n与你自己查找帮助文档 (?length) 或讲义相比，AI 辅助的优缺点是什么？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week1_lab.html#实验总结",
+    "href": "week1_lab.html#实验总结",
+    "title": "第一周实验：R 环境与基础操作",
+    "section": "8. 实验总结",
+    "text": "8. 实验总结\n在本实验中，我们熟悉了 RStudio 环境，练习了 R 的基本运算、变量赋值和向量操作，并成功安装和加载了 tidyverse。这些是后续进行更复杂数据分析的基础。确保你理解了向量的概念以及如何创建和访问它们。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lab.html",
+    "href": "week2_lab.html",
+    "title": "第二周实验：数据导入与描述性统计",
+    "section": "",
+    "text": "1. 目标\n本实验旨在练习使用 readr 包导入数据，熟悉数据框 (Data Frame) 和 Tibble，处理因子类型，并计算和解释基本的描述性统计量，同时初步使用 dplyr 进行数据筛选。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lab.html#目标",
+    "href": "week2_lab.html#目标",
+    "title": "第二周实验：数据导入与描述性统计",
+    "section": "",
+    "text": "使用 read_csv() 导入数据文件。\n检查和理解导入数据的结构 (glimpse, str, summary)。\n创建和操作因子变量 (factor, levels)。\n计算集中趋势（均值、中位数）和离散趋势（标准差、IQR、分位数）统计量。\n使用 dplyr 的 select() 和 filter() 选择和筛选数据。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lab.html#数据导入-readr",
+    "href": "week2_lab.html#数据导入-readr",
+    "title": "第二周实验：数据导入与描述性统计",
+    "section": "2. 数据导入 (readr)",
+    "text": "2. 数据导入 (readr)\n我们将使用一个模拟的学生成绩数据集 grades.csv。\ngrades.csv 文件内容:\nStudentID,Name,Major,Exam1,Exam2,FinalProject,Attendance\nS001,Alice,Statistics,85,88,92,Present\nS002,Bob,CompSci,92,NA,85,Present\nS003,Charlie,Math,78,82,75,Absent\nS004,David,Statistics,88,90,95,Present\nS005,Eve,CompSci,75,80,NA,Absent\nS006,Frank,Statistics,95,98,96,Present\nS007,Grace,Math,NA,75,80,Present\nS008,Heidi,CompSci,81,84,88,Present\n任务:\n\n将上面的 CSV 内容复制到一个纯文本文件中，并将其命名为 grades.csv，保存在你的 R 项目工作目录下（或者你知道其路径的地方）。\n使用 readr::read_csv() 函数将 grades.csv 文件读入 R，并将结果存储在一个名为 grades_data 的 Tibble 中。\n打印 grades_data 查看内容。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lab.html#数据结构探索",
+    "href": "week2_lab.html#数据结构探索",
+    "title": "第二周实验：数据导入与描述性统计",
+    "section": "3. 数据结构探索",
+    "text": "3. 数据结构探索\n导入数据后，检查其结构非常重要。\n任务: 使用以下函数探索 grades_data 的结构：\n\nglimpse(): 快速查看数据结构，包括列名、类型和前几行数据。\nstr(): 显示对象的内部结构（更详细）。\nsummary(): 对每一列计算基本的描述性统计（对数值型计算最小值、Q1、中位数、均值、Q3、最大值、NA 数量；对字符型/因子型计算频数）。\nhead(): 查看前几行数据。\ntail(): 查看后几行数据。\n\n思考:\n\nread_csv 自动识别的列类型是否都正确？\n哪些列包含缺失值 (NA)？summary() 如何提示我们？\nMajor 和 Attendance 列目前是什么类型？你认为它们应该是什么类型更合适？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lab.html#因子-factor",
+    "href": "week2_lab.html#因子-factor",
+    "title": "第二周实验：数据导入与描述性统计",
+    "section": "4. 因子 (Factor)",
+    "text": "4. 因子 (Factor)\nMajor 和 Attendance 列代表分类信息。将它们转换为因子类型通常更便于后续分析和绘图。\n任务:\n\n将 grades_data 中的 Major 列转换为因子类型。查看转换后的列和它的水平 (levels)。\n将 Attendance 列转换为因子类型。思考一下，Attendance 的水平是否有自然的顺序？（例如，“Present” 是否优于 “Absent”？在这个场景下可能没有）。\n(可选挑战) 如果我们认为专业 “Statistics” &gt; “Math” &gt; “CompSci”，如何创建一个有序因子？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lab.html#描述性统计计算",
+    "href": "week2_lab.html#描述性统计计算",
+    "title": "第二周实验：数据导入与描述性统计",
+    "section": "5. 描述性统计计算",
+    "text": "5. 描述性统计计算\n现在我们来计算一些描述性统计量，以更好地理解数值型变量（如考试成绩）的分布。\n任务: 计算 Exam1, Exam2, 和 FinalProject 这三列的：\n\n均值 (Mean)\n中位数 (Median)\n标准差 (Standard Deviation)\n四分位距 (IQR)\n最小值 (Minimum) 和最大值 (Maximum)\n0.1 分位数和 0.9 分位数\n\n注意处理缺失值 (NA)！ 很多函数需要设置 na.rm = TRUE。\n思考:\n\n比较 Exam1 和 Exam2 的均值和中位数，哪个考试的平均表现似乎更好？哪个考试的成绩分布更受异常值影响（如果看均值和中位数的差异）？\n比较 Exam1 和 Exam2 的标准差和 IQR，哪个考试的成绩更分散？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lab.html#dplyr-初步select-与-filter",
+    "href": "week2_lab.html#dplyr-初步select-与-filter",
+    "title": "第二周实验：数据导入与描述性统计",
+    "section": "6. dplyr 初步：select() 与 filter()",
+    "text": "6. dplyr 初步：select() 与 filter()\n练习使用 dplyr 选择特定的列和行。\n任务: 使用 grades_data Tibble 完成以下操作：\n\n选择 StudentID, Name, 和 FinalProject 这三列。\n选择除了 Attendance 之外的所有列。\n筛选出 Major 为 “Statistics” 的所有学生记录。\n筛选出 Exam1 成绩大于 85 分的学生记录。\n筛选出 Major 为 “CompSci” 且 Exam2 成绩大于 80 分的学生记录。\n筛选出 Attendance 为 “Absent” 或 FinalProject 成绩低于 80 分的学生记录。\n链式操作: 筛选出 Major 为 “Statistics” 的学生，然后只选择他们的 Name 和 FinalProject 成绩。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+    ]
+  },
+  {
+    "objectID": "week2_lab.html#实验总结",
+    "href": "week2_lab.html#实验总结",
+    "title": "第二周实验：数据导入与描述性统计",
+    "section": "7. 实验总结",
+    "text": "7. 实验总结\n在本实验中，我们练习了从 CSV 文件导入数据，使用多种函数检查了数据结构，将分类变量转换为因子，计算了关键的描述性统计量（注意处理 NA），并使用 dplyr 的 select 和 filter 对数据进行了基本的筛选和子集提取。这些是进行任何数据分析前必不可少的数据熟悉和准备步骤。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lab.html",
+    "href": "week3_lab.html",
+    "title": "第三周实验：dplyr 进阶与 tidyr 数据整形",
+    "section": "",
+    "text": "1. 目标\n本实验旨在熟练掌握 dplyr 包中更高级的数据转换函数，并使用 tidyr 包进行数据整形，同时练习处理缺失值和使用管道连接操作。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lab.html#目标",
+    "href": "week3_lab.html#目标",
+    "title": "第三周实验：dplyr 进阶与 tidyr 数据整形",
+    "section": "",
+    "text": "熟练使用 dplyr::mutate() 创建和修改列。\n熟练使用 dplyr::arrange() 对数据进行排序。\n掌握 dplyr::group_by() 和 dplyr::summarise() 进行分组汇总计算。\n理解整洁数据 (Tidy Data) 的概念。\n使用 tidyr::pivot_longer() 将宽数据转换为长数据。\n使用 tidyr::pivot_wider() 将长数据转换为宽数据。\n练习识别和处理缺失值 (NA)。\n熟练运用管道 (%&gt;%) 串联多个数据处理步骤。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lab.html#数据准备",
+    "href": "week3_lab.html#数据准备",
+    "title": "第三周实验：dplyr 进阶与 tidyr 数据整形",
+    "section": "2. 数据准备",
+    "text": "2. 数据准备\n我们将继续使用上周的 grades.csv 数据，并引入一个新的数据集 exam_attempts.csv 来练习 pivot_longer 和 pivot_wider。\ngrades.csv (回顾):\nStudentID,Name,Major,Exam1,Exam2,FinalProject,Attendance\nS001,Alice,Statistics,85,88,92,Present\nS002,Bob,CompSci,92,NA,85,Present\nS003,Charlie,Math,78,82,75,Absent\nS004,David,Statistics,88,90,95,Present\nS005,Eve,CompSci,75,80,NA,Absent\nS006,Frank,Statistics,95,98,96,Present\nS007,Grace,Math,NA,75,80,Present\nS008,Heidi,CompSci,81,84,88,Present\nexam_attempts.csv 文件内容:\nStudentID,Attempt1_Score,Attempt1_Time,Attempt2_Score,Attempt2_Time\nS001,85,50,88,45\nS002,92,60,NA,NA\nS003,78,55,82,50\nS004,88,48,90,42\n任务:\n\n确保 grades.csv 文件在你的工作目录中。\n创建 exam_attempts.csv 文件并保存在工作目录。\n加载 tidyverse 包。\n读入 grades.csv 到 grades_data。\n读入 exam_attempts.csv 到 attempts_data。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lab.html#dplyr-进阶练习",
+    "href": "week3_lab.html#dplyr-进阶练习",
+    "title": "第三周实验：dplyr 进阶与 tidyr 数据整形",
+    "section": "3. dplyr 进阶练习",
+    "text": "3. dplyr 进阶练习\n\n3.1 mutate()\n任务: 使用 grades_data：\n\n计算 Exam1 和 Exam2 的平均分（忽略 NA），并将结果存储在新列 AvgExamScore 中。\n创建一个新列 FinalGrade，假设最终成绩计算方式为：Exam1 * 0.3 + Exam2 * 0.3 + FinalProject * 0.4。注意处理 NA 值（如果任一成绩为 NA，则 FinalGrade 也应为 NA）。\n创建一个逻辑列 PassedExam1，表示 Exam1 成绩是否大于等于 60 (假设 60 分及格)。\n\n\n\n3.2 arrange()\n任务: 使用 grades_data_mutated：\n\n按 FinalGrade 降序排列学生。\n先按 Major 字母顺序排列，然后在每个专业内按 Exam1 升序排列。\n\n\n\n3.3 group_by() 与 summarise()\n任务: 使用 grades_data：\n\n计算每个 Major 的学生人数。\n计算每个 Major 的 Exam1 平均分和 FinalProject 平均分（忽略 NA）。\n找出每个 Major 中 Exam1 的最高分。\n计算 Attendance 为 “Present” 和 “Absent” 的学生人数分别是多少。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lab.html#tidyr-数据整形练习",
+    "href": "week3_lab.html#tidyr-数据整形练习",
+    "title": "第三周实验：dplyr 进阶与 tidyr 数据整形",
+    "section": "4. tidyr 数据整形练习",
+    "text": "4. tidyr 数据整形练习\n\n4.1 pivot_longer()\nattempts_data 目前是“宽”格式，每次尝试的成绩和时间分布在不同的列中。我们希望将其转换为“长”格式，每行代表一次尝试。\n任务: 将 attempts_data 转换为长格式，包含以下列：\n\nStudentID\nAttempt (值为 1 或 2)\nScore (对应尝试的得分)\nTime (对应尝试的时间)\n\n\n\n4.2 pivot_wider()\n任务: 将刚刚创建的长格式数据 attempts_long 转换回原来的宽格式。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lab.html#处理缺失值-na",
+    "href": "week3_lab.html#处理缺失值-na",
+    "title": "第三周实验：dplyr 进阶与 tidyr 数据整形",
+    "section": "5. 处理缺失值 (NA)",
+    "text": "5. 处理缺失值 (NA)\n任务: 使用 grades_data：\n\n计算 Exam2 列有多少个缺失值。\n创建一个新数据框 grades_no_na_exam2，移除 Exam2 列包含 NA 的所有行。\n创建一个新数据框 grades_filled_project，将 FinalProject 列中的 NA 替换为该列的中位数。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lab.html#综合链式操作",
+    "href": "week3_lab.html#综合链式操作",
+    "title": "第三周实验：dplyr 进阶与 tidyr 数据整形",
+    "section": "6. 综合链式操作 (%>%)",
+    "text": "6. 综合链式操作 (%&gt;%)\n任务: 使用 grades_data，通过一步链式操作完成以下任务：\n\n筛选出 Major 为 “Statistics” 或 “Math” 的学生。\n计算这些学生的 Exam1 和 Exam2 的平均分（忽略 NA），命名为 AvgExamScore。\n只保留 StudentID, Name, Major, 和 AvgExamScore 这几列。\n按 AvgExamScore 降序排列结果。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+    ]
+  },
+  {
+    "objectID": "week3_lab.html#实验总结",
+    "href": "week3_lab.html#实验总结",
+    "title": "第三周实验：dplyr 进阶与 tidyr 数据整形",
+    "section": "7. 实验总结",
+    "text": "7. 实验总结\n在本实验中，我们深入练习了 dplyr 的核心数据转换函数 mutate, arrange, group_by, summarise，并掌握了使用 tidyr 的 pivot_longer 和 pivot_wider 在长宽数据格式间转换。我们还练习了处理缺失值的常用方法，并通过管道将这些操作流畅地组合起来。熟练掌握这些 tidyverse 技能对于高效地进行数据清理和准备至关重要。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lab.html",
+    "href": "week4_lab.html",
+    "title": "第四周实验：ggplot2 可视化探索",
+    "section": "",
+    "text": "1. 目标\n本实验旨在通过实践 ggplot2 包，熟练掌握创建常用统计图形进行探索性数据分析 (EDA) 的技能，并练习基本的图形定制。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lab.html#目标",
+    "href": "week4_lab.html#目标",
+    "title": "第四周实验：ggplot2 可视化探索",
+    "section": "",
+    "text": "回顾 ggplot2 的图层语法。\n练习绘制单变量图形：直方图、密度图、箱线图。\n练习绘制双变量图形：散点图、分组箱线图/小提琴图、条形图。\n使用 labs() 添加标题和标签。\n使用 theme_...() 应用不同的视觉主题。\n(可选) 结合 dplyr 进行数据汇总后再绘图。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lab.html#数据准备",
+    "href": "week4_lab.html#数据准备",
+    "title": "第四周实验：ggplot2 可视化探索",
+    "section": "2. 数据准备",
+    "text": "2. 数据准备\n我们将主要使用 ggplot2 内置的 mpg 数据集。确保 tidyverse 已加载。\nlibrary(tidyverse)\nlibrary(ggplot2) # ggplot2 包含在 tidyverse 中，但显式加载有时有助于代码清晰\n\n# 查看 mpg 数据集结构\nglimpse(mpg)\n# ?mpg # 查看帮助文档",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lab.html#单变量可视化练习",
+    "href": "week4_lab.html#单变量可视化练习",
+    "title": "第四周实验：ggplot2 可视化探索",
+    "section": "3. 单变量可视化练习",
+    "text": "3. 单变量可视化练习\n探索单个变量的分布特征。\n\n3.1 直方图 (geom_histogram)\n任务:\n\n绘制变量 cty (城市里程/加仑) 的直方图。\n尝试调整 binwidth 参数（例如 binwidth = 2 或 binwidth = 5），观察图形的变化。\n为直方图添加填充色 (fill) 和边框色 (color)。\n\n\n\n3.2 密度图 (geom_density)\n任务:\n\n绘制变量 hwy (高速公路里程/加仑) 的密度图。\n添加填充色，并使用 alpha 参数设置透明度。\n(可选挑战) 在同一张图上绘制不同 drv (驱动方式) 的 hwy 密度图，使用 fill 映射到 drv 并设置 alpha。\n\n\n\n3.3 箱线图 (geom_boxplot)\n任务:\n\n绘制变量 displ (发动机排量) 的箱线图。\n绘制按 class (车辆类别) 分组的 hwy (高速公路里程) 的箱线图。\n将上一步的箱线图翻转，使类别标签在 Y 轴上，更易阅读 (coord_flip())。\n(可选挑战) 在分组箱线图上叠加 geom_jitter()，显示原始数据点（设置 alpha 和 width）。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lab.html#双变量可视化练习",
+    "href": "week4_lab.html#双变量可视化练习",
+    "title": "第四周实验：ggplot2 可视化探索",
+    "section": "4. 双变量可视化练习",
+    "text": "4. 双变量可视化练习\n探索两个变量之间的关系。\n\n4.1 散点图 (geom_point)\n任务:\n\n绘制 displ (发动机排量) 和 cty (城市里程) 的散点图。\n在散点图上，将点的颜色映射到 drv (驱动方式)。\n在散点图上，将点的大小映射到 cyl (气缸数)。\n(可选挑战) 添加一条线性拟合线 (geom_smooth(method = \"lm\"))。\n\n\n\n4.2 条形图 (geom_bar / geom_col)\n任务:\n\n使用 geom_bar() 统计 drv (驱动方式) 的频数并绘制条形图。\n(结合 dplyr) 先计算每个 manufacturer (制造商) 的平均 hwy (高速公路里程)，然后使用 geom_col() 绘制条形图展示结果，并按平均里程排序。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lab.html#图形定制练习-labs-theme",
+    "href": "week4_lab.html#图形定制练习-labs-theme",
+    "title": "第四周实验：ggplot2 可视化探索",
+    "section": "5. 图形定制练习 (labs & theme)",
+    "text": "5. 图形定制练习 (labs & theme)\n任务: 选择你之前绘制的任意一个图形，进行以下定制：\n\n使用 labs() 添加一个有意义的 title, subtitle, x 轴标签, y 轴标签, 以及 caption。\n尝试应用不同的内置主题，如 theme_bw(), theme_minimal(), theme_classic(), theme_light()，观察效果。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+    ]
+  },
+  {
+    "objectID": "week4_lab.html#实验总结",
+    "href": "week4_lab.html#实验总结",
+    "title": "第四周实验：ggplot2 可视化探索",
+    "section": "6. 实验总结",
+    "text": "6. 实验总结\n在本实验中，我们通过 mpg 数据集实践了 ggplot2 的核心功能。我们练习了绘制用于探索单变量分布的直方图、密度图和箱线图，以及用于探索双变量关系的散点图和条形图（包括分组比较）。我们还学习了如何使用 labs() 和 theme_...() 对图形进行基本定制，使其更具信息量和美观性。熟练掌握 ggplot2 是进行有效数据探索和结果沟通的关键技能。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lab.html",
+    "href": "week5_lab.html",
+    "title": "第五周实验：假设检验实践 (t-检验与 ANOVA)",
+    "section": "",
+    "text": "1. 目标\n本实验旨在通过实践应用，熟练掌握单样本 t 检验、双独立样本 t 检验、配对样本 t 检验以及单因素方差分析 (ANOVA) 的 R 实现和结果解读。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lab.html#目标",
+    "href": "week5_lab.html#目标",
+    "title": "第五周实验：假设检验实践 (t-检验与 ANOVA)",
+    "section": "",
+    "text": "根据问题场景选择合适的假设检验方法。\n使用 t.test() 执行各种 t 检验，并解释 P 值和置信区间。\n理解并检查 t 检验和 ANOVA 的假设条件（特别是正态性和方差齐性）。\n使用 aov() 和 summary() 执行 ANOVA，并解读 ANOVA 表。\n在 ANOVA 结果显著后，使用 TukeyHSD() 进行事后检验，找出具体差异。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lab.html#数据准备",
+    "href": "week5_lab.html#数据准备",
+    "title": "第五周实验：假设检验实践 (t-检验与 ANOVA)",
+    "section": "2. 数据准备",
+    "text": "2. 数据准备\n我们将使用 R 内置数据集和一些模拟数据进行练习。\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(car) # 用于 Levene's Test\n\n# 查看内置数据集 sleep (比较两种安眠药的效果)\n# ?sleep\nglimpse(sleep)\nhead(sleep)\n\n# 模拟一些单样本数据 (例如，一批零件的长度，已知标准为 10cm)\nset.seed(123)\npart_lengths &lt;- rnorm(25, mean = 10.1, sd = 0.2) # 模拟 25 个零件，均值略偏离 10\n\n# 模拟 ANOVA 数据 (例如，三种不同教学方法 A, B, C 的学生得分)\nset.seed(456)\nscores_A &lt;- rnorm(20, mean = 75, sd = 5)\nscores_B &lt;- rnorm(20, mean = 80, sd = 5)\nscores_C &lt;- rnorm(20, mean = 78, sd = 5)\n\nanova_sim_data &lt;- tibble(\n  Score = c(scores_A, scores_B, scores_C),\n  Method = factor(rep(c(\"A\", \"B\", \"C\"), each = 20))\n)",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lab.html#单样本-t-检验-t.test",
+    "href": "week5_lab.html#单样本-t-检验-t.test",
+    "title": "第五周实验：假设检验实践 (t-检验与 ANOVA)",
+    "section": "3. 单样本 t 检验 (t.test)",
+    "text": "3. 单样本 t 检验 (t.test)\n场景: 假设已知零件的标准长度应为 10cm。我们抽取了 25 个零件样本 (part_lengths)，想要检验这批零件的平均长度是否显著不等于 10cm。\n任务:\n\n陈述原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n(可选) 检查数据的正态性假设（例如，使用 QQ 图或 Shapiro-Wilk 检验）。\n使用 t.test() 对 part_lengths 进行单样本 t 检验，检验均值是否等于 10。\n解读检验结果：t 值、自由度、P 值、置信区间、样本均值估计。\n根据 P 值和选择的显著性水平 \\(\\alpha = 0.05\\) 做出决策。\n用通俗语言解释结论。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lab.html#双独立样本-t-检验-t.test",
+    "href": "week5_lab.html#双独立样本-t-检验-t.test",
+    "title": "第五周实验：假设检验实践 (t-检验与 ANOVA)",
+    "section": "4. 双独立样本 t 检验 (t.test)",
+    "text": "4. 双独立样本 t 检验 (t.test)\n场景: 我们想比较两种不同的肥料（A 和 B）对作物产量 (yield) 的影响是否有显著差异。假设我们有两组独立的样本数据。\n模拟数据:\nset.seed(789)\nyield_fertA &lt;- rnorm(15, mean = 50, sd = 8)\nyield_fertB &lt;- rnorm(18, mean = 56, sd = 7)\n任务:\n\n陈述原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n(可选) 分别检查两组数据的正态性。\n检查方差齐性假设 (使用 Levene’s Test 或 var.test())。\n根据方差齐性检验结果，选择合适的 t.test() 参数 (var.equal = TRUE 或 FALSE，推荐默认 FALSE 即 Welch’s test)。执行双独立样本 t 检验。\n解读检验结果：t 值 (或 Welch’s t)、自由度、P 值、置信区间 (针对均值差)、样本均值估计。\n根据 P 值和 \\(\\alpha = 0.05\\) 做出决策。\n用通俗语言解释结论。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lab.html#配对样本-t-检验-t.test",
+    "href": "week5_lab.html#配对样本-t-检验-t.test",
+    "title": "第五周实验：假设检验实践 (t-检验与 ANOVA)",
+    "section": "5. 配对样本 t 检验 (t.test)",
+    "text": "5. 配对样本 t 检验 (t.test)\n场景: 使用 R 内置的 sleep 数据集。该数据集记录了 10 位病人在分别使用两种安眠药（group=1 和 group=2）后，相比未使用药物时额外睡眠时间的变化 (extra)。我们想检验这两种药物的效果是否有显著差异。这是一个典型的配对样本设计，因为每个病人都尝试了两种药物。\n任务:\n\n陈述原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n(可选) 检查配对差值的正态性。\n使用 t.test() 对 sleep 数据进行配对样本 t 检验 (比较 group 1 和 2 的 extra 值)。设置 paired = TRUE。\n解读检验结果：t 值、自由度、P 值、置信区间 (针对差值的均值)、差值的样本均值估计。\n根据 P 值和 \\(\\alpha = 0.05\\) 做出决策。\n用通俗语言解释结论。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lab.html#单因素-anova-与事后检验",
+    "href": "week5_lab.html#单因素-anova-与事后检验",
+    "title": "第五周实验：假设检验实践 (t-检验与 ANOVA)",
+    "section": "6. 单因素 ANOVA 与事后检验",
+    "text": "6. 单因素 ANOVA 与事后检验\n场景: 使用我们之前模拟的 anova_sim_data，比较三种不同教学方法 (A, B, C) 的学生平均得分 (Score) 是否存在显著差异。\n任务:\n\n陈述 ANOVA 的原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n(可选) 检查各组数据的正态性。\n检查方差齐性假设 (使用 Levene’s Test)。\n使用 aov() 拟合 ANOVA 模型。\n使用 summary() 查看 ANOVA 表，并解读 F 值和 P 值。\n根据 ANOVA 的 P 值和 \\(\\alpha = 0.05\\) 做出初步决策。\n如果 ANOVA 结果显著 (P &lt; 0.05)，则使用 TukeyHSD() 进行事后检验。\n解读 TukeyHSD 的结果（调整后的 P 值和置信区间），判断具体哪些组之间存在显著差异。\n用通俗语言总结最终结论。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+    ]
+  },
+  {
+    "objectID": "week5_lab.html#实验总结",
+    "href": "week5_lab.html#实验总结",
+    "title": "第五周实验：假设检验实践 (t-检验与 ANOVA)",
+    "section": "7. 实验总结",
+    "text": "7. 实验总结\n在本实验中，我们针对不同的研究场景，实践了四种核心的假设检验方法：单样本 t 检验、双独立样本 t 检验、配对样本 t 检验和单因素方差分析 (ANOVA) 及其事后检验。我们重点练习了如何在 R 中实现这些检验，并根据输出结果（特别是 P 值和置信区间）做出统计决策和解释结论。同时，我们也强调了在应用这些方法前检查相关假设条件（如正态性、方差齐性）的重要性。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lab.html",
+    "href": "week6_lab.html",
+    "title": "第六周实验：相关与简单线性回归实践",
+    "section": "",
+    "text": "1. 目标\n本实验旨在练习计算和解释相关系数，使用散点图可视化变量关系，并拟合和解释简单的线性回归模型。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lab.html#目标",
+    "href": "week6_lab.html#目标",
+    "title": "第六周实验：相关与简单线性回归实践",
+    "section": "",
+    "text": "使用 cor() 计算 Pearson 和 Spearman 相关系数。\n使用 cor.test() 对相关性进行显著性检验并解释结果。\n使用 ggplot2::geom_point() 和 geom_smooth() 创建和解读散点图。\n理解相关不等于因果。\n使用 lm() 拟合简单线性回归模型。\n解读 summary(lm()) 的输出，特别是系数、P 值和 R²。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lab.html#数据准备",
+    "href": "week6_lab.html#数据准备",
+    "title": "第六周实验：相关与简单线性回归实践",
+    "section": "2. 数据准备",
+    "text": "2. 数据准备\n我们将继续使用 mpg 数据集，并可能使用 mtcars 数据集。\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(GGally) # 用于绘制散点图矩阵\n\n# glimpse(mpg)\n# glimpse(mtcars)",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lab.html#相关分析练习",
+    "href": "week6_lab.html#相关分析练习",
+    "title": "第六周实验：相关与简单线性回归实践",
+    "section": "3. 相关分析练习",
+    "text": "3. 相关分析练习\n\n3.1 计算与可视化\n场景: 我们想探索 mpg 数据集中几个连续变量之间的关系，例如 displ (排量), cty (城市里程), hwy (高速里程)。\n任务:\n\n绘制 displ 和 hwy 的散点图，并在图上添加一条线性拟合线 (method = \"lm\") 和一条非线性平滑曲线 (默认 geom_smooth)。观察它们的关系是线性的吗？\n计算 displ 和 hwy 之间的 Pearson 相关系数。\n计算 displ 和 hwy 之间的 Spearman 相关系数。比较两者的大小，思考为何可能有差异。\n(可选挑战) 使用 GGally::ggpairs() 函数创建一个散点图矩阵，可视化多个连续变量（如 displ, cty, hwy, cyl）之间的两两关系和各自的分布。 (需要先 install.packages(\"GGally\"))\n\n\n\n3.2 相关性检验 (cor.test)\n任务:\n\n使用 cor.test() 对 displ 和 hwy 之间的 Pearson 相关性进行显著性检验。\n解读检验结果：相关系数估计值、P 值、置信区间。根据 P 值和 \\(\\alpha = 0.05\\) 判断相关性是否显著。\n使用 cor.test() 对 displ 和 hwy 之间的 Spearman 相关性进行显著性检验。\n解读检验结果。\n\n\n\n3.3 相关不等于因果讨论\n思考题: 假设你发现一个城市中冰淇淋销量 (ice_cream_sales) 与犯罪率 (crime_rate) 之间存在强正相关 (\\(r \\approx 0.8, p &lt; 0.001\\))。\n\n这是否意味着吃冰淇淋会导致犯罪？为什么？\n你能想到一个可能的混淆变量来解释这种相关性吗？\n如果想研究冰淇淋是否真的影响犯罪率（虽然听起来很荒谬），相关分析足够吗？需要什么样的研究设计？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lab.html#简单线性回归-slr-练习",
+    "href": "week6_lab.html#简单线性回归-slr-练习",
+    "title": "第六周实验：相关与简单线性回归实践",
+    "section": "4. 简单线性回归 (SLR) 练习",
+    "text": "4. 简单线性回归 (SLR) 练习\n场景: 我们想建立一个模型，用汽车重量 wt (单位：1000 lbs) 来预测其每加仑英里数 mpg (使用 mtcars 数据集)。\n任务:\n\n绘制 wt (x 轴) 和 mpg (y 轴) 的散点图，并添加线性拟合线 (geom_smooth(method = \"lm\"))。初步判断两者是否存在线性关系。\n使用 lm() 函数拟合一个简单线性回归模型，用 wt 预测 mpg。将模型存储在 slr_mpg_wt 中。\n使用 summary() 查看模型 slr_mpg_wt 的详细结果。\n解读模型结果:\n\n写出回归方程 (\\(\\hat{mpg} = \\hat{\\beta}_0 + \\hat{\\beta}_1 \\times wt\\))。\n解释截距\\(\\hat{\\beta}_0\\)的含义（在这个场景下是否有实际意义？）。\n解释斜率\\(\\hat{\\beta}_1\\)的含义。\nwt 对 mpg 的影响是否统计显著？依据是什么 (P 值)？\n模型解释了 mpg 变异的百分之多少 (R-squared)？这个模型的拟合优度如何？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lab.html#可选-预测",
+    "href": "week6_lab.html#可选-预测",
+    "title": "第六周实验：相关与简单线性回归实践",
+    "section": "5. (可选) 预测",
+    "text": "5. (可选) 预测\n使用我们拟合的模型 slr_mpg_wt 来进行预测。\n任务:\n\n预测一辆重量为 2500 lbs (即 wt = 2.5) 的汽车的 MPG。\n预测一辆重量为 4000 lbs (即 wt = 4.0) 的汽车的 MPG。\n使用 predict() 函数进行预测，并可以获取预测值的置信区间或预测区间。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week6_lab.html#实验总结",
+    "href": "week6_lab.html#实验总结",
+    "title": "第六周实验：相关与简单线性回归实践",
+    "section": "6. 实验总结",
+    "text": "6. 实验总结\n在本实验中，我们练习了相关分析和简单线性回归。我们计算并检验了 Pearson 和 Spearman 相关系数，强调了相关不等于因果。我们使用 ggplot2 可视化了变量间的关系。最重要的是，我们使用 lm() 拟合了简单线性回归模型，并详细解读了 summary() 输出中的系数、P 值和 R²，理解了它们在描述变量关系和模型拟合优度方面的含义。我们还初步尝试了使用拟合的模型进行预测。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lab.html",
+    "href": "week7_lab.html",
+    "title": "第七周实验：卡方检验与统计方法选择",
+    "section": "",
+    "text": "1. 目标\n本实验旨在练习处理分类数据，特别是使用列联表和卡方检验来分析两个分类变量之间的关联性，并巩固根据研究问题选择合适统计方法的能力。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lab.html#目标",
+    "href": "week7_lab.html#目标",
+    "title": "第七周实验：卡方检验与统计方法选择",
+    "section": "",
+    "text": "使用 table() 创建列联表，并使用 prop.table() 计算百分比。\n使用 chisq.test() 执行卡方独立性检验。\n检查卡方检验的期望频数假设。\n解读卡方检验的结果（\\(\\chi^2\\) 值, df, P 值）。\n(可选) 了解并使用 fisher.test()。\n练习根据不同场景选择合适的统计检验方法（回顾阶段一内容）。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lab.html#数据准备",
+    "href": "week7_lab.html#数据准备",
+    "title": "第七周实验：卡方检验与统计方法选择",
+    "section": "2. 数据准备",
+    "text": "2. 数据准备\n我们将使用 ggplot2 内置的 diamonds 数据集，并可能创建一些模拟数据。\nlibrary(tidyverse)\n\n# 使用 diamonds 数据集\n# 为了避免样本量过大导致期望频数都很大，我们抽取一个子集\nset.seed(123)\ndiamonds_subset &lt;- diamonds %&gt;% sample_n(1000)\n\n# 查看数据结构和变量类型\nglimpse(diamonds_subset)\n# 我们将重点关注 cut (切割质量) 和 color (颜色) 这两个分类变量",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lab.html#列联表分析",
+    "href": "week7_lab.html#列联表分析",
+    "title": "第七周实验：卡方检验与统计方法选择",
+    "section": "3. 列联表分析",
+    "text": "3. 列联表分析\n任务:\n\n使用 table() 函数创建 diamonds_subset 数据集中 cut 和 color 变量的列联表，存储在 cut_color_table 中并打印。\n使用 prop.table() 计算该列联表的：\n\n单元格占总数的百分比。\n行百分比 (每行的和为 100%)。\n列百分比 (每列的和为 100%)。\n\n解读: 根据行百分比或列百分比，初步判断 cut 和 color 之间是否存在某种关联的迹象？（例如，某个切割等级是否更倾向于出现某种颜色？）",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lab.html#卡方独立性检验-chisq.test",
+    "href": "week7_lab.html#卡方独立性检验-chisq.test",
+    "title": "第七周实验：卡方检验与统计方法选择",
+    "section": "4. 卡方独立性检验 (chisq.test)",
+    "text": "4. 卡方独立性检验 (chisq.test)\n场景: 我们想正式检验钻石的切割质量 (cut) 与颜色 (color) 是否相互独立。\n任务:\n\n陈述卡方独立性检验的原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n使用 chisq.test() 对 cut_color_table 进行卡方检验。\n检查期望频数假设: 从检验结果中提取期望频数 ($expected)，检查是否有期望频数小于 5 的单元格？如果有很多，卡方检验的 P 值可能不准确。\n解读检验结果：\\(\\chi^2\\) 统计量值、自由度 (df)、P 值。\n根据 P 值和 \\(\\alpha = 0.05\\) 做出决策。\n用通俗语言解释结论。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lab.html#可选-fisher-精确检验-fisher.test",
+    "href": "week7_lab.html#可选-fisher-精确检验-fisher.test",
+    "title": "第七周实验：卡方检验与统计方法选择",
+    "section": "5. (可选) Fisher 精确检验 (fisher.test)",
+    "text": "5. (可选) Fisher 精确检验 (fisher.test)\n场景: 假设我们有一个 2x2 的列联表，或者卡方检验的期望频数假设不满足。\n模拟 2x2 数据: 假设我们调查了 30 人是否使用某 APP（UseApp: Yes/No）以及他们的性别（Gender: Male/Female）。\nset.seed(999)\n\ngender &lt;- sample(c(\"Male\", \"Female\"), 30, replace = TRUE)\nuse_app &lt;- sample(c(\"Yes\", \"No\"), 30, replace = TRUE, prob = c(0.6, 0.4))\n\napp_gender_table &lt;- table(Gender = gender, UseApp = use_app)\n\nprint(app_gender_table)\n任务:\n\n对 app_gender_table 执行 Fisher 精确检验。\n解读 P 值并做出结论。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lab.html#统计方法选择练习",
+    "href": "week7_lab.html#统计方法选择练习",
+    "title": "第七周实验：卡方检验与统计方法选择",
+    "section": "6. 统计方法选择练习",
+    "text": "6. 统计方法选择练习\n根据以下场景，选择最合适的统计检验或分析方法，并简要说明理由。\n\n场景一: 比较两种不同品牌（A 和 B）灯泡的平均使用寿命（单位：小时）。收集了两组独立样本数据。\n场景二: 调查某大学学生对新图书馆规章的满意度（分为：非常满意、满意、一般、不满意、非常不满意）是否与其所在学院（文学院、理学院、工学院、商学院）有关。\n场景三: 研究跑步距离（公里）与跑步者消耗的卡路里（大卡）之间的关系强度和方向。\n场景四: 一家公司想知道其新推出的广告（花费：万元）是否显著提升了产品月销量（件）。他们有广告投放前 12 个月和投放后 12 个月的月销量数据。\n场景五: 检验一个标准的六面骰子是否是公平的（即每个点数出现的概率是否都是 1/6）。进行了 600 次投掷。\n场景六: 想要预测一个客户是否会购买某产品（是/否），基于该客户的年龄、收入和历史购买次数。\n场景七: 比较三种不同施肥方案（方案 1、方案 2、对照组）对玉米平均产量的影响。\n场景八: 检验一批产品的实际重量（克）是否显著低于其标注重量 500 克。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+    ]
+  },
+  {
+    "objectID": "week7_lab.html#实验总结",
+    "href": "week7_lab.html#实验总结",
+    "title": "第七周实验：卡方检验与统计方法选择",
+    "section": "7. 实验总结",
+    "text": "7. 实验总结\n在本实验中，我们重点练习了处理分类变量关联性的主要工具——列联表和卡方独立性检验。我们学会了如何创建表格、计算百分比、执行检验、检查假设并解读结果。我们还了解了 Fisher 精确检验的适用场景。最后，通过场景分析，我们巩固了根据研究问题和数据类型选择合适统计方法的能力，这是整个第一阶段学习的核心技能之一。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lab.html",
+    "href": "week8_lab.html",
+    "title": "第八周实验：阶段回顾与多元回归实践",
+    "section": "",
+    "text": "1. 目标\n本实验旨在巩固第一阶段的核心知识，并通过实践加深对多元线性回归 (MLR) 的理解，特别是偏回归系数的解释和模型基本假设的回顾。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lab.html#目标",
+    "href": "week8_lab.html#目标",
+    "title": "第八周实验：阶段回顾与多元回归实践",
+    "section": "",
+    "text": "快速回顾 tidyverse 数据处理、ggplot2 可视化和第一阶段的关键统计方法。\n使用 lm() 拟合包含多个自变量的 MLR 模型。\n重点练习解读 MLR 模型 summary() 输出，特别是偏回归系数的含义（控制其他变量）。\n解释分类自变量（因子）在 MLR 中的系数含义。\n区分 R-squared 和 Adjusted R-squared。\n理解模型整体 F 检验的意义。\n回顾 L.I.N.E. 假设在线性回归中的重要性。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lab.html#阶段一快速回顾练习",
+    "href": "week8_lab.html#阶段一快速回顾练习",
+    "title": "第八周实验：阶段回顾与多元回归实践",
+    "section": "2. 阶段一快速回顾练习",
+    "text": "2. 阶段一快速回顾练习\n在深入 MLR 之前，快速完成以下练习以巩固基础。\n数据: 使用 mpg 数据集。\n\nlibrary(tidyverse)\nlibrary(car)  # 用于后续可能需要的方差膨胀因子(VIF)计算\n\n练习题:\n\ndplyr: 计算每个 class (车辆类别) 的平均 cty (城市里程)，并按平均里程降序排列。\nggplot2: 绘制 displ (排量) 与 cty 的散点图，并将点的颜色映射到 drv (驱动方式)，添加合适的标题和轴标签。\n假设检验选择: 你想比较 drv 为 ‘f’ (前驱) 和 ‘r’ (后驱) 的车辆的平均 hwy (高速里程) 是否有显著差异，你会选择哪种统计检验？(写出名称即可)\n相关性: 计算 cty 和 hwy 之间的 Pearson 相关系数。\nSLR 回顾: 拟合一个简单线性回归模型，用 cty 预测 hwy。写出回归方程，并解释斜率的含义。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lab.html#多元线性回归-mlr-实践",
+    "href": "week8_lab.html#多元线性回归-mlr-实践",
+    "title": "第八周实验：阶段回顾与多元回归实践",
+    "section": "3. 多元线性回归 (MLR) 实践",
+    "text": "3. 多元线性回归 (MLR) 实践\n场景: 我们想建立一个更全面的模型来预测 mpg 数据集中的 hwy (高速公路里程)，同时考虑 cty (城市里程)、year (生产年份) 和 class (车辆类别) 的影响。\n任务: 1. 使用 lm() 拟合一个 MLR 模型，公式为 hwy ~ cty + as.factor(year) + class。将模型存储在 mlr_hwy 中。(注意：year 是二分类变量（1999 和 2008），使用 as.factor() 将其转换为因子变量) 2. 使用 summary() 查看模型 mlr_hwy 的详细结果。 3. 解读模型系数 (Coefficients): * 解释截距 (Intercept) 的含义（是否有实际意义？）。 * 解释 cty 的偏回归系数的含义（强调“控制其他变量”）。 * 解释 year 的偏回归系数的含义。(注意：year 的系数表示 2008 年相对于 1999 年（参照组）的 hwy 差异) * 解释 class 各水平的系数含义（它们是相对于哪个参照组的？）。 * 判断每个系数的统计显著性（基于 P 值和 \\(\\alpha = 0.05\\)）。 4. 解读模型整体性能: * 解释 Adjusted R-squared 的值代表什么？ * 解释 F-statistic 和对应的 p-value 的含义（检验模型的整体显著性）。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lab.html#统计显著性-vs-实际重要性讨论",
+    "href": "week8_lab.html#统计显著性-vs-实际重要性讨论",
+    "title": "第八周实验：阶段回顾与多元回归实践",
+    "section": "4. 统计显著性 vs 实际重要性讨论",
+    "text": "4. 统计显著性 vs 实际重要性讨论\n思考: 在上面的 mlr_hwy 模型中，year 的系数是统计显著的 (p ≈ 0.0036)，估计值为 0.46。\n\n这个结果的统计意义是什么？\n这个结果的实际重要性如何？增加约 0.46 MPG 对于购车者或汽车工程师来说，是一个值得关注的差异吗？（这取决于具体情境和比较基准）。\n如果样本量增大很多，一个估计值为 0.1 MPG 的系数也可能变得统计显著 (p &lt; 0.05)。在这种情况下，它的实际重要性又如何？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lab.html#回顾-l.i.n.e.-假设",
+    "href": "week8_lab.html#回顾-l.i.n.e.-假设",
+    "title": "第八周实验：阶段回顾与多元回归实践",
+    "section": "5. 回顾 L.I.N.E. 假设",
+    "text": "5. 回顾 L.I.N.E. 假设\n回顾线性回归的四个关键假设：\n\nLinearity (线性性): Y 与 X 之间的关系是线性的。\nIndependence (独立性): 误差项（残差）相互独立。\nNormality (正态性): 误差项（残差）服从正态分布。\nEqual Variance (等方差性 / Homoscedasticity): 误差项（残差）的方差在所有 X 水平上是恒定的。\n\n思考: 对于我们拟合的 mlr_hwy 模型： * 你认为哪个假设最有可能被违反？为什么？ * 如果这些假设被违反，会对我们的模型结果（系数估计、P 值、置信区间）产生什么影响？（回顾讲义内容）。\n（我们将在下周的实验中学习如何具体诊断这些假设。）",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+    ]
+  },
+  {
+    "objectID": "week8_lab.html#实验总结",
+    "href": "week8_lab.html#实验总结",
+    "title": "第八周实验：阶段回顾与多元回归实践",
+    "section": "6. 实验总结",
+    "text": "6. 实验总结\n在本实验中，我们通过简短练习回顾了第一阶段的关键知识点。接着，我们重点实践了多元线性回归模型的拟合与解读，特别是深入理解了偏回归系数的含义——在控制其他变量影响下的独立效应。我们还练习了解读模型摘要中的 R² 和整体 F 检验，并讨论了统计显著性与实际重要性的区别。最后，我们回顾了 L.I.N.E. 假设，为下周的模型诊断做好铺垫。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+    ]
+  }
+]

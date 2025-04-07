@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>第四周：眼见为实：ggplot2 可视化探索与推断初步 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week5_lecture.html" rel="next">
+<link href="./week3_lecture.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles/custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week4_lecture.html"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">课程介绍</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">讲义</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lecture.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周：分类数据的智慧：卡方检验与阶段总结</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周：承前启后：阶段回顾与多元回归再探</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">实验</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周实验：R 环境与基础操作</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周实验：数据导入与描述性统计</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周实验：<code>dplyr</code> 进阶与 <code>tidyr</code> 数据整形</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周实验：<code>ggplot2</code> 可视化探索</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周实验：假设检验实践 (t-检验与 ANOVA)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周实验：卡方检验与统计方法选择</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周实验：阶段回顾与多元回归实践</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#为何需要数据可视化" id="toc-为何需要数据可视化" class="nav-link active" data-scroll-target="#为何需要数据可视化">1. 为何需要数据可视化？</a></li>
+  <li><a href="#数据可视化原则" id="toc-数据可视化原则" class="nav-link" data-scroll-target="#数据可视化原则">2. 数据可视化原则</a></li>
+  <li><a href="#ggplot2图形的语法" id="toc-ggplot2图形的语法" class="nav-link" data-scroll-target="#ggplot2图形的语法">3. <code>ggplot2</code>：图形的语法</a></li>
+  <li><a href="#常用单变量图形" id="toc-常用单变量图形" class="nav-link" data-scroll-target="#常用单变量图形">4. 常用单变量图形</a></li>
+  <li><a href="#常用双变量图形" id="toc-常用双变量图形" class="nav-link" data-scroll-target="#常用双变量图形">5. 常用双变量图形</a></li>
+  <li><a href="#图形定制初步" id="toc-图形定制初步" class="nav-link" data-scroll-target="#图形定制初步">6. 图形定制初步</a></li>
+  <li><a href="#推断统计思想初步" id="toc-推断统计思想初步" class="nav-link" data-scroll-target="#推断统计思想初步">7. 推断统计思想初步</a></li>
+  <li><a href="#参数估计点估计-vs-区间估计" id="toc-参数估计点估计-vs-区间估计" class="nav-link" data-scroll-target="#参数估计点估计-vs-区间估计">8. 参数估计：点估计 vs 区间估计</a></li>
+  <li><a href="#置信区间-confidence-interval" id="toc-置信区间-confidence-interval" class="nav-link" data-scroll-target="#置信区间-confidence-interval">9. 置信区间 (Confidence Interval)</a></li>
+  <li><a href="#项目相关与本周总结" id="toc-项目相关与本周总结" class="nav-link" data-scroll-target="#项目相关与本周总结">10. 项目相关与本周总结</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week4_lecture.html"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="为何需要数据可视化" class="level2">
+<h2 class="anchored" data-anchor-id="为何需要数据可视化">1. 为何需要数据可视化？</h2>
+<p>我们已经学会了如何整理数据和计算描述性统计量，但数字往往难以直观地揭示数据背后的模式、趋势和异常。数据可视化通过图形将数据呈现出来，帮助我们：</p>
+<ul>
+<li><strong>探索性数据分析 (Exploratory Data Analysis, EDA):</strong> 快速理解数据分布、变量间关系、发现异常点。</li>
+<li><strong>沟通发现:</strong> 清晰有效地向他人展示数据洞见。</li>
+<li><strong>模型诊断:</strong> (后续课程) 检查统计模型的假设是否成立。</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="本周目标">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+本周目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>理解数据可视化的基本原则。</li>
+<li>掌握 <code>ggplot2</code> 的核心语法和图层叠加思想。</li>
+<li>能够绘制常用的单变量和双变量图形。</li>
+<li>对图形进行基本的定制（标签、主题）。</li>
+<li>初步理解推断统计的核心思想：从样本推断总体。</li>
+<li>理解点估计和区间估计的概念。</li>
+<li>掌握置信区间的概念和正确解释。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="数据可视化原则" class="level2">
+<h2 class="anchored" data-anchor-id="数据可视化原则">2. 数据可视化原则</h2>
+<p>有效的可视化不仅仅是绘制图形，更要遵循一定的原则，确保图形清晰、准确、不误导。</p>
+<ul>
+<li><strong>清晰性:</strong> 图形元素（点、线、条）易于区分，标签、坐标轴清晰明了。</li>
+<li><strong>准确性:</strong> 图形真实反映数据特征，避免扭曲（如不恰当的坐标轴范围）。</li>
+<li><strong>简洁性:</strong> 避免不必要的图形元素（“图表垃圾”），突出核心信息。</li>
+<li><strong>目的性:</strong> 图形应服务于特定的分析或沟通目的。选择合适的图形类型。</li>
+</ul>
+</section>
+<section id="ggplot2图形的语法" class="level2">
+<h2 class="anchored" data-anchor-id="ggplot2图形的语法">3. <code>ggplot2</code>：图形的语法</h2>
+<p><code>ggplot2</code> 是 <code>tidyverse</code> 中的旗舰级可视化包，它基于“图形语法”(Grammar of Graphics) 的理念，提供了一种强大而灵活的方式来创建各种复杂的图形。</p>
+<ul>
+<li><p><strong>核心理念：图层叠加 (Layers)</strong> 一个 <code>ggplot2</code> 图形由若干图层叠加而成，每个图层包含：</p>
+<ol type="1">
+<li><strong>数据 (Data):</strong> 要可视化的数据框或 Tibble。</li>
+<li><strong>映射 (Aesthetic Mappings, <code>aes()</code>):</strong> 将数据中的<strong>变量</strong>映射到图形的<strong>视觉属性</strong>（如 x 轴位置、y 轴位置、颜色、形状、大小等）。</li>
+<li><strong>几何对象 (Geometric Objects, <code>geom_...</code>):</strong> 定义了使用哪种图形来表示数据（如点、线、条形、箱线等）。</li>
+<li><strong>统计变换 (Statistical Transformations, <code>stat_...</code>):</strong> 对数据进行统计汇总（如计算频数、密度、均值等），<code>geom</code> 通常有默认的 <code>stat</code>。</li>
+<li><strong>位置调整 (Position Adjustments, <code>position_...</code>):</strong> 处理图形元素重叠问题（如堆叠、并列）。</li>
+<li><strong>坐标系 (Coordinate System, <code>coord_...</code>):</strong> 控制坐标轴（如笛卡尔坐标、极坐标）。</li>
+<li><strong>分面 (Faceting, <code>facet_...</code>):</strong> 将数据按某个分类变量分割成多个子图。</li>
+</ol></li>
+<li><p><strong>基本语法模板:</strong> <code>r     ggplot(data = &lt;DATA_FRAME&gt;) +       geom_xxx(mapping = aes(&lt;MAPPINGS&gt;)) +       # 其他图层、设定...</code></p></li>
+<li><p><strong>示例数据准备:</strong> 我们将使用 <code>ggplot2</code> 内置的 <code>mpg</code> 数据集（关于不同汽车型号燃油效率等信息）。</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)     </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mpg) <span class="co"># 快速查看数据结构</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Rows: 234
+#&gt; Columns: 11
+#&gt; $ manufacturer &lt;chr&gt; "audi", "audi", "audi", "audi", "audi", "audi", "audi", "…
+#&gt; $ model        &lt;chr&gt; "a4", "a4", "a4", "a4", "a4", "a4", "a4", "a4 quattro", "…
+#&gt; $ displ        &lt;dbl&gt; 1.8, 1.8, 2.0, 2.0, 2.8, 2.8, 3.1, 1.8, 1.8, 2.0, 2.0, 2.…
+#&gt; $ year         &lt;int&gt; 1999, 1999, 2008, 2008, 1999, 1999, 2008, 1999, 1999, 200…
+#&gt; $ cyl          &lt;int&gt; 4, 4, 4, 4, 6, 6, 6, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 8, 8, …
+#&gt; $ trans        &lt;chr&gt; "auto(l5)", "manual(m5)", "manual(m6)", "auto(av)", "auto…
+#&gt; $ drv          &lt;chr&gt; "f", "f", "f", "f", "f", "f", "f", "4", "4", "4", "4", "4…
+#&gt; $ cty          &lt;int&gt; 18, 21, 20, 21, 16, 18, 18, 18, 16, 20, 19, 15, 17, 17, 1…
+#&gt; $ hwy          &lt;int&gt; 29, 29, 31, 30, 26, 26, 27, 26, 25, 28, 27, 25, 25, 25, 2…
+#&gt; $ fl           &lt;chr&gt; "p", "p", "p", "p", "p", "p", "p", "p", "p", "p", "p", "p…
+#&gt; $ class        &lt;chr&gt; "compact", "compact", "compact", "compact", "compact", "c…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ?mpg # 查看数据集帮助文档</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+</ul>
+</section>
+<section id="常用单变量图形" class="level2">
+<h2 class="anchored" data-anchor-id="常用单变量图形">4. 常用单变量图形</h2>
+<p>用于探索单个变量的分布特征。</p>
+<ul>
+<li><p><strong>直方图 (Histogram): <code>geom_histogram()</code></strong></p>
+<ul>
+<li>展示连续变量的分布情况。将变量范围分成若干区间 (bins)，计算落在每个区间的观测数量。</li>
+<li><code>aes()</code>: 通常只需要映射 <code>x</code> 轴。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 探索发动机排量 (displ) 的分布</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> displ), <span class="at">binwidth =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">color =</span> <span class="st">"black"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># binwidth 控制区间的宽度，可以调整以观察不同粒度的分布</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fill 设置填充色, color 设置边框色</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p><strong>密度图 (Density Plot): <code>geom_density()</code></strong></p>
+<ul>
+<li>直方图的平滑版本，更清晰地展示分布形状。</li>
+<li><code>aes()</code>: 通常只需要映射 <code>x</code> 轴。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 探索发动机排量 (displ) 的分布</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> displ), <span class="at">fill =</span> <span class="st">"lightgreen"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># alpha 控制填充透明度</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p><strong>箱线图 (Boxplot): <code>geom_boxplot()</code></strong></p>
+<ul>
+<li>展示连续变量的分布概要（中位数、四分位数、异常值）。</li>
+<li><code>aes()</code>: 通常映射 <code>y</code> 轴（或 <code>x</code> 轴，如果想画水平箱线图）。可以映射 <code>x</code> 轴为分类变量来分组比较。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 探索每加仑高速公路行驶英里数 (hwy) 的分布</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">y =</span> hwy), <span class="at">fill =</span> <span class="st">"orange"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看不同驱动方式 (drv: f=前驱, r=后驱, 4=四驱) 的 hwy 分布</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> drv, <span class="at">y =</span> hwy, <span class="at">fill =</span> drv)) <span class="co"># 按 drv 分组并用颜色区分</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout-info" title="箱线图解读">
+<ul>
+<li>箱体：覆盖 IQR (Q1 到 Q3)。</li>
+<li>箱内粗线：中位数 (Q2)。</li>
+<li>触须 (Whiskers)：通常延伸到距离箱体 1.5 倍 IQR 范围内的最远点。</li>
+<li>点：超出触须范围的潜在异常值。</li>
+</ul>
+</div></li>
+</ul>
+</section>
+<section id="常用双变量图形" class="level2">
+<h2 class="anchored" data-anchor-id="常用双变量图形">5. 常用双变量图形</h2>
+<p>用于探索两个变量之间的关系。</p>
+<ul>
+<li><p><strong>散点图 (Scatter Plot): <code>geom_point()</code></strong></p>
+<ul>
+<li>展示两个<strong>连续变量</strong>之间的关系。</li>
+<li><code>aes()</code>: 映射 <code>x</code> 和 <code>y</code> 轴。可以映射其他属性（如 <code>color</code>, <code>shape</code>, <code>size</code>）到第三个变量。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 探索发动机排量 (displ) 与高速公路里程 (hwy) 的关系</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> displ, <span class="at">y =</span> hwy))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将颜色映射到车辆类别 (class)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> displ, <span class="at">y =</span> hwy, <span class="at">color =</span> class))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将点的大小映射到气缸数 (cyl)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> displ, <span class="at">y =</span> hwy, <span class="at">size =</span> cyl, <span class="at">color =</span> class), <span class="at">alpha =</span> <span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p><strong>分组箱线图/小提琴图 (Grouped Boxplot/Violin Plot)</strong></p>
+<ul>
+<li>比较一个<strong>连续变量</strong>在不同<strong>分类变量</strong>组别下的分布。</li>
+<li><code>geom_boxplot()</code> 或 <code>geom_violin()</code> (小提琴图结合了箱线图和密度图)。</li>
+<li><code>aes()</code>: 映射 <code>x</code> 到分类变量，<code>y</code> 到连续变量。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 比较不同车辆类别 (class) 的高速公路里程 (hwy) 分布 (箱线图)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> class, <span class="at">y =</span> hwy, <span class="at">fill =</span> class)) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="co"># 翻转坐标轴，让类别标签更易读</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 比较不同车辆类别 (class) 的高速公路里程 (hwy) 分布 (小提琴图)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> class, <span class="at">y =</span> hwy, <span class="at">fill =</span> class)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> class, <span class="at">y =</span> hwy), <span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="co"># 叠加箱线图</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p><strong>条形图 (Bar Plot): <code>geom_bar()</code> / <code>geom_col()</code></strong></p>
+<ul>
+<li><code>geom_bar()</code>: 统计<strong>分类变量</strong>的频数。<code>aes()</code> 只需要映射 <code>x</code>。</li>
+<li><code>geom_col()</code>: 直接绘制<strong>已计算好</strong>的高度值。<code>aes()</code> 需要映射 <code>x</code> 和 <code>y</code>。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 统计不同车辆类别 (class) 的数量</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> class, <span class="at">fill =</span> class)) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 统计不同类型车辆的平均油耗 (hwy)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>vehicle_summary <span class="ot">&lt;-</span> mpg <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Avg_hwy =</span> <span class="fu">mean</span>(hwy))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制每个车辆类别的平均油耗 (hwy)</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> vehicle_summary) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> class, <span class="at">y =</span> Avg_hwy, <span class="at">fill =</span> class))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="图形定制初步" class="level2">
+<h2 class="anchored" data-anchor-id="图形定制初步">6. 图形定制初步</h2>
+<p><code>ggplot2</code> 提供了丰富的定制选项。</p>
+<ul>
+<li><p><strong>标签 (Labels): <code>labs()</code></strong></p>
+<ul>
+<li>修改标题、副标题、坐标轴标签、图例标题等。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mpg) <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> displ, <span class="at">y =</span> hwy, <span class="at">color =</span> class))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">labs</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"发动机排量与高速公路里程关系"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">subtitle =</span> <span class="st">"数据来源：mpg 数据集"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"发动机排量 (升)"</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"高速公路里程 (英里/加仑)"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"车辆类别"</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"图形由 ggplot2 生成"</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p><strong>主题 (Themes): <code>theme_...()</code></strong></p>
+<ul>
+<li>快速改变图形的整体外观（背景、网格线、字体等）。</li>
+<li>内置主题：<code>theme_bw()</code>, <code>theme_minimal()</code>, <code>theme_classic()</code>, <code>theme_light()</code>, <code>theme_dark()</code> 等。</li>
+<li><code>theme()</code> 函数可以进行更细致的调整。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">labs</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"发动机排量与高速公路里程关系"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"发动机排量 (升)"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"高速公路里程 (英里/加仑)"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"车辆类别"</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_minimal</span>() <span class="co"># 应用 minimal 主题</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week4_lecture_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="推断统计思想初步" class="level2">
+<h2 class="anchored" data-anchor-id="推断统计思想初步">7. 推断统计思想初步</h2>
+<p>到目前为止，我们主要关注<strong>描述统计</strong>（描述已有数据的特征）和<strong>探索性分析</strong>（发现数据中的模式）。<strong>推断统计</strong>则更进一步，试图从<strong>样本 (Sample)</strong> 数据推断<strong>总体 (Population)</strong> 的特征。</p>
+<ul>
+<li><strong>总体 vs 样本:</strong>
+<ul>
+<li><strong>总体:</strong> 我们感兴趣的所有个体或对象的集合（例如，所有中国大学生的身高）。总体通常太大而无法完全测量。</li>
+<li><strong>样本:</strong> 从总体中抽取的一部分个体或对象的集合（例如，随机抽取 1000 名中国大学生的身高）。我们通过分析样本来了解总体。</li>
+</ul></li>
+<li><strong>抽样分布 (Sampling Distribution):</strong>
+<ul>
+<li>想象一下，我们<strong>反复</strong>从同一个总体中抽取<strong>多个</strong>大小相同的样本，并计算每个样本的某个统计量（如样本均值 <span class="math inline">\(\bar{x}\)</span>）。</li>
+<li>这些样本统计量的分布就称为该统计量的<strong>抽样分布</strong>。</li>
+<li>抽样分布描述了样本统计量本身的不确定性或变异性。</li>
+</ul></li>
+<li><strong>中心极限定理 (Central Limit Theorem, CLT) 直观理解:</strong>
+<ul>
+<li>CLT 是统计学中最重要的定理之一。</li>
+<li><strong>核心思想:</strong> 无论总体本身的分布形状如何（只要不是太极端），当样本量 <span class="math inline">\(n\)</span> 足够大时，<strong>样本均值</strong> <span class="math inline">\(\bar{x}\)</span> 的抽样分布近似服从正态分布。</li>
+<li>这个正态分布的均值等于总体均值 <span class="math inline">\(\mu\)</span>，标准差（称为<strong>标准误 Standard Error, SE</strong>）等于总体标准差 <span class="math inline">\(\sigma\)</span> 除以 <span class="math inline">\(\sqrt{n}\)</span> (<span class="math inline">\(SE = \frac{\sigma}{\sqrt{n}}\)</span>)。</li>
+<li><strong>意义:</strong> 使得我们可以利用正态分布的性质来对总体均值进行推断，即使我们不知道总体的具体分布。</li>
+</ul></li>
+</ul>
+<div class="callout-info" title="CLT 的重要性">
+<p>CLT 是许多统计推断方法（如 t 检验、置信区间）的理论基础。它告诉我们，即使原始数据不是正态的，样本均值在多次抽样下也会趋向于正态分布，这极大地简化了推断过程。</p>
+</div>
+</section>
+<section id="参数估计点估计-vs-区间估计" class="level2">
+<h2 class="anchored" data-anchor-id="参数估计点估计-vs-区间估计">8. 参数估计：点估计 vs 区间估计</h2>
+<p>我们通常希望估计总体的某个参数（如总体均值 <span class="math inline">\(\mu\)</span>、总体比例 <span class="math inline">\(p\)</span>）。</p>
+<ul>
+<li><strong>点估计 (Point Estimate):</strong> 用样本统计量直接作为总体参数的估计值。
+<ul>
+<li>例如，用样本均值 <span class="math inline">\(\bar{x}\)</span> 估计总体均值 <span class="math inline">\(\mu\)</span>。</li>
+<li>用样本比例 <span class="math inline">\(\hat{p}\)</span> 估计总体比例 <span class="math inline">\(p\)</span>。</li>
+<li><strong>优点:</strong> 简单直观。</li>
+<li><strong>缺点:</strong> 几乎不可能精确等于总体参数，且没有提供估计的<strong>不确定性</strong>信息。由于抽样误差，每次抽样的点估计值都会有所不同。</li>
+</ul></li>
+<li><strong>区间估计 (Interval Estimate):</strong> 给出一个包含总体参数真实值的<strong>可能范围</strong>，并附带一定的<strong>置信水平 (Confidence Level)</strong>。
+<ul>
+<li>最常见的区间估计是<strong>置信区间 (Confidence Interval, CI)</strong>。</li>
+<li><strong>优点:</strong> 提供了估计的不确定性度量。</li>
+<li><strong>缺点:</strong> 理解和解释比点估计复杂。</li>
+</ul></li>
+</ul>
+</section>
+<section id="置信区间-confidence-interval" class="level2">
+<h2 class="anchored" data-anchor-id="置信区间-confidence-interval">9. 置信区间 (Confidence Interval)</h2>
+<ul>
+<li><strong>概念:</strong> 基于样本数据构造的一个区间，我们有<strong>一定程度的信心</strong>（由置信水平决定）认为该区间包含了未知的总体参数。</li>
+<li><strong>置信水平 (Confidence Level):</strong> 通常表示为 <span class="math inline">\((1-\alpha) \times 100\%\)</span>，常用 95%。
+<ul>
+<li><strong>95% 置信区间的含义 (重要！):</strong> 如果我们反复从总体中抽取<strong>无数个</strong>相同大小的样本，并为每个样本构造一个 95% 置信区间，那么<strong>大约有 95% 的这些区间会包含真实的总体参数</strong>。</li>
+<li><strong>错误理解:</strong> 不能说“总体参数有 95% 的概率落在这个具体的区间内”。总体参数是一个固定的值，它要么在区间内，要么不在。置信水平描述的是构造区间这个<strong>方法</strong>的长期可靠性。</li>
+</ul></li>
+<li><strong>置信区间的构成 (以总体均值</strong> <span class="math inline">\(\mu\)</span> 为例，假设 <span class="math inline">\(\sigma\)</span> 已知或 <span class="math inline">\(n\)</span> 很大):
+<ul>
+<li>置信区间 = 点估计 <span class="math inline">\(\pm\)</span> 边际误差 (Margin of Error, MOE)</li>
+<li><span class="math inline">\(CI = \bar{x} \pm Z_{\alpha/2} \times SE = \bar{x} \pm Z_{\alpha/2} \times \frac{\sigma}{\sqrt{n}}\)</span></li>
+<li><span class="math inline">\(Z_{\alpha/2}\)</span> 是标准正态分布上侧 <span class="math inline">\(\alpha/2\)</span> 分位数（例如，95% 置信水平对应 <span class="math inline">\(\alpha=0.05\)</span>, <span class="math inline">\(Z_{0.025} \approx 1.96\)</span>）。</li>
+<li>边际误差取决于：
+<ul>
+<li><strong>置信水平:</strong> 水平越高，区间越宽。</li>
+<li><strong>数据变异性 (</strong><span class="math inline">\(\sigma\)</span>): 变异性越大，区间越宽。</li>
+<li><strong>样本量 (</strong><span class="math inline">\(n\)</span>): 样本量越大，区间越窄（估计越精确）。</li>
+</ul></li>
+</ul></li>
+<li><strong>解释示例:</strong> 假设我们计算出某产品用户满意度的 95% 置信区间为 [8.2, 8.8]。
+<ul>
+<li><strong>正确解释:</strong> 我们有 95% 的信心认为，该产品用户的真实平均满意度介于 8.2 和 8.8 之间。或者说，如果我们重复抽样并构造区间，预计 95% 的区间会包含真实的平均满意度。</li>
+<li><strong>错误解释:</strong>
+<ul>
+<li>“用户的满意度有 95% 的概率在 8.2 到 8.8 之间。” (概率是针对区间的构造方法，不是针对具体区间或参数)</li>
+<li>“95% 的用户满意度在 8.2 到 8.8 之间。” (置信区间是关于总体<strong>均值</strong>，不是关于个体数据)</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="项目相关与本周总结" class="level2">
+<h2 class="anchored" data-anchor-id="项目相关与本周总结">10. 项目相关与本周总结</h2>
+<ul>
+<li><strong>项目任务:</strong>
+<ul>
+<li>使用 <code>ggplot2</code> 对你的项目数据进行深入的探索性数据分析 (EDA)。尝试绘制各种单变量和双变量图形，探索变量分布和关系。</li>
+<li>思考你的项目中可能需要进行<strong>参数估计</strong>的问题。例如，你想估计某个群体的平均值、比例或两个变量间的关系强度吗？这些估计是点估计还是区间估计更有意义？</li>
+</ul></li>
+<li><strong>本周回顾:</strong> 我们学习了数据可视化的重要性和 <code>ggplot2</code> 的强大功能，能够绘制和定制常见的统计图形。同时，我们初步踏入了推断统计的大门，理解了从样本推断总体的基本思想、抽样分布、CLT 的直观意义，以及点估计和置信区间的概念与解释。</li>
+</ul>
+<p><strong>下周预告:</strong> 我们将正式学习<strong>假设检验</strong>，这是推断统计的另一个核心工具，用于基于样本证据对关于总体的某个断言（假设）做出决策。我们将学习单样本和双样本 t 检验，以及方差分析 (ANOVA)。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week3_lecture.html" class="pagination-link" aria-label="第三周：数据整形：`tidyverse` 的核心技艺">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week5_lecture.html" class="pagination-link" aria-label="第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用">
+        <span class="nav-page-text"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,223 @@
+---
+title: "第十周实验：模型改进与选择实践"
+author: "Your Name / TA Name"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-tools: true
+editor: visual
+---
+
+## 1. 目标
+
+本实验旨在基于上周的模型诊断结果，实践模型改进的常用策略，并练习使用不同标准进行模型选择。
+
+-   应用变量变换（如对数变换）尝试解决非线性或异方差问题，并比较诊断结果。
+-   根据 VIF 结果，通过移除变量来处理多重共线性问题，并观察模型变化。
+-   通过移除强影响点（基于 Cook's D）来评估其对模型的影响。
+-   在模型中添加交互项，并解释交互效应。
+-   使用 AIC 和 BIC 比较不同模型的相对优劣。
+-   (可选) 了解 `step()` 函数的使用，并理解其局限性。
+
+## 2. 数据与模型准备
+
+我们将继续使用上周诊断过的模型： \* `mlr_hwy`: 基于 `mpg` 数据集，`hwy ~ displ + cyl + drv`。诊断显示可能存在轻微非线性/异方差，以及 `displ` 和 `cyl` 之间的共线性。 \* `prob_model`: 基于模拟的 `prob_data`，`y ~ x1 + x2 + x3`。诊断显示存在严重共线性 (x1, x2) 和强影响点 (点 1)。
+
+```{r setup-data-w10}
+library(tidyverse)
+library(ggplot2)
+library(car)    # For vif()
+library(broom)  # For augment()
+library(interactions) # For interact_plot()
+
+# --- 模型 1: mpg 数据 ---
+mlr_hwy <- lm(hwy ~ displ + cyl + drv, data = mpg)
+# summary(mlr_hwy)
+# vif(mlr_hwy)
+# par(mfrow=c(2,2)); plot(mlr_hwy); par(mfrow=c(1,1))
+
+
+# --- 模型 2: 问题数据 ---
+set.seed(42)
+n_prob <- 100
+x1_prob <- rnorm(n_prob)
+x2_prob <- x1_prob * 0.8 + rnorm(n_prob, 0, 0.1) # 共线性
+x3_prob <- rnorm(n_prob)
+y_prob <- 2 + 3*x1_prob + 1*x2_prob - 2*x3_prob + rnorm(n_prob, 0, 2)
+y_prob[1] <- y_prob[1] + 15 # 异常/强影响点
+x1_prob[2] <- x1_prob[2] + 4 # 高杠杆点
+prob_data <- tibble(y = y_prob, x1 = x1_prob, x2 = x2_prob, x3 = x3_prob)
+prob_model <- lm(y ~ x1 + x2 + x3, data = prob_data)
+# summary(prob_model)
+# vif(prob_model)
+# plot(prob_model, which=4) # Cook's D
+```
+
+## 3. 变量变换实践
+
+**场景:** `mlr_hwy` 模型的诊断图（特别是 Residuals vs Fitted 和 Scale-Location）提示可能存在轻微的异方差（方差随拟合值增大而增大）。燃油效率这类变量有时进行对数变换效果较好。
+
+**任务:** 1. 创建一个新模型 `mlr_hwy_log`，对因变量 `hwy` 进行自然对数变换 (`log(hwy)`)，自变量保持不变。 2. 使用 `plot()` 函数对新模型 `mlr_hwy_log` 进行诊断。 3. 比较 `mlr_hwy_log` 和 `mlr_hwy` 的诊断图（特别是 Residuals vs Fitted 和 Scale-Location）。对数变换是否改善了异方差问题？对残差正态性是否有影响？ 4. (思考) 对数变换后，系数的解释发生了什么变化？
+
+```{r practice-transformation}
+# 1. 创建对数变换模型
+mlr_hwy_log <- lm(log(hwy) ~ displ + cyl + drv, data = mpg)
+
+# 2. 诊断新模型
+print("--- Diagnosis for log(hwy) model ---")
+par(mfrow = c(2, 2))
+plot(mlr_hwy_log)
+par(mfrow = c(1, 1))
+
+# 3. 比较诊断图
+print("--- Comparison ---")
+print("Compare the Residuals vs Fitted plot and Scale-Location plot with the original mlr_hwy plots.")
+print("Did the spread of residuals become more uniform (less of a funnel shape)?")
+print("Did the Normal Q-Q plot improve or worsen?")
+# 预期：对数变换可能使残差散点更均匀，改善异方差，但对正态性的影响不一定。
+
+# 4. 思考系数解释变化
+print("--- Coefficient Interpretation Change ---")
+print("Original model: displ coefficient means for 1 unit increase in displ, hwy decreases by beta_displ MPG on average.")
+print("New model: displ coefficient means for 1 unit increase in displ, log(hwy) decreases by beta_displ_log on average.")
+print("More intuitively: for 1 unit increase in displ, hwy changes by a factor of exp(beta_displ_log) on average.")
+```
+
+## 4. 处理多重共线性实践
+
+**场景:** `prob_model` 模型的 VIF 诊断显示 `x1` 和 `x2` 存在严重共线性。
+
+**任务:** 1. 回顾 `prob_model` 的 VIF 值。 2. 创建一个新模型 `prob_model_nox2`，从 `prob_model` 中移除共线性严重的变量之一（例如 `x2`）。 3. 查看新模型 `prob_model_nox2` 的摘要 (`summary()`) 和 VIF 值。 4. 比较 `prob_model` 和 `prob_model_nox2` 的结果： \* `x1` 的系数估计值和标准误有何变化？P 值呢？ \* 模型的 Adjusted R-squared 有何变化？ \* 移除 `x2` 是否解决了共线性问题？这样做是否合理（取决于 `x1` 和 `x2` 的理论重要性）？
+
+```{r practice-multicollinearity}
+# 1. 回顾 prob_model VIF
+print("--- VIF for original prob_model ---")
+vif(prob_model)
+
+# 2. 创建移除 x2 的新模型
+prob_model_nox2 <- lm(y ~ x1 + x3, data = prob_data)
+
+# 3. 查看新模型摘要和 VIF
+print("--- Summary for prob_model_nox2 (x2 removed) ---")
+summary(prob_model_nox2)
+print("--- VIF for prob_model_nox2 ---")
+# VIF requires more than one predictor, will error here.
+# If we had more predictors, we would check vif(prob_model_nox2)
+print("VIF check requires >1 predictor. If x1 and x3 remain, VIF is not applicable or will be 1.")
+
+
+# 4. 比较结果
+print("--- Comparison ---")
+print("Original prob_model summary:")
+summary(prob_model)
+print("Compare coefficients (especially x1), std. errors, p-values, and Adj. R-squared.")
+# 预期：
+# - x1 的标准误在新模型中可能显著减小，P 值可能变得更显著（如果 x1 本身效应强）。
+# - x1 的系数估计值可能发生变化 (吸收了部分 x2 的效应)。
+# - Adjusted R-squared 可能略有下降（因为移除了一个变量），但如果 x2 确实冗余，下降可能不大。
+# - VIF 问题得到解决。
+# - 合理性讨论：如果 x1 和 x2 衡量相似概念，移除一个可能合理。如果它们代表不同但相关的概念，移除可能导致遗漏变量偏误。
+```
+
+## 5. 处理强影响点实践
+
+**场景:** `prob_model` 的 Cook's D 诊断显示第一个观测点是强影响点。
+
+**任务:** 1. 找出 `prob_model` 中 Cook's D 大于某个阈值（例如 0.5 或 1）的点的索引。 2. 创建一个新模型 `prob_model_noinf`，从 `prob_data` 中移除这些强影响点后重新拟合模型 (`y ~ x1 + x2 + x3`)。 3. 比较 `prob_model` 和 `prob_model_noinf` 的模型摘要 (`summary()`)。 \* 系数估计值（特别是截距和受影响变量的系数）是否有显著变化？ \* 标准误和 P 值是否有变化？ \* R-squared 和 Adjusted R-squared 是否有变化？ 4. **讨论:** 移除这个点对模型结果产生了多大的影响？你认为应该移除它吗？（强调移除的谨慎性）。
+
+```{r practice-influential}
+# 1. 找出强影响点
+cooks_prob <- cooks.distance(prob_model)
+# 使用较严格的阈值 0.5 或 1，或者 4/n
+cutoff_inf <- 0.5 # 或者 1 或 4/nrow(prob_data)
+influential_indices <- which(cooks_prob > cutoff_inf)
+print(paste("Influential points (Cook's D >", cutoff_inf, "):", toString(influential_indices)))
+# 预期：点 1 应该在这里
+
+# 2. 创建移除影响点后的模型
+if (length(influential_indices) > 0) {
+  prob_model_noinf <- lm(y ~ x1 + x2 + x3, data = prob_data[-influential_indices, ])
+
+  # 3. 比较模型摘要
+  print("--- Summary for original prob_model ---")
+  summary(prob_model)
+  print("--- Summary for prob_model_noinf (influential points removed) ---")
+  summary(prob_model_noinf)
+
+  # 4. 讨论
+  print("--- Discussion ---")
+  print("Compare the coefficients, std. errors, p-values, and R-squared.")
+  print("Did removing the influential point(s) significantly change the model estimates or conclusions?")
+  print("Consider if the influential point is due to error or represents a valid but extreme case.")
+  print("Removing points should be done cautiously and reported transparently.")
+
+} else {
+  print(paste("No influential points found with Cook's D >", cutoff_inf))
+}
+
+```
+
+## 6. 交互项实践
+
+**场景:** 我们想探究 `mpg` 数据集中，发动机排量 (`displ`) 对高速公路里程 (`hwy`) 的影响是否会因为驱动方式 (`drv`) 的不同而不同。
+
+**任务:** 1. 拟合一个包含 `displ` 和 `drv` 主效应以及它们之间交互项的模型 `hwy ~ displ * drv`。将模型存储在 `interaction_hwy` 中。 2. 查看模型摘要 `summary(interaction_hwy)`。 3. **解读交互项系数:** \* 找到 `displ:drv4` 和 `displ:drvr` 的系数和 P 值。 \* 解释 `displ:drv4` 系数的含义（它如何调节 `displ` 的效应？）。 \* 这些交互项是否统计显著？这说明了什么？ 4. 使用 `interactions::interact_plot()` 可视化交互效应。观察不同 `drv` 水平下 `displ` 对 `hwy` 的拟合线斜率是否不同。
+
+```{r practice-interaction}
+# 1. 拟合交互模型
+interaction_hwy <- lm(hwy ~ displ * drv, data = mpg)
+
+# 2. 查看摘要
+summary_interaction <- summary(interaction_hwy)
+print(summary_interaction)
+
+# 3. 解读交互项系数
+print("--- Interaction Term Interpretation ---")
+# 找到 Coefficients 表中 displ:drv4 和 displ:drvr 行
+# displ:drv4 系数: 表示与参照组 drv='f' 相比，四驱 drv='4' 会使 displ 对 hwy 的负斜率改变多少。
+#                   例如，如果系数为 1.5，意味着对于四驱车，排量增加1升，hwy减少的幅度比前驱车要 *少* 1.5 MPG。
+# displ:drvr 系数: 类似地，表示后驱车相对于前驱车，displ 斜率的变化。
+# 显著性: 查看交互项的 P 值。如果 P < 0.05，则说明 displ 对 hwy 的影响确实显著依赖于 drv 的水平。
+# 根据实际输出判断显著性。 (在此示例中，交互项可能不显著)
+
+# 4. 可视化交互效应
+library(interactions)
+interact_plot(interaction_hwy, pred = displ, modx = drv, plot.points = TRUE, interval = TRUE) +
+  labs(title = "交互效应：排量对高速里程的影响因驱动方式而异",
+       x = "排量 (升)", y = "高速里程 (MPG)") +
+  theme_minimal()
+# 观察：图中不同颜色（代表 drv）的拟合线斜率是否明显不同？如果线不平行，则支持交互效应的存在。
+```
+
+## 7. 模型比较实践 (AIC/BIC)
+
+**场景:** 比较我们为 `hwy` 建立的几个模型： \* `slr_hwy_displ <- lm(hwy ~ displ, data = mpg)` (仅排量) \* `mlr_hwy` (`hwy ~ displ + cyl + drv`) (排量+气缸+驱动) \* `mlr_hwy_log` (`log(hwy) ~ displ + cyl + drv`) (因变量对数变换) - 注意：AIC/BIC 不能直接比较因变量不同的模型！ \* `interaction_hwy` (`hwy ~ displ * drv`) (排量与驱动交互)
+
+**任务:** 1. 拟合 `slr_hwy_displ` 模型。 2. 使用 `AIC()` 和 `BIC()` 函数比较 **因变量相同** 的模型：`slr_hwy_displ`, `mlr_hwy`, `interaction_hwy`。 3. 哪个模型的 AIC/BIC 值最低？这表明哪个模型在拟合优度和复杂度之间取得了更好的平衡？
+
+```{r practice-model-comparison}
+# 1. 拟合 SLR 模型
+slr_hwy_displ <- lm(hwy ~ displ, data = mpg)
+
+# 2. 比较 AIC 和 BIC (只能比较因变量都是 hwy 的模型)
+print("--- Model Comparison (AIC/BIC) ---")
+AIC_comparison <- AIC(slr_hwy_displ, mlr_hwy, interaction_hwy)
+BIC_comparison <- BIC(slr_hwy_displ, mlr_hwy, interaction_hwy)
+
+print("AIC Comparison:")
+print(AIC_comparison)
+print("BIC Comparison:")
+print(BIC_comparison)
+
+# 3. 解读
+print("--- Interpretation ---")
+print("Find the model with the lowest AIC and BIC values.")
+print("Lower values suggest a better balance between model fit and complexity.")
+print("For example, if interaction_hwy has the lowest AIC/BIC, it might be preferred based on these criteria.")
+print("However, model selection should also consider theory, diagnostics, and research goals.")
+```
+
+## 8. 实验总结
+
+在本实验中，我们基于模型诊断的结果，实践了多种模型改进策略，包括变量变换、处理多重共线性和强影响点。我们还学习了如何添加和解释交互项，以捕捉更复杂的变量关系。最后，我们使用 AIC 和 BIC 作为参考指标，比较了不同模型的相对优劣。模型构建是一个迭代的过程，需要结合诊断、改进和选择，才能得到一个相对可靠和有效的模型。

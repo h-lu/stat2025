@@ -1,0 +1,286 @@
+---
+title: "第十二周：Logistic 回归评估 与 模型比较初步"
+---
+
+## 1. 模型好坏：如何评估分类模型？
+
+上周我们学习了如何拟合 Logistic 回归模型来预测分类结果的概率。但是，仅仅拟合模型是不够的，我们还需要评估模型的**预测性能 (Predictive Performance)**，即模型在区分不同类别方面的表现如何。与线性回归使用 R² 或 RMSE 不同，分类模型有其独特的评估指标。
+
+::: {.callout-note title="本周目标"}
+-   理解并能够计算**混淆矩阵 (Confusion Matrix)**。
+-   掌握常用的分类模型评估指标：**准确率 (Accuracy)**、**精确率 (Precision)**、**召回率 (Recall / Sensitivity)**、**F1 分数 (F1-Score)**、**特异度 (Specificity)**，并理解它们之间的权衡。
+-   理解 **ROC 曲线 (Receiver Operating Characteristic Curve)** 和 **AUC 值 (Area Under the Curve)** 的含义和作用。
+-   能够使用 R 实现上述评估指标和 ROC/AUC 的计算与可视化。
+-   了解使用 AIC/BIC 等信息准则比较广义线性模型 (GLM) 的思路。
+-   继续推进 Capstone 项目：选题讨论与初步数据探索。
+:::
+
+我们将继续使用上周的 `mtcars` Logistic 回归模型作为示例。
+
+``` r
+library(tidyverse)
+library(broom)
+library(pROC) # 用于 ROC 曲线和 AUC 计算
+# install.packages("pROC") # 如果尚未安装
+library(yardstick) # tidyverse 风格的模型评估包 (可选)
+# install.packages("yardstick") # 如果尚未安装
+
+# 回顾上周的模型
+mtcars_data <- mtcars %>%
+  mutate(am = factor(am, levels = c(0, 1), labels = c("Automatic", "Manual")))
+
+logistic_model <- glm(am ~ hp + wt, data = mtcars_data, family = binomial)
+# summary(logistic_model)
+
+# 获取模型预测的概率 (预测为 "Manual" 的概率)
+predictions_prob <- predict(logistic_model, type = "response") # type="response" 返回概率
+
+# 为了计算混淆矩阵等指标，需要将概率转换为类别预测
+# 通常使用 0.5 作为阈值 (threshold)
+threshold <- 0.5
+predictions_class <- ifelse(predictions_prob > threshold, "Manual", "Automatic")
+predictions_class <- factor(predictions_class, levels = c("Automatic", "Manual")) # 确保因子水平一致
+
+# 将真实值和预测值放入一个 tibble，方便后续计算
+eval_data <- tibble(
+  observed = mtcars_data$am,
+  predicted_prob = predictions_prob,
+  predicted_class = predictions_class
+)
+
+# glimpse(eval_data)
+```
+
+## 2. 混淆矩阵 (Confusion Matrix)
+
+混淆矩阵是评估分类模型性能的基础。它是一个表格，总结了模型**预测类别**与**实际类别**之间的匹配情况。对于二元分类，它通常是一个 2x2 的矩阵。
+
+-   **结构:**
+
+    |                         | 预测为 Positive (1)     | 预测为 Negative (0)     |
+    |:---------------------|:------------------------|:------------------------|
+    | **实际为 Positive (1)** | **TP** (True Positive)  | **FN** (False Negative) |
+    | **实际为 Negative (0)** | **FP** (False Positive) | **TN** (True Negative)  |
+
+    -   **TP (真正例):** 实际为 Positive，预测也为 Positive (预测正确)。
+    -   **FN (假反例):** 实际为 Positive，但预测为 Negative (预测错误，**漏报**，Type II Error)。
+    -   **FP (假正例):** 实际为 Negative，但预测为 Positive (预测错误，**误报**，Type I Error)。
+    -   **TN (真反例):** 实际为 Negative，预测也为 Negative (预测正确)。
+
+-   **R 实现:**
+
+    ``` r
+    # 方法1: 使用基础 table() 函数
+    # 注意：第一个参数是实际值，第二个参数是预测值
+    confusion_matrix_base <- table(Observed = eval_data$observed, Predicted = eval_data$predicted_class)
+    print(confusion_matrix_base)
+    #          Predicted
+    # Observed  Automatic Manual
+    # Automatic        16      3  <- TN=16, FP=3
+    # Manual            3     10  <- FN=3, TP=10
+
+    # 方法2: 使用 yardstick 包 (更推荐，输出更规范)
+    conf_mat_tbl <- eval_data %>%
+      conf_mat(truth = observed, estimate = predicted_class) # truth=真实值, estimate=预测值
+
+    print(conf_mat_tbl)
+    #            Truth
+    # Prediction Automatic Manual
+    #  Automatic        16      3
+    #  Manual            3     10
+
+    # 可以绘制混淆矩阵图
+    autoplot(conf_mat_tbl, type = "heatmap") +
+      labs(title = "Confusion Matrix Heatmap")
+    # autoplot(conf_mat_tbl, type = "mosaic") # 马赛克图
+    ```
+
+## 3. 基于混淆矩阵的评估指标
+
+从混淆矩阵可以衍生出多个评估指标，从不同角度衡量模型性能。
+
+-   **准确率 (Accuracy):**
+    -   **定义:** 模型**预测正确**的样本占**总样本**的比例。
+
+    -   **公式:** $Accuracy = \frac{TP + TN}{TP + TN + FP + FN}$
+
+    -   **解读:** 最直观的指标，但在**类别不平衡 (Imbalanced Classes)** 的数据集中具有**误导性**。例如，如果 99% 的样本是 Negative，一个将所有样本都预测为 Negative 的模型也能达到 99% 的准确率，但这显然不是一个好模型。
+
+    -   **R 实现:**
+
+        ``` r
+        # 手动计算
+        accuracy_manual <- (16 + 10) / (16 + 10 + 3 + 3)
+        print(accuracy_manual) # 约 0.8125
+
+        # 使用 yardstick
+        eval_data %>% accuracy(truth = observed, estimate = predicted_class)
+        ```
+-   **精确率 (Precision):** (也叫查准率)
+    -   **定义:** 在所有**预测为 Positive** 的样本中，**实际也为 Positive** 的比例。
+
+    -   **公式:** $Precision = \frac{TP}{TP + FP}$
+
+    -   **解读:** 衡量模型预测 Positive 的**准确性**。高精确率表示模型预测为 Positive 的结果中，很少有误报 (FP)。关注“预测出来的 Positive 有多准？”。
+
+    -   **应用:** 当**误报 (FP) 的代价很高**时很重要（例如，垃圾邮件检测，宁可漏掉一些垃圾邮件，也不想把正常邮件误判为垃圾邮件）。
+
+    -   **R 实现:**
+
+        ``` r
+        # 手动计算 (预测为 Manual 的精确率)
+        precision_manual <- 10 / (10 + 3)
+        print(precision_manual) # 约 0.769
+
+        # 使用 yardstick (需要指定 positive 类)
+        eval_data %>% precision(truth = observed, estimate = predicted_class, event_level = "second") # "second" 表示第二个因子水平 "Manual" 是 positive 类
+        ```
+-   **召回率 (Recall / Sensitivity / True Positive Rate, TPR):** (也叫查全率、敏感度)
+    -   **定义:** 在所有**实际为 Positive** 的样本中，被模型**成功预测为 Positive** 的比例。
+
+    -   **公式:** $Recall = Sensitivity = TPR = \frac{TP}{TP + FN}$
+
+    -   **解读:** 衡量模型**找出所有 Positive 样本**的能力。高召回率表示模型很少漏报 (FN)。关注“所有 Positive 的样本，找出来了多少？”。
+
+    -   **应用:** 当**漏报 (FN) 的代价很高**时很重要（例如，疾病诊断，宁可误诊一些健康人，也不想漏掉真正的病人）。
+
+    -   **R 实现:**
+
+        ``` r
+        # 手动计算 (Manual 类的召回率)
+        recall_manual <- 10 / (10 + 3)
+        print(recall_manual) # 约 0.769 (在这个例子中恰好与 Precision 相等)
+
+        # 使用 yardstick
+        eval_data %>% recall(truth = observed, estimate = predicted_class, event_level = "second")
+        # 或者使用 sensitivity()
+        eval_data %>% sensitivity(truth = observed, estimate = predicted_class, event_level = "second")
+        ```
+-   **F1 分数 (F1-Score):**
+    -   **定义:** 精确率 (Precision) 和召回率 (Recall) 的**调和平均数 (Harmonic Mean)**。
+
+    -   **公式:** $F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall} = \frac{2TP}{2TP + FP + FN}$
+
+    -   **解读:** 综合考虑了精确率和召回率，当两者都较高时，F1 分数也较高。是评估模型综合性能的常用指标，尤其在类别不平衡时比准确率更可靠。
+
+    -   **R 实现:**
+
+        ``` r
+        # 手动计算
+        f1_manual <- 2 * (precision_manual * recall_manual) / (precision_manual + recall_manual)
+        print(f1_manual) # 约 0.769
+
+        # 使用 yardstick
+        eval_data %>% f_meas(truth = observed, estimate = predicted_class, event_level = "second") # f_meas 计算 F-beta score, 默认 beta=1 即 F1
+        ```
+-   **特异度 (Specificity / True Negative Rate, TNR):**
+    -   **定义:** 在所有**实际为 Negative** 的样本中，被模型**成功预测为 Negative** 的比例。
+
+    -   **公式:** $Specificity = TNR = \frac{TN}{TN + FP}$
+
+    -   **解读:** 衡量模型**正确识别 Negative 样本**的能力。与召回率 (Sensitivity) 对应。
+
+    -   **应用:** 在疾病诊断中，表示正确识别健康人的能力。
+
+    -   **R 实现:**
+
+        ``` r
+        # 手动计算
+        specificity_manual <- 16 / (16 + 3)
+        print(specificity_manual) # 约 0.842
+
+        # 使用 yardstick
+        eval_data %>% specificity(truth = observed, estimate = predicted_class, event_level = "second") # 注意 event_level 仍然是 positive 类
+        ```
+
+::: {.callout-warning title="指标权衡 (Trade-off)"}
+-   **精确率 vs 召回率:** 通常存在权衡。提高精确率（减少 FP）可能会降低召回率（增加 FN），反之亦然。选择哪个更重要取决于具体应用场景和两类错误的代价。
+-   **阈值选择:** 改变分类阈值（默认 0.5）会影响预测类别，从而改变混淆矩阵和所有这些指标。ROC 曲线可以帮助我们理解不同阈值下的性能。
+:::
+
+## 4. ROC 曲线 与 AUC 值
+
+-   **ROC 曲线 (Receiver Operating Characteristic Curve):**
+
+    -   一种可视化分类模型在**所有可能阈值**下性能表现的图形。
+    -   **横轴:** **假正例率 (False Positive Rate, FPR)** = $1 - Specificity = \frac{FP}{FP + TN}$。
+    -   **纵轴:** **真正例率 (True Positive Rate, TPR)** = $Recall = Sensitivity = \frac{TP}{TP + FN}$。
+    -   **绘制方法:** 连续改变分类阈值，计算每个阈值下的 TPR 和 FPR，描点连接。
+    -   **解读:** 曲线越**靠近左上角** (TPR 高，FPR 低)，模型性能越好。对角线代表**随机猜测**。
+
+-   **AUC 值 (Area Under the ROC Curve):**
+
+    -   ROC 曲线下的面积，取值 0 到 1。
+    -   **解读:** AUC 越大，模型区分 Positive 和 Negative 样本的**整体能力越强**。不依赖特定阈值。AUC=0.5 表示随机猜测。
+    -   **直观含义:** 从 Positive 和 Negative 样本中各随机抽取一个，AUC 值等于模型将 Positive 样本预测概率排在 Negative 样本预测概率之前的概率。
+
+-   **R 实现 (使用 `pROC` 包):**
+
+    ``` r
+    library(pROC)
+
+    # 创建 ROC 对象
+    # response: 真实类别 (因子或 0/1)
+    # predictor: 预测为 Positive 类别的概率
+    # levels: 指定哪个是 Negative(0), 哪个是 Positive(1)
+    roc_obj <- roc(response = eval_data$observed,
+                   predictor = eval_data$predicted_prob,
+                   levels = c("Automatic", "Manual")) # 指定 Automatic 为 0, Manual 为 1
+
+    # 计算 AUC 值
+    auc_value <- auc(roc_obj)
+    print(paste("AUC:", round(auc_value, 4))) # 约 0.909
+
+    # 绘制 ROC 曲线
+    ggroc(roc_obj, legacy.axes = TRUE) + # legacy.axes=TRUE 使 x 轴为 FPR
+      geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color="grey", linetype="dashed") + # 添加对角线
+      labs(title = paste("ROC Curve (AUC =", round(auc_value, 3), ")"),
+           x = "False Positive Rate (1 - Specificity)",
+           y = "True Positive Rate (Sensitivity)") +
+      theme_minimal()
+
+    # 找到最佳阈值 (例如，基于 Youden's J statistic = Sensitivity + Specificity - 1 最大化)
+    # coords(roc_obj, "best", ret = "threshold")
+    ```
+
+## 5. 模型比较初步：AIC 与 BIC
+
+当我们有多个候选的 Logistic 回归模型时，如何比较它们？
+
+-   **信息准则 (Information Criteria):** AIC 和 BIC 同样适用于广义线性模型 (GLM)。
+
+    -   权衡模型的**拟合优度**和**模型复杂度**。
+    -   **目标:** 选择 AIC 或 BIC **最小**的模型。
+    -   只能用于比较**使用相同因变量和相同数据集**拟合的模型。
+
+-   **R 实现:**
+
+    ``` r
+    # 假设我们有另一个模型，只用 wt 预测 am
+    logistic_model_wt_only <- glm(am ~ wt, data = mtcars_data, family = binomial)
+
+    # 比较两个模型的 AIC 和 BIC
+    AIC(logistic_model, logistic_model_wt_only)
+    BIC(logistic_model, logistic_model_wt_only)
+
+    # 结果显示 logistic_model (包含 hp 和 wt) 的 AIC 和 BIC 都更小，
+    # 表明在拟合优度和复杂度之间权衡后，它是相对更优的模型。
+    ```
+
+-   **其他比较方法:**
+
+    -   **似然比检验 (LRT):** 比较**嵌套模型**。`anova(model1, model2, test="LRT")`。
+    -   **交叉验证 (Cross-Validation):** (更高级) 在测试集上评估模型性能，更可靠。
+
+## 6. Capstone 项目进展
+
+-   **本周任务:**
+    -   **确定选题和研究问题:** 与老师或助教讨论你的初步想法，确保可行性。
+    -   **获取并初步检查数据:** 使用 `readr` 导入数据，使用 `glimpse()`, `summary()`, `skimr::skim()` 等函数了解数据结构、变量类型、缺失值等。
+    -   **进行初步的 EDA:** 使用 `ggplot2` 绘制关键变量的分布图（直方图、箱线图、条形图）和变量关系图（散点图、分组箱线图）。
+
+## 7. 本周总结与预告
+
+本周我们重点学习了如何评估分类模型（特别是 Logistic 回归）的性能。我们掌握了混淆矩阵及其衍生指标（准确率、精确率、召回率、F1、特异度），理解了它们的应用场景和权衡。我们还学习了 ROC 曲线和 AUC 值作为不依赖阈值的整体性能评估工具。最后，我们了解了使用 AIC/BIC 比较 GLM 的思路。
+
+**下周预告:** 我们将进一步探讨 AI 工具在数据分析中的应用，学习如何更有效地利用 AI 进行编程、调试、解释和报告写作，并强调批判性思维和验证的重要性。同时，我们将学习可重复报告的基础知识（R Markdown / Quarto），让我们的分析过程和结果更规范、更易于分享。

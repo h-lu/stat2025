@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>第六周：探索关系：相关与简单线性回归入门 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week7_lecture.html" rel="next">
+<link href="./week5_lecture.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles/custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week6_lecture.html"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">课程介绍</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">讲义</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lecture.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周：分类数据的智慧：卡方检验与阶段总结</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周：承前启后：阶段回顾与多元回归再探</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">实验</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周实验：R 环境与基础操作</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周实验：数据导入与描述性统计</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周实验：<code>dplyr</code> 进阶与 <code>tidyr</code> 数据整形</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周实验：<code>ggplot2</code> 可视化探索</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周实验：假设检验实践 (t-检验与 ANOVA)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周实验：卡方检验与统计方法选择</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周实验：阶段回顾与多元回归实践</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#变量之间的关系" id="toc-变量之间的关系" class="nav-link active" data-scroll-target="#变量之间的关系">1. 变量之间的关系</a></li>
+  <li><a href="#相关分析-correlation-analysis" id="toc-相关分析-correlation-analysis" class="nav-link" data-scroll-target="#相关分析-correlation-analysis">2. 相关分析 (Correlation Analysis)</a></li>
+  <li><a href="#简单线性回归-simple-linear-regression-slr" id="toc-简单线性回归-simple-linear-regression-slr" class="nav-link" data-scroll-target="#简单线性回归-simple-linear-regression-slr">3. 简单线性回归 (Simple Linear Regression, SLR)</a></li>
+  <li><a href="#多元线性回归-multiple-linear-regression-mlr-概念初步引入" id="toc-多元线性回归-multiple-linear-regression-mlr-概念初步引入" class="nav-link" data-scroll-target="#多元线性回归-multiple-linear-regression-mlr-概念初步引入">4. 多元线性回归 (Multiple Linear Regression, MLR) 概念初步引入</a></li>
+  <li><a href="#项目相关与本周总结" id="toc-项目相关与本周总结" class="nav-link" data-scroll-target="#项目相关与本周总结">5. 项目相关与本周总结</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week6_lecture.html"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="变量之间的关系" class="level2">
+<h2 class="anchored" data-anchor-id="变量之间的关系">1. 变量之间的关系</h2>
+<p>前几周我们关注于描述单个变量的特征（分布）或比较不同组别在某个变量上的差异（均值比较）。本周我们将开始探索<strong>两个或多个变量之间是否存在关联</strong>，以及如何量化和描述这种关联。</p>
+<div class="callout callout-style-default callout-note callout-titled" title="本周目标">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+本周目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>理解相关性分析的目的和局限性（相关不等于因果）。</li>
+<li>掌握 Pearson 和 Spearman 相关系数的适用场景、计算和显著性检验。</li>
+<li>能够结合散点图直观理解相关性。</li>
+<li>理解简单线性回归 (SLR) 的基本概念、模型形式和系数含义。</li>
+<li>了解最小二乘法 (OLS) 的基本思想。</li>
+<li>能够使用 R 的 <code>lm()</code> 函数拟合 SLR 模型并解读基本输出（系数、R²）。</li>
+<li>初步了解多元线性回归 (MLR) 的动机和“偏回归系数”的概念。</li>
+</ul>
+</div>
+</div>
+<p>我们将继续使用 <code>mpg</code> 数据集，并可能引入其他示例。</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># glimpse(mpg)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="相关分析-correlation-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="相关分析-correlation-analysis">2. 相关分析 (Correlation Analysis)</h2>
+<p>相关分析用于衡量两个<strong>连续变量</strong>之间<strong>线性关联</strong>的<strong>强度</strong>和<strong>方向</strong>。</p>
+<ul>
+<li><strong>相关不等于因果 (Correlation does not imply causation!)</strong></li>
+</ul>
+<div class="callout callout-style-default callout-caution callout-titled" title="相关不等于因果">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+相关不等于因果
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在统计分析中，相关关系与因果关系是截然不同的概念。当我们观察到两个变量之间存在相关性时，可能有以下四种解释：</p>
+<ol type="1">
+<li><strong>直接因果</strong>：X 直接导致 Y 的变化。</li>
+<li><strong>反向因果</strong>：Y 的变化反过来影响 X。</li>
+<li><strong>共同原因</strong>：存在第三方变量 Z 同时影响 X 和 Y。</li>
+<li><strong>随机巧合</strong>：变量间的关联纯属偶然。</li>
+</ol>
+<p>需要特别注意的是，相关分析仅能揭示变量是否<strong>共同变化</strong>，而无法证明因果关系。要确定因果关系，通常需要借助更严谨的研究设计（如随机对照实验）或坚实的理论依据。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="相关不等于因果的典型案例">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+相关不等于因果的典型案例
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>冰淇淋与溺水</strong>：冰淇淋销量与溺水人数高度相关。但这并非因为吃冰淇淋导致溺水，而是因为两者都与<strong>夏天/高温</strong>这个混淆变量相关。</li>
+<li><strong>雨伞与感冒</strong>：雨伞销量与感冒人数呈正相关。这并不意味着使用雨伞会导致感冒，而是因为两者都与<strong>雨天</strong>这个共同因素相关。</li>
+<li><strong>鞋子尺寸与阅读能力</strong>：儿童的鞋子尺寸与其阅读能力呈正相关。这显然不是因果关系，而是因为两者都与<strong>年龄</strong>这个变量相关。</li>
+<li><strong>医院数量与犯罪率</strong>：一个城市的医院数量与犯罪率呈正相关。这并不意味着医院导致犯罪，而是因为两者都与<strong>城市人口规模</strong>相关。</li>
+</ul>
+</div>
+</div>
+<ul>
+<li><p><strong>相关系数 (Correlation Coefficient, <span class="math inline">\(r\)</span>):</strong></p>
+<ul>
+<li>衡量线性关联强度和方向的数值，范围在 <span class="math inline">\(-1\)</span> 到 <span class="math inline">\(+1\)</span> 之间。</li>
+<li><strong>符号</strong>表示方向：
+<ul>
+<li><span class="math inline">\(r &gt; 0\)</span>: 正相关 (一个变量增加，另一个变量倾向于增加)。</li>
+<li><span class="math inline">\(r &lt; 0\)</span>: 负相关 (一个变量增加，另一个变量倾向于减少)。</li>
+<li><span class="math inline">\(r = 0\)</span>: 无<strong>线性</strong>相关 (注意：可能存在非线性关系)。</li>
+</ul></li>
+<li><strong>绝对值</strong>表示强度：
+<ul>
+<li><span class="math inline">\(|r|\)</span> 接近 1: 强线性相关。</li>
+<li><span class="math inline">\(|r|\)</span> 接近 0: 弱线性相关或无线性相关。</li>
+<li>强度划分没有绝对标准，通常：0.1-0.3 (弱), 0.4-0.6 (中), 0.7-1.0 (强)。</li>
+</ul></li>
+</ul></li>
+<li><p><strong>常用相关系数:</strong></p>
+<ol type="1">
+<li><strong>皮尔逊积矩相关系数 (Pearson Product-Moment Correlation Coefficient, <span class="math inline">\(r\)</span>):</strong>
+<ul>
+<li>最常用的相关系数。</li>
+<li>衡量两个<strong>连续变量</strong>之间<strong>线性</strong>关联的强度和方向。</li>
+<li><strong>假设条件:</strong>
+<ul>
+<li>变量是连续的。</li>
+<li>变量之间存在线性关系（可通过散点图初步判断）。</li>
+<li>数据<strong>近似服从二元正态分布</strong>（或样本量足够大）。对异常值比较敏感。</li>
+</ul></li>
+<li>公式: <span class="math inline">\(r = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i - \bar{x})^2 \sum_{i=1}^{n}(y_i - \bar{y})^2}}\)</span></li>
+</ul></li>
+<li><strong>斯皮尔曼等级相关系数 (Spearman Rank Correlation Coefficient, <span class="math inline">\(\rho\)</span> 或 <span class="math inline">\(r_s\)</span>):</strong>
+<ul>
+<li>基于变量值的<strong>秩次 (Rank)</strong> 计算的相关系数。</li>
+<li>衡量两个变量之间<strong>单调关系</strong> (Monotonic Relationship) 的强度和方向（即一个变量增加，另一个变量也倾向于增加或减少，但不一定是直线）。</li>
+<li><strong>适用场景:</strong>
+<ul>
+<li>变量是<strong>有序分类变量 (Ordinal)</strong>。</li>
+<li>连续变量<strong>不满足</strong> Pearson 相关系数的正态性或线性假设。</li>
+<li>数据中存在<strong>异常值</strong>（对异常值不敏感）。</li>
+</ul></li>
+<li>计算方法：先将两个变量的数据分别排序并转换为秩次，然后计算秩次的 Pearson 相关系数。</li>
+</ul></li>
+</ol></li>
+<li><p><strong>可视化：散点图 (Scatter Plot)</strong> 散点图是判断两个连续变量关系类型（线性、非线性、无关系）和观察异常值的最佳工具。</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 探索发动机排量 (displ) 与高速公路里程 (hwy) 的关系</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(<span class="at">x =</span> displ, <span class="at">y =</span> hwy)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> class)) <span class="sc">+</span> <span class="co"># 用颜色区分车辆类别</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span> <span class="co"># 添加线性拟合线 (后面会讲)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> <span class="co"># 添加非线性平滑曲线 (LOESS)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"发动机排量 vs 高速公路里程"</span>, <span class="at">x =</span> <span class="st">"排量 (升)"</span>, <span class="at">y =</span> <span class="st">"里程 (MPG)"</span>) <span class="sc">+</span>       <span class="fu">theme_minimal</span>()     <span class="co"># 从图中可以看出，两者大致呈负相关关系，可能略带曲线。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week6_lecture_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p><strong>R 实现:</strong></p>
+<ul>
+<li><code>cor(x, y, method = ...)</code>: 计算相关系数。
+<ul>
+<li><code>method</code>: “pearson” (默认), “spearman”, “kendall”。</li>
+</ul></li>
+<li><code>cor.test(x, y, method = ...)</code>: 计算相关系数，并进行<strong>显著性检验</strong>。
+<ul>
+<li><strong>显著性检验的原假设</strong> <span class="math inline">\(H_0\)</span>: 两个变量之间<strong>没有</strong>相关性 (总体相关系数 <span class="math inline">\(\rho = 0\)</span>)。</li>
+<li><strong>备择假设</strong> <span class="math inline">\(H_1\)</span>: 两个变量之间<strong>存在</strong>相关性 (<span class="math inline">\(\rho \ne 0\)</span>)。</li>
+<li>返回结果包括相关系数估计值、P 值和置信区间。</li>
+</ul></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算 displ 和 hwy 的 Pearson 相关系数</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(mpg<span class="sc">$</span>displ, mpg<span class="sc">$</span>hwy, <span class="at">method =</span> <span class="st">"pearson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] -0.76602</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 进行 Pearson 相关性检验</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pearson_test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(mpg<span class="sc">$</span>displ, mpg<span class="sc">$</span>hwy, <span class="at">method =</span> <span class="st">"pearson"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pearson_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt;  Pearson's product-moment correlation
+#&gt; 
+#&gt; data:  mpg$displ and mpg$hwy
+#&gt; t = -18.151, df = 232, p-value &lt; 2.2e-16
+#&gt; alternative hypothesis: true correlation is not equal to 0
+#&gt; 95 percent confidence interval:
+#&gt;  -0.8142727 -0.7072539
+#&gt; sample estimates:
+#&gt;      cor 
+#&gt; -0.76602</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 解读:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># r 约 -0.76 (强负相关)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># P 值非常小 (&lt; 2.2e-16)，远小于 0.05，拒绝 H0，认为 displ 和 hwy 之间存在显著的线性相关性。</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 95% 置信区间 [-0.81, -0.71]，不包含 0，也支持拒绝 H0。</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算 displ 和 hwy 的 Spearman 相关系数 (对非线性关系和异常值更稳健)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(mpg<span class="sc">$</span>displ, mpg<span class="sc">$</span>hwy, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] -0.8266576</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 进行 Spearman 相关性检验</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>spearman_test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(mpg<span class="sc">$</span>displ, mpg<span class="sc">$</span>hwy, <span class="at">method =</span> <span class="st">"spearman"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(spearman_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt;  Spearman's rank correlation rho
+#&gt; 
+#&gt; data:  mpg$displ and mpg$hwy
+#&gt; S = 3900727, p-value &lt; 2.2e-16
+#&gt; alternative hypothesis: true rho is not equal to 0
+#&gt; sample estimates:
+#&gt;        rho 
+#&gt; -0.8266576</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 解读:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rho 约 -0.83 (强负单调关系)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># P 值也非常小，拒绝 H0，认为存在显著的单调关系。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+</ul>
+</section>
+<section id="简单线性回归-simple-linear-regression-slr" class="level2">
+<h2 class="anchored" data-anchor-id="简单线性回归-simple-linear-regression-slr">3. 简单线性回归 (Simple Linear Regression, SLR)</h2>
+<p>相关分析告诉我们变量间关联的强度和方向，而<strong>回归分析 (Regression Analysis)</strong> 则更进一步，试图建立一个<strong>数学模型</strong>来描述一个或多个<strong>自变量 (Independent Variable / Predictor)</strong> 如何影响一个<strong>因变量 (Dependent Variable / Response)</strong>。</p>
+<p>简单线性回归是其中最基础的形式，用于描述<strong>一个</strong>连续自变量 X 如何<strong>线性地</strong>影响<strong>一个</strong>连续因变量 Y。</p>
+<ul>
+<li><p><strong>概念引入:</strong> 我们试图找到一条<strong>最佳拟合直线</strong>，来概括散点图中两个连续变量 (X, Y) 之间的关系。这条直线可以用来：</p>
+<ul>
+<li>描述 X 对 Y 的影响程度（斜率）。</li>
+<li>基于 X 的值来<strong>预测</strong> Y 的值。</li>
+</ul></li>
+<li><p><strong>模型形式:</strong> <span class="math display">\[ Y = \beta_0 + \beta_1 X + \epsilon \]</span></p>
+<ul>
+<li><span class="math inline">\(Y\)</span>: 因变量 (Response)。</li>
+<li><span class="math inline">\(X\)</span>: 自变量 (Predictor)。</li>
+<li><span class="math inline">\(\beta_0\)</span>: <strong>截距 (Intercept)</strong>。当 <span class="math inline">\(X=0\)</span> 时，Y 的<strong>期望值</strong>。有时没有实际意义（例如 X 不能取 0）。</li>
+<li><span class="math inline">\(\beta_1\)</span>: <strong>斜率 (Slope)</strong>。X <strong>每增加一个单位</strong>时，Y 的<strong>期望</strong>平均变化量。这是衡量 X 对 Y 线性影响的关键系数。</li>
+<li><span class="math inline">\(\epsilon\)</span>: <strong>误差项 (Error Term) / 残差 (Residual)</strong>。代表了除 X 之外所有其他影响 Y 的因素，以及模型本身的随机性。假设误差项是<strong>独立</strong>的，且服从均值为 0，方差为 <span class="math inline">\(\sigma^2\)</span> 的<strong>正态分布</strong> (<span class="math inline">\(N(0, \sigma^2)\)</span>)。</li>
+</ul></li>
+<li><p><strong>系数含义解释 (重要！):</strong></p>
+<ul>
+<li><span class="math inline">\(\beta_0\)</span> (截距): 当自变量 X 为 0 时，因变量 Y 的<strong>预测值</strong>。</li>
+<li><span class="math inline">\(\beta_1\)</span> (斜率): 自变量 X <strong>每变化一个单位</strong>，因变量 Y <strong>平均</strong>变化 <span class="math inline">\(\beta_1\)</span> 个单位。</li>
+</ul></li>
+<li><p><strong>最小二乘法 (Ordinary Least Squares, OLS) 思想:</strong></p>
+<ul>
+<li>如何找到“最佳”拟合直线？OLS 的目标是找到一条直线，使得所有<strong>实际观测值</strong> <span class="math inline">\(y_i\)</span> 与直线上<strong>预测值</strong> <span class="math inline">\(\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i\)</span> 之间的<strong>纵向距离（残差</strong> <span class="math inline">\(e_i = y_i - \hat{y}_i\)</span>）的平方和最小。</li>
+<li>即最小化：<span class="math inline">\(\sum_{i=1}^{n} e_i^2 = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 = \sum_{i=1}^{n} (y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i))^2\)</span></li>
+<li>通过微积分可以推导出 <span class="math inline">\(\hat{\beta}_0\)</span> 和 <span class="math inline">\(\hat{\beta}_1\)</span> 的估计公式。</li>
+</ul></li>
+<li><p><strong>R 实现: <code>lm()</code> (Linear Model)</strong></p>
+<ul>
+<li>使用公式语法 <code>Y ~ X</code>。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合一个用 displ 预测 hwy 的简单线性回归模型</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># hwy = beta0 + beta1 * displ + epsilon</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>slr_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(hwy <span class="sc">~</span> displ, <span class="at">data =</span> mpg)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看模型基本信息</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(slr_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = hwy ~ displ, data = mpg)
+#&gt; 
+#&gt; Coefficients:
+#&gt; (Intercept)        displ  
+#&gt;      35.698       -3.531</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看详细的汇总统计信息 (最常用)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>summary_slr <span class="ot">&lt;-</span> <span class="fu">summary</span>(slr_model)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(summary_slr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = hwy ~ displ, data = mpg)
+#&gt; 
+#&gt; Residuals:
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -7.1039 -2.1646 -0.2242  2.0589 15.0105 
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)  35.6977     0.7204   49.55   &lt;2e-16 ***
+#&gt; displ        -3.5306     0.1945  -18.15   &lt;2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; Residual standard error: 3.836 on 232 degrees of freedom
+#&gt; Multiple R-squared:  0.5868, Adjusted R-squared:  0.585 
+#&gt; F-statistic: 329.5 on 1 and 232 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div></li>
+<li><p><strong>基本输出解读 (<code>summary(slr_model)</code>)</strong></p>
+<ul>
+<li><strong><code>Coefficients</code> 表:</strong>
+<ul>
+<li><code>Estimate</code>: 系数的<strong>点估计值</strong> (<span class="math inline">\(\hat{\beta}_0\)</span> 和 <span class="math inline">\(\hat{\beta}_1\)</span>)。
+<ul>
+<li><span class="math inline">\(\hat{\beta}_0 \approx 35.70\)</span>: 当发动机排量为 0 时，预测的高速公路里程约为 35.7 MPG (这里截距可能没有实际意义)。</li>
+<li><span class="math inline">\(\hat{\beta}_1 \approx -3.53\)</span>: 发动机排量<strong>每增加 1 升</strong>，高速公路里程<strong>平均减少</strong>约 3.53 MPG。</li>
+</ul></li>
+<li><code>Std. Error</code>: 系数估计值的<strong>标准误</strong>，衡量估计的不确定性。</li>
+<li><code>t value</code>: 检验系数是否<strong>显著不为 0</strong> 的 t 统计量 (<span class="math inline">\(t = \frac{\hat{\beta}}{\text{Std. Error}}\)</span>)。<span class="math inline">\(H_0: \beta = 0\)</span> vs <span class="math inline">\(H_1: \beta \ne 0\)</span>。</li>
+<li><code>Pr(&gt;|t|)</code>: 对应 t 检验的 <strong>P 值</strong>。如果 P 值 &lt; <span class="math inline">\(\alpha\)</span>，则认为该系数<strong>显著不为 0</strong>，即该自变量对因变量有显著的线性影响。在本例中，displ 的 P 值远小于 0.05，说明排量对高速里程有显著的负向影响。</li>
+</ul></li>
+<li><strong>R-squared (</strong><span class="math inline">\(R^2\)</span>) (决定系数 Coefficient of Determination):
+<ul>
+<li>表示因变量 Y 的总变异中，<strong>能被自变量 X (模型) 解释的比例</strong>。范围在 0 到 1 之间。</li>
+<li><span class="math inline">\(R^2 = 1 - \frac{\sum e_i^2}{\sum (y_i - \bar{y})^2} = \frac{\text{模型解释的平方和}}{\text{总平方和}}\)</span></li>
+<li>这里的 <code>Multiple R-squared: 0.5868</code> 意味着发动机排量 (displ) <strong>解释了</strong>高速公路里程 (hwy) 变异的<strong>约 58.7%</strong>。</li>
+<li><code>Adjusted R-squared</code>: 对自变量个数进行惩罚的 R²，在多元回归中更有用，用于模型比较。</li>
+</ul></li>
+<li><strong>F-statistic 和 p-value:</strong> 对整个模型<strong>整体显著性</strong>的检验。<span class="math inline">\(H_0\)</span>: 所有回归系数（除截距外）都为 0。在 SLR 中，它等价于对 <span class="math inline">\(\beta_1\)</span> 的 t 检验。如果 P 值 &lt; <span class="math inline">\(\alpha\)</span>，则认为模型整体是显著的。</li>
+</ul></li>
+</ul>
+</section>
+<section id="多元线性回归-multiple-linear-regression-mlr-概念初步引入" class="level2">
+<h2 class="anchored" data-anchor-id="多元线性回归-multiple-linear-regression-mlr-概念初步引入">4. 多元线性回归 (Multiple Linear Regression, MLR) 概念初步引入</h2>
+<p>现实世界中，一个因变量往往受到<strong>多个</strong>自变量的影响。MLR 将 SLR 扩展到包含两个或更多自变量的情况。</p>
+<ul>
+<li><p><strong>动机:</strong></p>
+<ul>
+<li>更准确地预测 Y（包含更多相关信息）。</li>
+<li><strong>控制其他变量的影响</strong>，估计某个特定自变量对 Y 的<strong>独立效应 (Independent Effect)</strong>。</li>
+</ul></li>
+<li><p><strong>模型形式:</strong> <span class="math display">\[ Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k + \epsilon \]</span></p>
+<ul>
+<li><span class="math inline">\(X_1, X_2, ..., X_k\)</span>: k 个自变量。</li>
+<li><span class="math inline">\(\beta_0\)</span>: 截距。当<strong>所有</strong>自变量都为 0 时，Y 的期望值。</li>
+<li><span class="math inline">\(\beta_1, \beta_2, ..., \beta_k\)</span>: <strong>偏回归系数 (Partial Regression Coefficients)</strong>。</li>
+</ul></li>
+<li><p><strong>核心概念：偏回归系数</strong> <span class="math inline">\(\beta_j\)</span></p>
+<ul>
+<li><span class="math inline">\(\beta_j\)</span> 表示<strong>在控制住模型中所有其他自变量 (</strong><span class="math inline">\(X_1, ..., X_{j-1}, X_{j+1}, ..., X_k\)</span>) 不变的情况下，自变量 <span class="math inline">\(X_j\)</span> <strong>每增加一个单位</strong>时，因变量 Y 的<strong>期望</strong>平均变化量。</li>
+<li><strong>重要区别:</strong> MLR 中的 <span class="math inline">\(\beta_j\)</span> <strong>不等于</strong> 单独做 Y 对 <span class="math inline">\(X_j\)</span> 的 SLR 时的斜率！因为它考虑并剔除了其他自变量的影响。这使得我们能更准确地评估 <span class="math inline">\(X_j\)</span> 对 Y 的<strong>独立贡献</strong>。</li>
+</ul></li>
+<li><p><strong>R 实现:</strong> 仍然使用 <code>lm()</code> 函数，在公式中加入更多自变量。 (我们将在后续课程中深入学习 MLR 的模型构建、诊断和选择。)</p></li>
+<li><p><strong>后续重要性:</strong> 拟合 MLR 模型只是第一步。后续需要进行<strong>模型诊断</strong>（检查假设是否满足）、<strong>模型选择</strong>（选择最佳的自变量组合）等，这些是阶段二的核心内容。</p></li>
+</ul>
+</section>
+<section id="项目相关与本周总结" class="level2">
+<h2 class="anchored" data-anchor-id="项目相关与本周总结">5. 项目相关与本周总结</h2>
+<ul>
+<li><strong>项目任务:</strong>
+<ul>
+<li>计算你项目中<strong>连续变量</strong>之间的相关系数（Pearson 或 Spearman，根据情况选择），并进行显著性检验。结合散点图进行解释。</li>
+<li>如果你的项目问题涉及用一个连续变量预测另一个连续变量，尝试构建一个<strong>简单线性回归模型</strong>。解释模型的系数 (<span class="math inline">\(\hat{\beta}_0, \hat{\beta}_1\)</span>) 和 R²。</li>
+<li>思考你的项目中，是否需要考虑<strong>多个</strong>自变量来预测因变量？如果是，初步设想一个 MLR 模型（写下公式即可），并思考每个自变量的<strong>偏效应</strong>可能是什么含义。</li>
+</ul></li>
+<li><strong>本周回顾:</strong> 我们学习了如何使用相关分析来量化两个连续变量的线性关联强度，并强调了相关不等于因果。接着，我们入门了简单线性回归，学习了如何用一条直线来建模和预测，理解了 OLS 原理、模型系数的含义以及 R² 的解释。最后，我们初步接触了多元线性回归的核心思想——控制变量和偏效应，为后续更复杂的模型学习打下了基础。</li>
+</ul>
+<p><strong>下周预告:</strong> 我们将回到<strong>分类数据</strong>，学习如何分析两个或多个分类变量之间的关联性，主要工具是<strong>卡方检验 (Chi-squared Test)</strong>。同时，我们将对第一阶段（第 1-7 周）所学知识进行小结，梳理各种统计方法的适用场景。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week5_lecture.html" class="pagination-link" aria-label="第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week7_lecture.html" class="pagination-link" aria-label="第七周：分类数据的智慧：卡方检验与阶段总结">
+        <span class="nav-page-text"><span class="chapter-title">第七周：分类数据的智慧：卡方检验与阶段总结</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

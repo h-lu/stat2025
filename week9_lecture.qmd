@@ -1,0 +1,282 @@
+---
+title: "第九周：模型诊断实战：发现模型的问题"
+---
+
+## 1. 为何需要模型诊断？
+
+上周我们学习了如何拟合多元线性回归模型 (MLR) 并解释其系数。然而，仅仅拟合模型是不够的。我们需要**诊断 (Diagnose)** 模型，以确保其结果是**可靠和有效的**。模型诊断主要关注：
+
+1.  **检查线性回归的 L.I.N.E. 假设是否满足:**
+    -   线性性 (Linearity)
+    -   独立性 (Independence) - 本课程较少涉及检验，主要靠研究设计保证
+    -   正态性 (Normality of Residuals)
+    -   等方差性 (Equal Variance / Homoscedasticity)
+2.  **识别可能对模型产生过大影响的数据点:**
+    -   **异常值 (Outliers):** Y 值远离模型预测值的点 (残差大)。
+    -   **高杠杆点 (High Leverage Points):** X 值远离其他 X 值均值的点 (可能对回归线斜率有较大影响)。
+    -   **强影响点 (Influential Points):** 对模型参数（系数）估计产生不成比例影响的点，通常既是异常值又是高杠杆点。
+
+::: {.callout-note title="本周目标"}
+-   理解模型诊断的重要性。
+-   掌握常用的模型诊断工具及其 R 实现：
+    -   **残差图 (Residual Plots):** 检查线性性、等方差性。
+    -   **正态 QQ 图 (Normal Q-Q Plot):** 检查残差正态性。
+    -   **Shapiro-Wilk 检验:** 对残差正态性进行统计检验。
+    -   **方差膨胀因子 (Variance Inflation Factor, VIF):** 检查多重共线性。
+    -   **Cook 距离 (Cook's Distance):** 识别强影响点。
+-   能够解读诊断图和指标，判断模型是否存在问题。
+-   通过实践工作坊应用诊断技术。
+:::
+
+我们将使用上周拟合的 MLR 模型作为示例，并可能引入其他数据。
+
+``` r
+library(tidyverse)
+library(ggplot2)
+library(car) # 需要 car 包提供 VIF 和其他诊断功能
+# install.packages("car") # 如果尚未安装
+library(broom) # 需要 broom 包的 augment 函数
+
+# 回顾上周的 MLR 模型
+# mpg 数据集已在 tidyverse 中
+mlr_model_mpg <- lm(hwy ~ displ + cyl + drv, data = mpg)
+summary(mlr_model_mpg)
+
+# 为了演示，创建一个包含一些潜在问题的数据集
+set.seed(42)
+n_prob <- 100
+x1_prob <- rnorm(n_prob)
+x2_prob <- x1_prob * 0.8 + rnorm(n_prob, 0, 0.1) # 引入共线性
+x3_prob <- rnorm(n_prob)
+y_prob <- 2 + 3*x1_prob + 1*x2_prob - 2*x3_prob + rnorm(n_prob, 0, 2)
+# 引入一个异常值/强影响点
+y_prob[1] <- y_prob[1] + 15
+x1_prob[2] <- x1_prob[2] + 4 # 引入一个高杠杆点
+prob_data <- tibble(y = y_prob, x1 = x1_prob, x2 = x2_prob, x3 = x3_prob)
+prob_model <- lm(y ~ x1 + x2 + x3, data = prob_data)
+summary(prob_model)
+```
+
+## 2. 诊断工具箱与 R 实现
+
+R 的基础绘图功能和 `car` 等包提供了丰富的诊断工具。`lm()` 对象本身也包含了很多诊断信息。
+
+### 2.1 残差分析：检查线性性与等方差性
+
+**残差 (Residuals,** $e_i = y_i - \hat{y}_i$) 是模型诊断的核心。它们代表了模型未能解释的部分。
+
+-   **残差图 (Residuals vs Fitted Plot):**
+    -   **横轴:** 模型的拟合值 ($\hat{y}_i$)。
+
+    -   **纵轴:** 残差 ($e_i$)。
+
+    -   **理想模式:** 点应该**随机散布**在 $y=0$ 这条水平线上下，没有明显的模式（如曲线、喇叭形、扇形）。
+
+    -   **检查内容:**
+
+        -   **线性性:** 如果点呈现**曲线**模式，可能表示 Y 与某个 X 的关系不是线性的。
+        -   **等方差性:** 如果点的散布**宽度**随着拟合值的变化而变化（例如，呈**喇叭形**或**扇形**），则违反了等方差性假设（异方差 Heteroscedasticity）。
+
+    -   **R 实现:**
+
+        ``` r
+        # 方法1: 使用基础 plot() 函数 (推荐，一次生成多个诊断图)
+        par(mfrow = c(2, 2)) # 设置绘图区域为 2x2
+        plot(mlr_model_mpg)
+        par(mfrow = c(1, 1)) # 恢复默认绘图区域
+
+        # plot(prob_model) # 对另一个模型进行诊断
+
+        # 方法2: 手动提取残差和拟合值绘图 (使用 ggplot2)
+        mpg_diag <- augment(mlr_model_mpg) # broom 包的 augment 函数提取诊断信息
+        # glimpse(mpg_diag)
+
+        ggplot(mpg_diag, aes(x = .fitted, y = .resid)) +
+          geom_point(alpha = 0.6) +
+          geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+          geom_smooth(se = FALSE, color = "blue") + # 添加平滑曲线辅助观察模式
+          labs(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals") +
+          theme_minimal()
+
+        # 对 prob_model 绘图
+        prob_diag <- augment(prob_model)
+        ggplot(prob_diag, aes(x = .fitted, y = .resid)) +
+          geom_point(alpha = 0.6) +
+          geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+          geom_smooth(se = FALSE, color = "blue") +
+          labs(title = "Residuals vs Fitted (Problematic Data)", x = "Fitted values", y = "Residuals") +
+          theme_minimal()
+        # 这个图可能显示出一些非随机模式或异常点
+        ```
+
+        -   `plot(model)` 会默认生成 4 个诊断图，第一个就是 Residuals vs Fitted。
+
+### 2.2 残差正态性检查
+
+-   **正态 Q-Q 图 (Normal Q-Q Plot):**
+    -   **横轴:** 理论正态分布的分位数 (Theoretical Quantiles)。
+
+    -   **纵轴:** 标准化残差 (Standardized Residuals) 的分位数。
+
+    -   **理想模式:** 点应该大致落在**对角线 (y=x)** 上。
+
+    -   **检查内容:** 如果点系统性地偏离对角线，特别是呈 S 形或弓形，则提示残差可能不正态。
+
+    -   **R 实现:**
+
+        ``` r
+        # 方法1: 使用基础 plot() 函数 (第二个图)
+        # plot(mlr_model_mpg)
+
+        # 方法2: 使用 ggplot2
+        ggplot(mpg_diag, aes(sample = .std.resid)) + # .std.resid 是标准化残差
+          stat_qq() +
+          stat_qq_line(color = "red") +
+          labs(title = "Normal Q-Q Plot", x = "Theoretical Quantiles", y = "Standardized Residuals") +
+          theme_minimal()
+
+        # 对 prob_model 绘图
+        ggplot(augment(prob_model), aes(sample = .std.resid)) +
+          stat_qq() +
+          stat_qq_line(color = "red") +
+          labs(title = "Normal Q-Q Plot (Problematic Data)") +
+          theme_minimal()
+        # 这个图可能显示出偏离直线的情况，特别是尾部
+        ```
+-   **Shapiro-Wilk 正态性检验:**
+    -   一种常用的统计检验方法，用于检验数据是否来自正态分布总体。
+
+    -   **假设:**
+
+        -   $H_0$: 数据服从正态分布。
+        -   $H_1$: 数据不服从正态分布。
+
+    -   **R 实现:** `shapiro.test()` (作用于残差)
+
+        ``` r
+        # 提取模型残差
+        residuals_mpg <- residuals(mlr_model_mpg)
+        residuals_prob <- residuals(prob_model)
+
+        # 执行 Shapiro-Wilk 检验
+        shapiro.test(residuals_mpg)
+        shapiro.test(residuals_prob)
+
+        # 解读:
+        # 如果 P 值 > alpha (如 0.05)，则未能拒绝 H0，没有足够证据表明残差不正态。
+        # 如果 P 值 < alpha，则拒绝 H0，认为残差不服从正态分布。
+        # 注意：对于大样本量，即使轻微偏离正态，检验也可能显著 (P < 0.05)。此时应更侧重于 Q-Q 图的视觉判断。
+        ```
+
+### 2.3 检查多重共线性 (Multicollinearity)
+
+-   **多重共线性:** 指模型中的**自变量之间**存在**高度相关**关系。
+-   **后果:**
+    -   系数估计值的**标准误会增大**，导致 t 检验的功效降低，难以判断系数的显著性（P 值变大）。
+    -   系数估计值变得**不稳定**，对数据的微小变动非常敏感，甚至可能出现符号错误。
+    -   难以解释单个自变量的独立效应。
+    -   **注意:** 共线性**不影响**模型的整体拟合优度 (R²) 和预测能力（只要新数据的共线性模式与训练数据相似）。主要影响系数的**解释**和**推断**。
+-   **诊断工具：方差膨胀因子 (Variance Inflation Factor, VIF)**
+    -   VIF 衡量每个自变量 $X_j$ 的方差因其与其他自变量的相关性而“膨胀”了多少倍。
+
+    -   计算方法：对每个 $X_j$，用它作为因变量，其他所有自变量作为预测变量，拟合一个辅助回归模型，得到 $R_j^2$。则 $VIF_j = \frac{1}{1 - R_j^2}$。
+
+    -   **解读:**
+
+        -   `VIF = 1`: 表示该自变量与其他自变量完全不相关（理想情况）。
+        -   `VIF > 1`: 表示存在共线性。
+        -   **经验法则:**
+            -   `VIF > 5`: 可能存在较强的共线性，需要关注。
+            -   `VIF > 10`: 通常认为存在严重的共线性，需要处理。
+
+    -   **R 实现:** `vif()` (来自 `car` 包)
+
+        ``` r
+        library(car)
+
+        # 计算 mlr_model_mpg 的 VIF
+        vif_mpg <- vif(mlr_model_mpg)
+        print(vif_mpg)
+        # 解读: displ 和 cyl 的 VIF 较高 (可能 > 5)，提示它们之间存在较强相关性，这符合预期。
+        # drv 的 VIF 通常较低，因为它是一个因子。
+
+        # 计算 prob_model 的 VIF
+        vif_prob <- vif(prob_model)
+        print(vif_prob)
+        # 解读: x1 和 x2 的 VIF 可能非常高 (因为我们故意让它们相关)，提示严重共线性。
+        ```
+
+### 2.4 识别强影响点
+
+-   **Cook 距离 (Cook's Distance,** $D_i$)
+    -   衡量第 $i$ 个观测点**对所有系数估计值**的**整体影响**。
+
+    -   它计算的是移除第 $i$ 个点后，系数估计值的变化大小。
+
+    -   **解读:**
+
+        -   Cook's D 值越大，表示该点的影响越大。
+        -   **经验法则:**
+            -   $D_i > 0.5$: 可能是一个有影响的点。
+            -   $D_i > 1$: 通常被认为是强影响点，需要仔细检查。
+            -   也有建议用 $D_i > 4/n$ (n 为样本量) 作为阈值。
+
+    -   **R 实现:**
+
+        ``` r
+        # 方法1: 使用基础 plot() 函数 (通常是第 5 个图，Residuals vs Leverage，点的大小与 Cook's D 相关)
+        # plot(mlr_model_mpg)
+        # plot(prob_model) # 观察是否有远离中心且 Cook's D 轮廓线较大的点
+
+        # 方法2: 直接计算 Cook's D
+        cooks_mpg <- cooks.distance(mlr_model_mpg)
+        cooks_prob <- cooks.distance(prob_model)
+
+        # 找出 Cook's D 较大的点
+        cutoff_mpg <- 4 / nrow(mpg)
+        cutoff_prob <- 4 / nrow(prob_data)
+
+        influential_mpg_indices <- which(cooks_mpg > cutoff_mpg)
+        influential_prob_indices <- which(cooks_prob > cutoff_prob) # 或者用 > 0.5 或 > 1
+
+        print(paste("Influential points in mpg model (indices):", toString(influential_mpg_indices)))
+        print(paste("Influential points in prob model (indices):", toString(influential_prob_indices)))
+
+        # 查看这些点的数据
+        # mpg[influential_mpg_indices, ]
+        # prob_data[influential_prob_indices, ]
+
+        # 使用 ggplot2 可视化 Cook's D
+        mpg_diag %>%
+          mutate(obs_index = row_number()) %>%
+          ggplot(aes(x = obs_index, y = .cooksd)) +
+          geom_col(fill = "skyblue") + # 用柱状图显示
+          geom_hline(yintercept = cutoff_mpg, color = "red", linetype = "dashed") +
+          labs(title = "Cook's Distance Plot (mpg)", x = "Observation Index", y = "Cook's Distance") +
+          theme_minimal()
+
+        augment(prob_model) %>%
+          mutate(obs_index = row_number()) %>%
+          ggplot(aes(x = obs_index, y = .cooksd)) +
+          geom_col(fill = "salmon") +
+          geom_hline(yintercept = cutoff_prob, color = "red", linetype = "dashed") +
+          geom_hline(yintercept = 0.5, color = "blue", linetype = "dotted") + # 添加 0.5 阈值线
+          geom_hline(yintercept = 1, color = "darkgreen", linetype = "dotted") + # 添加 1 阈值线
+          labs(title = "Cook's Distance Plot (Problematic Data)", x = "Observation Index", y = "Cook's Distance") +
+          theme_minimal()
+        # 观察是否有柱子超过阈值线，特别是我们引入问题的第 1 个点。
+        ```
+
+## 3. 诊断实践工作坊
+
+现在，让我们分组或独立地，对自己项目中的（或老师提供的）线性回归模型进行全面的诊断。
+
+**步骤:** 1. 拟合你的线性回归模型 (`lm()`)。 2. 使用 `plot(model)` 或 `ggplot2` 绘制**残差图 (Residuals vs Fitted)**。检查是否有非线性模式或异方差（喇叭形）。 3. 绘制**正态 Q-Q 图**。检查点是否大致落在直线上。 4. (可选) 使用 `shapiro.test(residuals(model))` 进行正态性检验。 5. 如果模型有多个自变量，使用 `vif(model)` 检查**多重共线性**。是否有 VIF \> 5 或 10？ 6. 绘制 **Cook 距离图**或计算 `cooks.distance(model)`。是否有 $D_i > 4/n$ 或 \> 0.5 或 \> 1 的点？识别这些强影响点。 7. **总结**你的诊断结果：模型的主要问题是什么？（违反了哪些假设？是否存在共线性？是否有强影响点？）
+
+**讨论:** \* 分享你的诊断结果。 \* 你的模型看起来可靠吗？哪些方面需要改进？ \* 对于发现的问题，你认为可能的原因是什么？
+
+## 4. 本周总结与预告
+
+本周我们深入学习了线性回归模型诊断的关键技术。通过检查残差图、正态 Q-Q 图、VIF 和 Cook 距离等工具，我们能够评估模型是否满足基本假设，并识别出可能存在的问题，如非线性、异方差、残差非正态、多重共线性以及强影响点。模型诊断是确保回归结果可靠性和有效性的必要步骤。
+
+**下周预告:** 发现了模型的问题，该如何解决？下周我们将探讨**模型改进与选择**的策略，包括如何应对诊断中发现的问题（如变量变换、处理共线性/强影响点），如何引入**交互项**来捕捉更复杂的关系，以及在多个可能的模型中进行选择的原则和方法。

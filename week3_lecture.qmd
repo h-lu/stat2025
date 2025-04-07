@@ -1,0 +1,319 @@
+---
+title: "第三周：数据整形：`tidyverse` 的核心技艺"
+execute:
+  echo: true
+  message: false
+  warning: false
+  error: false
+  cache: false
+---
+
+## 1. `dplyr` 进阶：更强大的数据操作
+
+上周我们学习了 `dplyr` 的 `select()` 和 `filter()`。本周我们将学习更多核心动词，让数据操作如虎添翼。
+
+::: {.callout-note title="本周目标"}
+-   掌握 `dplyr` 的核心数据转换动词：`mutate()`, `arrange()`, `group_by()`, `summarise()`。
+-   理解并应用 `tidyr` 进行数据长宽格式转换：`pivot_longer()`, `pivot_wider()`。
+-   掌握"整洁数据" (Tidy Data) 的核心原则。
+-   学习处理数据中的缺失值 (NA)。
+-   熟练运用管道 (`%>%`) 连接多步数据处理操作。
+:::
+
+我们将继续使用上周创建的 `students_data` Tibble，并可能引入新的示例数据。
+
+```{r setup-data}
+library(tidyverse)
+
+# 回顾上周数据 (或重新创建)
+csv_text <- "Name,Age,Major,GPA\nAlice,21,Statistics,3.8\nBob,22,Computer Science,3.5\nCharlie,20,Mathematics,3.9\nDavid,21,Statistics,3.6"
+students_data <- read_csv(csv_text)
+
+# 引入一个更复杂的数据集用于演示 group_by 和 summarise
+exam_scores <- tibble(
+  StudentID = c(101, 102, 101, 103, 102, 103, 101),
+  Exam = c("Midterm", "Midterm", "Final", "Midterm", "Final", "Final", "Quiz1"),
+  Score = c(85, 90, 88, 75, 92, 80, 95)
+)
+
+print(students_data)
+print(exam_scores)
+```
+
+-   **`mutate()`: 创建或修改列**
+
+    -   基于现有列计算新列，或修改现有列。
+    -   新列会添加到数据框的末尾。
+
+    ```{r mutate-example}
+    # 示例1: 计算 GPA 相对于 4.0 的差距
+    students_data %>%
+      mutate(GPA_diff = 4.0 - GPA)
+
+    # 示例2: 创建一个表示年龄是否大于21岁的逻辑列
+    students_data %>%
+      mutate(Is_Over_21 = Age > 21)
+
+    # 示例3: 同时创建多个列
+    students_data %>%
+      mutate(
+        GPA_diff = 4.0 - GPA,
+        Birth_Year = 2024 - Age # 假设当前是2024年
+      )
+
+    # 示例4: 修改现有列 (例如，将 GPA 乘以 25 得到百分制)
+    students_data %>%
+      mutate(GPA_percent = GPA * 25) # 创建新列
+
+    # 示例5: 直接修改原列 (需谨慎)
+    students_data %>%
+      mutate(GPA = GPA * 25)
+    ```
+
+-   **`arrange()`: 按列排序行**
+
+    -   默认升序排列。
+    -   使用 `desc()` 进行降序排列。
+    -   可以按多个列排序。
+
+    ```{r arrange-example}
+    # 按年龄升序排序
+    students_data %>% arrange(Age)
+
+    # 按 GPA 降序排序
+    students_data %>% arrange(desc(GPA))
+
+    # 先按专业升序，再按 GPA 降序
+    students_data %>% arrange(Major, desc(GPA))
+    ```
+
+-   **`group_by()`: 按分类变量分组**
+
+    -   本身不改变数据外观，但会为后续操作（主要是 `summarise()`）添加分组信息。
+    -   后续操作将在每个分组内部独立进行。
+
+    ```{r group-by-example}
+    # 按专业分组 (输出看起来没变，但内部结构变了)
+    students_data %>% group_by(Major)
+
+    # 按学生ID分组 exam_scores 数据
+    exam_scores %>% group_by(StudentID)
+    ```
+
+-   **`summarise()` (或 `summarize()`): 数据汇总**
+
+    -   通常与 `group_by()` 结合使用，对每个分组进行汇总计算。
+    -   创建包含汇总统计量的新数据框。
+    -   常用的汇总函数：`mean()`, `median()`, `sd()`, `var()`, `min()`, `max()`, `n()` (计算行数/观测数), `n_distinct()` (计算唯一值数量)。
+
+    ```{r summarise-example}
+    # 计算所有学生的平均年龄和最高 GPA (没有 group_by)
+    students_data %>%
+      summarise(
+        Avg_Age = mean(Age),
+        Max_GPA = max(GPA)
+      )
+
+    # 计算每个专业的学生人数和平均 GPA
+    students_data %>%
+      group_by(Major) %>%
+      summarise(
+        Num_Students = n(), # n() 计算当前分组的行数
+        Avg_GPA = mean(GPA, na.rm = TRUE) # 好习惯：处理可能的NA
+      )
+
+    # 计算每个学生的考试次数和平均分
+    exam_scores %>%
+      group_by(StudentID) %>%
+      summarise(
+        Num_Exams = n(),
+        Avg_Score = mean(Score),
+        Min_Score = min(Score),
+        Max_Score = max(Score)
+      )
+
+    # 计算每门考试的参加人数和最高分
+    exam_scores %>%
+      group_by(Exam) %>%
+      summarise(
+        Num_Participants = n_distinct(StudentID), # 统计不重复的学生ID数
+        Highest_Score = max(Score)
+      )
+    ```
+
+    ::: {.callout-tip title="`ungroup()`"}
+    使用 `group_by()` 后，数据会保持分组状态。如果后续操作希望在整个数据集上进行，而不是分组进行，需要使用 `ungroup()` 取消分组。
+
+    ```{r ungroup-example}
+    students_data %>%
+      group_by(Major) %>%
+      mutate(Major_Avg_GPA = mean(GPA)) %>% # 在分组内计算平均GPA
+      ungroup() %>% # 取消分组
+      mutate(Overall_Avg_GPA = mean(GPA)) # 在全体数据上计算总平均GPA
+    ```
+    :::
+
+## 2. 整洁数据 (Tidy Data) 的理念
+
+"整洁数据" 是由 Hadley Wickham 提出的数据组织标准，旨在简化数据分析流程。遵循整洁数据原则的数据更易于使用 `tidyverse` 工具进行处理和可视化。
+
+-   **三条核心原则:**
+    1.  **每个变量构成一列 (Each variable forms a column)。**
+    2.  **每个观测构成一行 (Each observation forms a row)。**
+    3.  **每种类型的观测单元构成一个表格 (Each type of observational unit forms a table)。**
+-   **为何重要？**
+    -   `tidyverse` 中的函数（`dplyr`, `ggplot2` 等）都设计为处理整洁数据。
+    -   使数据结构标准化，便于理解和协作。
+    -   简化数据清理和转换步骤。
+-   **不整洁数据的常见形式:**
+    -   列名是变量值，而不是变量名 (例如，年份作为列名)。
+    -   一个单元格中存储了多个值。
+    -   变量同时存储在行和列中。
+
+## 3. `tidyr`: 让数据更整洁
+
+`tidyr` 包提供了将数据在"宽"格式和"长"格式之间转换的函数，帮助我们将数据整理成"整洁"的形式。
+
+-   **宽数据 (Wide Data):** 通常人类阅读更友好，但不利于计算。变量值可能作为列名。
+
+-   **长数据 (Long Data):** 通常更符合整洁数据原则，便于 `tidyverse` 处理。每个观测的关键信息都在行内，变量名在列中。
+
+-   **核心函数:**
+
+    -   `pivot_longer()`: 将**宽数据变长**。将多个列"融合"成键-值对的两列。
+    -   `pivot_wider()`: 将**长数据变宽**。根据键-值对将数据"展开"到多个列。
+
+-   **`pivot_longer()` 示例:** 假设我们有如下"宽"格式数据，记录了不同季度销售额：
+    
+    ```{r}
+    sales_wide <- tibble(
+      Product = c("A", "B"),
+      Qtr1 = c(100, 150),
+      Qtr2 = c(110, 160),
+      Qtr3 = c(120, 170),
+      Qtr4 = c(130, 180)
+      )
+      
+      print(sales_wide)
+    ```
+      
+    这里的列名 `Qtr1` 到 `Qtr4` 实际上是"季度"这个变量的值。我们希望将其转换为整洁的长格式：
+    ```{r}
+    sales_long <- sales_wide %>%
+      pivot_longer(
+        cols = Qtr1:Qtr4, # 指定哪些列需要被转换 (这里是 Qtr1 到 Qtr4) 
+        names_to = "Quarter",  # 新列名，用于存储原来的列名 (Qtr1, Qtr2...)
+        values_to = "Sales"    # 新列名，用于存储原来的单元格值
+      )
+    
+    print(sales_long)
+    ```
+      
+      现在，每个观测（某个产品在某个季度的销售额）都独占一行，变量（产品、季度、销售额）各自成列。
+
+-   **`pivot_wider()` 示例:** 将刚才的长数据 `sales_long` 转换回宽数据： 
+
+    ```{r}
+    sales_regained_wide <- sales_long %>%
+      pivot_wider(
+        names_from = Quarter, # 指定包含新列名的列 (Quarter)
+        values_from = Sales   # 指定包含新单元格值的列 (Sales)
+        )
+        
+    print(sales_regained_wide)
+    ```
+
+## 4. 处理缺失值 (NA)
+
+缺失值 (NA, Not Available) 在真实数据中非常常见。`dplyr` 和 `tidyr` 以及 R 基础函数提供了处理它们的方法。
+
+-   **识别缺失值:** `is.na()` 函数返回一个逻辑向量，`TRUE` 表示对应位置是 NA。
+
+    ```{r}
+    x <- c(1, 2, NA, 4, NA)
+    is.na(x)
+
+    # 在数据框中使用 (例如，检查 exam_scores 中是否有 NA)
+    is.na(exam_scores) # 返回一个与数据框同样大小的逻辑矩阵
+    any(is.na(exam_scores)) # 检查整个数据框是否有任何 NA
+    colSums(is.na(exam_scores)) # 计算每列的 NA 数量
+    ```
+
+-   **处理策略:**
+
+    1.  **删除:**
+
+        -   `na.omit()` (基础 R): 删除**任何列**包含 NA 的**整行**。简单粗暴，可能丢失过多信息。
+        -   `drop_na()` (`tidyr`): 功能类似 `na.omit()`, 但可以指定只检查某些列的 NA。
+
+    ```{r}
+    scores_na_df <- tibble(ID = 1:6, Score = c(85, 92, NA, 88, 95, 72))
+    print(scores_na_df)
+
+    na.omit(scores_na_df) # 删除包含 NA 的行
+
+    library(tidyr)
+    scores_na_df %>% drop_na() # 同上
+
+    # 假设有另一列，我们只想删除 Score 为 NA 的行
+    scores_na_df2 <- tibble(
+      ID = 1:6,
+      Score = c(85, 92, NA, 88, 95, 72),
+      Group = c("A", "B", "A", NA, "B", "A")
+      )
+    print(scores_na_df2)
+    scores_na_df2 %>% drop_na(Score) # 只检查 Score 列的 NA
+    ```
+
+    2.  **填充/插补 (Imputation):** 用某个值（如均值、中位数、众数或模型预测值）替换 NA。这更复杂，需要根据具体情况选择合适的方法（后续课程可能涉及）。
+
+    -   `replace_na()` (`tidyr`): 用指定值替换 NA。
+
+    ```{r}
+    scores_na_df %>%
+      mutate(Score_filled = replace_na(Score, mean(Score, na.rm = TRUE))) # 用均值填充
+    ```
+
+    3.  **在计算中忽略:** 许多函数（如 `mean()`, `sum()`, `sd()` 等）有 `na.rm = TRUE` 参数。 
+    
+    ```{r}
+    mean(scores_na_df$Score) # NA
+    mean(scores_na_df$Score, na.rm = TRUE) # 正确计算
+    ```
+
+::: {.callout-warning title="处理 NA 的重要性"}
+不恰当处理 NA 会导致分析结果偏差甚至错误。选择哪种策略取决于数据的性质、缺失的原因以及分析的目标。删除是最简单的方法，但只有在 NA 占比很小或确定该观测无效时才推荐。
+:::
+
+## 5. 管道 (`%>%`) 连接多步操作
+
+管道使得复杂的数据处理流程清晰易读。
+
+-   **示例：** 从 `exam_scores` 数据中，找出每个学生（StudentID）的最高分（Max_Score），并按最高分降序排列，最后只显示 StudentID 和 Max_Score。
+    ```{r}
+    exam_scores %>%
+      group_by(StudentID) %>% # 按学生分组
+      summarise(Max_Score = max(Score)) %>% # 计算每个学生的最高分
+      arrange(desc(Max_Score)) %>% # 按最高分降序排列
+      ungroup() # 最好取消分组（虽然这里影响不大）
+    ```
+
+-   **对比不使用管道的代码：**
+    ```{r}
+    grouped_data <- group_by(exam_scores, StudentID)
+    summary_data <- summarise(grouped_data, Max_Score = max(Score))
+    arranged_data <- arrange(summary_data, desc(Max_Score))
+    ungroup(arranged_data)
+    ```
+
+管道显然更简洁、更符合思维流程。
+
+## 6. 项目相关与本周总结
+
+-   **项目任务:**
+    -   应用本周学到的 `dplyr` 动词（`mutate`, `arrange`, `group_by`, `summarise`）对你的项目数据进行初步的探索性分析。例如，计算分组统计量，创建新变量，按特定条件排序。
+    -   检查你的项目数据是否符合"整洁数据"原则。如果不符合，思考如何使用 `pivot_longer` 或 `pivot_wider` 进行转换（如果适用）。
+    -   检查项目数据中的缺失值 (`is.na()`, `colSums(is.na())`)。思考初步的处理策略（暂时可以先记录下来，不一定立即处理）。
+-   **本周回顾:** 我们掌握了 `dplyr` 的核心转换函数和 `tidyr` 的长宽格式转换，理解了整洁数据的重要性，并学习了处理缺失值的基本方法。通过管道，我们可以将这些操作流畅地组合起来，高效地完成数据整形任务。
+
+**下周预告:** 数据准备就绪，是时候让数据"说话"了！我们将学习强大的可视化工具 `ggplot2`，探索如何通过图形发现数据中的模式和洞见，并初步接触推断统计的思想。

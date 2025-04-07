@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>第二周：数据的语言：获取、导入与初步描述 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week3_lecture.html" rel="next">
+<link href="./week1_lecture.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles/custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week2_lecture.html"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">课程介绍</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">讲义</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lecture.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周：分类数据的智慧：卡方检验与阶段总结</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周：承前启后：阶段回顾与多元回归再探</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">实验</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周实验：R 环境与基础操作</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周实验：数据导入与描述性统计</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周实验：<code>dplyr</code> 进阶与 <code>tidyr</code> 数据整形</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周实验：<code>ggplot2</code> 可视化探索</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周实验：假设检验实践 (t-检验与 ANOVA)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周实验：卡方检验与统计方法选择</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周实验：阶段回顾与多元回归实践</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#数据从何而来" id="toc-数据从何而来" class="nav-link active" data-scroll-target="#数据从何而来">1. 数据从何而来？</a></li>
+  <li><a href="#readr高效导入数据" id="toc-readr高效导入数据" class="nav-link" data-scroll-target="#readr高效导入数据">2. <code>readr</code>：高效导入数据</a></li>
+  <li><a href="#数据框-data-frame-与-tibble" id="toc-数据框-data-frame-与-tibble" class="nav-link" data-scroll-target="#数据框-data-frame-与-tibble">3. 数据框 (Data Frame) 与 Tibble</a></li>
+  <li><a href="#变量类型因子-factor" id="toc-变量类型因子-factor" class="nav-link" data-scroll-target="#变量类型因子-factor">4. 变量类型：因子 (Factor)</a></li>
+  <li><a href="#描述性统计-i数据的中心在哪里集中趋势" id="toc-描述性统计-i数据的中心在哪里集中趋势" class="nav-link" data-scroll-target="#描述性统计-i数据的中心在哪里集中趋势">5. 描述性统计 I：数据的“中心”在哪里？(集中趋势)</a></li>
+  <li><a href="#描述性统计-ii数据的散布程度如何离散趋势" id="toc-描述性统计-ii数据的散布程度如何离散趋势" class="nav-link" data-scroll-target="#描述性统计-ii数据的散布程度如何离散趋势">6. 描述性统计 II：数据的“散布”程度如何？(离散趋势)</a></li>
+  <li><a href="#dplyr-初步数据操作的瑞士军刀" id="toc-dplyr-初步数据操作的瑞士军刀" class="nav-link" data-scroll-target="#dplyr-初步数据操作的瑞士军刀">7. <code>dplyr</code> 初步：数据操作的瑞士军刀</a></li>
+  <li><a href="#项目相关与本周总结" id="toc-项目相关与本周总结" class="nav-link" data-scroll-target="#项目相关与本周总结">8. 项目相关与本周总结</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week2_lecture.html"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="数据从何而来" class="level2">
+<h2 class="anchored" data-anchor-id="数据从何而来">1. 数据从何而来？</h2>
+<p>数据分析的第一步是获取数据。数据可以来自各种来源，并以不同的格式存储。</p>
+<ul>
+<li><strong>常见数据来源:</strong>
+<ul>
+<li><strong>文件:</strong> CSV (逗号分隔值), Excel (.xlsx), TXT (纯文本), JSON, XML 等。这是最常见的形式。</li>
+<li><strong>数据库:</strong> SQL 数据库 (如 PostgreSQL, MySQL), NoSQL 数据库。</li>
+<li><strong>API (应用程序编程接口):</strong> 从网站或服务（如社交媒体、天气服务）获取实时数据。</li>
+<li><strong>网页抓取:</strong> 从网页 HTML 中提取数据（需要注意合法性和道德规范）。</li>
+</ul></li>
+<li><strong>常见数据格式:</strong>
+<ul>
+<li><strong>表格数据 (Tabular Data):</strong> 行代表观测 (Observations)，列代表变量 (Variables)。这是我们本课程主要处理的格式。CSV 和 Excel 文件通常存储表格数据。</li>
+<li><strong>非结构化数据:</strong> 文本、图像、音频等。</li>
+<li><strong>半结构化数据:</strong> JSON, XML 等，具有一定的结构但不如表格数据规整。</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="本周目标">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+本周目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>了解常见的数据来源和格式。</li>
+<li>使用 <code>readr</code> 包高效导入 CSV 等文本文件。</li>
+<li>理解 R 中核心的表格数据结构：数据框 (Data Frame) 和 Tibble。</li>
+<li>认识并处理一种重要的变量类型：因子 (Factor)。</li>
+<li>计算并解释描述性统计量，包括集中趋势和离散趋势。</li>
+<li>初步掌握 <code>dplyr</code> 包中的数据筛选和选择功能。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="readr高效导入数据" class="level2">
+<h2 class="anchored" data-anchor-id="readr高效导入数据">2. <code>readr</code>：高效导入数据</h2>
+<p><code>tidyverse</code> 中的 <code>readr</code> 包提供了快速、友好的函数来读取矩形数据（如 CSV 和 TSV）。</p>
+<ul>
+<li><p><strong>核心函数:</strong></p>
+<ul>
+<li><code>read_csv()</code>: 读取逗号分隔的文件。</li>
+<li><code>read_tsv()</code>: 读取制表符分隔的文件。</li>
+<li><code>read_delim()</code>: 读取使用任意分隔符的文件。</li>
+<li><code>read_fwf()</code>: 读取固定宽度文件。</li>
+<li><code>read_log()</code>: 读取 Apache 风格的日志文件。</li>
+<li><code>read_excel()</code>: (来自 <code>readxl</code> 包，通常与 <code>tidyverse</code> 一起使用) 读取 Excel 文件。</li>
+</ul></li>
+<li><p><strong><code>read_csv()</code> 示例:</strong> 假设我们有一个名为 <code>students.csv</code> 的文件：</p>
+<pre class="csv"><code>    Name,Age,Major,GPA
+    Alice,21,Statistics,3.8
+    Bob,22,Computer Science,3.5
+    Charlie,20,Mathematics,3.9
+    David,21,Statistics,3.6</code></pre>
+<p>在 R 中读取：</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># 加载tidyverse通常也会加载readr</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 students.csv 在当前工作目录下</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果不在，需要提供完整或相对路径</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># students_data &lt;- read_csv("path/to/your/students.csv")</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 为了演示，我们直接用文本创建数据</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>csv_text <span class="ot">&lt;-</span> <span class="st">"Name,Age,Major,GPA</span><span class="sc">\n</span><span class="st">Alice,21,Statistics,3.8</span><span class="sc">\n</span><span class="st">Bob,22,Computer Science,3.5</span><span class="sc">\n</span><span class="st">Charlie,20,Mathematics,3.9</span><span class="sc">\n</span><span class="st">David,21,Statistics,3.6"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>students_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(csv_text)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(students_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 4 × 4
+#&gt;   Name      Age Major              GPA
+#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+#&gt; 1 Alice      21 Statistics         3.8
+#&gt; 2 Bob        22 Computer Science   3.5
+#&gt; 3 Charlie    20 Mathematics        3.9
+#&gt; 4 David      21 Statistics         3.6</code></pre>
+</div>
+</div>
+<p><code>read_csv()</code> 会自动猜测列的类型，并返回一个 Tibble 对象。</p></li>
+<li><p><strong>常用参数:</strong></p>
+<ul>
+<li><code>file</code>: 文件路径或 URL。</li>
+<li><code>col_names</code>: 是否包含列名 (默认为 <code>TRUE</code>)。如果文件没有列名，设为 <code>FALSE</code>，<code>readr</code> 会自动生成 <code>X1</code>, <code>X2</code>…</li>
+<li><code>col_types</code>: 手动指定列类型，提高稳定性和速度。</li>
+<li><code>na</code>: 指定哪些字符串应被视作缺失值 (默认识别 “NA”)。</li>
+<li><code>skip</code>: 跳过文件开头的行数。</li>
+<li><code>n_max</code>: 最多读取的行数。</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 示例：指定列类型，将 "N/A" 视作缺失值</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>students_data_spec <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"students.csv"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_types =</span> <span class="fu">cols</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Name =</span> <span class="fu">col_character</span>(),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Age =</span> <span class="fu">col_integer</span>(),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Major =</span> <span class="fu">col_character</span>(),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">GPA =</span> <span class="fu">col_double</span>()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"NA"</span>, <span class="st">"N/A"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="数据框-data-frame-与-tibble" class="level2">
+<h2 class="anchored" data-anchor-id="数据框-data-frame-与-tibble">3. 数据框 (Data Frame) 与 Tibble</h2>
+<ul>
+<li><strong>数据框 (Data Frame):</strong> R 中存储表格数据的标准结构。
+<ul>
+<li>本质上是一个<strong>等长</strong>向量的列表。</li>
+<li>每一列是一个向量，必须包含<strong>相同类型</strong>的数据。</li>
+<li>不同列可以包含不同类型的数据。</li>
+<li>创建示例：</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Product =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Price =</span> <span class="fu">c</span>(<span class="fl">15.5</span>, <span class="fl">20.0</span>, <span class="fl">16.0</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">InStock =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    ID Product Price InStock
+#&gt; 1 101       A  15.5    TRUE
+#&gt; 2 102       B  20.0   FALSE
+#&gt; 3 103       A  16.0    TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df) <span class="co"># 查看数据框结构</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 'data.frame':    3 obs. of  4 variables:
+#&gt;  $ ID     : num  101 102 103
+#&gt;  $ Product: chr  "A" "B" "A"
+#&gt;  $ Price  : num  15.5 20 16
+#&gt;  $ InStock: logi  TRUE FALSE TRUE</code></pre>
+</div>
+</div></li>
+<li><strong>Tibble:</strong> <code>tidyverse</code> 对数据框的现代优化版本。
+<ul>
+<li><code>readr</code> 函数默认返回 Tibble。</li>
+<li><strong>优点:</strong>
+<ul>
+<li>打印更友好：只显示前 10 行和适合屏幕的列。</li>
+<li>不会自动将字符串转换为因子 (Factor)。</li>
+<li>不会改变列名（例如，不允许非法字符）。</li>
+<li>子集提取 (<code>[</code>) 行为更一致。</li>
+</ul></li>
+<li>大多数情况下，可以像使用数据框一样使用 Tibble。</li>
+<li><code>tibble()</code> 函数创建 Tibble，<code>as_tibble()</code> 将数据框转换为 Tibble。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>tb <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Product =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"A"</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Price =</span> <span class="fu">c</span>(<span class="fl">15.5</span>, <span class="fl">20.0</span>, <span class="fl">16.0</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">InStock =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 3 × 4
+#&gt;      ID Product Price InStock
+#&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;lgl&gt;  
+#&gt; 1   101 A        15.5 TRUE   
+#&gt; 2   102 B        20   FALSE  
+#&gt; 3   103 A        16   TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(tb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; tibble [3 × 4] (S3: tbl_df/tbl/data.frame)
+#&gt;  $ ID     : num [1:3] 101 102 103
+#&gt;  $ Product: chr [1:3] "A" "B" "A"
+#&gt;  $ Price  : num [1:3] 15.5 20 16
+#&gt;  $ InStock: logi [1:3] TRUE FALSE TRUE</code></pre>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="变量类型因子-factor" class="level2">
+<h2 class="anchored" data-anchor-id="变量类型因子-factor">4. 变量类型：因子 (Factor)</h2>
+<p>因子是 R 中用来表示<strong>分类变量</strong> (Categorical Variable) 的特殊数据类型。分类变量的值来自一个固定的、已知的集合，称为<strong>水平 (Levels)</strong>。</p>
+<ul>
+<li><p><strong>应用场景:</strong> 性别 (男/女)、学历 (本科/硕士/博士)、产品类别 (A/B/C) 等。</p></li>
+<li><p><strong>为何使用因子？</strong></p>
+<ul>
+<li>节省内存（内部存储为整数）。</li>
+<li>在统计建模和绘图中（如 <code>ggplot2</code>）通常需要因子类型来正确处理分类变量。</li>
+<li>可以指定水平的顺序（例如，教育程度：小学 &lt; 中学 &lt; 大学）。</li>
+</ul></li>
+<li><p><strong>创建和使用:</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设有一个字符向量表示教育程度</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>education_char <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Bachelor"</span>, <span class="st">"Master"</span>, <span class="st">"Bachelor"</span>, <span class="st">"PhD"</span>, <span class="st">"Master"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 将其转换为因子</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>education_factor <span class="ot">&lt;-</span> <span class="fu">factor</span>(education_char)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(education_factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] Bachelor Master   Bachelor PhD      Master  
+#&gt; Levels: Bachelor Master PhD</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(education_factor) <span class="co"># 查看水平</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Bachelor" "Master"   "PhD"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看内部存储 (整数)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(education_factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 1 2 1 3 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建有序因子 (指定水平顺序)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>education_ordered <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  education_char,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Bachelor"</span>, <span class="st">"Master"</span>, <span class="st">"PhD"</span>), <span class="co"># 指定顺序</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ordered =</span> <span class="cn">TRUE</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(education_ordered)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] Bachelor Master   Bachelor PhD      Master  
+#&gt; Levels: Bachelor &lt; Master &lt; PhD</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>education_ordered[<span class="dv">1</span>] <span class="sc">&lt;</span> education_ordered[<span class="dv">2</span>] <span class="co"># 可以比较顺序</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled" title="`stringsAsFactors`">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>stringsAsFactors</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在旧版本的 R (&lt; 4.0) 中，<code>data.frame()</code> 默认会将字符向量转换为因子。<code>tidyverse</code> (包括 <code>readr</code> 和 <code>tibble</code>) <strong>不会</strong>自动这样做，这通常是更期望的行为。如果需要因子，请显式转换。</p>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="描述性统计-i数据的中心在哪里集中趋势" class="level2">
+<h2 class="anchored" data-anchor-id="描述性统计-i数据的中心在哪里集中趋势">5. 描述性统计 I：数据的“中心”在哪里？(集中趋势)</h2>
+<p>描述性统计用于总结和描述数据集的主要特征。集中趋势度量了数据的中心位置。</p>
+<ul>
+<li><strong>均值 (Mean):</strong> 数据的算术平均值。对异常值敏感。
+<ul>
+<li><p>公式: <span class="math inline">\(\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}\)</span></p></li>
+<li><p>R 实现: <code>mean()</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">85</span>, <span class="dv">92</span>, <span class="dv">78</span>, <span class="dv">88</span>, <span class="dv">95</span>, <span class="dv">72</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 85</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 处理缺失值 (NA)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>scores_na <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">85</span>, <span class="dv">92</span>, <span class="cn">NA</span>, <span class="dv">88</span>, <span class="dv">95</span>, <span class="dv">72</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(scores_na) <span class="co"># 结果是 NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(scores_na, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="co"># 移除 NA 后计算</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 86.4</code></pre>
+</div>
+</div></li>
+</ul></li>
+<li><strong>中位数 (Median):</strong> 将数据排序后位于中间位置的值。对异常值不敏感（稳健）。
+<ul>
+<li><p>如果 n 为奇数，中位数是第 <span class="math inline">\(\frac{n+1}{2}\)</span> 个值。</p></li>
+<li><p>如果 n 为偶数，中位数是第 <span class="math inline">\(\frac{n}{2}\)</span> 和第 <span class="math inline">\(\frac{n}{2}+1\)</span> 个值的平均值。</p></li>
+<li><p>R 实现: <code>median()</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 86.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(scores_na, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 88</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 比较均值和中位数 (异常值影响)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>scores_outlier <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">85</span>, <span class="dv">92</span>, <span class="dv">78</span>, <span class="dv">88</span>, <span class="dv">95</span>, <span class="dv">72</span>, <span class="dv">200</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(scores_outlier)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 101.4286</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(scores_outlier)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 88</code></pre>
+</div>
+</div></li>
+</ul></li>
+<li><strong>众数 (Mode):</strong> 数据集中出现次数最多的值。适用于分类数据，也可用于数值数据。R 基础包没有直接计算众数的函数，通常需要自定义或使用其他包。</li>
+</ul>
+</section>
+<section id="描述性统计-ii数据的散布程度如何离散趋势" class="level2">
+<h2 class="anchored" data-anchor-id="描述性统计-ii数据的散布程度如何离散趋势">6. 描述性统计 II：数据的“散布”程度如何？(离散趋势)</h2>
+<p>离散趋势度量了数据围绕中心值的散布或变异程度。</p>
+<ul>
+<li><strong>极差 (Range):</strong> 最大值与最小值的差。简单但易受异常值影响。
+<ul>
+<li>R 实现: <code>range()</code> 返回最小值和最大值，<code>diff(range(x))</code> 计算极差。</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 72 95</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span>(<span class="fu">range</span>(scores))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 23</code></pre>
+</div>
+</div></li>
+<li><strong>分位数 (Quantiles):</strong> 将数据排序后，按特定比例分割数据的值。
+<ul>
+<li><strong>四分位数 (Quartiles):</strong> 将数据分为四等份的点。
+<ul>
+<li>Q1 (第一四分位数): 25% 的数据小于该值。</li>
+<li>Q2 (第二四分位数): 50% 的数据小于该值，即<strong>中位数</strong>。</li>
+<li>Q3 (第三四分位数): 75% 的数据小于该值。</li>
+</ul></li>
+<li><strong>四分位距 (Interquartile Range, IQR):</strong> Q3 与 Q1 的差 (<span class="math inline">\(IQR = Q3 - Q1\)</span>)。衡量数据中间 50% 的散布范围，对异常值稳健。</li>
+<li>R 实现: <code>quantile()</code>, <code>IQR()</code></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(scores) <span class="co"># 默认计算 0%, 25%, 50%, 75%, 100% 分位数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    0%   25%   50%   75%  100% 
+#&gt; 72.00 79.75 86.50 91.00 95.00</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(scores, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>)) <span class="co"># 计算 10% 和 90% 分位数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  10%  90% 
+#&gt; 75.0 93.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 11.25</code></pre>
+</div>
+</div></li>
+<li><strong>方差 (Variance):</strong> 数据点与其均值之差的平方的平均值。度量数据偏离均值的平均程度。单位是原始数据的平方。
+<ul>
+<li>样本方差公式: <span class="math inline">\(s^2 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1}\)</span> (注意分母是 n-1，无偏估计)</li>
+<li>R 实现: <code>var()</code></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 75.2</code></pre>
+</div>
+</div></li>
+<li><strong>标准差 (Standard Deviation):</strong> 方差的平方根。与原始数据具有相同的单位，更易于解释。
+<ul>
+<li>样本标准差公式: <span class="math inline">\(s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1}}\)</span></li>
+<li>R 实现: <code>sd()</code></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 8.671793</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(scores)) <span class="co"># 结果与 sd(scores) 相同</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 8.671793</code></pre>
+</div>
+</div></li>
+</ul>
+<div class="callout-info" title="选择哪个度量？">
+<ul>
+<li><strong>集中趋势:</strong>
+<ul>
+<li>数据对称且无极端异常值：均值。</li>
+<li>数据偏斜或有异常值：中位数。</li>
+</ul></li>
+<li><strong>离散趋势:</strong>
+<ul>
+<li>数据对称且无极端异常值：标准差（结合均值）。</li>
+<li>数据偏斜或有异常值：IQR（结合中位数）。</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="dplyr-初步数据操作的瑞士军刀" class="level2">
+<h2 class="anchored" data-anchor-id="dplyr-初步数据操作的瑞士军刀">7. <code>dplyr</code> 初步：数据操作的瑞士军刀</h2>
+<p><code>dplyr</code> 是 <code>tidyverse</code> 的核心包之一，提供了用于数据操作（筛选、选择、变换、汇总、排序）的一致且高效的函数（称为 “verbs”）。</p>
+<ul>
+<li><p><strong>核心思想:</strong> 每个函数只做一件事，通过管道 (<code>%&gt;%</code>) 连接起来完成复杂操作。</p></li>
+<li><p><strong>管道操作符 (<code>%&gt;%</code>):</strong> 将左侧对象作为右侧函数的第一个参数传递。读作 “then”。</p>
+<ul>
+<li><code>x %&gt;% f(y)</code> 等价于 <code>f(x, y)</code></li>
+<li><code>x %&gt;% f(y) %&gt;% g(z)</code> 等价于 <code>g(f(x, y), z)</code></li>
+</ul></li>
+<li><p><strong>本周学习的 <code>dplyr</code> 动词:</strong></p>
+<ul>
+<li><code>select()</code>: 按名称选择列。</li>
+<li><code>filter()</code>: 根据条件筛选行。</li>
+</ul></li>
+<li><p><strong><code>select()</code> 示例:</strong> (使用之前创建的 <code>students_data</code> Tibble)</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 选择 Name 和 GPA 列</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(students_data, Name, GPA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 4 × 2
+#&gt;   Name      GPA
+#&gt;   &lt;chr&gt;   &lt;dbl&gt;
+#&gt; 1 Alice     3.8
+#&gt; 2 Bob       3.5
+#&gt; 3 Charlie   3.9
+#&gt; 4 David     3.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 选择除 Major 之外的所有列</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(students_data, <span class="sc">-</span>Major)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 4 × 3
+#&gt;   Name      Age   GPA
+#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 Alice      21   3.8
+#&gt; 2 Bob        22   3.5
+#&gt; 3 Charlie    20   3.9
+#&gt; 4 David      21   3.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 选择从 Name 到 Major 的所有列</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(students_data, Name<span class="sc">:</span>Major)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 4 × 3
+#&gt;   Name      Age Major           
+#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;           
+#&gt; 1 Alice      21 Statistics      
+#&gt; 2 Bob        22 Computer Science
+#&gt; 3 Charlie    20 Mathematics     
+#&gt; 4 David      21 Statistics</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用管道</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>students_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(Name, Age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 4 × 2
+#&gt;   Name      Age
+#&gt;   &lt;chr&gt;   &lt;dbl&gt;
+#&gt; 1 Alice      21
+#&gt; 2 Bob        22
+#&gt; 3 Charlie    20
+#&gt; 4 David      21</code></pre>
+</div>
+</div></li>
+<li><p><strong><code>filter()</code> 示例:</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 筛选 Major 为 Statistics 的学生</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(students_data, Major <span class="sc">==</span> <span class="st">"Statistics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 2 × 4
+#&gt;   Name    Age Major        GPA
+#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;
+#&gt; 1 Alice    21 Statistics   3.8
+#&gt; 2 David    21 Statistics   3.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 筛选 Age 大于 20 的学生</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(students_data, Age <span class="sc">&gt;</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 3 × 4
+#&gt;   Name    Age Major              GPA
+#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+#&gt; 1 Alice    21 Statistics         3.8
+#&gt; 2 Bob      22 Computer Science   3.5
+#&gt; 3 David    21 Statistics         3.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 筛选 Major 为 Statistics 且 GPA 大于 3.7 的学生</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(students_data, Major <span class="sc">==</span> <span class="st">"Statistics"</span>, GPA <span class="sc">&gt;</span> <span class="fl">3.7</span>) <span class="co"># 逗号表示 "与"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 1 × 4
+#&gt;   Name    Age Major        GPA
+#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;
+#&gt; 1 Alice    21 Statistics   3.8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 或者使用 &amp;</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(students_data, Major <span class="sc">==</span> <span class="st">"Statistics"</span> <span class="sc">&amp;</span> GPA <span class="sc">&gt;</span> <span class="fl">3.7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 1 × 4
+#&gt;   Name    Age Major        GPA
+#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;
+#&gt; 1 Alice    21 Statistics   3.8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 筛选 Major 为 Statistics 或 Mathematics 的学生</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(students_data, Major <span class="sc">==</span> <span class="st">"Statistics"</span> <span class="sc">|</span> Major <span class="sc">==</span> <span class="st">"Mathematics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 3 × 4
+#&gt;   Name      Age Major         GPA
+#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+#&gt; 1 Alice      21 Statistics    3.8
+#&gt; 2 Charlie    20 Mathematics   3.9
+#&gt; 3 David      21 Statistics    3.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 或者使用 %in%</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(students_data, Major <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Statistics"</span>, <span class="st">"Mathematics"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 3 × 4
+#&gt;   Name      Age Major         GPA
+#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+#&gt; 1 Alice      21 Statistics    3.8
+#&gt; 2 Charlie    20 Mathematics   3.9
+#&gt; 3 David      21 Statistics    3.6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 结合管道</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>students_data <span class="sc">%&gt;%</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">21</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Name, GPA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 3 × 2
+#&gt;   Name    GPA
+#&gt;   &lt;chr&gt; &lt;dbl&gt;
+#&gt; 1 Alice   3.8
+#&gt; 2 Bob     3.5
+#&gt; 3 David   3.6</code></pre>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="项目相关与本周总结" class="level2">
+<h2 class="anchored" data-anchor-id="项目相关与本周总结">8. 项目相关与本周总结</h2>
+<ul>
+<li><strong>项目任务:</strong> 尝试使用 <code>readr</code> 函数导入一份真实数据（如果是 CSV 或类似格式）。检查导入后的数据结构 (<code>str()</code>, <code>glimpse()</code>)，看看列类型是否符合预期。</li>
+<li><strong>本周回顾:</strong> 我们学习了如何将数据读入 R，理解了数据框和 Tibble，认识了因子类型，并掌握了计算基本描述性统计量和使用 <code>dplyr</code> 进行初步筛选和选择的方法。这些是进行任何数据分析的基础。</li>
+</ul>
+<p><strong>下周预告:</strong> 我们将深入学习 <code>dplyr</code> 和 <code>tidyr</code>，掌握更多数据整理和变形的强大技术，为更复杂的数据分析和可视化做准备。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week1_lecture.html" class="pagination-link" aria-label="第一周：启程：统计思维、R与数据世界">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week3_lecture.html" class="pagination-link" aria-label="第三周：数据整形：`tidyverse` 的核心技艺">
+        <span class="nav-page-text"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

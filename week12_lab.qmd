@@ -1,0 +1,185 @@
+---
+title: "第十二周实验：Logistic 回归评估与模型比较"
+author: "Your Name / TA Name"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-tools: true
+editor: visual
+---
+
+## 1. 目标
+
+本实验旨在练习评估 Logistic 回归模型的性能，理解各种评估指标的含义和计算方法，并初步实践模型比较。
+
+-   从拟合的 Logistic 回归模型生成预测概率和预测类别。
+-   使用 `table()` 或 `yardstick::conf_mat()` 创建和解读混淆矩阵。
+-   使用 `yardstick` 包计算并解释 Accuracy, Precision, Recall, Specificity, F1-Score。
+-   理解不同评估指标的侧重点和适用场景。
+-   使用 `pROC` 包绘制 ROC 曲线并计算 AUC 值，评估模型的整体区分能力。
+-   使用 `AIC()` 和 `BIC()` 比较不同 Logistic 回归模型的相对优劣。
+-   讨论 Capstone 项目选题和初步 EDA。
+
+## 2. 数据与模型准备
+
+我们将继续使用上周的 `ISLR::Default` 数据集和拟合的多元 Logistic 回归模型 `logistic_multi`。
+
+```{r setup-data-w12}
+library(tidyverse)
+# install.packages("ISLR") # 如果尚未安装
+library(ISLR)
+library(broom)
+# install.packages("yardstick") # 如果尚未安装
+library(yardstick) # For metrics: conf_mat, accuracy, precision, recall, f_meas, spec
+# install.packages("pROC") # 如果尚未安装
+library(pROC)      # For ROC and AUC
+library(ggplot2)   # For plotting ROC
+
+# 加载数据并回顾模型
+data("Default")
+logistic_multi <- glm(default ~ balance + income + student, data = Default, family = binomial)
+# summary(logistic_multi)
+
+# --- 生成预测 ---
+# 预测概率 (预测 default = Yes 的概率)
+pred_prob_yes <- predict(logistic_multi, type = "response") # type="response" 返回概率
+
+# 设定阈值并生成预测类别
+threshold <- 0.5
+pred_class <- ifelse(pred_prob_yes > threshold, "Yes", "No")
+pred_class <- factor(pred_class, levels = levels(Default$default)) # 确保因子水平一致
+
+# 创建包含观测值和预测值的 tibble
+eval_data_w12 <- tibble(
+  observed = Default$default,
+  predicted_prob = pred_prob_yes,
+  predicted_class = pred_class
+)
+
+glimpse(eval_data_w12)
+```
+
+## 3. 混淆矩阵与基础指标
+
+**任务:** 1. 使用 `yardstick::conf_mat()` 创建 `eval_data_w12` 的混淆矩阵。 2. 手动识别混淆矩阵中的 TP, FN, FP, TN (假设 "Yes" 是 Positive 类)。 3. 使用 `yardstick` 函数计算以下指标，并解释其含义： \* Accuracy \* Precision (for class "Yes") \* Recall (Sensitivity, for class "Yes") \* Specificity (for class "Yes", i.e., correctly identifying "No") \* F1-Score (for class "Yes")
+
+```{r practice-conf-matrix-metrics}
+# 1. 创建混淆矩阵
+conf_matrix <- eval_data_w12 %>%
+  conf_mat(truth = observed, estimate = predicted_class)
+
+print("Confusion Matrix:")
+print(conf_matrix)
+
+# 2. 手动识别 (基于上面打印的矩阵)
+# TP: Observed=Yes, Predicted=Yes (右下角)
+# FN: Observed=Yes, Predicted=No (右上角)
+# FP: Observed=No, Predicted=Yes (左下角)
+# TN: Observed=No, Predicted=No (左上角)
+# (具体数值依赖于模型和阈值)
+
+# 3. 计算评估指标
+# metrics_summary <- eval_data_w12 %>%
+#   metrics(truth = observed, estimate = predicted_class) # metrics 可以一次计算多个, 但可能不含概率指标
+
+print("Metrics Summary (using default threshold 0.5):")
+# 计算单个指标并解释
+acc <- eval_data_w12 %>% accuracy(truth = observed, estimate = predicted_class)
+prec <- eval_data_w12 %>% precision(truth = observed, estimate = predicted_class, event_level = "second") # "Yes" is the second level
+rec <- eval_data_w12 %>% recall(truth = observed, estimate = predicted_class, event_level = "second")
+spec <- eval_data_w12 %>% specificity(truth = observed, estimate = predicted_class, event_level = "second")
+f1 <- eval_data_w12 %>% f_meas(truth = observed, estimate = predicted_class, event_level = "second")
+
+print(paste("Accuracy:", round(acc$.estimate, 4)))
+# 解释: 模型整体预测正确的比例。
+
+print(paste("Precision (for Yes):", round(prec$.estimate, 4)))
+# 解释: 在所有被预测为违约(Yes)的客户中，实际确实违约的比例。
+
+print(paste("Recall/Sensitivity (for Yes):", round(rec$.estimate, 4)))
+# 解释: 在所有实际违约(Yes)的客户中，被模型成功预测出来的比例。
+
+print(paste("Specificity (for No):", round(spec$.estimate, 4)))
+# 解释: 在所有实际未违约(No)的客户中，被模型成功预测为未违约的比例。
+
+print(paste("F1-Score (for Yes):", round(f1$.estimate, 4)))
+# 解释: Precision 和 Recall 的调和平均，综合衡量模型对违约(Yes)类别的预测性能。
+```
+
+**思考:** \* 在这个 `Default` 数据集中，类别是否平衡？（提示：查看 `summary(Default$default)` 或 `table(Default$default)`）。如果不平衡，Accuracy 是一个好的评估指标吗？为什么？ \* 对于信用卡违约预测，你认为 Precision 和 Recall 哪个更重要？或者说，误报 (FP - 将未违约者预测为违约) 和漏报 (FN - 将违约者预测为未违约) 哪个代价更大？这会如何影响你对模型的评估侧重？
+
+```{r check-imbalance}
+table(Default$default)
+# 结果显示 No 类别远多于 Yes 类别，数据不平衡。
+# 因此，Accuracy 可能具有误导性，应更关注 Precision, Recall, F1 或 AUC。
+```
+
+## 4. ROC 曲线与 AUC
+
+**任务:** 1. 使用 `pROC::roc()` 函数，根据 `eval_data_w12` 中的真实观测值 (`observed`) 和预测概率 (`predicted_prob`) 创建 ROC 对象。确保正确指定 `levels` 参数。 2. 使用 `pROC::auc()` 计算 AUC 值。 3. 解读 AUC 值的含义（模型的整体区分能力如何？）。 4. 使用 `pROC::ggroc()` 绘制 ROC 曲线，并添加对角线和 AUC 值标注。
+
+```{r practice-roc-auc}
+# 1. 创建 ROC 对象
+# levels = c("No", "Yes") 表示 "No" 是参照组 (0), "Yes" 是事件组 (1)
+roc_curve <- roc(response = eval_data_w12$observed,
+                 predictor = eval_data_w12$predicted_prob,
+                 levels = c("No", "Yes")) # 指定 No 为阴性，Yes 为阳性
+
+# 2. 计算 AUC
+auc_value <- auc(roc_curve)
+print(paste("AUC:", round(auc_value, 4)))
+
+# 3. 解读 AUC
+# AUC 值（例如接近 0.97）非常高，表明该模型在区分违约和不违约客户方面具有很强的整体能力。
+# 远好于随机猜测 (AUC=0.5)。
+
+# 4. 绘制 ROC 曲线
+ggroc(roc_curve, legacy.axes = TRUE) + # legacy.axes=TRUE 使 x 轴为 FPR
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color="darkgrey", linetype="dashed") + # 添加对角线
+  labs(title = paste("ROC Curve (AUC =", round(auc_value, 3), ")"),
+       x = "False Positive Rate (1 - Specificity)",
+       y = "True Positive Rate (Sensitivity)") +
+  annotate("text", x = 0.75, y = 0.25, label = paste("AUC =", round(auc_value, 3)), size = 4) +
+  theme_minimal()
+
+# (可选) 找到最佳阈值点
+# plot.roc(roc_curve, print.thres = "best", print.thres.best.method = "youden")
+# best_threshold <- coords(roc_curve, "best", ret = "threshold", best.method="youden")$threshold
+# print(paste("Best threshold (Youden):", round(best_threshold, 4)))
+```
+
+## 5. 模型比较 (AIC/BIC)
+
+**场景:** 比较上周拟合的两个 Logistic 回归模型： \* `logistic_simple`: `default ~ balance` \* `logistic_multi`: `default ~ balance + income + student`
+
+**任务:** 1. 重新拟合 `logistic_simple` 模型（如果需要）。 2. 使用 `AIC()` 和 `BIC()` 比较这两个模型。 3. 哪个模型的 AIC 和 BIC 更低？根据这些信息准则，哪个模型相对更优？这是否符合你对模型复杂度和拟合效果的直观感受？
+
+```{r practice-model-comparison-logistic}
+# 1. 重新拟合简单模型 (如果需要)
+logistic_simple <- glm(default ~ balance, data = Default, family = binomial)
+
+# 2. 比较 AIC 和 BIC
+print("--- Model Comparison (AIC/BIC) ---")
+AIC_comp <- AIC(logistic_simple, logistic_multi)
+BIC_comp <- BIC(logistic_simple, logistic_multi)
+
+print("AIC Comparison:")
+print(AIC_comp)
+print("BIC Comparison:")
+print(BIC_comp)
+
+# 3. 解读
+# 比较两个模型的 AIC 和 BIC 值。通常 logistic_multi 的值会更低。
+# 结论：根据 AIC 和 BIC 标准，包含 balance, income, student 的多元模型
+#       在拟合优度和模型复杂度之间取得了更好的平衡，相对优于只包含 balance 的简单模型。
+#       这表明加入 income 和 student 变量（即使 income 效应很小）整体上改进了模型（根据信息准则）。
+```
+
+## 6. Capstone 项目进展讨论
+
+**任务:** 1. **分享你的选题:** 向小组或全班简要介绍你选择的 Capstone 项目主题、研究问题和数据来源。 2. **展示初步 EDA:** 展示你使用 `ggplot2` 等工具进行的初步数据探索结果（关键变量分布、变量关系图等）。 3. **讨论遇到的问题:** 分享你在数据获取、清理或初步探索中遇到的困难或疑问。 4. **接受反馈:** 听取老师、助教和同学的建议。
+
+## 7. 实验总结
+
+在本实验中，我们深入实践了 Logistic 回归模型的评估。我们学会了如何生成预测、构建混淆矩阵，并计算和解释了 Accuracy, Precision, Recall, Specificity, F1-Score 等关键指标。我们还掌握了使用 ROC 曲线和 AUC 值来评估模型整体区分能力的方法。最后，我们练习了使用 AIC/BIC 来比较不同 Logistic 回归模型。这些评估技能对于理解和选择合适的分类模型至关重要。同时，我们也推进了 Capstone 项目的选题和初步探索。

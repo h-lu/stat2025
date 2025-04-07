@@ -44,6 +44,7 @@ title: "第四周：眼见为实：`ggplot2` 可视化探索与推断初步"
     7.  **分面 (Faceting, `facet_...`):** 将数据按某个分类变量分割成多个子图。
 
 -   **基本语法模板:** 
+
     ```r
     ggplot(data = <DATA_FRAME>) +
       geom_xxx(mapping = aes(<MAPPINGS>)) +       # 其他图层、设定...

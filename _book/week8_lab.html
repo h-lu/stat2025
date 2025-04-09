@@ -351,11 +351,28 @@ window.Quarto = {
 <section id="多元线性回归-mlr-实践" class="level2">
 <h2 class="anchored" data-anchor-id="多元线性回归-mlr-实践">3. 多元线性回归 (MLR) 实践</h2>
 <p><strong>场景:</strong> 我们想建立一个更全面的模型来预测 <code>mpg</code> 数据集中的 <code>hwy</code> (高速公路里程)，同时考虑 <code>cty</code> (城市里程)、<code>year</code> (生产年份) 和 <code>class</code> (车辆类别) 的影响。</p>
-<p><strong>任务:</strong> 1. 使用 <code>lm()</code> 拟合一个 MLR 模型，公式为 <code>hwy ~ cty + as.factor(year) + class</code>。将模型存储在 <code>mlr_hwy</code> 中。(注意：year 是二分类变量（1999 和 2008），使用 as.factor() 将其转换为因子变量) 2. 使用 <code>summary()</code> 查看模型 <code>mlr_hwy</code> 的详细结果。 3. <strong>解读模型系数 (Coefficients):</strong> * 解释<strong>截距 (Intercept)</strong> 的含义（是否有实际意义？）。 * 解释 <code>cty</code> 的<strong>偏回归系数</strong>的含义（强调“控制其他变量”）。 * 解释 <code>year</code> 的<strong>偏回归系数</strong>的含义。(注意：year 的系数表示 2008 年相对于 1999 年（参照组）的 hwy 差异) * 解释 <code>class</code> 各水平的系数含义（它们是相对于哪个参照组的？）。 * 判断每个系数的<strong>统计显著性</strong>（基于 P 值和 <span class="math inline">\(\alpha = 0.05\)</span>）。 4. <strong>解读模型整体性能:</strong> * 解释 <strong>Adjusted R-squared</strong> 的值代表什么？ * 解释 <strong>F-statistic</strong> 和对应的 <strong>p-value</strong> 的含义（检验模型的整体显著性）。</p>
+<p><strong>任务:</strong></p>
+<ol type="1">
+<li>使用 <code>lm()</code> 拟合一个 MLR 模型，公式为 <code>hwy ~ cty + as.factor(year) + class</code>。将模型存储在 <code>mlr_hwy</code> 中。(注意：year 是二分类变量（1999 和 2008），使用 as.factor() 将其转换为因子变量)</li>
+<li>使用 <code>summary()</code> 查看模型 <code>mlr_hwy</code> 的详细结果。</li>
+<li><strong>解读模型系数 (Coefficients):</strong>
+<ul>
+<li>解释<strong>截距 (Intercept)</strong> 的含义（是否有实际意义？）。</li>
+<li>解释 <code>cty</code> 的<strong>偏回归系数</strong>的含义（强调“控制其他变量”）。</li>
+<li>解释 <code>year</code> 的<strong>偏回归系数</strong>的含义。(注意：year 的系数表示 2008 年相对于 1999 年（参照组）的 hwy 差异)</li>
+<li>解释 <code>class</code> 各水平的系数含义（它们是相对于哪个参照组的？）。</li>
+<li>判断每个系数的<strong>统计显著性</strong>（基于 P 值和 <span class="math inline">\(\alpha = 0.05\)</span>）。</li>
+</ul></li>
+<li><strong>解读模型整体性能:</strong>
+<ul>
+<li>解释 <strong>Adjusted R-squared</strong> 的值代表什么？</li>
+<li>解释 <strong>F-statistic</strong> 和对应的 <strong>p-value</strong> 的含义（检验模型的整体显著性）。</li>
+</ul></li>
+</ol>
 </section>
 <section id="统计显著性-vs-实际重要性讨论" class="level2">
 <h2 class="anchored" data-anchor-id="统计显著性-vs-实际重要性讨论">4. 统计显著性 vs 实际重要性讨论</h2>
-<p><strong>思考:</strong> 在上面的 <code>mlr_hwy</code> 模型中，<code>year</code> 的系数是统计显著的 (p ≈ 0.0036)，估计值为 0.46。</p>
+<p><strong>思考:</strong>在上面的 <code>mlr_hwy</code> 模型中，<code>year</code> 的系数是统计显著的 (p ≈ 0.0036)，估计值为 0.46。</p>
 <ol type="1">
 <li>这个结果的<strong>统计意义</strong>是什么？</li>
 <li>这个结果的<strong>实际重要性</strong>如何？增加约 0.46 MPG 对于购车者或汽车工程师来说，是一个值得关注的差异吗？（这取决于具体情境和比较基准）。</li>

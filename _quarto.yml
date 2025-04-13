@@ -19,6 +19,8 @@ book:
         - week6_lecture.qmd
         - week7_lecture.qmd
         - week8_lecture.qmd
+        - week9_lecture.qmd
+        
     - part: "实验"
       chapters:
         - week1_lab.qmd
@@ -29,7 +31,7 @@ book:
         - week6_lab.qmd
         - week7_lab.qmd
         - week8_lab.qmd
-
+        - week9_lab.qmd
 execute:
   echo: true
   message: false

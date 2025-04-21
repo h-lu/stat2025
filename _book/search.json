@@ -1590,5 +1590,170 @@
       "实验",
       "<span class='chapter-number'>19</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
+  },
+  {
+    "objectID": "week10_lab.html",
+    "href": "week10_lab.html",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "",
+    "text": "1. 目标\n本实验旨在基于上周的模型诊断结果，实践模型改进的常用策略，并练习使用不同标准进行模型选择。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lab.html#目标",
+    "href": "week10_lab.html#目标",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "",
+    "text": "应用变量变换（如对数变换）尝试解决非线性或异方差问题，并比较诊断结果。\n根据 VIF 结果，通过移除变量来处理多重共线性问题，并观察模型变化。\n通过移除强影响点（基于 Cook’s D）来评估其对模型的影响。\n在模型中添加交互项，并解释交互效应。\n使用 AIC 和 BIC 比较不同模型的相对优劣。\n了解 step() 函数的使用，并理解其局限性。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lab.html#数据与模型准备",
+    "href": "week10_lab.html#数据与模型准备",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "2. 数据与模型准备",
+    "text": "2. 数据与模型准备\n我们将继续使用上周诊断过的模型：\n\nmlr_hwy: 基于 mpg 数据集，hwy ~ displ + cyl + drv。诊断显示可能存在轻微非线性/异方差，以及 displ 和 cyl 之间的共线性。\nprob_model: 基于模拟的 prob_data，y ~ x1 + x2 + x3。诊断显示存在严重共线性 (x1, x2) 和强影响点 (点 1)。\n\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(car)    # For vif()\nlibrary(broom)  # For augment()\nlibrary(interactions) # For interact_plot()\n\n# --- 模型 1: mpg 数据 ---\nmlr_hwy &lt;- lm(hwy ~ displ + cyl + drv, data = mpg)\n# summary(mlr_hwy)\n# vif(mlr_hwy)\n# par(mfrow=c(2,2)); plot(mlr_hwy); par(mfrow=c(1,1))\n\n\n# --- 模型 2: 问题数据 ---\nset.seed(42)\nn_prob &lt;- 100\nx1_prob &lt;- rnorm(n_prob)\nx2_prob &lt;- x1_prob * 0.8 + rnorm(n_prob, 0, 0.1) # 共线性\nx3_prob &lt;- rnorm(n_prob)\ny_prob &lt;- 2 + 3*x1_prob + 1*x2_prob - 2*x3_prob + rnorm(n_prob, 0, 2)\ny_prob[1] &lt;- y_prob[1] + 15 # 异常/强影响点\nx1_prob[2] &lt;- x1_prob[2] + 4 # 高杠杆点\nprob_data &lt;- tibble(y = y_prob, x1 = x1_prob, x2 = x2_prob, x3 = x3_prob)\nprob_model &lt;- lm(y ~ x1 + x2 + x3, data = prob_data)\n# summary(prob_model)\n# vif(prob_model)\n# plot(prob_model, which=4) # Cook's D",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lab.html#变量变换实践",
+    "href": "week10_lab.html#变量变换实践",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "3. 变量变换实践",
+    "text": "3. 变量变换实践\n场景: mlr_hwy 模型的诊断图（特别是 Residuals vs Fitted 和 Scale-Location）提示可能存在轻微的异方差（方差随拟合值增大而增大）。燃油效率这类变量有时进行对数变换效果较好。\n任务:\n\n创建一个新模型 mlr_hwy_log，对因变量 hwy 进行自然对数变换 (log(hwy))，自变量保持不变。\n使用 plot() 函数对新模型 mlr_hwy_log 进行诊断。\n比较 mlr_hwy_log 和 mlr_hwy 的诊断图（特别是 Residuals vs Fitted 和 Scale-Location）。对数变换是否改善了异方差问题？对残差正态性是否有影响？\n(思考) 对数变换后，系数的解释发生了什么变化？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lab.html#处理多重共线性实践",
+    "href": "week10_lab.html#处理多重共线性实践",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "4. 处理多重共线性实践",
+    "text": "4. 处理多重共线性实践\n场景: prob_model 模型的 VIF 诊断显示 x1 和 x2 存在严重共线性。\n任务:\n\n回顾 prob_model 的 VIF 值。\n创建一个新模型 prob_model_nox2，从 prob_model 中移除共线性严重的变量之一（例如 x2）。\n查看新模型 prob_model_nox2 的摘要 (summary()) 和 VIF 值。\n比较 prob_model 和 prob_model_nox2 的结果：\n\nx1 的系数估计值和标准误有何变化？P 值呢？\n模型的 Adjusted R-squared 有何变化？\n移除 x2 是否解决了共线性问题？这样做是否合理（取决于 x1 和 x2 的理论重要性）？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lab.html#处理强影响点实践",
+    "href": "week10_lab.html#处理强影响点实践",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "5. 处理强影响点实践",
+    "text": "5. 处理强影响点实践\n场景: prob_model 的 Cook’s D 诊断显示第一个观测点是强影响点。\n任务:\n\n找出 prob_model 中 Cook’s D 大于某个阈值（例如 0.5 或 1）的点的索引。\n创建一个新模型 prob_model_noinf，从 prob_data 中移除这些强影响点后重新拟合模型 (y ~ x1 + x2 + x3)。\n比较 prob_model 和 prob_model_noinf 的模型摘要 (summary())。\n\n系数估计值（特别是截距和受影响变量的系数）是否有显著变化？\n标准误和 P 值是否有变化？\nR-squared 和 Adjusted R-squared 是否有变化？\n\n讨论: 移除这个点对模型结果产生了多大的影响？你认为应该移除它吗？（强调移除的谨慎性）。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lab.html#交互项实践",
+    "href": "week10_lab.html#交互项实践",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "6. 交互项实践",
+    "text": "6. 交互项实践\n场景: 我们想探究 mpg 数据集中，发动机排量 (displ) 对高速公路里程 (hwy) 的影响是否会因为驱动方式 (drv) 的不同而不同。\n任务:\n\n拟合一个包含 displ 和 drv 主效应以及它们之间交互项的模型 hwy ~ displ * drv。将模型存储在 interaction_hwy 中。\n查看模型摘要 summary(interaction_hwy)。\n解读交互项系数:\n\n找到 displ:drv4 和 displ:drvr 的系数和 P 值。\n解释 displ:drv4 系数的含义（它如何调节 displ 的效应？）。\n这些交互项是否统计显著？这说明了什么？\n\n使用 interactions::interact_plot() 可视化交互效应。观察不同 drv 水平下 displ 对 hwy 的拟合线斜率是否不同。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lab.html#模型比较实践-aicbic",
+    "href": "week10_lab.html#模型比较实践-aicbic",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "7. 模型比较实践 (AIC/BIC)",
+    "text": "7. 模型比较实践 (AIC/BIC)\n场景: 比较我们为 hwy 建立的几个模型：\n\nslr_hwy_displ &lt;- lm(hwy ~ displ, data = mpg) (仅排量)\nmlr_hwy (hwy ~ displ + cyl + drv) (排量+气缸+驱动)\nmlr_hwy_log (log(hwy) ~ displ + cyl + drv) (因变量对数变换) - 注意：AIC/BIC 不能直接比较因变量不同的模型！\ninteraction_hwy (hwy ~ displ * drv) (排量与驱动交互)\n\n任务:\n\n拟合 slr_hwy_displ 模型。\n使用 AIC() 和 BIC() 函数比较 因变量相同 的模型：slr_hwy_displ, mlr_hwy, interaction_hwy。\n哪个模型的 AIC/BIC 值最低？这表明哪个模型在拟合优度和复杂度之间取得了更好的平衡？",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lab.html#实验总结",
+    "href": "week10_lab.html#实验总结",
+    "title": "第十周实验：模型改进与选择实践",
+    "section": "8. 实验总结",
+    "text": "8. 实验总结\n在本实验中，我们基于模型诊断的结果，实践了多种模型改进策略，包括变量变换、处理多重共线性和强影响点。我们还学习了如何添加和解释交互项，以捕捉更复杂的变量关系。最后，我们使用 AIC 和 BIC 作为参考指标，比较了不同模型的相对优劣。模型构建是一个迭代的过程，需要结合诊断、改进和选择，才能得到一个相对可靠和有效的模型。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lecture.html",
+    "href": "week10_lecture.html",
+    "title": "第十周：模型改进与选择的批判性视角",
+    "section": "",
+    "text": "1. 模型诊断之后：如何改进？\n上周我们学习了如何诊断线性回归模型，识别潜在的问题，如违反 L.I.N.E. 假设、多重共线性或存在强影响点。本周我们将探讨如何应对这些问题，改进我们的模型，并讨论如何在多个可能的模型中进行选择。\n我们将继续使用之前的模型和数据作为示例。\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(car)    # For vif()\nlibrary(broom)  # For augment()\n\n# 回顾模型\n# mpg 数据集\nmlr_model_mpg &lt;- lm(hwy ~ displ + cyl + drv, data = mpg)\n\n# 问题数据 (回顾创建过程)\nset.seed(42)\nn_prob &lt;- 100\nx1_prob &lt;- rnorm(n_prob)\nx2_prob &lt;- x1_prob * 0.8 + rnorm(n_prob, 0, 0.1) # 共线性\nx3_prob &lt;- rnorm(n_prob)\ny_prob &lt;- 2 + 3*x1_prob + 1*x2_prob - 2*x3_prob + rnorm(n_prob, 0, 2)\ny_prob[1] &lt;- y_prob[1] + 15 # 异常/强影响点\nx1_prob[2] &lt;- x1_prob[2] + 4 # 高杠杆点\nprob_data &lt;- tibble(y = y_prob, x1 = x1_prob, x2 = x2_prob, x3 = x3_prob)\nprob_model &lt;- lm(y ~ x1 + x2 + x3, data = prob_data)\n\n# 诊断回顾 (上一周内容)\n# plot(mlr_model_mpg)\n# plot(prob_model)\n# vif(mlr_model_mpg)\n# vif(prob_model)\n# cooks.distance(prob_model)",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第十周：模型改进与选择的批判性视角</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lecture.html#模型诊断之后如何改进",
+    "href": "week10_lecture.html#模型诊断之后如何改进",
+    "title": "第十周：模型改进与选择的批判性视角",
+    "section": "",
+    "text": "本周目标\n\n\n\n\n学习应对模型诊断问题的常用策略：\n\n变量变换 (Variable Transformation): 处理非线性、异方差、残差非正态。\n处理多重共线性: 移除变量、合并变量、岭回归/Lasso (概念介绍)。\n处理强影响点: 检查数据错误、移除点（需谨慎）、使用稳健回归。\n\n理解并应用交互项 (Interaction Terms) 来捕捉变量间的协同效应。\n批判性地看待自动模型选择方法（如 step()）。\n掌握基于理论、诊断结果和简洁性原则进行模型选择的思路。\n了解 AIC 和 BIC 作为模型选择的参考指标。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第十周：模型改进与选择的批判性视角</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lecture.html#应对诊断问题的策略",
+    "href": "week10_lecture.html#应对诊断问题的策略",
+    "title": "第十周：模型改进与选择的批判性视角",
+    "section": "2. 应对诊断问题的策略",
+    "text": "2. 应对诊断问题的策略\n\n2.1 变量变换 (Variable Transformation)\n当模型违反线性性、等方差性或残差正态性假设时，对因变量 Y 或某个自变量 X 进行数学变换（如取对数、平方根、倒数等）有时可以改善情况。\n\n常用变换:\n\n对数变换 (Log Transformation): log(Y) 或 log(X)。\n\n适用场景: 处理右偏 (Right-skewed) 数据、稳定随均值增大而增大的方差、将指数增长关系线性化。\n注意: 变量必须取正值。可考虑 log(Y + c)。\n系数解释变化: (见讲义详细说明)\n\n平方根变换 (Square Root Transformation): sqrt(Y) 或 sqrt(X)。适用于计数数据或轻微右偏/异方差。变量需非负。\n倒数变换 (Reciprocal Transformation): 1/Y 或 1/X。处理严重右偏。变量不能为 0。\n平方变换 (Square Transformation): \\(Y^2\\) 或 \\(X^2\\)。处理左偏 (Left-skewed) 数据。\nBox-Cox 变换: 自动寻找最佳幂变换 (\\(\\lambda\\)) (需要 MASS 包)。\n\n示例 (对数变换): 假设发现 hwy 的残差呈喇叭口（异方差）。\n\n# 尝试对 hwy 取对数\nmlr_model_log_hwy &lt;- lm(log(hwy) ~ displ + cyl + drv, data = mpg)\nsummary(mlr_model_log_hwy)\n\n#&gt; \n#&gt; Call:\n#&gt; lm(formula = log(hwy) ~ displ + cyl + drv, data = mpg)\n#&gt; \n#&gt; Residuals:\n#&gt;      Min       1Q   Median       3Q      Max \n#&gt; -0.38326 -0.06832  0.00667  0.06868  0.36474 \n#&gt; \n#&gt; Coefficients:\n#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    \n#&gt; (Intercept)  3.56292    0.04329  82.304  &lt; 2e-16 ***\n#&gt; displ       -0.04983    0.01938  -2.571   0.0108 *  \n#&gt; cyl         -0.06661    0.01400  -4.756 3.49e-06 ***\n#&gt; drvf         0.21762    0.02156  10.092  &lt; 2e-16 ***\n#&gt; drvr         0.23605    0.02989   7.897 1.18e-13 ***\n#&gt; ---\n#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n#&gt; \n#&gt; Residual standard error: 0.1247 on 229 degrees of freedom\n#&gt; Multiple R-squared:  0.7748, Adjusted R-squared:  0.7708 \n#&gt; F-statistic: 196.9 on 4 and 229 DF,  p-value: &lt; 2.2e-16\n\n# 诊断新模型\npar(mfrow=c(2,2))\nplot(mlr_model_log_hwy)\n\n\n\n\n\n\n\npar(mfrow=c(1,1))\n# 观察残差图和 QQ 图是否有改善\n\n选择变换的原则: 优先考虑 Y；基于理论或诊断图；注意系数解释变化；尝试比较。\n\n\n\n2.2 处理多重共线性 (VIF &gt; 5 或 10)\n\n策略:\n\n移除变量: 移除理论上不重要或 VIF 最高的变量之一 (可能引入遗漏偏误)。\n合并变量: 将高度相关的变量合并为综合指标 (如均值、PCA)。\n收集更多数据:。\n使用专门方法 (高级): 岭回归 (Ridge), Lasso 回归。\n\n示例 (移除变量): 在 prob_model 中，x1 和 x2 的 VIF 高。尝试移除 x2。\n\n\n\n2.3 处理强影响点 (Cook’s D &gt; 1 或 0.5 或 4/n)\n\n策略:\n\n检查数据错误: 修正或删除错误。\n检查是否代表特殊情况: 单独分析或分层建模。\n移除影响点 (需极其谨慎！): 仅在确认错误或不代表总体时考虑；必须报告；比较移除前后的模型。\n使用稳健回归 (Robust Regression): (高级) 如 rlm() from MASS。\n\n示例 (比较移除影响点): 在 prob_model 中，第一个点可能是强影响点。\n\n# 识别影响点索引 (假设 Cook's D &gt; 0.5)\ninfluential_prob_indices &lt;- which(cooks.distance(prob_model) &gt; 0.5)\n# print(influential_prob_indices) # 假设结果是 1\n\n# 拟合移除影响点后的模型\nif(length(influential_prob_indices) &gt; 0) {\n  prob_model_robust &lt;- lm(y ~ x1 + x2 + x3, data = prob_data[-influential_prob_indices, ])\n  # 比较摘要\n  summary(prob_model)\n  summary(prob_model_robust)\n} else {\n  print(\"No highly influential points found based on Cook's D &gt; 0.5\")\n}\n\n#&gt; \n#&gt; Call:\n#&gt; lm(formula = y ~ x1 + x2 + x3, data = prob_data[-influential_prob_indices, \n#&gt;     ])\n#&gt; \n#&gt; Residuals:\n#&gt;     Min      1Q  Median      3Q     Max \n#&gt; -3.6001 -1.1900 -0.2038  1.2253  4.6613 \n#&gt; \n#&gt; Coefficients:\n#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    \n#&gt; (Intercept)   2.0493     0.1818  11.272   &lt;2e-16 ***\n#&gt; x1            3.1105     1.6414   1.895   0.0612 .  \n#&gt; x2            1.0219     2.0328   0.503   0.6163    \n#&gt; x3           -2.0731     0.1823 -11.371   &lt;2e-16 ***\n#&gt; ---\n#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n#&gt; \n#&gt; Residual standard error: 1.785 on 94 degrees of freedom\n#&gt; Multiple R-squared:  0.8823, Adjusted R-squared:  0.8786 \n#&gt; F-statistic: 234.9 on 3 and 94 DF,  p-value: &lt; 2.2e-16",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第十周：模型改进与选择的批判性视角</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lecture.html#交互项-interaction-terms",
+    "href": "week10_lecture.html#交互项-interaction-terms",
+    "title": "第十周：模型改进与选择的批判性视角",
+    "section": "3. 交互项 (Interaction Terms)",
+    "text": "3. 交互项 (Interaction Terms)\n当一个自变量的效果依赖于另一个自变量的水平时，引入交互项（变量乘积）。\n\n模型形式 (含交互项): \\[ Y = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + \\beta_3 (X_1 \\times X_2) + \\epsilon \\]\n系数解释:\n\n\\(\\beta_1\\): \\(X_2=0\\) 时，\\(X_1\\) 的效应。\n\\(\\beta_2\\): \\(X_1=0\\) 时，\\(X_2\\) 的效应。\n\\(\\beta_3\\): \\(X_2\\) 每增加 1 单位，\\(X_1\\) 对 Y 的效应额外变化 \\(\\beta_3\\)。\n\\(X_1\\) 对 Y 的总效应: \\((\\beta_1 + \\beta_3 X_2)\\)，随 \\(X_2\\) 变化。\n\nR 实现: 使用 * 或 :。\n\nY ~ X1 * X2 (推荐) 或 Y ~ X1 + X2 + X1:X2\n\n\n# 示例：研究 displ 对 hwy 的影响是否因 drv 而异？\ninteraction_model_mpg &lt;- lm(hwy ~ displ * drv, data = mpg)\nsummary(interaction_model_mpg)\n\n#&gt; \n#&gt; Call:\n#&gt; lm(formula = hwy ~ displ * drv, data = mpg)\n#&gt; \n#&gt; Residuals:\n#&gt;    Min     1Q Median     3Q    Max \n#&gt; -8.489 -1.895 -0.191  1.797 13.467 \n#&gt; \n#&gt; Coefficients:\n#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    \n#&gt; (Intercept)  30.6831     1.0961  27.994  &lt; 2e-16 ***\n#&gt; displ        -2.8785     0.2638 -10.913  &lt; 2e-16 ***\n#&gt; drvf          6.6950     1.5670   4.272 2.84e-05 ***\n#&gt; drvr         -4.9034     4.1821  -1.172   0.2422    \n#&gt; displ:drvf   -0.7243     0.4979  -1.455   0.1471    \n#&gt; displ:drvr    1.9550     0.8148   2.400   0.0172 *  \n#&gt; ---\n#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n#&gt; \n#&gt; Residual standard error: 3.034 on 228 degrees of freedom\n#&gt; Multiple R-squared:  0.746,  Adjusted R-squared:  0.7405 \n#&gt; F-statistic:   134 on 5 and 228 DF,  p-value: &lt; 2.2e-16\n\n# 解读交互项系数 (如 displ:drv4):\n# 相对于参照组 drv='f'，四驱 drv='4' 会使 displ 对 hwy 的负效应 (斜率) 发生多少变化。\n# 如果交互项显著 (P &lt; 0.05)，说明 displ 的影响依赖于驱动方式。\n\n# 可视化交互效应\n# install.packages(\"interactions\")\nlibrary(interactions)\ninteract_plot(interaction_model_mpg, pred = displ, modx = drv, plot.points = TRUE)\n\n\n\n\n\n\n\n# 如果线不平行，提示存在交互效应。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第十周：模型改进与选择的批判性视角</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lecture.html#模型选择的批判性视角",
+    "href": "week10_lecture.html#模型选择的批判性视角",
+    "title": "第十周：模型改进与选择的批判性视角",
+    "section": "4. 模型选择的批判性视角",
+    "text": "4. 模型选择的批判性视角\n选择“最佳”模型需要在简洁性和预测/解释能力之间权衡。\n\n常见策略与批判:\n\n自动逐步回归 (step()):\n\n方法: 自动增删变量优化 AIC 等标准。\n缺点: 结果不稳定、P 值失效、可能选出无意义模型。不推荐常规使用。\n\n基于理论和领域知识: 优先选择理论重要、可解释的变量。\n基于模型诊断: 移除导致严重问题的变量（如果合理）。\n基于简洁性原则 (Parsimony): 解释力相近时选更简单的。\n基于信息准则 (AIC/BIC):\n\n衡量拟合优度与复杂度的权衡。\n目标：选择 AIC 或 BIC 最小的模型。\nBIC 对复杂度惩罚更重，倾向于更简洁模型。\n可比较非嵌套模型。\n\n\n# 比较两个模型的 AIC/BIC\nmodel1 &lt;- lm(hwy ~ displ + cyl, data = mpg)\nmodel2 &lt;- lm(hwy ~ displ + drv, data = mpg)\nAIC(model1, model2)\n\n#&gt;        df      AIC\n#&gt; model1  4 1288.779\n#&gt; model2  5 1196.741\n\nBIC(model1, model2)\n\n#&gt;        df      BIC\n#&gt; model1  4 1302.601\n#&gt; model2  5 1214.018\n\n\n\n最佳实践: 结合理论、诊断、简洁性和信息准则进行综合判断。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第十周：模型改进与选择的批判性视角</span>"
+    ]
+  },
+  {
+    "objectID": "week10_lecture.html#本周总结与预告",
+    "href": "week10_lecture.html#本周总结与预告",
+    "title": "第十周：模型改进与选择的批判性视角",
+    "section": "5. 本周总结与预告",
+    "text": "5. 本周总结与预告\n本周我们探讨了模型诊断后的改进策略（变量变换、处理共线性/影响点）和交互项的应用。我们还批判性地讨论了模型选择的方法，强调了综合判断的重要性。\n下周预告: 进入分类预测领域，学习Logistic 回归原理、系数解释（优势比 Odds Ratio）及 R 实现。Capstone 项目启动！",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>第十周：模型改进与选择的批判性视角</span>"
+    ]
   }
 ]

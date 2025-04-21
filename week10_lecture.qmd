@@ -19,7 +19,7 @@ title: "第十周：模型改进与选择的批判性视角"
 
 我们将继续使用之前的模型和数据作为示例。
 
-``` r
+```{r setup}
 library(tidyverse)
 library(ggplot2)
 library(car)    # For vif()
@@ -68,7 +68,7 @@ prob_model <- lm(y ~ x1 + x2 + x3, data = prob_data)
 
 -   **示例 (对数变换):** 假设发现 `hwy` 的残差呈喇叭口（异方差）。
 
-    ``` r
+    ```{r}
     # 尝试对 hwy 取对数
     mlr_model_log_hwy <- lm(log(hwy) ~ displ + cyl + drv, data = mpg)
     summary(mlr_model_log_hwy)
@@ -102,7 +102,7 @@ prob_model <- lm(y ~ x1 + x2 + x3, data = prob_data)
 
 -   **示例 (比较移除影响点):** 在 `prob_model` 中，第一个点可能是强影响点。
 
-    ``` r
+    ```{r}
     # 识别影响点索引 (假设 Cook's D > 0.5)
     influential_prob_indices <- which(cooks.distance(prob_model) > 0.5)
     # print(influential_prob_indices) # 假设结果是 1
@@ -135,7 +135,7 @@ prob_model <- lm(y ~ x1 + x2 + x3, data = prob_data)
 
     -   `Y ~ X1 * X2` (推荐) 或 `Y ~ X1 + X2 + X1:X2`
 
-    ``` r
+    ```{r}
     # 示例：研究 displ 对 hwy 的影响是否因 drv 而异？
     interaction_model_mpg <- lm(hwy ~ displ * drv, data = mpg)
     summary(interaction_model_mpg)
@@ -174,7 +174,7 @@ prob_model <- lm(y ~ x1 + x2 + x3, data = prob_data)
         -   BIC 对复杂度惩罚更重，倾向于更简洁模型。
         -   可比较非嵌套模型。
 
-        ``` r
+        ```{r}
         # 比较两个模型的 AIC/BIC
         model1 <- lm(hwy ~ displ + cyl, data = mpg)
         model2 <- lm(hwy ~ displ + drv, data = mpg)

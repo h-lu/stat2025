@@ -4,7 +4,7 @@ title: "第十二周：Logistic 回归评估 与 模型比较初步"
 
 ## 1. 模型好坏：如何评估分类模型？
 
-上周我们学习了如何拟合 Logistic 回归模型来预测分类结果的概率。但是，仅仅拟合模型是不够的，我们还需要评估模型的**预测性能 (Predictive Performance)**，即模型在区分不同类别方面的表现如何。与线性回归使用 R² 或 RMSE 不同，分类模型有其独特的评估指标。
+上周我们学习了如何拟合 Logistic 回归模型来预测分类结果的概率。本周我们将以 ISLR 包中的 `Default` 数据集为例，演示如何评估分类模型的**预测性能 (Predictive Performance)**，即模型在区分不同类别方面的表现如何。与线性回归使用 $R^2$ 或 RMSE 不同，分类模型有其独特的评估指标。
 
 ::: {.callout-note title="本周目标"}
 -   理解并能够计算**混淆矩阵 (Confusion Matrix)**。
@@ -12,41 +12,35 @@ title: "第十二周：Logistic 回归评估 与 模型比较初步"
 -   理解 **ROC 曲线 (Receiver Operating Characteristic Curve)** 和 **AUC 值 (Area Under the Curve)** 的含义和作用。
 -   能够使用 R 实现上述评估指标和 ROC/AUC 的计算与可视化。
 -   了解使用 AIC/BIC 等信息准则比较广义线性模型 (GLM) 的思路。
--   继续推进 Capstone 项目：选题讨论与初步数据探索。
+-   继续推进综合实践项目：选题讨论与初步数据探索。
 :::
 
-我们将继续使用上周的 `mtcars` Logistic 回归模型作为示例。
+我们将以 ISLR 包中的 `Default` 数据集为例，拟合 `default ~ balance + student` 的 Logistic 回归模型。
 
 ```{r}
 library(tidyverse)
+library(ISLR)
 library(broom)
 library(pROC) # 用于 ROC 曲线和 AUC 计算
 # install.packages("pROC") # 如果尚未安装
 library(yardstick) # tidyverse 风格的模型评估包 (可选)
 # install.packages("yardstick") # 如果尚未安装
 
-# 回顾上周的模型
-mtcars_data <- mtcars %>%
-  mutate(am = factor(am, levels = c(0, 1), labels = c("Automatic", "Manual")))
+# 加载 Default 数据集
+data(Default)
+Default <- ISLR::Default %>%
+  mutate(
+    default = factor(default, levels = c("No", "Yes")),
+    student = factor(student)
+  )
 
-logistic_model <- glm(am ~ hp + wt, data = mtcars_data, family = binomial)
-# summary(logistic_model)
+# 拟合 Logistic 回归模型
+default_model <- glm(default ~ balance + student, data = Default, family = binomial)
+# summary(default_model)
 
-# 获取模型预测的概率 (预测为 "Manual" 的概率)
-predictions_prob <- predict(logistic_model, type = "response") # type="response" 返回概率
-
-# 为了计算混淆矩阵等指标，需要将概率转换为类别预测
-# 通常使用 0.5 作为阈值 (threshold)
-threshold <- 0.5
-predictions_class <- ifelse(predictions_prob > threshold, "Manual", "Automatic")
-predictions_class <- factor(predictions_class, levels = c("Automatic", "Manual")) # 确保因子水平一致
-
-# 将真实值和预测值放入一个 tibble，方便后续计算
-eval_data <- tibble(
-  observed = mtcars_data$am,
-  predicted_prob = predictions_prob,
-  predicted_class = predictions_class
-)
+# 获取模型预测的概率 (预测为 "Yes" 的概率)
+eval_data <-augment(default_model, type.predict = "response") %>%
+  mutate(predict_class = as.factor(ifelse(.fitted > 0.5, "Yes", "No")))
 
 # glimpse(eval_data)
 ```
@@ -69,30 +63,18 @@ eval_data <- tibble(
 
 -   **R 实现:**
 
-    ``` r
+    ```{r}
     # 方法1: 使用基础 table() 函数
     # 注意：第一个参数是实际值，第二个参数是预测值
-    confusion_matrix_base <- table(Observed = eval_data$observed, Predicted = eval_data$predicted_class)
+    confusion_matrix_base <- table(Predicted = eval_data$predict_class, Observed = eval_data$default)
+    
     print(confusion_matrix_base)
-    #          Predicted
-    # Observed  Automatic Manual
-    # Automatic        16      3  <- TN=16, FP=3
-    # Manual            3     10  <- FN=3, TP=10
-
+    
     # 方法2: 使用 yardstick 包 (更推荐，输出更规范)
     conf_mat_tbl <- eval_data %>%
-      conf_mat(truth = observed, estimate = predicted_class) # truth=真实值, estimate=预测值
+      conf_mat(truth = default, estimate = predict_class) # truth=真实值, estimate=预测值
 
     print(conf_mat_tbl)
-    #            Truth
-    # Prediction Automatic Manual
-    #  Automatic        16      3
-    #  Manual            3     10
-
-    # 可以绘制混淆矩阵图
-    autoplot(conf_mat_tbl, type = "heatmap") +
-      labs(title = "Confusion Matrix Heatmap")
-    # autoplot(conf_mat_tbl, type = "mosaic") # 马赛克图
     ```
 
 ## 3. 基于混淆矩阵的评估指标
@@ -108,53 +90,68 @@ eval_data <- tibble(
 
     -   **R 实现:**
 
-        ``` r
+        ```{r}
         # 手动计算
-        accuracy_manual <- (16 + 10) / (16 + 10 + 3 + 3)
-        print(accuracy_manual) # 约 0.8125
+        accuracy_manual <- (9628 + 105) / (9628 + 105 + 228 + 39)
+        print(accuracy_manual)
 
         # 使用 yardstick
-        eval_data %>% accuracy(truth = observed, estimate = predicted_class)
+        eval_data %>% accuracy(truth = default, estimate = predict_class)
         ```
 -   **精确率 (Precision):** (也叫查准率)
     -   **定义:** 在所有**预测为 Positive** 的样本中，**实际也为 Positive** 的比例。
 
     -   **公式:** $Precision = \frac{TP}{TP + FP}$
 
-    -   **解读:** 衡量模型预测 Positive 的**准确性**。高精确率表示模型预测为 Positive 的结果中，很少有误报 (FP)。关注“预测出来的 Positive 有多准？”。
+    -   **解读:** 衡量模型预测 Positive 的**准确性**。高精确率表示模型预测为 Positive 的结果中，很少有误报 (FP)。关注"预测出来的 Positive 有多准？"。
 
     -   **应用:** 当**误报 (FP) 的代价很高**时很重要（例如，垃圾邮件检测，宁可漏掉一些垃圾邮件，也不想把正常邮件误判为垃圾邮件）。
 
     -   **R 实现:**
 
-        ``` r
+        ```{r}
         # 手动计算 (预测为 Manual 的精确率)
-        precision_manual <- 10 / (10 + 3)
-        print(precision_manual) # 约 0.769
+        precision_manual <- 105 / (105 + 39)
+        print(precision_manual)
 
         # 使用 yardstick (需要指定 positive 类)
-        eval_data %>% precision(truth = observed, estimate = predicted_class, event_level = "second") # "second" 表示第二个因子水平 "Manual" 是 positive 类
+        eval_data %>% 
+            precision(
+                truth = default,
+                estimate = predict_class,
+                event_level = "second" # "second" 表示第二个因子水平 "Yes" 是 positive 类
+                )
         ```
 -   **召回率 (Recall / Sensitivity / True Positive Rate, TPR):** (也叫查全率、敏感度)
     -   **定义:** 在所有**实际为 Positive** 的样本中，被模型**成功预测为 Positive** 的比例。
 
     -   **公式:** $Recall = Sensitivity = TPR = \frac{TP}{TP + FN}$
 
-    -   **解读:** 衡量模型**找出所有 Positive 样本**的能力。高召回率表示模型很少漏报 (FN)。关注“所有 Positive 的样本，找出来了多少？”。
+    -   **解读:** 衡量模型**找出所有 Positive 样本**的能力。高召回率表示模型很少漏报 (FN)。关注"所有 Positive 的样本，找出来了多少？"。
 
     -   **应用:** 当**漏报 (FN) 的代价很高**时很重要（例如，疾病诊断，宁可误诊一些健康人，也不想漏掉真正的病人）。
 
     -   **R 实现:**
 
-        ``` r
+        ```{r}
         # 手动计算 (Manual 类的召回率)
-        recall_manual <- 10 / (10 + 3)
-        print(recall_manual) # 约 0.769 (在这个例子中恰好与 Precision 相等)
+        recall_manual <- 105 / (105 + 228)
+        print(recall_manual)
 
         # 使用 yardstick
-        eval_data %>% recall(truth = observed, estimate = predicted_class, event_level = "second")
+        eval_data %>% 
+            recall(
+                truth = default,
+                estimate = predict_class,
+                event_level = "second" # "second" 表示第二个因子水平 "Yes" 是 positive 类
+                )
         # 或者使用 sensitivity()
-        eval_data %>% sensitivity(truth = observed, estimate = predicted_class, event_level = "second")
+        eval_data %>% 
+            sensitivity(
+                truth = default,
+                estimate = predict_class,
+                event_level = "second" # "second" 表示第二个因子水平 "Yes" 是 positive 类
+                )
         ```
 -   **F1 分数 (F1-Score):**
     -   **定义:** 精确率 (Precision) 和召回率 (Recall) 的**调和平均数 (Harmonic Mean)**。
@@ -165,13 +162,18 @@ eval_data <- tibble(
 
     -   **R 实现:**
 
-        ``` r
+        ```{r}
         # 手动计算
         f1_manual <- 2 * (precision_manual * recall_manual) / (precision_manual + recall_manual)
-        print(f1_manual) # 约 0.769
+        print(f1_manual)
 
         # 使用 yardstick
-        eval_data %>% f_meas(truth = observed, estimate = predicted_class, event_level = "second") # f_meas 计算 F-beta score, 默认 beta=1 即 F1
+        eval_data %>% 
+            f_meas(
+                truth = default,
+                estimate = predict_class,
+                event_level = "second" # "second" 表示第二个因子水平 "Yes" 是 positive 类
+                ) # f_meas 计算 F-beta score, 默认 beta=1 即 F1
         ```
 -   **特异度 (Specificity / True Negative Rate, TNR):**
     -   **定义:** 在所有**实际为 Negative** 的样本中，被模型**成功预测为 Negative** 的比例。
@@ -184,13 +186,18 @@ eval_data <- tibble(
 
     -   **R 实现:**
 
-        ``` r
+        ```{r}
         # 手动计算
-        specificity_manual <- 16 / (16 + 3)
-        print(specificity_manual) # 约 0.842
+        specificity_manual <- 9628 / (9628 + 39)
+        print(specificity_manual)
 
         # 使用 yardstick
-        eval_data %>% specificity(truth = observed, estimate = predicted_class, event_level = "second") # 注意 event_level 仍然是 positive 类
+        eval_data %>% 
+            specificity(
+                truth = default,
+                estimate = predict_class,
+                event_level = "second" # "second" 表示第二个因子水平 "Yes" 是 positive 类
+                )
         ```
 
 ::: {.callout-warning title="指标权衡 (Trade-off)"}
@@ -214,34 +221,61 @@ eval_data <- tibble(
     -   **解读:** AUC 越大，模型区分 Positive 和 Negative 样本的**整体能力越强**。不依赖特定阈值。AUC=0.5 表示随机猜测。
     -   **直观含义:** 从 Positive 和 Negative 样本中各随机抽取一个，AUC 值等于模型将 Positive 样本预测概率排在 Negative 样本预测概率之前的概率。
 
--   **R 实现 (使用 `pROC` 包):**
+-   **R 实现 (使用 `yardstick` 包):**
 
-    ``` r
-    library(pROC)
-
-    # 创建 ROC 对象
-    # response: 真实类别 (因子或 0/1)
-    # predictor: 预测为 Positive 类别的概率
-    # levels: 指定哪个是 Negative(0), 哪个是 Positive(1)
-    roc_obj <- roc(response = eval_data$observed,
-                   predictor = eval_data$predicted_prob,
-                   levels = c("Automatic", "Manual")) # 指定 Automatic 为 0, Manual 为 1
-
+    ```{r}
     # 计算 AUC 值
-    auc_value <- auc(roc_obj)
-    print(paste("AUC:", round(auc_value, 4))) # 约 0.909
+    auc_value <- eval_data %>%
+      yardstick::roc_auc(
+        truth = default,
+        .fitted, # 预测为 "Yes" 的概率列
+        event_level = "second"
+      )
+    print(auc_value)
+
+    # 计算 ROC 曲线数据
+    roc_curve_data <- eval_data %>%
+      yardstick::roc_curve(
+        truth = default,
+        .fitted, # 预测为 "Yes" 的概率列
+        event_level = "second"
+      )
 
     # 绘制 ROC 曲线
-    ggroc(roc_obj, legacy.axes = TRUE) + # legacy.axes=TRUE 使 x 轴为 FPR
-      geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color="grey", linetype="dashed") + # 添加对角线
-      labs(title = paste("ROC Curve (AUC =", round(auc_value, 3), ")"),
-           x = "False Positive Rate (1 - Specificity)",
-           y = "True Positive Rate (Sensitivity)") +
+    ggplot(roc_curve_data, aes(x = 1 - specificity, y = sensitivity)) +
+      geom_line(color = "blue", size = 1) +
+      geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "grey") +
+      labs(
+        title = paste0("ROC Curve (AUC = ", round(auc_value$.estimate, 3), ")"),
+        x = "False Positive Rate (1 - Specificity)",
+        y = "True Positive Rate (Sensitivity)"
+      ) +
       theme_minimal()
 
-    # 找到最佳阈值 (例如，基于 Youden's J statistic = Sensitivity + Specificity - 1 最大化)
-    # coords(roc_obj, "best", ret = "threshold")
+    # 找到最佳阈值（例如，Youden's J 最大化）
+    best_threshold <- roc_curve_data %>%
+      mutate(youden_j = sensitivity + specificity - 1) %>%
+      filter(youden_j == max(youden_j)) %>%
+      select(.threshold, sensitivity, specificity, youden_j)
+    print(best_threshold)
     ```
+
+::: {.callout-tip title="什么是 Youden's J 最大化？"}
+
+Youden's J 指数（又称 Youden's J statistic）是评估二分类模型性能的一个指标，定义为：
+
+$$
+J = \text{Sensitivity} + \text{Specificity} - 1
+$$
+
+其中，Sensitivity（灵敏度/召回率）和 Specificity（特异度）分别衡量模型对正例和负例的识别能力。**J 值越大，模型在该阈值下的整体区分能力越强。**
+
+**Youden's J 最大化**方法有明确的理论依据。Youden's J 指数最早由 W.J. Youden 在 1950 年的论文 "Index for rating diagnostic tests"（Biometrics, 1950, 6(3): 195-198）中提出。该指数衡量了诊断测试在不同阈值下对正例（灵敏度）和负例（特异度）识别能力的综合表现。最大化 J 值等价于在灵敏度和特异度之间取得最优平衡点，从而使模型整体区分能力最强。因此，选择使 J 值最大的阈值，理论上可以获得最佳的分类效果，尤其适用于正负样本重要性相当的场景。参考文献：Youden, W. J. (1950). Index for rating diagnostic tests. Biometrics, 6(3), 195-198.
+
+在 ROC 曲线分析中，常用 Youden's J 最大化来确定最佳分类阈值，从而提升模型的实际应用效果。
+:::
+
+
 
 ## 5. 模型比较初步：AIC 与 BIC
 
@@ -255,15 +289,15 @@ eval_data <- tibble(
 
 -   **R 实现:**
 
-    ``` r
-    # 假设我们有另一个模型，只用 wt 预测 am
-    logistic_model_wt_only <- glm(am ~ wt, data = mtcars_data, family = binomial)
+    ```{r}
+    # 假设我们有另一个模型，只用 student 预测 default
+    default_model_student_only <- glm(default ~ student, data = Default, family = binomial)
 
     # 比较两个模型的 AIC 和 BIC
-    AIC(logistic_model, logistic_model_wt_only)
-    BIC(logistic_model, logistic_model_wt_only)
+    AIC(default_model, default_model_student_only)
+    BIC(default_model, default_model_student_only)
 
-    # 结果显示 logistic_model (包含 hp 和 wt) 的 AIC 和 BIC 都更小，
+    # 结果显示 default_model (包含 student 和 balance) 的 AIC 和 BIC 都更小，
     # 表明在拟合优度和复杂度之间权衡后，它是相对更优的模型。
     ```
 
@@ -272,7 +306,7 @@ eval_data <- tibble(
     -   **似然比检验 (LRT):** 比较**嵌套模型**。`anova(model1, model2, test="LRT")`。
     -   **交叉验证 (Cross-Validation):** (更高级) 在测试集上评估模型性能，更可靠。
 
-## 6. Capstone 项目进展
+## 6. 综合实践项目进展
 
 -   **本周任务:**
     -   **确定选题和研究问题:** 与老师或助教讨论你的初步想法，确保可行性。

@@ -303,7 +303,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#混淆矩阵与基础指标" id="toc-混淆矩阵与基础指标" class="nav-link" data-scroll-target="#混淆矩阵与基础指标">3. 混淆矩阵与基础指标</a></li>
   <li><a href="#roc-曲线与-auc" id="toc-roc-曲线与-auc" class="nav-link" data-scroll-target="#roc-曲线与-auc">4. ROC 曲线与 AUC</a></li>
   <li><a href="#模型比较-aicbic" id="toc-模型比较-aicbic" class="nav-link" data-scroll-target="#模型比较-aicbic">5. 模型比较 (AIC/BIC)</a></li>
-  <li><a href="#capstone-项目进展讨论" id="toc-capstone-项目进展讨论" class="nav-link" data-scroll-target="#capstone-项目进展讨论">6. Capstone 项目进展讨论</a></li>
+  <li><a href="#综合实践项目进展讨论" id="toc-综合实践项目进展讨论" class="nav-link" data-scroll-target="#综合实践项目进展讨论">6. 综合实践项目进展讨论</a></li>
   <li><a href="#实验总结" id="toc-实验总结" class="nav-link" data-scroll-target="#实验总结">7. 实验总结</a></li>
   </ul>
 </nav>
@@ -338,9 +338,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>使用 <code>table()</code> 或 <code>yardstick::conf_mat()</code> 创建和解读混淆矩阵。</li>
 <li>使用 <code>yardstick</code> 包计算并解释 Accuracy, Precision, Recall, Specificity, F1-Score。</li>
 <li>理解不同评估指标的侧重点和适用场景。</li>
-<li>使用 <code>pROC</code> 包绘制 ROC 曲线并计算 AUC 值，评估模型的整体区分能力。</li>
+<li>使用 <code>yardstick</code> 包绘制 ROC 曲线并计算 AUC 值，评估模型的整体区分能力。</li>
 <li>使用 <code>AIC()</code> 和 <code>BIC()</code> 比较不同 Logistic 回归模型的相对优劣。</li>
-<li>讨论 Capstone 项目选题和初步 EDA。</li>
+<li>讨论综合实践项目选题和初步 EDA。</li>
 </ul>
 </section>
 <section id="数据与模型准备" class="level2">
@@ -353,215 +353,70 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("yardstick") # 如果尚未安装</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(yardstick) <span class="co"># For metrics: conf_mat, accuracy, precision, recall, f_meas, spec</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pROC") # 如果尚未安装</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC)      <span class="co"># For ROC and AUC</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)   <span class="co"># For plotting ROC</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载数据并回顾模型</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Default"</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>logistic_multi <span class="ot">&lt;-</span> <span class="fu">glm</span>(default <span class="sc">~</span> balance <span class="sc">+</span> income <span class="sc">+</span> student, <span class="at">data =</span> Default, <span class="at">family =</span> binomial)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(logistic_multi)</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 生成预测 ---</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 预测概率 (预测 default = Yes 的概率)</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>pred_prob_yes <span class="ot">&lt;-</span> <span class="fu">predict</span>(logistic_multi, <span class="at">type =</span> <span class="st">"response"</span>) <span class="co"># type="response" 返回概率</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 设定阈值并生成预测类别</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>threshold <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>pred_class <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(pred_prob_yes <span class="sc">&gt;</span> threshold, <span class="st">"Yes"</span>, <span class="st">"No"</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>pred_class <span class="ot">&lt;-</span> <span class="fu">factor</span>(pred_class, <span class="at">levels =</span> <span class="fu">levels</span>(Default<span class="sc">$</span>default)) <span class="co"># 确保因子水平一致</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建包含观测值和预测值的 tibble</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>eval_data_w12 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">observed =</span> Default<span class="sc">$</span>default,</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">predicted_prob =</span> pred_prob_yes,</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">predicted_class =</span> pred_class</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(eval_data_w12)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; Rows: 10,000
-#&gt; Columns: 3
-#&gt; $ observed        &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No…
-#&gt; $ predicted_prob  &lt;dbl&gt; 1.428724e-03, 1.122204e-03, 9.812272e-03, 4.415893e-04…
-#&gt; $ predicted_class &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No…</code></pre>
-</div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载数据并回顾模型</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Default"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>logistic_multi <span class="ot">&lt;-</span> <span class="fu">glm</span>(default <span class="sc">~</span> balance <span class="sc">+</span> income <span class="sc">+</span> student, <span class="at">data =</span> Default, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="混淆矩阵与基础指标" class="level2">
 <h2 class="anchored" data-anchor-id="混淆矩阵与基础指标">3. 混淆矩阵与基础指标</h2>
-<p><strong>任务:</strong> 1. 使用 <code>yardstick::conf_mat()</code> 创建 <code>eval_data_w12</code> 的混淆矩阵。 2. 手动识别混淆矩阵中的 TP, FN, FP, TN (假设 “Yes” 是 Positive 类)。 3. 使用 <code>yardstick</code> 函数计算以下指标，并解释其含义： * Accuracy * Precision (for class “Yes”) * Recall (Sensitivity, for class “Yes”) * Specificity (for class “Yes”, i.e., correctly identifying “No”) * F1-Score (for class “Yes”)</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 创建混淆矩阵</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="ot">&lt;-</span> eval_data_w12 <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Confusion Matrix:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "Confusion Matrix:"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(conf_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt;           Truth
-#&gt; Prediction   No  Yes
-#&gt;        No  9627  228
-#&gt;        Yes   40  105</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 手动识别 (基于上面打印的矩阵)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># TP: Observed=Yes, Predicted=Yes (右下角)</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># FN: Observed=Yes, Predicted=No (右上角)</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># FP: Observed=No, Predicted=Yes (左下角)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># TN: Observed=No, Predicted=No (左上角)</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (具体数值依赖于模型和阈值)</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 计算评估指标</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># metrics_summary &lt;- eval_data_w12 %&gt;%</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   metrics(truth = observed, estimate = predicted_class) # metrics 可以一次计算多个, 但可能不含概率指标</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Metrics Summary (using default threshold 0.5):"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "Metrics Summary (using default threshold 0.5):"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算单个指标并解释</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>acc <span class="ot">&lt;-</span> eval_data_w12 <span class="sc">%&gt;%</span> <span class="fu">accuracy</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>prec <span class="ot">&lt;-</span> eval_data_w12 <span class="sc">%&gt;%</span> <span class="fu">precision</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>) <span class="co"># "Yes" is the second level</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>rec <span class="ot">&lt;-</span> eval_data_w12 <span class="sc">%&gt;%</span> <span class="fu">recall</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>spec <span class="ot">&lt;-</span> eval_data_w12 <span class="sc">%&gt;%</span> <span class="fu">specificity</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>f1 <span class="ot">&lt;-</span> eval_data_w12 <span class="sc">%&gt;%</span> <span class="fu">f_meas</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Accuracy:"</span>, <span class="fu">round</span>(acc<span class="sc">$</span>.estimate, <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "Accuracy: 0.9732"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 解释: 模型整体预测正确的比例。</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Precision (for Yes):"</span>, <span class="fu">round</span>(prec<span class="sc">$</span>.estimate, <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "Precision (for Yes): 0.7241"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 解释: 在所有被预测为违约(Yes)的客户中，实际确实违约的比例。</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Recall/Sensitivity (for Yes):"</span>, <span class="fu">round</span>(rec<span class="sc">$</span>.estimate, <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "Recall/Sensitivity (for Yes): 0.3153"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 解释: 在所有实际违约(Yes)的客户中，被模型成功预测出来的比例。</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Specificity (for No):"</span>, <span class="fu">round</span>(spec<span class="sc">$</span>.estimate, <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "Specificity (for No): 0.9959"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 解释: 在所有实际未违约(No)的客户中，被模型成功预测为未违约的比例。</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"F1-Score (for Yes):"</span>, <span class="fu">round</span>(f1<span class="sc">$</span>.estimate, <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "F1-Score (for Yes): 0.4393"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 解释: Precision 和 Recall 的调和平均，综合衡量模型对违约(Yes)类别的预测性能。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><strong>思考:</strong> * 在这个 <code>Default</code> 数据集中，类别是否平衡？（提示：查看 <code>summary(Default$default)</code> 或 <code>table(Default$default)</code>）。如果不平衡，Accuracy 是一个好的评估指标吗？为什么？ * 对于信用卡违约预测，你认为 Precision 和 Recall 哪个更重要？或者说，误报 (FP - 将未违约者预测为违约) 和漏报 (FN - 将违约者预测为未违约) 哪个代价更大？这会如何影响你对模型的评估侧重？</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(Default<span class="sc">$</span>default)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; 
-#&gt;   No  Yes 
-#&gt; 9667  333</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 结果显示 No 类别远多于 Yes 类别，数据不平衡。</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 因此，Accuracy 可能具有误导性，应更关注 Precision, Recall, F1 或 AUC。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p><strong>任务:</strong></p>
+<ol type="1">
+<li>使用 <code>yardstick::conf_mat()</code> 创建混淆矩阵。</li>
+<li>手动识别混淆矩阵中的 TP, FN, FP, TN (假设 “Yes” 是 Positive 类)。</li>
+<li>使用 <code>yardstick</code> 函数计算以下指标，并解释其含义：</li>
+</ol>
+<ul>
+<li>Accuracy</li>
+<li>Precision</li>
+<li>Recall</li>
+<li>Specificity</li>
+<li>F1-Score</li>
+</ul>
+<p><strong>思考:</strong></p>
+<ul>
+<li>在这个 <code>Default</code> 数据集中，类别是否平衡？（提示：查看 <code>summary(Default$default)</code> 或 <code>table(Default$default)</code>）。如果不平衡，Accuracy 是一个好的评估指标吗？为什么？</li>
+<li>对于信用卡违约预测，你认为 Precision 和 Recall 哪个更重要？或者说，误报 (FP - 将未违约者预测为违约) 和漏报 (FN - 将违约者预测为未违约) 哪个代价更大？这会如何影响你对模型的评估侧重？</li>
+</ul>
 </section>
 <section id="roc-曲线与-auc" class="level2">
 <h2 class="anchored" data-anchor-id="roc-曲线与-auc">4. ROC 曲线与 AUC</h2>
-<p><strong>任务:</strong> 1. 使用 <code>pROC::roc()</code> 函数，根据 <code>eval_data_w12</code> 中的真实观测值 (<code>observed</code>) 和预测概率 (<code>predicted_prob</code>) 创建 ROC 对象。确保正确指定 <code>levels</code> 参数。 2. 使用 <code>pROC::auc()</code> 计算 AUC 值。 3. 解读 AUC 值的含义（模型的整体区分能力如何？）。 4. 使用 <code>pROC::ggroc()</code> 绘制 ROC 曲线，并添加对角线和 AUC 值标注。</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 创建 ROC 对象</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># levels = c("No", "Yes") 表示 "No" 是参照组 (0), "Yes" 是事件组 (1)</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>roc_curve <span class="ot">&lt;-</span> <span class="fu">roc</span>(<span class="at">response =</span> eval_data_w12<span class="sc">$</span>observed,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">predictor =</span> eval_data_w12<span class="sc">$</span>predicted_prob,</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>)) <span class="co"># 指定 No 为阴性，Yes 为阳性</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 计算 AUC</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>auc_value <span class="ot">&lt;-</span> <span class="fu">auc</span>(roc_curve)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"AUC:"</span>, <span class="fu">round</span>(auc_value, <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "AUC: 0.9496"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 解读 AUC</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># AUC 值（例如接近 0.97）非常高，表明该模型在区分违约和不违约客户方面具有很强的整体能力。</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 远好于随机猜测 (AUC=0.5)。</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 绘制 ROC 曲线</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggroc</span>(roc_curve, <span class="at">legacy.axes =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="co"># legacy.axes=TRUE 使 x 轴为 FPR</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="dv">1</span>), <span class="at">color=</span><span class="st">"darkgrey"</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span> <span class="co"># 添加对角线</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"ROC Curve (AUC ="</span>, <span class="fu">round</span>(auc_value, <span class="dv">3</span>), <span class="st">")"</span>),</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"False Positive Rate (1 - Specificity)"</span>,</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"True Positive Rate (Sensitivity)"</span>) <span class="sc">+</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.75</span>, <span class="at">y =</span> <span class="fl">0.25</span>, <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"AUC ="</span>, <span class="fu">round</span>(auc_value, <span class="dv">3</span>)), <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="week12_lab_files/figure-html/practice-roc-auc-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (可选) 找到最佳阈值点</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot.roc(roc_curve, print.thres = "best", print.thres.best.method = "youden")</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># best_threshold &lt;- coords(roc_curve, "best", ret = "threshold", best.method="youden")$threshold</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># print(paste("Best threshold (Youden):", round(best_threshold, 4)))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p><strong>任务:</strong></p>
+<ol type="1">
+<li>使用 <code>yardstick::roc_curve()</code> 函数，根据真实观测值和预测概率创建 ROC 对象。确保正确指定 <code>levels</code> 参数。</li>
+<li>使用 <code>yardstick::roc_auc()</code> 计算 AUC 值。</li>
+<li>解读 AUC 值的含义（模型的整体区分能力如何？）。</li>
+<li>使用 <code>yardstick::autoplot()</code> 绘制 ROC 曲线，并添加对角线和 AUC 值标注。</li>
+</ol>
 </section>
 <section id="模型比较-aicbic" class="level2">
 <h2 class="anchored" data-anchor-id="模型比较-aicbic">5. 模型比较 (AIC/BIC)</h2>
-<p><strong>场景:</strong> 比较上周拟合的两个 Logistic 回归模型： * <code>logistic_simple</code>: <code>default ~ balance</code> * <code>logistic_multi</code>: <code>default ~ balance + income + student</code></p>
-<p><strong>任务:</strong> 1. 重新拟合 <code>logistic_simple</code> 模型（如果需要）。 2. 使用 <code>AIC()</code> 和 <code>BIC()</code> 比较这两个模型。 3. 哪个模型的 AIC 和 BIC 更低？根据这些信息准则，哪个模型相对更优？这是否符合你对模型复杂度和拟合效果的直观感受？</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 重新拟合简单模型 (如果需要)</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>logistic_simple <span class="ot">&lt;-</span> <span class="fu">glm</span>(default <span class="sc">~</span> balance, <span class="at">data =</span> Default, <span class="at">family =</span> binomial)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 比较 AIC 和 BIC</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"--- Model Comparison (AIC/BIC) ---"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "--- Model Comparison (AIC/BIC) ---"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>AIC_comp <span class="ot">&lt;-</span> <span class="fu">AIC</span>(logistic_simple, logistic_multi)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>BIC_comp <span class="ot">&lt;-</span> <span class="fu">BIC</span>(logistic_simple, logistic_multi)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"AIC Comparison:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "AIC Comparison:"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(AIC_comp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt;                 df      AIC
-#&gt; logistic_simple  2 1600.452
-#&gt; logistic_multi   4 1579.545</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"BIC Comparison:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt; [1] "BIC Comparison:"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(BIC_comp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>#&gt;                 df      BIC
-#&gt; logistic_simple  2 1614.872
-#&gt; logistic_multi   4 1608.386</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 解读</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 比较两个模型的 AIC 和 BIC 值。通常 logistic_multi 的值会更低。</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 结论：根据 AIC 和 BIC 标准，包含 balance, income, student 的多元模型</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co">#       在拟合优度和模型复杂度之间取得了更好的平衡，相对优于只包含 balance 的简单模型。</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co">#       这表明加入 income 和 student 变量（即使 income 效应很小）整体上改进了模型（根据信息准则）。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p><strong>场景:</strong> 比较上周拟合的两个 Logistic 回归模型：</p>
+<ul>
+<li><code>logistic_simple</code>: <code>default ~ balance + student</code></li>
+<li><code>logistic_multi</code>: <code>default ~ balance + income + student</code></li>
+</ul>
+<p><strong>任务:</strong></p>
+<ol type="1">
+<li>重新拟合 <code>logistic_simple</code> 模型（如果需要）。</li>
+<li>使用 <code>AIC()</code> 和 <code>BIC()</code> 比较这两个模型。</li>
+<li>哪个模型的 AIC 和 BIC 更低？根据这些信息准则，哪个模型相对更优？这是否符合你对模型复杂度和拟合效果的直观感受？</li>
+</ol>
 </section>
-<section id="capstone-项目进展讨论" class="level2">
-<h2 class="anchored" data-anchor-id="capstone-项目进展讨论">6. Capstone 项目进展讨论</h2>
-<p><strong>任务:</strong> 1. <strong>分享你的选题:</strong> 向小组或全班简要介绍你选择的 Capstone 项目主题、研究问题和数据来源。 2. <strong>展示初步 EDA:</strong> 展示你使用 <code>ggplot2</code> 等工具进行的初步数据探索结果（关键变量分布、变量关系图等）。 3. <strong>讨论遇到的问题:</strong> 分享你在数据获取、清理或初步探索中遇到的困难或疑问。 4. <strong>接受反馈:</strong> 听取老师、助教和同学的建议。</p>
+<section id="综合实践项目进展讨论" class="level2">
+<h2 class="anchored" data-anchor-id="综合实践项目进展讨论">6. 综合实践项目进展讨论</h2>
+<p><strong>任务:</strong></p>
+<ol type="1">
+<li><strong>分享你的选题:</strong> 向小组或全班简要介绍你选择的综合实践项目主题、研究问题和数据来源。</li>
+<li><strong>展示初步 EDA:</strong> 展示你使用 <code>ggplot2</code> 等工具进行的初步数据探索结果（关键变量分布、变量关系图等）。</li>
+<li><strong>讨论遇到的问题:</strong> 分享你在数据获取、清理或初步探索中遇到的困难或疑问。</li>
+<li><strong>接受反馈:</strong> 听取老师、助教和同学的建议。</li>
+</ol>
 </section>
 <section id="实验总结" class="level2">
 <h2 class="anchored" data-anchor-id="实验总结">7. 实验总结</h2>
-<p>在本实验中，我们深入实践了 Logistic 回归模型的评估。我们学会了如何生成预测、构建混淆矩阵，并计算和解释了 Accuracy, Precision, Recall, Specificity, F1-Score 等关键指标。我们还掌握了使用 ROC 曲线和 AUC 值来评估模型整体区分能力的方法。最后，我们练习了使用 AIC/BIC 来比较不同 Logistic 回归模型。这些评估技能对于理解和选择合适的分类模型至关重要。同时，我们也推进了 Capstone 项目的选题和初步探索。</p>
+<p>在本实验中，我们深入实践了 Logistic 回归模型的评估。我们学会了如何生成预测、构建混淆矩阵，并计算和解释了 Accuracy, Precision, Recall, Specificity, F1-Score 等关键指标。我们还掌握了使用 ROC 曲线和 AUC 值来评估模型整体区分能力的方法。最后，我们练习了使用 AIC/BIC 来比较不同 Logistic 回归模型。这些评估技能对于理解和选择合适的分类模型至关重要。同时，我们也推进了综合实践项目的选题和初步探索。</p>
 
 
 </section>

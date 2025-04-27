@@ -1,24 +1,17 @@
 ---
 title: "第十一周实验：Logistic 回归拟合与解释"
-author: "Your Name / TA Name"
-format:
-  html:
-    toc: true
-    code-fold: true
-    code-tools: true
-editor: visual
 ---
 
 ## 1. 目标
 
-本实验旨在练习使用 R 拟合二元 Logistic 回归模型，并重点掌握其系数（特别是优势比 Odds Ratio）的解释。同时，开始构思 Capstone 项目。
+本实验旨在练习使用 R 拟合二元 Logistic 回归模型，并重点掌握其系数（特别是优势比 Odds Ratio）的解释。同时，开始构思综合实践项目。
 
 -   理解 Logistic 回归的应用场景（预测二元分类结果）。
 -   准备用于 Logistic 回归的数据（确保因变量是因子或 0/1）。
 -   使用 `glm()` 函数拟合 Logistic 回归模型 (`family = binomial`)。
 -   解读 `summary(glm())` 的输出，特别是系数、z 值和 P 值。
 -   计算并解释优势比 (OR = `exp(coef)`) 及其置信区间。
--   开始思考并初步确定 Capstone 项目的选题和研究问题。
+-   开始思考并初步确定综合实践项目的选题和研究问题。
 
 ## 2. 数据准备
 
@@ -45,99 +38,60 @@ levels(Default$default) # No 是第一个水平 (参照组, 0), Yes 是第二个
 
 **场景:** 我们首先尝试只用信用卡余额 (`balance`) 来预测客户是否会违约 (`default`)。
 
-**任务:** 1. 使用 `glm()` 拟合一个简单 Logistic 回归模型，公式为 `default ~ balance`，`family` 设置为 `binomial`。将模型存储在 `logistic_simple` 中。 2. 使用 `summary()` 查看模型结果。 3. **解读系数:** \* 解释截距 (Intercept) 的**对数优势 (log-odds)** 含义。 \* 解释 `balance` 系数的**对数优势 (log-odds)** 含义。 \* `balance` 对违约的影响是否统计显著？ 4. **计算并解释优势比 (OR):** \* 计算 `balance` 系数的优势比 (`exp(coef)`)。 \* 解释该 OR 的含义（信用卡余额每增加一个单位，违约的优势变为原来的多少倍？）。 \* (可选) 计算 OR 的置信区间 (`exp(confint(model))`)。
+**任务:** 
 
-```{r practice-simple-logistic}
-# 1. 拟合简单 Logistic 回归模型
-logistic_simple <- glm(default ~ balance, data = Default, family = binomial)
-
-# 2. 查看模型摘要
-summary_simple <- summary(logistic_simple)
-print(summary_simple)
-
-# 3. 解读系数 (对数优势尺度)
-print("--- Simple Model Coefficient Interpretation (Log-Odds) ---")
-# 截距 (≈ -10.65): 当信用卡余额为 0 时，违约的对数优势约为 -10.65。优势非常低 (exp(-10.65) 极小)。
-# balance (≈ 0.0055): 信用卡余额每增加 1 美元，违约的对数优势平均增加约 0.0055。
-# 显著性: balance 的 P 值 (< 2e-16) 远小于 0.05，表明余额对违约有极其显著的正向影响。
-print("Intercept (log-odds): When balance is 0, the log-odds of defaulting is approx -10.65.")
-print("balance (log-odds): For each $1 increase in balance, the log-odds of defaulting increases by approx 0.0055.")
-print("Significance: The effect of balance is highly statistically significant (p < 0.001).")
-
-# 4. 计算并解释优势比 (OR)
-print("--- Simple Model Odds Ratio Interpretation ---")
-or_simple <- exp(coef(logistic_simple))
-print("Odds Ratios:")
-print(or_simple)
-# OR for balance ≈ 1.0055
-
-# 解释 OR: 信用卡余额每增加 1 美元，客户违约的优势 (Odds) 大约是原来的 1.0055 倍 (即优势约增加 0.55%)。
-print("OR Interpretation for balance:")
-print("For each $1 increase in balance, the odds of defaulting increase by a factor of approx 1.0055 (about a 0.55% increase in odds).")
-
-# (可选) OR 的置信区间
-# 使用 confint.default 来避免可能因包冲突产生的错误
-or_ci_simple <- exp(confint.default(logistic_simple))
-print("95% CI for Odds Ratios:")
-print(or_ci_simple)
-# balance 的 OR 置信区间不包含 1，再次确认其显著性。
-```
+1. 使用 `glm()` 拟合一个简单 Logistic 回归模型，公式为 `default ~ balance`，`family` 设置为 `binomial`。将模型存储在 `logistic_simple` 中。 
+2. 使用 `summary()` 查看模型结果。 
+3. **解读系数:** 
+    -   解释截距 (Intercept) 的**对数优势 (log-odds)** 含义。 
+    -   解释 `balance` 系数的**对数优势 (log-odds)** 含义。 
+    -   `balance` 对违约的影响是否统计显著？ 
+4. **计算并解释优势比 (OR):** 
+    -   计算 `balance` 系数的优势比 (`exp(coef)`)。 
+    -   解释该 OR 的含义（信用卡余额每增加一个单位，违约的优势变为原来的多少倍？）。 
+    -   计算 OR 的置信区间 (`exp(confint(model))`)。
 
 ## 4. 拟合多元 Logistic 回归模型
 
 **场景:** 现在我们加入更多预测变量：`student` (是否是学生) 和 `income` (收入)，来构建一个更全面的违约预测模型。
 
-**任务:** 1. 使用 `glm()` 拟合一个多元 Logistic 回归模型，公式为 `default ~ balance + income + student`。将模型存储在 `logistic_multi` 中。 2. 使用 `summary()` 查看模型结果。 3. **解读系数:** \* 解释 `balance` 的**偏**系数的对数优势含义（强调控制其他变量）。 \* 解释 `income` 的**偏**系数的对数优势含义。 \* 解释 `studentYes` 系数的对数优势含义（它是相对于哪个参照组的？）。 \* 判断每个变量的统计显著性。 4. **计算并解释优势比 (OR):** \* 计算所有系数的 OR。 \* 解释 `balance` 的 OR（控制收入和学生身份后）。 \* 解释 `income` 的 OR。 \* 解释 `studentYes` 的 OR（学生相对于非学生的违约优势比是多少？）。
+**任务:** 
 
-```{r practice-multi-logistic}
-# 1. 拟合多元 Logistic 回归模型
-logistic_multi <- glm(default ~ balance + income + student, data = Default, family = binomial)
-
-# 2. 查看模型摘要
-summary_multi <- summary(logistic_multi)
-print(summary_multi)
-
-# 3. 解读系数 (对数优势尺度)
-print("--- Multi Model Coefficient Interpretation (Log-Odds) ---")
-# balance (≈ 0.0057): 在保持收入(income)和学生身份(student)不变的情况下，余额每增加1美元，违约的对数优势平均增加约 0.0057。显著 (p < 0.001)。
-# income (≈ 2.08e-05): 在保持余额(balance)和学生身份(student)不变的情况下，收入每增加1美元，违约的对数优势平均增加一个非常小的正量。显著 (p < 0.05)。(注意：之前示例可能因随机性或数据版本略有不同，这里结果变为显著)
-# studentYes (≈ -0.6468): 在保持余额(balance)和收入(income)不变的情况下，学生(student=Yes)相对于非学生(student=No，参照组)，其违约的对数优势平均低约 0.647。显著 (p < 0.001)。
-print("balance (log-odds): Controlling for income and student status, each $1 increase in balance increases the log-odds of default by approx 0.0057 (p < 0.001).")
-print("income (log-odds): Controlling for balance and student status, each $1 increase in income increases the log-odds of default by approx 2.08e-05 (p < 0.05).") # 结果可能与讲义略不同
-print("studentYes (log-odds): Controlling for balance and income, students (Yes) have log-odds of defaulting approx 0.647 lower than non-students (No) (p < 0.001).")
+1. 使用 `glm()` 拟合一个多元 Logistic 回归模型，公式为 `default ~ balance + income + student`。将模型存储在 `logistic_multi` 中。 
+2. 使用 `summary()` 查看模型结果。 
+3. **解读系数:** 
+    -   解释 `balance` 的**偏**系数的对数优势含义（强调控制其他变量）。 
+    -   解释 `income` 的**偏**系数的对数优势含义。 
+    -   解释 `studentYes` 系数的对数优势含义（它是相对于哪个参照组的？）。 
+    -   判断每个变量的统计显著性。 
+4. **计算并解释优势比 (OR):** 
+    -   计算所有系数的 OR。 
+    -   解释 `balance` 的 OR（控制收入和学生身份后）。 
+    -   解释 `income` 的 OR。 
+    -   解释 `studentYes` 的 OR（学生相对于非学生的违约优势比是多少？）。
 
 
-# 4. 计算并解释优势比 (OR)
-print("--- Multi Model Odds Ratio Interpretation ---")
-or_multi <- exp(coef(logistic_multi))
-print("Odds Ratios:")
-print(or_multi)
-# OR for balance ≈ 1.0057
-# OR for income ≈ 1.00002
-# OR for studentYes ≈ 0.524
+**思考:** 
 
-# 解释 OR:
-# balance: 控制收入和学生身份后，余额每增加1美元，违约优势变为原来的 1.0057 倍。
-# income: 控制余额和学生身份后，收入每增加1美元，违约优势变为原来的 1.00002 倍 (几乎无影响，但统计上显著)。
-# studentYes: 控制余额和收入后，学生违约的优势大约是非学生的 0.52 倍（即学生的违约优势比非学生低约 48%）。
-print("OR Interpretation for balance: Controlling for others, each $1 increase in balance multiplies the odds of default by approx 1.0057.")
-print("OR Interpretation for income: Controlling for others, each $1 increase in income multiplies the odds of default by approx 1.00002 (a very small effect, though statistically significant).")
-print("OR Interpretation for studentYes: Controlling for balance and income, the odds of default for students are about 0.52 times the odds for non-students (approx 48% lower odds).")
+1. 比较简单模型和多元模型中 `balance` 的系数和 OR，它们有变化吗？为什么？（因为加入了控制变量 `income` 和 `student`）。 
+2. `income` 变量在多元模型中变得统计显著了（虽然效应量很小），这可能是什么原因？（可能是由于控制了其他变量后，`income` 的微小独立效应显现出来，或者与样本量有关）。 
+3. `studentYes` 的系数是负的，OR 小于 1，这说明学生身份是违约的“保护”因素吗？（注意：这只是在控制了 balance 和 income 之后的结果。单独看学生身份和违约的关系可能会不同，可能存在混淆）。
 
-# (可选) OR 的置信区间
-or_ci_multi <- exp(confint.default(logistic_multi))
-print("95% CI for Odds Ratios:")
-print(or_ci_multi)
-```
+## 5. 综合实践项目构思
 
-**思考:** \* 比较简单模型和多元模型中 `balance` 的系数和 OR，它们有变化吗？为什么？（因为加入了控制变量 `income` 和 `student`）。 \* `income` 变量在多元模型中变得统计显著了（虽然效应量很小），这可能是什么原因？（可能是由于控制了其他变量后，`income` 的微小独立效应显现出来，或者与样本量有关）。 \* `studentYes` 的系数是负的，OR 小于 1，这说明学生身份是违约的“保护”因素吗？（注意：这只是在控制了 balance 和 income 之后的结果。单独看学生身份和违约的关系可能会不同，可能存在混淆）。
+**任务:** 
 
-## 5. Capstone 项目构思
-
-**任务:** 1. **初步选题:** 确定 1-2 个你感兴趣的 Capstone 项目主题或方向。 2. **寻找数据:** 尝试寻找与你选题相关的公开数据集，或者思考你已有的数据。评估数据的可获取性和大致质量。 3. **明确研究问题:** 针对你的选题和数据，提出 1-2 个具体、可衡量、可通过数据分析回答的研究问题。 \* 例如：“哪些因素（如年龄、性别、浏览时长）显著影响用户是否会点击广告？” (Logistic 回归) \* 例如：“不同促销策略（A, B, C）对产品周销量的平均影响是否存在显著差异？” (ANOVA) \* 例如：“空气质量指数 (AQI) 与城市交通流量之间是否存在线性关系？能否用交通流量预测 AQI？” (相关/回归) 4. **初步计划:** 简要思考你可能需要进行哪些数据处理步骤？可能用到哪些主要的统计方法？
+1. **初步选题:** 确定 1-2 个你感兴趣的综合实践项目主题或方向。 
+2. **寻找数据:** 尝试寻找与你选题相关的公开数据集，或者思考你已有的数据。评估数据的可获取性和大致质量。 
+3. **明确研究问题:** 针对你的选题和数据，提出 1-2 个具体、可衡量、可通过数据分析回答的研究问题。 
+    -   例如：“哪些因素（如年龄、性别、浏览时长）显著影响用户是否会点击广告？” (Logistic 回归) 
+    -   例如：“不同促销策略（A, B, C）对产品周销量的平均影响是否存在显著差异？” (ANOVA) 
+    -   例如：“空气质量指数 (AQI) 与城市交通流量之间是否存在线性关系？能否用交通流量预测 AQI？” (相关/回归) 
+    
+4. **初步计划:** 简要思考你可能需要进行哪些数据处理步骤？可能用到哪些主要的统计方法？
 
 **准备在下周课堂上简要分享和讨论你的初步想法。**
 
 ## 6. 实验总结
 
-在本实验中，我们使用 `ISLR::Default` 数据集实践了拟合简单和多元 Logistic 回归模型。我们重点练习了使用 `glm(family = binomial)` 函数，并深入解读了模型系数，特别是计算和解释了优势比 (Odds Ratio) 及其含义。理解 OR 是掌握 Logistic 回归的关键。同时，我们也正式启动了 Capstone 项目的构思阶段。
+在本实验中，我们使用 `ISLR::Default` 数据集实践了拟合简单和多元 Logistic 回归模型。我们重点练习了使用 `glm(family = binomial)` 函数，并深入解读了模型系数，特别是计算和解释了优势比 (Odds Ratio) 及其含义。理解 OR 是掌握 Logistic 回归的关键。同时，我们也正式启动了综合实践项目的构思阶段。

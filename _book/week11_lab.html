@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>第六周实验：相关与简单线性回归实践 – 统计学与R语言</title>
+<title>第十一周实验：Logistic 回归拟合与解释 – 统计学与R语言</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./week7_lab.html" rel="next">
-<link href="./week5_lab.html" rel="prev">
+<link href="./week12_lab.html" rel="next">
+<link href="./week10_lab.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,35 +104,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles/custom.css">
 </head>
@@ -146,7 +117,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lab.html">实验</a></li><li class="breadcrumb-item"><a href="./week6_lab.html"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lab.html">实验</a></li><li class="breadcrumb-item"><a href="./week11_lab.html"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -283,7 +254,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -308,7 +279,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./week11_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></a>
+  <a href="./week11_lab.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -330,14 +301,9 @@ window.Quarto = {
   <ul>
   <li><a href="#目标" id="toc-目标" class="nav-link active" data-scroll-target="#目标">1. 目标</a></li>
   <li><a href="#数据准备" id="toc-数据准备" class="nav-link" data-scroll-target="#数据准备">2. 数据准备</a></li>
-  <li><a href="#相关分析练习" id="toc-相关分析练习" class="nav-link" data-scroll-target="#相关分析练习">3. 相关分析练习</a>
-  <ul class="collapse">
-  <li><a href="#计算与可视化" id="toc-计算与可视化" class="nav-link" data-scroll-target="#计算与可视化">3.1 计算与可视化</a></li>
-  <li><a href="#相关性检验-cor.test" id="toc-相关性检验-cor.test" class="nav-link" data-scroll-target="#相关性检验-cor.test">3.2 相关性检验 (<code>cor.test</code>)</a></li>
-  <li><a href="#相关不等于因果讨论" id="toc-相关不等于因果讨论" class="nav-link" data-scroll-target="#相关不等于因果讨论">3.3 相关不等于因果讨论</a></li>
-  </ul></li>
-  <li><a href="#简单线性回归-slr-练习" id="toc-简单线性回归-slr-练习" class="nav-link" data-scroll-target="#简单线性回归-slr-练习">4. 简单线性回归 (SLR) 练习</a></li>
-  <li><a href="#可选-预测" id="toc-可选-预测" class="nav-link" data-scroll-target="#可选-预测">5. (可选) 预测</a></li>
+  <li><a href="#拟合简单-logistic-回归模型" id="toc-拟合简单-logistic-回归模型" class="nav-link" data-scroll-target="#拟合简单-logistic-回归模型">3. 拟合简单 Logistic 回归模型</a></li>
+  <li><a href="#拟合多元-logistic-回归模型" id="toc-拟合多元-logistic-回归模型" class="nav-link" data-scroll-target="#拟合多元-logistic-回归模型">4. 拟合多元 Logistic 回归模型</a></li>
+  <li><a href="#综合实践项目构思" id="toc-综合实践项目构思" class="nav-link" data-scroll-target="#综合实践项目构思">5. 综合实践项目构思</a></li>
   <li><a href="#实验总结" id="toc-实验总结" class="nav-link" data-scroll-target="#实验总结">6. 实验总结</a></li>
   </ul>
 </nav>
@@ -345,9 +311,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lab.html">实验</a></li><li class="breadcrumb-item"><a href="./week6_lab.html"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lab.html">实验</a></li><li class="breadcrumb-item"><a href="./week11_lab.html"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></h1>
+<h1 class="title"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></h1>
 </div>
 
 
@@ -366,90 +332,127 @@ window.Quarto = {
 
 <section id="目标" class="level2">
 <h2 class="anchored" data-anchor-id="目标">1. 目标</h2>
-<p>本实验旨在练习计算和解释相关系数，使用散点图可视化变量关系，并拟合和解释简单的线性回归模型。</p>
+<p>本实验旨在练习使用 R 拟合二元 Logistic 回归模型，并重点掌握其系数（特别是优势比 Odds Ratio）的解释。同时，开始构思综合实践项目。</p>
 <ul>
-<li>使用 <code>cor()</code> 计算 Pearson 和 Spearman 相关系数。</li>
-<li>使用 <code>cor.test()</code> 对相关性进行显著性检验并解释结果。</li>
-<li>使用 <code>ggplot2::geom_point()</code> 和 <code>geom_smooth()</code> 创建和解读散点图。</li>
-<li>理解相关不等于因果。</li>
-<li>使用 <code>lm()</code> 拟合简单线性回归模型。</li>
-<li>解读 <code>summary(lm())</code> 的输出，特别是系数、P 值和 R²。</li>
+<li>理解 Logistic 回归的应用场景（预测二元分类结果）。</li>
+<li>准备用于 Logistic 回归的数据（确保因变量是因子或 0/1）。</li>
+<li>使用 <code>glm()</code> 函数拟合 Logistic 回归模型 (<code>family = binomial</code>)。</li>
+<li>解读 <code>summary(glm())</code> 的输出，特别是系数、z 值和 P 值。</li>
+<li>计算并解释优势比 (OR = <code>exp(coef)</code>) 及其置信区间。</li>
+<li>开始思考并初步确定综合实践项目的选题和研究问题。</li>
 </ul>
 </section>
 <section id="数据准备" class="level2">
 <h2 class="anchored" data-anchor-id="数据准备">2. 数据准备</h2>
-<p>我们将继续使用 <code>mpg</code> 数据集，并可能使用 <code>mtcars</code> 数据集。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally) <span class="co"># 用于绘制散点图矩阵</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># glimpse(mpg)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># glimpse(mtcars)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>我们将使用 <code>ISLR</code> 包中的 <code>Default</code> 数据集（需要先安装 <code>ISLR</code> 包）。该数据集包含了关于信用卡客户是否违约 (default) 的信息，以及他们的收入 (income)、余额 (balance) 和是否是学生 (student) 等变量。</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("ISLR") # 如果尚未安装</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)     <span class="co"># 包含 Default 数据集</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)    <span class="co"># 用于 tidy() 函数提取模型结果</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载并查看 Default 数据集</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Default"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Default)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Rows: 10,000
+#&gt; Columns: 4
+#&gt; $ default &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No, No, No…
+#&gt; $ student &lt;fct&gt; No, Yes, No, No, No, Yes, No, Yes, No, No, Yes, Yes, No, No, N…
+#&gt; $ balance &lt;dbl&gt; 729.5265, 817.1804, 1073.5492, 529.2506, 785.6559, 919.5885, 8…
+#&gt; $ income  &lt;dbl&gt; 44361.625, 12106.135, 31767.139, 35704.494, 38463.496, 7491.55…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Default)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  default    student       balance           income     
+#&gt;  No :9667   No :7056   Min.   :   0.0   Min.   :  772  
+#&gt;  Yes: 333   Yes:2944   1st Qu.: 481.7   1st Qu.:21340  
+#&gt;                        Median : 823.6   Median :34553  
+#&gt;                        Mean   : 835.4   Mean   :33517  
+#&gt;                        3rd Qu.:1166.3   3rd Qu.:43808  
+#&gt;                        Max.   :2654.3   Max.   :73554</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 我们的目标是预测客户是否会违约 (default = Yes)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查因变量 default 的类型和水平</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Default<span class="sc">$</span>default)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "factor"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(Default<span class="sc">$</span>default) <span class="co"># No 是第一个水平 (参照组, 0), Yes 是第二个水平 (目标事件, 1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "No"  "Yes"</code></pre>
+</div>
+</div>
 </section>
-<section id="相关分析练习" class="level2">
-<h2 class="anchored" data-anchor-id="相关分析练习">3. 相关分析练习</h2>
-<section id="计算与可视化" class="level3">
-<h3 class="anchored" data-anchor-id="计算与可视化">3.1 计算与可视化</h3>
-<p><strong>场景:</strong> 我们想探索 <code>mpg</code> 数据集中几个连续变量之间的关系，例如 <code>displ</code> (排量), <code>cty</code> (城市里程), <code>hwy</code> (高速里程)。</p>
+<section id="拟合简单-logistic-回归模型" class="level2">
+<h2 class="anchored" data-anchor-id="拟合简单-logistic-回归模型">3. 拟合简单 Logistic 回归模型</h2>
+<p><strong>场景:</strong> 我们首先尝试只用信用卡余额 (<code>balance</code>) 来预测客户是否会违约 (<code>default</code>)。</p>
 <p><strong>任务:</strong></p>
 <ol type="1">
-<li>绘制 <code>displ</code> 和 <code>hwy</code> 的散点图，并在图上添加一条线性拟合线 (<code>method = "lm"</code>) 和一条非线性平滑曲线 (默认 <code>geom_smooth</code>)。观察它们的关系是线性的吗？</li>
-<li>计算 <code>displ</code> 和 <code>hwy</code> 之间的 Pearson 相关系数。</li>
-<li>计算 <code>displ</code> 和 <code>hwy</code> 之间的 Spearman 相关系数。比较两者的大小，思考为何可能有差异。</li>
-<li>(可选挑战) 使用 <code>GGally::ggpairs()</code> 函数创建一个散点图矩阵，可视化多个连续变量（如 <code>displ</code>, <code>cty</code>, <code>hwy</code>, <code>cyl</code>）之间的两两关系和各自的分布。 (需要先 <code>install.packages("GGally")</code>)</li>
-</ol>
-</section>
-<section id="相关性检验-cor.test" class="level3">
-<h3 class="anchored" data-anchor-id="相关性检验-cor.test">3.2 相关性检验 (<code>cor.test</code>)</h3>
-<p><strong>任务:</strong></p>
-<ol type="1">
-<li>使用 <code>cor.test()</code> 对 <code>displ</code> 和 <code>hwy</code> 之间的 <strong>Pearson</strong> 相关性进行显著性检验。</li>
-<li>解读检验结果：相关系数估计值、P 值、置信区间。根据 P 值和 <span class="math inline">\(\alpha = 0.05\)</span> 判断相关性是否显著。</li>
-<li>使用 <code>cor.test()</code> 对 <code>displ</code> 和 <code>hwy</code> 之间的 <strong>Spearman</strong> 相关性进行显著性检验。</li>
-<li>解读检验结果。</li>
-</ol>
-</section>
-<section id="相关不等于因果讨论" class="level3">
-<h3 class="anchored" data-anchor-id="相关不等于因果讨论">3.3 相关不等于因果讨论</h3>
-<p><strong>思考题:</strong> 假设你发现一个城市中冰淇淋销量 (<code>ice_cream_sales</code>) 与犯罪率 (<code>crime_rate</code>) 之间存在强正相关 (<span class="math inline">\(r \approx 0.8, p &lt; 0.001\)</span>)。</p>
-<ol type="1">
-<li>这是否意味着吃冰淇淋会导致犯罪？为什么？</li>
-<li>你能想到一个可能的<strong>混淆变量</strong>来解释这种相关性吗？</li>
-<li>如果想研究冰淇淋是否真的影响犯罪率（虽然听起来很荒谬），相关分析足够吗？需要什么样的研究设计？</li>
-</ol>
-</section>
-</section>
-<section id="简单线性回归-slr-练习" class="level2">
-<h2 class="anchored" data-anchor-id="简单线性回归-slr-练习">4. 简单线性回归 (SLR) 练习</h2>
-<p><strong>场景:</strong> 我们想建立一个模型，用汽车重量 <code>wt</code> (单位：1000 lbs) 来预测其每加仑英里数 <code>mpg</code> (使用 <code>mtcars</code> 数据集)。</p>
-<p><strong>任务:</strong></p>
-<ol type="1">
-<li>绘制 <code>wt</code> (x 轴) 和 <code>mpg</code> (y 轴) 的散点图，并添加线性拟合线 (<code>geom_smooth(method = "lm")</code>)。初步判断两者是否存在线性关系。</li>
-<li>使用 <code>lm()</code> 函数拟合一个简单线性回归模型，用 <code>wt</code> 预测 <code>mpg</code>。将模型存储在 <code>slr_mpg_wt</code> 中。</li>
-<li>使用 <code>summary()</code> 查看模型 <code>slr_mpg_wt</code> 的详细结果。</li>
-<li><strong>解读模型结果:</strong>
+<li>使用 <code>glm()</code> 拟合一个简单 Logistic 回归模型，公式为 <code>default ~ balance</code>，<code>family</code> 设置为 <code>binomial</code>。将模型存储在 <code>logistic_simple</code> 中。</li>
+<li>使用 <code>summary()</code> 查看模型结果。</li>
+<li><strong>解读系数:</strong>
 <ul>
-<li>写出回归方程 (<span class="math inline">\(\hat{mpg} = \hat{\beta}_0 + \hat{\beta}_1 \times wt\)</span>)。</li>
-<li>解释<strong>截距</strong><span class="math inline">\(\hat{\beta}_0\)</span>的含义（在这个场景下是否有实际意义？）。</li>
-<li>解释<strong>斜率</strong><span class="math inline">\(\hat{\beta}_1\)</span>的含义。</li>
-<li><code>wt</code> 对 <code>mpg</code> 的影响是否<strong>统计显著</strong>？依据是什么 (P 值)？</li>
-<li>模型解释了 <code>mpg</code> 变异的<strong>百分之多少</strong> (R-squared)？这个模型的拟合优度如何？</li>
+<li>解释截距 (Intercept) 的<strong>对数优势 (log-odds)</strong> 含义。</li>
+<li>解释 <code>balance</code> 系数的<strong>对数优势 (log-odds)</strong> 含义。</li>
+<li><code>balance</code> 对违约的影响是否统计显著？</li>
+</ul></li>
+<li><strong>计算并解释优势比 (OR):</strong>
+<ul>
+<li>计算 <code>balance</code> 系数的优势比 (<code>exp(coef)</code>)。</li>
+<li>解释该 OR 的含义（信用卡余额每增加一个单位，违约的优势变为原来的多少倍？）。</li>
+<li>计算 OR 的置信区间 (<code>exp(confint(model))</code>)。</li>
 </ul></li>
 </ol>
 </section>
-<section id="可选-预测" class="level2">
-<h2 class="anchored" data-anchor-id="可选-预测">5. (可选) 预测</h2>
-<p>使用我们拟合的模型 <code>slr_mpg_wt</code> 来进行预测。</p>
+<section id="拟合多元-logistic-回归模型" class="level2">
+<h2 class="anchored" data-anchor-id="拟合多元-logistic-回归模型">4. 拟合多元 Logistic 回归模型</h2>
+<p><strong>场景:</strong> 现在我们加入更多预测变量：<code>student</code> (是否是学生) 和 <code>income</code> (收入)，来构建一个更全面的违约预测模型。</p>
 <p><strong>任务:</strong></p>
 <ol type="1">
-<li>预测一辆重量为 2500 lbs (即 <code>wt = 2.5</code>) 的汽车的 MPG。</li>
-<li>预测一辆重量为 4000 lbs (即 <code>wt = 4.0</code>) 的汽车的 MPG。</li>
-<li>使用 <code>predict()</code> 函数进行预测，并可以获取预测值的置信区间或预测区间。</li>
+<li>使用 <code>glm()</code> 拟合一个多元 Logistic 回归模型，公式为 <code>default ~ balance + income + student</code>。将模型存储在 <code>logistic_multi</code> 中。</li>
+<li>使用 <code>summary()</code> 查看模型结果。</li>
+<li><strong>解读系数:</strong>
+<ul>
+<li>解释 <code>balance</code> 的<strong>偏</strong>系数的对数优势含义（强调控制其他变量）。</li>
+<li>解释 <code>income</code> 的<strong>偏</strong>系数的对数优势含义。</li>
+<li>解释 <code>studentYes</code> 系数的对数优势含义（它是相对于哪个参照组的？）。</li>
+<li>判断每个变量的统计显著性。</li>
+</ul></li>
+<li><strong>计算并解释优势比 (OR):</strong>
+<ul>
+<li>计算所有系数的 OR。</li>
+<li>解释 <code>balance</code> 的 OR（控制收入和学生身份后）。</li>
+<li>解释 <code>income</code> 的 OR。</li>
+<li>解释 <code>studentYes</code> 的 OR（学生相对于非学生的违约优势比是多少？）。</li>
+</ul></li>
 </ol>
+<p><strong>思考:</strong></p>
+<ol type="1">
+<li>比较简单模型和多元模型中 <code>balance</code> 的系数和 OR，它们有变化吗？为什么？（因为加入了控制变量 <code>income</code> 和 <code>student</code>）。</li>
+<li><code>income</code> 变量在多元模型中变得统计显著了（虽然效应量很小），这可能是什么原因？（可能是由于控制了其他变量后，<code>income</code> 的微小独立效应显现出来，或者与样本量有关）。</li>
+<li><code>studentYes</code> 的系数是负的，OR 小于 1，这说明学生身份是违约的“保护”因素吗？（注意：这只是在控制了 balance 和 income 之后的结果。单独看学生身份和违约的关系可能会不同，可能存在混淆）。</li>
+</ol>
+</section>
+<section id="综合实践项目构思" class="level2">
+<h2 class="anchored" data-anchor-id="综合实践项目构思">5. 综合实践项目构思</h2>
+<p><strong>任务:</strong></p>
+<ol type="1">
+<li><strong>初步选题:</strong> 确定 1-2 个你感兴趣的综合实践项目主题或方向。</li>
+<li><strong>寻找数据:</strong> 尝试寻找与你选题相关的公开数据集，或者思考你已有的数据。评估数据的可获取性和大致质量。</li>
+<li><strong>明确研究问题:</strong> 针对你的选题和数据，提出 1-2 个具体、可衡量、可通过数据分析回答的研究问题。
+<ul>
+<li>例如：“哪些因素（如年龄、性别、浏览时长）显著影响用户是否会点击广告？” (Logistic 回归)</li>
+<li>例如：“不同促销策略（A, B, C）对产品周销量的平均影响是否存在显著差异？” (ANOVA)</li>
+<li>例如：“空气质量指数 (AQI) 与城市交通流量之间是否存在线性关系？能否用交通流量预测 AQI？” (相关/回归)</li>
+</ul></li>
+<li><strong>初步计划:</strong> 简要思考你可能需要进行哪些数据处理步骤？可能用到哪些主要的统计方法？</li>
+</ol>
+<p><strong>准备在下周课堂上简要分享和讨论你的初步想法。</strong></p>
 </section>
 <section id="实验总结" class="level2">
 <h2 class="anchored" data-anchor-id="实验总结">6. 实验总结</h2>
-<p>在本实验中，我们练习了相关分析和简单线性回归。我们计算并检验了 Pearson 和 Spearman 相关系数，强调了相关不等于因果。我们使用 <code>ggplot2</code> 可视化了变量间的关系。最重要的是，我们使用 <code>lm()</code> 拟合了简单线性回归模型，并详细解读了 <code>summary()</code> 输出中的系数、P 值和 R²，理解了它们在描述变量关系和模型拟合优度方面的含义。我们还初步尝试了使用拟合的模型进行预测。</p>
+<p>在本实验中，我们使用 <code>ISLR::Default</code> 数据集实践了拟合简单和多元 Logistic 回归模型。我们重点练习了使用 <code>glm(family = binomial)</code> 函数，并深入解读了模型系数，特别是计算和解释了优势比 (Odds Ratio) 及其含义。理解 OR 是掌握 Logistic 回归的关键。同时，我们也正式启动了综合实践项目的构思阶段。</p>
 
 
 </section>
@@ -877,13 +880,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./week5_lab.html" class="pagination-link" aria-label="第五周实验：假设检验实践 (t-检验与 ANOVA)">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第五周实验：假设检验实践 (t-检验与 ANOVA)</span></span>
+      <a href="./week10_lab.html" class="pagination-link" aria-label="第十周实验：模型改进与选择实践">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第十周实验：模型改进与选择实践</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./week7_lab.html" class="pagination-link" aria-label="第七周实验：卡方检验与统计方法选择">
-        <span class="nav-page-text"><span class="chapter-title">第七周实验：卡方检验与统计方法选择</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./week12_lab.html" class="pagination-link" aria-label="第十二周实验：Logistic 回归评估与模型比较">
+        <span class="nav-page-text"><span class="chapter-title">第十二周实验：Logistic 回归评估与模型比较</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

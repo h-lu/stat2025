@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>第十二周：Logistic 回归评估 与 模型比较初步 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week1_lab.html" rel="next">
+<link href="./week11_lecture.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles/custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week12_lecture.html"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">课程介绍</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">讲义</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周：分类数据的智慧：卡方检验与阶段总结</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周：承前启后：阶段回顾与多元回归再探</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week9_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第九周：模型诊断实战：发现模型的问题</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week10_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十周：模型改进与选择的批判性视角</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week11_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十一周：预测分类结果：Logistic 回归（一）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week12_lecture.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">实验</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周实验：R 环境与基础操作</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周实验：数据导入与描述性统计</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周实验：<code>dplyr</code> 进阶与 <code>tidyr</code> 数据整形</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周实验：<code>ggplot2</code> 可视化探索</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周实验：假设检验实践 (t-检验与 ANOVA)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周实验：卡方检验与统计方法选择</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周实验：阶段回顾与多元回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week9_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第九周实验：回归模型诊断实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week10_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十周实验：模型改进与选择实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week11_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week12_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十二周实验：Logistic 回归评估与模型比较</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#模型好坏如何评估分类模型" id="toc-模型好坏如何评估分类模型" class="nav-link active" data-scroll-target="#模型好坏如何评估分类模型">1. 模型好坏：如何评估分类模型？</a></li>
+  <li><a href="#混淆矩阵-confusion-matrix" id="toc-混淆矩阵-confusion-matrix" class="nav-link" data-scroll-target="#混淆矩阵-confusion-matrix">2. 混淆矩阵 (Confusion Matrix)</a></li>
+  <li><a href="#基于混淆矩阵的评估指标" id="toc-基于混淆矩阵的评估指标" class="nav-link" data-scroll-target="#基于混淆矩阵的评估指标">3. 基于混淆矩阵的评估指标</a></li>
+  <li><a href="#roc-曲线-与-auc-值" id="toc-roc-曲线-与-auc-值" class="nav-link" data-scroll-target="#roc-曲线-与-auc-值">4. ROC 曲线 与 AUC 值</a></li>
+  <li><a href="#模型比较初步aic-与-bic" id="toc-模型比较初步aic-与-bic" class="nav-link" data-scroll-target="#模型比较初步aic-与-bic">5. 模型比较初步：AIC 与 BIC</a></li>
+  <li><a href="#capstone-项目进展" id="toc-capstone-项目进展" class="nav-link" data-scroll-target="#capstone-项目进展">6. Capstone 项目进展</a></li>
+  <li><a href="#本周总结与预告" id="toc-本周总结与预告" class="nav-link" data-scroll-target="#本周总结与预告">7. 本周总结与预告</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week12_lecture.html"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="模型好坏如何评估分类模型" class="level2">
+<h2 class="anchored" data-anchor-id="模型好坏如何评估分类模型">1. 模型好坏：如何评估分类模型？</h2>
+<p>上周我们学习了如何拟合 Logistic 回归模型来预测分类结果的概率。但是，仅仅拟合模型是不够的，我们还需要评估模型的<strong>预测性能 (Predictive Performance)</strong>，即模型在区分不同类别方面的表现如何。与线性回归使用 R² 或 RMSE 不同，分类模型有其独特的评估指标。</p>
+<div class="callout callout-style-default callout-note callout-titled" title="本周目标">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+本周目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>理解并能够计算<strong>混淆矩阵 (Confusion Matrix)</strong>。</li>
+<li>掌握常用的分类模型评估指标：<strong>准确率 (Accuracy)</strong>、<strong>精确率 (Precision)</strong>、<strong>召回率 (Recall / Sensitivity)</strong>、<strong>F1 分数 (F1-Score)</strong>、<strong>特异度 (Specificity)</strong>，并理解它们之间的权衡。</li>
+<li>理解 <strong>ROC 曲线 (Receiver Operating Characteristic Curve)</strong> 和 <strong>AUC 值 (Area Under the Curve)</strong> 的含义和作用。</li>
+<li>能够使用 R 实现上述评估指标和 ROC/AUC 的计算与可视化。</li>
+<li>了解使用 AIC/BIC 等信息准则比较广义线性模型 (GLM) 的思路。</li>
+<li>继续推进 Capstone 项目：选题讨论与初步数据探索。</li>
+</ul>
+</div>
+</div>
+<p>我们将继续使用上周的 <code>mtcars</code> Logistic 回归模型作为示例。</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC) <span class="co"># 用于 ROC 曲线和 AUC 计算</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pROC") # 如果尚未安装</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(yardstick) <span class="co"># tidyverse 风格的模型评估包 (可选)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("yardstick") # 如果尚未安装</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 回顾上周的模型</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>mtcars_data <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">am =</span> <span class="fu">factor</span>(am, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Automatic"</span>, <span class="st">"Manual"</span>)))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>logistic_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> mtcars_data, <span class="at">family =</span> binomial)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(logistic_model)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取模型预测的概率 (预测为 "Manual" 的概率)</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>predictions_prob <span class="ot">&lt;-</span> <span class="fu">predict</span>(logistic_model, <span class="at">type =</span> <span class="st">"response"</span>) <span class="co"># type="response" 返回概率</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 为了计算混淆矩阵等指标，需要将概率转换为类别预测</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 通常使用 0.5 作为阈值 (threshold)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>threshold <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>predictions_class <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(predictions_prob <span class="sc">&gt;</span> threshold, <span class="st">"Manual"</span>, <span class="st">"Automatic"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>predictions_class <span class="ot">&lt;-</span> <span class="fu">factor</span>(predictions_class, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Automatic"</span>, <span class="st">"Manual"</span>)) <span class="co"># 确保因子水平一致</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 将真实值和预测值放入一个 tibble，方便后续计算</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>eval_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">observed =</span> mtcars_data<span class="sc">$</span>am,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">predicted_prob =</span> predictions_prob,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">predicted_class =</span> predictions_class</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># glimpse(eval_data)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="混淆矩阵-confusion-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="混淆矩阵-confusion-matrix">2. 混淆矩阵 (Confusion Matrix)</h2>
+<p>混淆矩阵是评估分类模型性能的基础。它是一个表格，总结了模型<strong>预测类别</strong>与<strong>实际类别</strong>之间的匹配情况。对于二元分类，它通常是一个 2x2 的矩阵。</p>
+<ul>
+<li><p><strong>结构:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">预测为 Positive (1)</th>
+<th style="text-align: left;">预测为 Negative (0)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>实际为 Positive (1)</strong></td>
+<td style="text-align: left;"><strong>TP</strong> (True Positive)</td>
+<td style="text-align: left;"><strong>FN</strong> (False Negative)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>实际为 Negative (0)</strong></td>
+<td style="text-align: left;"><strong>FP</strong> (False Positive)</td>
+<td style="text-align: left;"><strong>TN</strong> (True Negative)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>TP (真正例):</strong> 实际为 Positive，预测也为 Positive (预测正确)。</li>
+<li><strong>FN (假反例):</strong> 实际为 Positive，但预测为 Negative (预测错误，<strong>漏报</strong>，Type II Error)。</li>
+<li><strong>FP (假正例):</strong> 实际为 Negative，但预测为 Positive (预测错误，<strong>误报</strong>，Type I Error)。</li>
+<li><strong>TN (真反例):</strong> 实际为 Negative，预测也为 Negative (预测正确)。</li>
+</ul></li>
+<li><p><strong>R 实现:</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法1: 使用基础 table() 函数</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 注意：第一个参数是实际值，第二个参数是预测值</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>confusion_matrix_base <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">Observed =</span> eval_data<span class="sc">$</span>observed, <span class="at">Predicted =</span> eval_data<span class="sc">$</span>predicted_class)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(confusion_matrix_base)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#          Predicted</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Observed  Automatic Manual</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Automatic        16      3  &lt;- TN=16, FP=3</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Manual            3     10  &lt;- FN=3, TP=10</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法2: 使用 yardstick 包 (更推荐，输出更规范)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>conf_mat_tbl <span class="ot">&lt;-</span> eval_data <span class="sc">%&gt;%</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class) <span class="co"># truth=真实值, estimate=预测值</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(conf_mat_tbl)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#            Truth</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Prediction Automatic Manual</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  Automatic        16      3</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  Manual            3     10</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 可以绘制混淆矩阵图</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(conf_mat_tbl, <span class="at">type =</span> <span class="st">"heatmap"</span>) <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Confusion Matrix Heatmap"</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># autoplot(conf_mat_tbl, type = "mosaic") # 马赛克图</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="基于混淆矩阵的评估指标" class="level2">
+<h2 class="anchored" data-anchor-id="基于混淆矩阵的评估指标">3. 基于混淆矩阵的评估指标</h2>
+<p>从混淆矩阵可以衍生出多个评估指标，从不同角度衡量模型性能。</p>
+<ul>
+<li><strong>准确率 (Accuracy):</strong>
+<ul>
+<li><p><strong>定义:</strong> 模型<strong>预测正确</strong>的样本占<strong>总样本</strong>的比例。</p></li>
+<li><p><strong>公式:</strong> <span class="math inline">\(Accuracy = \frac{TP + TN}{TP + TN + FP + FN}\)</span></p></li>
+<li><p><strong>解读:</strong> 最直观的指标，但在<strong>类别不平衡 (Imbalanced Classes)</strong> 的数据集中具有<strong>误导性</strong>。例如，如果 99% 的样本是 Negative，一个将所有样本都预测为 Negative 的模型也能达到 99% 的准确率，但这显然不是一个好模型。</p></li>
+<li><p><strong>R 实现:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 手动计算</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>accuracy_manual <span class="ot">&lt;-</span> (<span class="dv">16</span> <span class="sc">+</span> <span class="dv">10</span>) <span class="sc">/</span> (<span class="dv">16</span> <span class="sc">+</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">3</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(accuracy_manual) <span class="co"># 约 0.8125</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用 yardstick</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>eval_data <span class="sc">%&gt;%</span> <span class="fu">accuracy</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+<li><strong>精确率 (Precision):</strong> (也叫查准率)
+<ul>
+<li><p><strong>定义:</strong> 在所有<strong>预测为 Positive</strong> 的样本中，<strong>实际也为 Positive</strong> 的比例。</p></li>
+<li><p><strong>公式:</strong> <span class="math inline">\(Precision = \frac{TP}{TP + FP}\)</span></p></li>
+<li><p><strong>解读:</strong> 衡量模型预测 Positive 的<strong>准确性</strong>。高精确率表示模型预测为 Positive 的结果中，很少有误报 (FP)。关注“预测出来的 Positive 有多准？”。</p></li>
+<li><p><strong>应用:</strong> 当<strong>误报 (FP) 的代价很高</strong>时很重要（例如，垃圾邮件检测，宁可漏掉一些垃圾邮件，也不想把正常邮件误判为垃圾邮件）。</p></li>
+<li><p><strong>R 实现:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 手动计算 (预测为 Manual 的精确率)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>precision_manual <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">+</span> <span class="dv">3</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(precision_manual) <span class="co"># 约 0.769</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用 yardstick (需要指定 positive 类)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>eval_data <span class="sc">%&gt;%</span> <span class="fu">precision</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>) <span class="co"># "second" 表示第二个因子水平 "Manual" 是 positive 类</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+<li><strong>召回率 (Recall / Sensitivity / True Positive Rate, TPR):</strong> (也叫查全率、敏感度)
+<ul>
+<li><p><strong>定义:</strong> 在所有<strong>实际为 Positive</strong> 的样本中，被模型<strong>成功预测为 Positive</strong> 的比例。</p></li>
+<li><p><strong>公式:</strong> <span class="math inline">\(Recall = Sensitivity = TPR = \frac{TP}{TP + FN}\)</span></p></li>
+<li><p><strong>解读:</strong> 衡量模型<strong>找出所有 Positive 样本</strong>的能力。高召回率表示模型很少漏报 (FN)。关注“所有 Positive 的样本，找出来了多少？”。</p></li>
+<li><p><strong>应用:</strong> 当<strong>漏报 (FN) 的代价很高</strong>时很重要（例如，疾病诊断，宁可误诊一些健康人，也不想漏掉真正的病人）。</p></li>
+<li><p><strong>R 实现:</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 手动计算 (Manual 类的召回率)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>recall_manual <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">+</span> <span class="dv">3</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(recall_manual) <span class="co"># 约 0.769 (在这个例子中恰好与 Precision 相等)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用 yardstick</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>eval_data <span class="sc">%&gt;%</span> <span class="fu">recall</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 或者使用 sensitivity()</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>eval_data <span class="sc">%&gt;%</span> <span class="fu">sensitivity</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+<li><strong>F1 分数 (F1-Score):</strong>
+<ul>
+<li><p><strong>定义:</strong> 精确率 (Precision) 和召回率 (Recall) 的<strong>调和平均数 (Harmonic Mean)</strong>。</p></li>
+<li><p><strong>公式:</strong> <span class="math inline">\(F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall} = \frac{2TP}{2TP + FP + FN}\)</span></p></li>
+<li><p><strong>解读:</strong> 综合考虑了精确率和召回率，当两者都较高时，F1 分数也较高。是评估模型综合性能的常用指标，尤其在类别不平衡时比准确率更可靠。</p></li>
+<li><p><strong>R 实现:</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 手动计算</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>f1_manual <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (precision_manual <span class="sc">*</span> recall_manual) <span class="sc">/</span> (precision_manual <span class="sc">+</span> recall_manual)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(f1_manual) <span class="co"># 约 0.769</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用 yardstick</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>eval_data <span class="sc">%&gt;%</span> <span class="fu">f_meas</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>) <span class="co"># f_meas 计算 F-beta score, 默认 beta=1 即 F1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+<li><strong>特异度 (Specificity / True Negative Rate, TNR):</strong>
+<ul>
+<li><p><strong>定义:</strong> 在所有<strong>实际为 Negative</strong> 的样本中，被模型<strong>成功预测为 Negative</strong> 的比例。</p></li>
+<li><p><strong>公式:</strong> <span class="math inline">\(Specificity = TNR = \frac{TN}{TN + FP}\)</span></p></li>
+<li><p><strong>解读:</strong> 衡量模型<strong>正确识别 Negative 样本</strong>的能力。与召回率 (Sensitivity) 对应。</p></li>
+<li><p><strong>应用:</strong> 在疾病诊断中，表示正确识别健康人的能力。</p></li>
+<li><p><strong>R 实现:</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 手动计算</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>specificity_manual <span class="ot">&lt;-</span> <span class="dv">16</span> <span class="sc">/</span> (<span class="dv">16</span> <span class="sc">+</span> <span class="dv">3</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(specificity_manual) <span class="co"># 约 0.842</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用 yardstick</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>eval_data <span class="sc">%&gt;%</span> <span class="fu">specificity</span>(<span class="at">truth =</span> observed, <span class="at">estimate =</span> predicted_class, <span class="at">event_level =</span> <span class="st">"second"</span>) <span class="co"># 注意 event_level 仍然是 positive 类</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="指标权衡 (Trade-off)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+指标权衡 (Trade-off)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>精确率 vs 召回率:</strong> 通常存在权衡。提高精确率（减少 FP）可能会降低召回率（增加 FN），反之亦然。选择哪个更重要取决于具体应用场景和两类错误的代价。</li>
+<li><strong>阈值选择:</strong> 改变分类阈值（默认 0.5）会影响预测类别，从而改变混淆矩阵和所有这些指标。ROC 曲线可以帮助我们理解不同阈值下的性能。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="roc-曲线-与-auc-值" class="level2">
+<h2 class="anchored" data-anchor-id="roc-曲线-与-auc-值">4. ROC 曲线 与 AUC 值</h2>
+<ul>
+<li><p><strong>ROC 曲线 (Receiver Operating Characteristic Curve):</strong></p>
+<ul>
+<li>一种可视化分类模型在<strong>所有可能阈值</strong>下性能表现的图形。</li>
+<li><strong>横轴:</strong> <strong>假正例率 (False Positive Rate, FPR)</strong> = <span class="math inline">\(1 - Specificity = \frac{FP}{FP + TN}\)</span>。</li>
+<li><strong>纵轴:</strong> <strong>真正例率 (True Positive Rate, TPR)</strong> = <span class="math inline">\(Recall = Sensitivity = \frac{TP}{TP + FN}\)</span>。</li>
+<li><strong>绘制方法:</strong> 连续改变分类阈值，计算每个阈值下的 TPR 和 FPR，描点连接。</li>
+<li><strong>解读:</strong> 曲线越<strong>靠近左上角</strong> (TPR 高，FPR 低)，模型性能越好。对角线代表<strong>随机猜测</strong>。</li>
+</ul></li>
+<li><p><strong>AUC 值 (Area Under the ROC Curve):</strong></p>
+<ul>
+<li>ROC 曲线下的面积，取值 0 到 1。</li>
+<li><strong>解读:</strong> AUC 越大，模型区分 Positive 和 Negative 样本的<strong>整体能力越强</strong>。不依赖特定阈值。AUC=0.5 表示随机猜测。</li>
+<li><strong>直观含义:</strong> 从 Positive 和 Negative 样本中各随机抽取一个，AUC 值等于模型将 Positive 样本预测概率排在 Negative 样本预测概率之前的概率。</li>
+</ul></li>
+<li><p><strong>R 实现 (使用 <code>pROC</code> 包):</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建 ROC 对象</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># response: 真实类别 (因子或 0/1)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># predictor: 预测为 Positive 类别的概率</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># levels: 指定哪个是 Negative(0), 哪个是 Positive(1)</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>roc_obj <span class="ot">&lt;-</span> <span class="fu">roc</span>(<span class="at">response =</span> eval_data<span class="sc">$</span>observed,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">predictor =</span> eval_data<span class="sc">$</span>predicted_prob,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Automatic"</span>, <span class="st">"Manual"</span>)) <span class="co"># 指定 Automatic 为 0, Manual 为 1</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算 AUC 值</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>auc_value <span class="ot">&lt;-</span> <span class="fu">auc</span>(roc_obj)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"AUC:"</span>, <span class="fu">round</span>(auc_value, <span class="dv">4</span>))) <span class="co"># 约 0.909</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制 ROC 曲线</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggroc</span>(roc_obj, <span class="at">legacy.axes =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="co"># legacy.axes=TRUE 使 x 轴为 FPR</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="dv">1</span>), <span class="at">color=</span><span class="st">"grey"</span>, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span> <span class="co"># 添加对角线</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"ROC Curve (AUC ="</span>, <span class="fu">round</span>(auc_value, <span class="dv">3</span>), <span class="st">")"</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"False Positive Rate (1 - Specificity)"</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"True Positive Rate (Sensitivity)"</span>) <span class="sc">+</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 找到最佳阈值 (例如，基于 Youden's J statistic = Sensitivity + Specificity - 1 最大化)</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co"># coords(roc_obj, "best", ret = "threshold")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+</section>
+<section id="模型比较初步aic-与-bic" class="level2">
+<h2 class="anchored" data-anchor-id="模型比较初步aic-与-bic">5. 模型比较初步：AIC 与 BIC</h2>
+<p>当我们有多个候选的 Logistic 回归模型时，如何比较它们？</p>
+<ul>
+<li><p><strong>信息准则 (Information Criteria):</strong> AIC 和 BIC 同样适用于广义线性模型 (GLM)。</p>
+<ul>
+<li>权衡模型的<strong>拟合优度</strong>和<strong>模型复杂度</strong>。</li>
+<li><strong>目标:</strong> 选择 AIC 或 BIC <strong>最小</strong>的模型。</li>
+<li>只能用于比较<strong>使用相同因变量和相同数据集</strong>拟合的模型。</li>
+</ul></li>
+<li><p><strong>R 实现:</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设我们有另一个模型，只用 wt 预测 am</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>logistic_model_wt_only <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> wt, <span class="at">data =</span> mtcars_data, <span class="at">family =</span> binomial)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 比较两个模型的 AIC 和 BIC</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(logistic_model, logistic_model_wt_only)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(logistic_model, logistic_model_wt_only)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 结果显示 logistic_model (包含 hp 和 wt) 的 AIC 和 BIC 都更小，</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 表明在拟合优度和复杂度之间权衡后，它是相对更优的模型。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>其他比较方法:</strong></p>
+<ul>
+<li><strong>似然比检验 (LRT):</strong> 比较<strong>嵌套模型</strong>。<code>anova(model1, model2, test="LRT")</code>。</li>
+<li><strong>交叉验证 (Cross-Validation):</strong> (更高级) 在测试集上评估模型性能，更可靠。</li>
+</ul></li>
+</ul>
+</section>
+<section id="capstone-项目进展" class="level2">
+<h2 class="anchored" data-anchor-id="capstone-项目进展">6. Capstone 项目进展</h2>
+<ul>
+<li><strong>本周任务:</strong>
+<ul>
+<li><strong>确定选题和研究问题:</strong> 与老师或助教讨论你的初步想法，确保可行性。</li>
+<li><strong>获取并初步检查数据:</strong> 使用 <code>readr</code> 导入数据，使用 <code>glimpse()</code>, <code>summary()</code>, <code>skimr::skim()</code> 等函数了解数据结构、变量类型、缺失值等。</li>
+<li><strong>进行初步的 EDA:</strong> 使用 <code>ggplot2</code> 绘制关键变量的分布图（直方图、箱线图、条形图）和变量关系图（散点图、分组箱线图）。</li>
+</ul></li>
+</ul>
+</section>
+<section id="本周总结与预告" class="level2">
+<h2 class="anchored" data-anchor-id="本周总结与预告">7. 本周总结与预告</h2>
+<p>本周我们重点学习了如何评估分类模型（特别是 Logistic 回归）的性能。我们掌握了混淆矩阵及其衍生指标（准确率、精确率、召回率、F1、特异度），理解了它们的应用场景和权衡。我们还学习了 ROC 曲线和 AUC 值作为不依赖阈值的整体性能评估工具。最后，我们了解了使用 AIC/BIC 比较 GLM 的思路。</p>
+<p><strong>下周预告:</strong> 我们将进一步探讨 AI 工具在数据分析中的应用，学习如何更有效地利用 AI 进行编程、调试、解释和报告写作，并强调批判性思维和验证的重要性。同时，我们将学习可重复报告的基础知识（R Markdown / Quarto），让我们的分析过程和结果更规范、更易于分享。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week11_lecture.html" class="pagination-link" aria-label="第十一周：预测分类结果：Logistic 回归（一）">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第十一周：预测分类结果：Logistic 回归（一）</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week1_lab.html" class="pagination-link" aria-label="第一周实验：R 环境与基础操作">
+        <span class="nav-page-text"><span class="chapter-title">第一周实验：R 环境与基础操作</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

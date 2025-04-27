@@ -1,12 +1,5 @@
 ---
 title: "第十二周实验：Logistic 回归评估与模型比较"
-author: "Your Name / TA Name"
-format:
-  html:
-    toc: true
-    code-fold: true
-    code-tools: true
-editor: visual
 ---
 
 ## 1. 目标

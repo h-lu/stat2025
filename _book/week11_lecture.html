@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>第十一周：预测分类结果：Logistic 回归（一） – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week12_lecture.html" rel="next">
+<link href="./week10_lecture.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles/custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week11_lecture.html"><span class="chapter-title">第十一周：预测分类结果：Logistic 回归（一）</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">课程介绍</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">讲义</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周：分类数据的智慧：卡方检验与阶段总结</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周：承前启后：阶段回顾与多元回归再探</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week9_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第九周：模型诊断实战：发现模型的问题</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week10_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十周：模型改进与选择的批判性视角</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week11_lecture.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">第十一周：预测分类结果：Logistic 回归（一）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week12_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">实验</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周实验：R 环境与基础操作</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周实验：数据导入与描述性统计</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周实验：<code>dplyr</code> 进阶与 <code>tidyr</code> 数据整形</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周实验：<code>ggplot2</code> 可视化探索</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周实验：假设检验实践 (t-检验与 ANOVA)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周实验：卡方检验与统计方法选择</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周实验：阶段回顾与多元回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week9_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第九周实验：回归模型诊断实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week10_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十周实验：模型改进与选择实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week11_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week12_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十二周实验：Logistic 回归评估与模型比较</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#从线性回归到分类预测" id="toc-从线性回归到分类预测" class="nav-link active" data-scroll-target="#从线性回归到分类预测">1. 从线性回归到分类预测</a></li>
+  <li><a href="#logistic-回归原理" id="toc-logistic-回归原理" class="nav-link" data-scroll-target="#logistic-回归原理">2. Logistic 回归原理</a></li>
+  <li><a href="#logistic-回归模型形式" id="toc-logistic-回归模型形式" class="nav-link" data-scroll-target="#logistic-回归模型形式">3. Logistic 回归模型形式</a></li>
+  <li><a href="#系数解释优势比-odds-ratio-or---核心" id="toc-系数解释优势比-odds-ratio-or---核心" class="nav-link" data-scroll-target="#系数解释优势比-odds-ratio-or---核心">4. 系数解释：优势比 (Odds Ratio, OR) - 核心！</a></li>
+  <li><a href="#r-实现-glm-generalized-linear-model" id="toc-r-实现-glm-generalized-linear-model" class="nav-link" data-scroll-target="#r-实现-glm-generalized-linear-model">5. R 实现: <code>glm()</code> (Generalized Linear Model)</a></li>
+  <li><a href="#综合实践项目启动" id="toc-综合实践项目启动" class="nav-link" data-scroll-target="#综合实践项目启动">6. 综合实践项目启动</a></li>
+  <li><a href="#本周总结与预告" id="toc-本周总结与预告" class="nav-link" data-scroll-target="#本周总结与预告">7. 本周总结与预告</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./week11_lecture.html"><span class="chapter-title">第十一周：预测分类结果：Logistic 回归（一）</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">第十一周：预测分类结果：Logistic 回归（一）</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="从线性回归到分类预测" class="level2">
+<h2 class="anchored" data-anchor-id="从线性回归到分类预测">1. 从线性回归到分类预测</h2>
+<p>到目前为止，我们学习的回归模型（SLR, MLR）都是用于预测<strong>连续型</strong>因变量 Y。但很多时候，我们感兴趣的预测目标是<strong>分类变量</strong>，特别是<strong>二元分类 (Binary Classification)</strong> 变量，其结果只有两种可能（例如：是/否、成功/失败、购买/不购买、患病/未患病）。</p>
+<ul>
+<li><strong>线性回归的局限性:</strong>
+<ul>
+<li>如果直接用线性回归预测一个 0/1 的二元变量，预测值 <span class="math inline">\(\hat{y}\)</span> 可能会超出 [0, 1] 的合理范围。</li>
+<li>误差项不满足正态性和等方差性假设。</li>
+<li>因变量和自变量之间的关系通常不是线性的，而是 S 形的。</li>
+</ul></li>
+<li><strong>Logistic 回归 (Logistic Regression):</strong>
+<ul>
+<li>一种广泛用于处理<strong>二元或多元分类</strong>问题的<strong>广义线性模型 (Generalized Linear Model, GLM)</strong>。</li>
+<li>它不直接预测类别 (0 或 1)，而是预测属于某个类别（通常是 “成功” 或 “事件发生”，编码为 1）的<strong>概率 (Probability)</strong> <span class="math inline">\(P(Y=1|X)\)</span>。</li>
+<li>然后可以设定一个阈值（如 0.5），将预测概率转换为类别预测。</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="本周目标">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+本周目标
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>理解为何线性回归不适用于分类结果。</li>
+<li>掌握 Logistic 回归的基本原理：Sigmoid 函数和 Logit 变换。</li>
+<li>理解 Logistic 回归的模型形式。</li>
+<li><strong>重点掌握</strong> Logistic 回归系数的解释，特别是<strong>优势比 (Odds Ratio, OR)</strong>。</li>
+<li>能够使用 R 的 <code>glm()</code> 函数拟合二元 Logistic 回归模型。</li>
+<li><strong>了解综合实践项目的要求、选题方向、时间安排和评分标准。</strong></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="logistic-回归原理" class="level2">
+<h2 class="anchored" data-anchor-id="logistic-回归原理">2. Logistic 回归原理</h2>
+<p>Logistic 回归通过两个关键步骤将线性预测值与概率联系起来：</p>
+<ol type="1">
+<li><p><strong>线性预测器 (Linear Predictor):</strong> 与线性回归类似，计算自变量的线性组合： <span class="math display">\[ z = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k \]</span> 这个 <span class="math inline">\(z\)</span> 的取值范围是 <span class="math inline">\((-\infty, +\infty)\)</span>。</p></li>
+<li><p><strong>连接函数 (Link Function) 的逆转换 / Sigmoid 函数:</strong> 为了将 <span class="math inline">\(z\)</span> 映射到 (0, 1) 的概率区间，Logistic 回归使用了 <strong>Sigmoid 函数</strong> (也称为 Logistic 函数)： <span class="math display">\[ P(Y=1|X) = p = \frac{e^z}{1 + e^z} = \frac{1}{1 + e^{-z}} \]</span></p>
+<ul>
+<li>Sigmoid 函数的图形呈 S 形，可以将任何实数 <span class="math inline">\(z\)</span> 转换为 (0, 1) 之间的值。</li>
+<li>当 <span class="math inline">\(z \to +\infty\)</span> 时，<span class="math inline">\(p \to 1\)</span>。</li>
+<li>当 <span class="math inline">\(z \to -\infty\)</span> 时，<span class="math inline">\(p \to 0\)</span>。</li>
+<li>当 <span class="math inline">\(z = 0\)</span> 时，<span class="math inline">\(p = 0.5\)</span>。</li>
+</ul></li>
+</ol>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成一系列 z 值</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算对应的概率 p</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>z))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘制 Sigmoid 函数图像</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">z =</span> z, <span class="at">p =</span> p), <span class="fu">aes</span>(<span class="at">x =</span> z, <span class="at">y =</span> p)) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"z"</span>, <span class="at">y =</span> <span class="st">"p(z)"</span>, <span class="at">title =</span> <span class="st">"Sigmoid Function"</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="week11_lecture_files/figure-html/sigmoid_plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="什么是连接函数 (Link Function)？">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+什么是连接函数 (Link Function)？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>连接函数（Link Function）是广义线性模型（GLM）中的一个重要概念。它的作用是将因变量的期望值（如概率 <span class="math inline">\(p\)</span>）与自变量的线性组合（<span class="math inline">\(z = \beta_0 + \beta_1 X_1 + ...\)</span>）联系起来。通过连接函数，可以将不同类型的因变量（如概率、计数等）与线性预测器相结合，实现灵活的建模。例如，Logistic 回归中用 Logit 连接函数将概率 <span class="math inline">\(p\)</span> 映射到 <span class="math inline">\((-\infty, +\infty)\)</span> 的对数优势（log-odds）空间。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="为什么会使用 Sigmoid 函数？">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+为什么会使用 Sigmoid 函数？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在 Logistic 回归中，我们需要将线性预测器 <span class="math inline">\(z\)</span>（取值范围为 <span class="math inline">\((-\infty, +\infty)\)</span>）转换为概率 <span class="math inline">\(p\)</span>（取值范围为 <span class="math inline">\((0, 1)\)</span>）。Sigmoid 函数（Logistic 函数）正好具备这种特性：<span class="math inline">\(p = \frac{1}{1 + e^{-z}}\)</span>。它不仅保证输出在 <span class="math inline">\((0, 1)\)</span> 区间，还能很好地描述概率随自变量变化的 S 形趋势。因此，Sigmoid 函数成为二元 Logistic 回归的标准选择。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="一定要使用 Sigmoid 函数吗？">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+一定要使用 Sigmoid 函数吗？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>不一定。虽然 Logistic 回归通常使用 Sigmoid（Logit 连接函数），但在广义线性模型（GLM）框架下，连接函数是可以更换的。例如，Probit 回归使用正态分布的累积分布函数（CDF）作为连接函数，Cloglog 回归使用补对数-对数（complementary log-log）连接函数。不同的连接函数适用于不同的数据分布和建模需求。实际中，Sigmoid 最常用，但不是唯一选择。</p>
+</div>
+</div>
+<ol start="3" type="1">
+<li><p><strong>Logit 变换 (Logit Transformation) / 连接函数:</strong> 反过来，如果我们想将概率 <span class="math inline">\(p\)</span> 转换回线性预测器 <span class="math inline">\(z\)</span>，需要用到 Sigmoid 函数的反函数，即 <strong>Logit 变换</strong>：</p>
+<ul>
+<li><strong>优势 (Odds):</strong> 事件发生的概率与不发生的概率之比。<span class="math inline">\(Odds = \frac{p}{1-p}\)</span>。取值范围是 <span class="math inline">\((0, +\infty)\)</span>。</li>
+<li><strong>对数优势 (Log-odds) / Logit:</strong> 对优势取自然对数。<span class="math inline">\(Logit(p) = \log(\frac{p}{1-p})\)</span>。取值范围是 <span class="math inline">\((-\infty, +\infty)\)</span>。</li>
+<li>在 Logistic 回归中，<strong>Logit(p) 被假定为自变量的线性组合</strong>: <span class="math display">\[ \log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k \]</span> 这里的 Logit 函数就是 Logistic 回归的<strong>连接函数</strong>，它将非线性的概率关系转换为了线性的对数优势关系。</li>
+</ul></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled" title="优势 (Odds) 的实际应用场景">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+优势 (Odds) 的实际应用场景
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>优势（Odds）及其对数优势（log-odds）在实际中有广泛应用，尤其是在医学、流行病学、社会科学等领域：</p>
+<ul>
+<li><strong>医学/流行病学</strong>：用于比较暴露组与非暴露组某疾病发生的优势（如吸烟者与非吸烟者患肺癌的优势比）。</li>
+<li><strong>社会科学</strong>：分析某因素（如教育水平、性别）对某事件（如就业、投票）的影响。</li>
+<li><strong>金融风控</strong>：评估客户特征对违约概率的影响，优势比可量化某变量对违约风险的提升或降低。</li>
+<li><strong>市场营销</strong>：衡量促销活动、广告等对购买行为发生的优势变化。</li>
+<li><strong>心理学/行为科学</strong>：分析某干预措施对行为发生的优势提升。</li>
+</ul>
+<p>优势（Odds）和优势比（Odds Ratio, OR）为解释二元结局变量（如“是/否”）与自变量关系提供了直观的量化工具，尤其适用于事件发生率较低的场景。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="什么是相对风险（Relative Risk, RR）？">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+什么是相对风险（Relative Risk, RR）？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>相对风险（Relative Risk, RR）</strong>，又称为风险比，是指暴露组事件发生的概率与非暴露组事件发生的概率之比。其计算公式为：</p>
+<p><span class="math display">\[
+RR = \frac{P(\text{事件}| \text{暴露})}{P(\text{事件}| \text{非暴露})}
+\]</span></p>
+<ul>
+<li>若 <span class="math inline">\(RR = 1\)</span>，表示暴露与事件发生无关；</li>
+<li>若 <span class="math inline">\(RR &gt; 1\)</span>，表示暴露会增加事件发生的风险；</li>
+<li>若 <span class="math inline">\(RR &lt; 1\)</span>，表示暴露会降低事件发生的风险。</li>
+</ul>
+<p><strong>举例：</strong> 如果吸烟者患肺癌的概率为 0.10，非吸烟者为 0.02，则 <span class="math inline">\(RR = 0.10 / 0.02 = 5\)</span>，即吸烟者患肺癌的风险是非吸烟者的 5 倍。</p>
+<p><strong>实际解读时，很多情况下我们更关心的是相对风险（RR），因为它直接反映概率的倍数关系，更直观、更贴近实际意义。</strong></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="为什么优势比（OR）适用于事件发生概率较低的情况？">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+为什么优势比（OR）适用于事件发生概率较低的情况？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>当事件发生概率较低（即罕见事件）时，优势比（OR）与相对风险（RR）非常接近，二者数值差异很小，因此用 OR 近似 RR 是合理且常见的做法。例如，在流行病学中研究罕见疾病时，OR 可以很好地反映暴露与疾病之间的风险关系。</p>
+<p><strong>数学说明：</strong></p>
+<p>假设有两组（暴露组和非暴露组），事件发生概率分别为 <span class="math inline">\(p_1\)</span> 和 <span class="math inline">\(p_0\)</span>，则：</p>
+<ul>
+<li><strong>相对风险（RR）</strong> 定义为： <span class="math display">\[
+RR = \frac{p_1}{p_0}
+\]</span></li>
+<li><strong>优势比（OR）</strong> 定义为： <span class="math display">\[
+OR = \frac{p_1/(1-p_1)}{p_0/(1-p_0)} = \frac{p_1(1-p_0)}{p_0(1-p_1)}
+\]</span></li>
+</ul>
+<p>当 <span class="math inline">\(p_1\)</span> 和 <span class="math inline">\(p_0\)</span> 都很小（即 <span class="math inline">\(p_1, p_0 \ll 1\)</span>），<span class="math inline">\(1-p_1 \approx 1\)</span>，<span class="math inline">\(1-p_0 \approx 1\)</span>，此时： <span class="math display">\[
+OR \approx \frac{p_1}{p_0} = RR
+\]</span> 因此在罕见事件（低发生率）情况下，OR 与 RR 数值非常接近。</p>
+<p>但当事件发生概率较高时，OR 会高估实际的风险比（RR），解释时容易产生误导。具体来说，随着 <span class="math inline">\(p_1\)</span> 或 <span class="math inline">\(p_0\)</span> 增大，<span class="math inline">\(1-p_1\)</span> 和 <span class="math inline">\(1-p_0\)</span> 不再接近 1，OR 的分母变小，导致 OR 明显大于 RR。例如：</p>
+<ul>
+<li>若 <span class="math inline">\(p_0 = 0.5, p_1 = 0.75\)</span>，则 <span class="math inline">\(RR = 0.75/0.5 = 1.5\)</span>，而 <span class="math inline">\(OR = \frac{0.75/0.25}{0.5/0.5} = 3\)</span>，OR 明显大于 RR。</li>
+</ul>
+<p>因此，优势比最适合用于低发生率（稀有事件）场景下的解释和比较；在高发生率场景下，需谨慎使用 OR，并建议同时报告 RR 以避免误导。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="那为什么 Logistic 回归要用优势（Odds）而不是直接用相对风险（RR）？">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+那为什么 Logistic 回归要用优势（Odds）而不是直接用相对风险（RR）？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>实际上，在实际解读和政策建议时，我们<strong>更关心相对风险（RR）</strong>，因为它直接反映概率的变化，对非专业人士也更容易理解。</p>
+<p>但在建模时，Logistic 回归选择用优势（Odds）和对数优势（log-odds）作为建模对象，主要原因有：</p>
+<ol type="1">
+<li><strong>概率的线性建模有限制</strong>：概率 <span class="math inline">\(p\)</span> 的取值范围是 <span class="math inline">\((0,1)\)</span>，直接用线性回归建模会导致预测值超出 <span class="math inline">\([0,1]\)</span> 区间，不合理。</li>
+<li><strong>优势（Odds）和对数优势（log-odds）可以取任意实数</strong>：对数优势 <span class="math inline">\(log(\frac{p}{1-p})\)</span> 的取值范围是 <span class="math inline">\((-\infty, +\infty)\)</span>，适合用线性模型来建模。</li>
+<li><strong>Logistic 回归的数学结构</strong>：Logistic 回归假定自变量的线性组合与对数优势（log-odds）成线性关系，即 <span class="math display">\[
+\log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 X_1 + ... + \beta_k X_k
+\]</span> 这样可以用最大似然法方便地估计参数。</li>
+<li><strong>优势比（OR）易于解释和计算</strong>：对数优势的指数化（<span class="math inline">\(e^{\beta_j}\)</span>）就是优势比，能直观地反映自变量变化对事件发生“优势”的倍数影响。</li>
+</ol>
+<p><strong>总结：</strong> Logistic 回归之所以用优势（Odds），主要是出于建模和数学推导的便利，而不是因为优势比本身比相对风险更有实际意义。实际解读时，尤其是向非专业人士汇报结果时，建议尽量补充相对风险（RR）的估算和解释。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="实际应用建议">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+实际应用建议
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>建模时</strong>：Logistic 回归只能直接输出优势比（OR），因为其数学结构决定了只能建模 log-odds。</li>
+<li><strong>解读和报告时</strong>：如果事件发生率不高，可以用 OR 近似 RR；如果事件发生率较高，建议用其他方法（如风险回归模型、G-computation、marginal effect 等）估算和报告相对风险（RR），以便更贴近实际意义。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="logistic-回归模型形式" class="level2">
+<h2 class="anchored" data-anchor-id="logistic-回归模型形式">3. Logistic 回归模型形式</h2>
+<p>核心模型是： <span class="math display">\[ \log\left(\frac{P(Y=1|X)}{1-P(Y=1|X)}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k \]</span></p>
+<p>或者等价地写成概率形式： <span class="math display">\[ P(Y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_1 + ... + \beta_k X_k)}} \]</span></p>
+<ul>
+<li>模型参数 <span class="math inline">\(\beta_0, \beta_1, ..., \beta_k\)</span> 通常使用<strong>最大似然估计 (Maximum Likelihood Estimation, MLE)</strong> 来获得，而不是 OLS。</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="什么是最大似然估计 (Maximum Likelihood Estimation, MLE)？">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+什么是最大似然估计 (Maximum Likelihood Estimation, MLE)？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>最大似然估计</strong>是一种常用的参数估计方法，其核心思想是：在已知观测数据的前提下，选择一组参数，使得在这些参数下，观测到的数据出现的“可能性”（即<strong>似然</strong>）最大。</p>
+<ul>
+<li><strong>直观理解</strong>：假如你知道数据是某种分布（比如二项分布、正态分布等）生成的，但不知道具体参数（如均值、方差等），最大似然估计就是找到一组参数，使得“在这些参数下，实际观测到的数据最有可能出现”。</li>
+<li><strong>数学表达</strong>：设观测数据为 <span class="math inline">\(y_1, y_2, ..., y_n\)</span>，参数为 <span class="math inline">\(\theta\)</span>，则似然函数为 <span class="math inline">\(L(\theta) = P(\text{数据}|\theta)\)</span>。最大似然估计就是求使 <span class="math inline">\(L(\theta)\)</span> 最大的 <span class="math inline">\(\theta\)</span>。</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Logistic 回归中最大似然估计的计算方法">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Logistic 回归中最大似然估计的计算方法
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在 Logistic 回归中，我们假设因变量 <span class="math inline">\(Y_i\)</span> 服从伯努利分布（0/1），其概率由自变量 <span class="math inline">\(X\)</span> 通过 logit 链接函数建模：</p>
+<p><span class="math display">\[
+P(Y_i = 1|X_i) = p_i = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_{i1} + ... + \beta_k X_{ik})}}
+\]</span></p>
+<ul>
+<li><strong>似然函数</strong>：所有观测的联合概率为 <span class="math display">\[
+L(\beta) = \prod_{i=1}^n p_i^{y_i} (1-p_i)^{1-y_i}
+\]</span></li>
+<li><strong>对数似然函数</strong>（便于计算）： <span class="math display">\[
+\ell(\beta) = \sum_{i=1}^n \left[ y_i \log(p_i) + (1-y_i)\log(1-p_i) \right]
+\]</span></li>
+<li><strong>最大似然估计过程</strong>：
+<ol type="1">
+<li>写出对数似然函数 <span class="math inline">\(\ell(\beta)\)</span>。</li>
+<li>对参数 <span class="math inline">\(\beta\)</span> 求偏导，令导数为 0，解方程组（通常无解析解）。</li>
+<li>用数值优化算法（如牛顿-拉夫森法）迭代求解最优参数 <span class="math inline">\(\hat{\beta}\)</span>。</li>
+</ol></li>
+<li><strong>R 中实现</strong>：<code>glm()</code> 函数自动完成最大似然估计，无需手动推导和优化。</li>
+</ul>
+<p><strong>总结</strong>：Logistic 回归的系数估计本质上就是通过最大似然法，找到一组参数，使得在这些参数下，观测到的 0/1 结果最有可能出现。</p>
+</div>
+</div>
+</section>
+<section id="系数解释优势比-odds-ratio-or---核心" class="level2">
+<h2 class="anchored" data-anchor-id="系数解释优势比-odds-ratio-or---核心">4. 系数解释：优势比 (Odds Ratio, OR) - 核心！</h2>
+<p>直接解释 Logistic 回归的系数 <span class="math inline">\(\beta_j\)</span> 比较困难，因为它表示自变量 <span class="math inline">\(X_j\)</span> 每增加一个单位，<strong>对数优势 (Log-odds)</strong> 的变化量。为了更直观地理解，我们通常解释<strong>优势比 (Odds Ratio, OR)</strong>。</p>
+<ul>
+<li><strong>优势比 (OR):</strong> 指自变量 <span class="math inline">\(X_j\)</span> <strong>增加一个单位</strong>时，事件发生的<strong>优势 (Odds)</strong> 变为原来的<strong>多少倍</strong>。 <span class="math display">\[ OR_j = \frac{Odds(X_j+1)}{Odds(X_j)} = \frac{e^{\beta_0 + \beta_1 X_1 + ... + \beta_j(X_j+1) + ...}}{e^{\beta_0 + \beta_1 X_1 + ... + \beta_j X_j + ...}} = e^{\beta_j} \]</span>
+<ul>
+<li><strong>计算:</strong> <span class="math inline">\(OR_j = \exp(\beta_j)\)</span>。</li>
+</ul></li>
+<li><strong>解读 OR:</strong>
+<ul>
+<li><span class="math inline">\(OR_j &gt; 1\)</span> (<span class="math inline">\(\beta_j &gt; 0\)</span>): <span class="math inline">\(X_j\)</span> 增加一个单位，事件发生的<strong>优势增加</strong> (变为原来的 <span class="math inline">\(OR_j\)</span> 倍)。<span class="math inline">\(X_j\)</span> 是风险因素/促进因素。</li>
+<li><span class="math inline">\(OR_j &lt; 1\)</span> (<span class="math inline">\(\beta_j &lt; 0\)</span>): <span class="math inline">\(X_j\)</span> 增加一个单位，事件发生的<strong>优势减少</strong> (变为原来的 <span class="math inline">\(OR_j\)</span> 倍)。<span class="math inline">\(X_j\)</span> 是保护因素。</li>
+<li><span class="math inline">\(OR_j = 1\)</span> (<span class="math inline">\(\beta_j = 0\)</span>): <span class="math inline">\(X_j\)</span> 变化对事件发生的优势<strong>没有影响</strong>。</li>
+</ul></li>
+<li><strong>示例解释:</strong>
+<ul>
+<li>假设研究吸烟 (X=1 表示吸烟, X=0 表示不吸烟) 对患肺癌 (Y=1) 的影响，得到 <span class="math inline">\(\hat{\beta}_{smoke} = 1.609\)</span>。</li>
+<li>计算 <span class="math inline">\(OR_{smoke} = \exp(1.609) \approx 5.0\)</span>。</li>
+<li><strong>解释:</strong> 吸烟者的患肺癌<strong>优势</strong>是<strong>不吸烟者</strong>的<strong>5 倍</strong> (在控制其他变量后)。</li>
+<li>假设研究年龄 (X，连续变量) 对购买某产品 (Y=1) 的影响，得到 <span class="math inline">\(\hat{\beta}_{age} = -0.05\)</span>。</li>
+<li>计算 <span class="math inline">\(OR_{age} = \exp(-0.05) \approx 0.95\)</span>。</li>
+<li><strong>解释:</strong> 年龄<strong>每增加 1 岁</strong>，购买该产品的<strong>优势</strong>变为原来的<strong>0.95 倍</strong> (即降低了约 5%) (在控制其他变量后)。</li>
+</ul></li>
+<li><strong>分类自变量的 OR:</strong> 如果 <span class="math inline">\(X_j\)</span> 是一个分类变量（如用虚拟编码表示），<span class="math inline">\(e^{\beta_j}\)</span> 表示该类别相对于<strong>参照类别</strong>的优势比。</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="OR vs RR">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+OR vs RR
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>优势比 (OR) <strong>不等于</strong> 相对风险 (Relative Risk, RR = <span class="math inline">\(P(Y=1|X_j+1) / P(Y=1|X_j)\)</span>)。只有当事件发生率很低时，OR 才近似等于 RR。解释时要用“优势”而非“风险”或“概率”。</p>
+</div>
+</div>
+</section>
+<section id="r-实现-glm-generalized-linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="r-实现-glm-generalized-linear-model">5. R 实现: <code>glm()</code> (Generalized Linear Model)</h2>
+<p>使用 <code>glm()</code> 函数拟合 Logistic 回归模型。</p>
+<ul>
+<li><p><strong>关键参数:</strong></p>
+<ul>
+<li><code>formula</code>: 与 <code>lm()</code> 类似，<code>Y ~ X1 + X2 + ...</code>。Y 应该是 0/1 编码或因子（R 会自动处理第一个水平为 0，第二个为 1）。</li>
+<li><code>family</code>: 指定模型的分布族和连接函数。对于 Logistic 回归，使用 <code>family = binomial(link = "logit")</code> 或简写 <code>family = binomial</code>。</li>
+<li><code>data</code>: 数据框。</li>
+</ul></li>
+<li><p><strong>示例：</strong> 使用 <code>ISLR</code> 包中的 <code>Default</code> 数据集，预测客户是否违约（default），基于信用卡余额（balance）和是否为学生（student）。</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 数据准备：确保 default 是因子，student 也是因子</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Default"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Default)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Rows: 10,000
+#&gt; Columns: 4
+#&gt; $ default &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No, No, No…
+#&gt; $ student &lt;fct&gt; No, Yes, No, No, No, Yes, No, Yes, No, No, Yes, Yes, No, No, N…
+#&gt; $ balance &lt;dbl&gt; 729.5265, 817.1804, 1073.5492, 529.2506, 785.6559, 919.5885, 8…
+#&gt; $ income  &lt;dbl&gt; 44361.625, 12106.135, 31767.139, 35704.494, 38463.496, 7491.55…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 默认 default 已为因子，student 也是因子</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 拟合 Logistic 回归模型</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>logistic_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(default <span class="sc">~</span> balance <span class="sc">+</span> student, <span class="at">data =</span> Default, <span class="at">family =</span> binomial)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 查看模型摘要（系数、标准误、z值、P值等）</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>tidy_logistic <span class="ot">&lt;-</span> <span class="fu">tidy</span>(logistic_model)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tidy_logistic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 3 × 5
+#&gt;   term         estimate std.error statistic   p.value
+#&gt;   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+#&gt; 1 (Intercept) -10.7      0.369       -29.1  2.23e-186
+#&gt; 2 balance       0.00574  0.000232     24.7  3.14e-135
+#&gt; 3 studentYes   -0.715    0.148        -4.85 1.26e-  6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 计算系数的优势比（OR）及其置信区间</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 4.1 计算 OR</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>or_table <span class="ot">&lt;-</span> tidy_logistic <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">OR =</span> <span class="fu">exp</span>(estimate))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(or_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 3 × 6
+#&gt;   term         estimate std.error statistic   p.value        OR
+#&gt;   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+#&gt; 1 (Intercept) -10.7      0.369       -29.1  2.23e-186 0.0000215
+#&gt; 2 balance       0.00574  0.000232     24.7  3.14e-135 1.01     
+#&gt; 3 studentYes   -0.715    0.148        -4.85 1.26e-  6 0.489</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4.2 计算置信区间（对数优势尺度）</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>confint_logistic <span class="ot">&lt;-</span> <span class="fu">confint</span>(logistic_model)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(confint_logistic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                     2.5 %        97.5 %
+#&gt; (Intercept) -11.498144891 -10.049841998
+#&gt; balance       0.005296591   0.006206095
+#&gt; studentYes   -1.007777857  -0.429075610</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4.3 计算 OR 的置信区间</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>or_ci <span class="ot">&lt;-</span> <span class="fu">exp</span>(confint_logistic)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(or_ci)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                    2.5 %       97.5 %
+#&gt; (Intercept) 0.0000101489 4.319257e-05
+#&gt; balance     1.0053106429 1.006225e+00
+#&gt; studentYes  0.3650292262 6.511107e-01</code></pre>
+</div>
+</div></li>
+<li><p><strong>结果解读：</strong></p>
+<ul>
+<li><p><strong>系数表（tidy_logistic）</strong> 包含每个变量的估计值（Estimate）、标准误（Std. Error）、z值（z value）和P值（Pr(&gt;|z|)）。</p></li>
+<li><p><strong>优势比（OR）</strong> 通过 <code>exp(estimate)</code> 计算，表示自变量每增加一个单位，违约的优势变化倍数。</p></li>
+<li><p><strong>置信区间</strong> 通过 <code>confint()</code> 计算，<code>exp(confint())</code> 得到 OR 的置信区间。</p></li>
+<li><p><strong>如何解读：</strong></p>
+<ul>
+<li>查看 <code>or_table</code> 和 <code>or_ci</code> 的输出，结合 P 值判断变量是否显著影响违约概率。</li>
+<li>例如，若 balance 的 OR &gt; 1 且 P 值显著，说明余额每增加 1 单位，违约的优势增加；若 student 的 OR &lt; 1，说明学生身份对违约的优势有保护作用（或相反，视结果而定）。</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="综合实践项目启动" class="level2">
+<h2 class="anchored" data-anchor-id="综合实践项目启动">6. 综合实践项目启动</h2>
+<p>本周，我们将正式启动课程的 <strong>综合实践项目</strong>！</p>
+<ul>
+<li><strong>目标:</strong> 应用本课程（主要是第一阶段，后续会补充第二阶段知识）所学的数据处理、可视化和统计推断/建模技能，选择一个你感兴趣的数据集和研究问题，完成一次相对完整的数据分析过程，并撰写报告或进行展示。</li>
+<li><strong>选题方向:</strong>
+<ul>
+<li>可以使用课程提供的示例数据集。</li>
+<li>可以寻找公开数据集（如 Kaggle, UCI Machine Learning Repository, 政府公开数据平台等）。</li>
+<li>可以使用与你专业领域相关的数据（需确保可获取性）。</li>
+<li><strong>关键：</strong> 选题范围要适中，问题要明确，数据应较为规整，或能够通过 <code>tidyverse</code> 工具进行清理。</li>
+</ul></li>
+<li><strong>时间节点 (暂定，以老师最终通知为准):</strong>
+<ul>
+<li><strong>第 11-12 周:</strong> 确定选题、研究问题、获取数据、初步数据探索 (EDA)。</li>
+<li><strong>第 13-14 周:</strong> 数据清理、模型构建（选择合适的统计方法）、模型诊断与改进。</li>
+<li><strong>第 15 周:</strong> 结果解释、报告撰写、展示准备、预演与反馈。</li>
+<li><strong>第 16 周:</strong> 最终项目展示与答辩 / 报告提交。</li>
+</ul></li>
+<li><strong>评分标准 (大致方向):</strong>
+<ul>
+<li>问题定义的清晰性与合理性。</li>
+<li>数据处理与准备的恰当性。</li>
+<li>探索性数据分析 (可视化) 的有效性。</li>
+<li>统计方法选择与应用的正确性。</li>
+<li>模型诊断与评估的完整性 (如适用)。</li>
+<li>结果解释的准确性与深入性。</li>
+<li>报告/展示的清晰度与专业性。</li>
+</ul></li>
+</ul>
+<p><strong>本周任务:</strong> 开始思考你的综合实践项目选题！寻找可能的数据集，明确你想要通过数据分析回答什么问题。下周我们将讨论选题并进行初步的数据探索。</p>
+</section>
+<section id="本周总结与预告" class="level2">
+<h2 class="anchored" data-anchor-id="本周总结与预告">7. 本周总结与预告</h2>
+<p>本周我们开启了分类预测的大门，学习了 Logistic 回归的基本原理，包括 Sigmoid 函数、Logit 变换以及最重要的优势比 (Odds Ratio) 解释。我们还掌握了使用 <code>glm()</code> 函数在 R 中拟合模型的方法。同时，综合实践项目正式启动，请大家积极思考选题。</p>
+<p><strong>下周预告:</strong> 拟合了 Logistic 回归模型，如何评估它的表现？下周我们将学习 Logistic 回归的<strong>评估指标</strong>，如混淆矩阵、准确率、精确率、召回率、F1 分数以及 ROC 曲线和 AUC 值，并探讨如何在不同模型间进行比较。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./week10_lecture.html" class="pagination-link" aria-label="第十周：模型改进与选择的批判性视角">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第十周：模型改进与选择的批判性视角</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week12_lecture.html" class="pagination-link" aria-label="第十二周：Logistic 回归评估 与 模型比较初步">
+        <span class="nav-page-text"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

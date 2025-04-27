@@ -17,7 +17,7 @@ title: "第十二周：Logistic 回归评估 与 模型比较初步"
 
 我们将继续使用上周的 `mtcars` Logistic 回归模型作为示例。
 
-``` r
+```{r}
 library(tidyverse)
 library(broom)
 library(pROC) # 用于 ROC 曲线和 AUC 计算

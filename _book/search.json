@@ -888,6 +888,182 @@
     ]
   },
   {
+    "objectID": "week11_lecture.html",
+    "href": "week11_lecture.html",
+    "title": "第十一周：预测分类结果：Logistic 回归（一）",
+    "section": "",
+    "text": "1. 从线性回归到分类预测\n到目前为止，我们学习的回归模型（SLR, MLR）都是用于预测连续型因变量 Y。但很多时候，我们感兴趣的预测目标是分类变量，特别是二元分类 (Binary Classification) 变量，其结果只有两种可能（例如：是/否、成功/失败、购买/不购买、患病/未患病）。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第十一周：预测分类结果：Logistic 回归（一）</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lecture.html#从线性回归到分类预测",
+    "href": "week11_lecture.html#从线性回归到分类预测",
+    "title": "第十一周：预测分类结果：Logistic 回归（一）",
+    "section": "",
+    "text": "线性回归的局限性:\n\n如果直接用线性回归预测一个 0/1 的二元变量，预测值 \\(\\hat{y}\\) 可能会超出 [0, 1] 的合理范围。\n误差项不满足正态性和等方差性假设。\n因变量和自变量之间的关系通常不是线性的，而是 S 形的。\n\nLogistic 回归 (Logistic Regression):\n\n一种广泛用于处理二元或多元分类问题的广义线性模型 (Generalized Linear Model, GLM)。\n它不直接预测类别 (0 或 1)，而是预测属于某个类别（通常是 “成功” 或 “事件发生”，编码为 1）的概率 (Probability) \\(P(Y=1|X)\\)。\n然后可以设定一个阈值（如 0.5），将预测概率转换为类别预测。\n\n\n\n\n\n\n\n\n本周目标\n\n\n\n\n理解为何线性回归不适用于分类结果。\n掌握 Logistic 回归的基本原理：Sigmoid 函数和 Logit 变换。\n理解 Logistic 回归的模型形式。\n重点掌握 Logistic 回归系数的解释，特别是优势比 (Odds Ratio, OR)。\n能够使用 R 的 glm() 函数拟合二元 Logistic 回归模型。\n了解综合实践项目的要求、选题方向、时间安排和评分标准。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第十一周：预测分类结果：Logistic 回归（一）</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lecture.html#logistic-回归原理",
+    "href": "week11_lecture.html#logistic-回归原理",
+    "title": "第十一周：预测分类结果：Logistic 回归（一）",
+    "section": "2. Logistic 回归原理",
+    "text": "2. Logistic 回归原理\nLogistic 回归通过两个关键步骤将线性预测值与概率联系起来：\n\n线性预测器 (Linear Predictor): 与线性回归类似，计算自变量的线性组合： \\[ z = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + ... + \\beta_k X_k \\] 这个 \\(z\\) 的取值范围是 \\((-\\infty, +\\infty)\\)。\n连接函数 (Link Function) 的逆转换 / Sigmoid 函数: 为了将 \\(z\\) 映射到 (0, 1) 的概率区间，Logistic 回归使用了 Sigmoid 函数 (也称为 Logistic 函数)： \\[ P(Y=1|X) = p = \\frac{e^z}{1 + e^z} = \\frac{1}{1 + e^{-z}} \\]\n\nSigmoid 函数的图形呈 S 形，可以将任何实数 \\(z\\) 转换为 (0, 1) 之间的值。\n当 \\(z \\to +\\infty\\) 时，\\(p \\to 1\\)。\n当 \\(z \\to -\\infty\\) 时，\\(p \\to 0\\)。\n当 \\(z = 0\\) 时，\\(p = 0.5\\)。\n\n\n\n\nCode\nlibrary(tidyverse)\n# 生成一系列 z 值\nz &lt;- seq(-10, 10, length.out = 100)\n\n# 计算对应的概率 p\np &lt;- 1 / (1 + exp(-z))\n\n# 绘制 Sigmoid 函数图像\nggplot(data.frame(z = z, p = p), aes(x = z, y = p)) +\n  geom_line(color = \"blue\") +\n  labs(x = \"z\", y = \"p(z)\", title = \"Sigmoid Function\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n什么是连接函数 (Link Function)？\n\n\n\n连接函数（Link Function）是广义线性模型（GLM）中的一个重要概念。它的作用是将因变量的期望值（如概率 \\(p\\)）与自变量的线性组合（\\(z = \\beta_0 + \\beta_1 X_1 + ...\\)）联系起来。通过连接函数，可以将不同类型的因变量（如概率、计数等）与线性预测器相结合，实现灵活的建模。例如，Logistic 回归中用 Logit 连接函数将概率 \\(p\\) 映射到 \\((-\\infty, +\\infty)\\) 的对数优势（log-odds）空间。\n\n\n\n\n\n\n\n\n为什么会使用 Sigmoid 函数？\n\n\n\n在 Logistic 回归中，我们需要将线性预测器 \\(z\\)（取值范围为 \\((-\\infty, +\\infty)\\)）转换为概率 \\(p\\)（取值范围为 \\((0, 1)\\)）。Sigmoid 函数（Logistic 函数）正好具备这种特性：\\(p = \\frac{1}{1 + e^{-z}}\\)。它不仅保证输出在 \\((0, 1)\\) 区间，还能很好地描述概率随自变量变化的 S 形趋势。因此，Sigmoid 函数成为二元 Logistic 回归的标准选择。\n\n\n\n\n\n\n\n\n一定要使用 Sigmoid 函数吗？\n\n\n\n不一定。虽然 Logistic 回归通常使用 Sigmoid（Logit 连接函数），但在广义线性模型（GLM）框架下，连接函数是可以更换的。例如，Probit 回归使用正态分布的累积分布函数（CDF）作为连接函数，Cloglog 回归使用补对数-对数（complementary log-log）连接函数。不同的连接函数适用于不同的数据分布和建模需求。实际中，Sigmoid 最常用，但不是唯一选择。\n\n\n\nLogit 变换 (Logit Transformation) / 连接函数: 反过来，如果我们想将概率 \\(p\\) 转换回线性预测器 \\(z\\)，需要用到 Sigmoid 函数的反函数，即 Logit 变换：\n\n优势 (Odds): 事件发生的概率与不发生的概率之比。\\(Odds = \\frac{p}{1-p}\\)。取值范围是 \\((0, +\\infty)\\)。\n对数优势 (Log-odds) / Logit: 对优势取自然对数。\\(Logit(p) = \\log(\\frac{p}{1-p})\\)。取值范围是 \\((-\\infty, +\\infty)\\)。\n在 Logistic 回归中，Logit(p) 被假定为自变量的线性组合: \\[ \\log\\left(\\frac{p}{1-p}\\right) = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + ... + \\beta_k X_k \\] 这里的 Logit 函数就是 Logistic 回归的连接函数，它将非线性的概率关系转换为了线性的对数优势关系。\n\n\n\n\n\n\n\n\n优势 (Odds) 的实际应用场景\n\n\n\n优势（Odds）及其对数优势（log-odds）在实际中有广泛应用，尤其是在医学、流行病学、社会科学等领域：\n\n医学/流行病学：用于比较暴露组与非暴露组某疾病发生的优势（如吸烟者与非吸烟者患肺癌的优势比）。\n社会科学：分析某因素（如教育水平、性别）对某事件（如就业、投票）的影响。\n金融风控：评估客户特征对违约概率的影响，优势比可量化某变量对违约风险的提升或降低。\n市场营销：衡量促销活动、广告等对购买行为发生的优势变化。\n心理学/行为科学：分析某干预措施对行为发生的优势提升。\n\n优势（Odds）和优势比（Odds Ratio, OR）为解释二元结局变量（如“是/否”）与自变量关系提供了直观的量化工具，尤其适用于事件发生率较低的场景。\n\n\n\n\n\n\n\n\n什么是相对风险（Relative Risk, RR）？\n\n\n\n相对风险（Relative Risk, RR），又称为风险比，是指暴露组事件发生的概率与非暴露组事件发生的概率之比。其计算公式为：\n\\[\nRR = \\frac{P(\\text{事件}| \\text{暴露})}{P(\\text{事件}| \\text{非暴露})}\n\\]\n\n若 \\(RR = 1\\)，表示暴露与事件发生无关；\n若 \\(RR &gt; 1\\)，表示暴露会增加事件发生的风险；\n若 \\(RR &lt; 1\\)，表示暴露会降低事件发生的风险。\n\n举例： 如果吸烟者患肺癌的概率为 0.10，非吸烟者为 0.02，则 \\(RR = 0.10 / 0.02 = 5\\)，即吸烟者患肺癌的风险是非吸烟者的 5 倍。\n实际解读时，很多情况下我们更关心的是相对风险（RR），因为它直接反映概率的倍数关系，更直观、更贴近实际意义。\n\n\n\n\n\n\n\n\n为什么优势比（OR）适用于事件发生概率较低的情况？\n\n\n\n当事件发生概率较低（即罕见事件）时，优势比（OR）与相对风险（RR）非常接近，二者数值差异很小，因此用 OR 近似 RR 是合理且常见的做法。例如，在流行病学中研究罕见疾病时，OR 可以很好地反映暴露与疾病之间的风险关系。\n数学说明：\n假设有两组（暴露组和非暴露组），事件发生概率分别为 \\(p_1\\) 和 \\(p_0\\)，则：\n\n相对风险（RR） 定义为： \\[\nRR = \\frac{p_1}{p_0}\n\\]\n优势比（OR） 定义为： \\[\nOR = \\frac{p_1/(1-p_1)}{p_0/(1-p_0)} = \\frac{p_1(1-p_0)}{p_0(1-p_1)}\n\\]\n\n当 \\(p_1\\) 和 \\(p_0\\) 都很小（即 \\(p_1, p_0 \\ll 1\\)），\\(1-p_1 \\approx 1\\)，\\(1-p_0 \\approx 1\\)，此时： \\[\nOR \\approx \\frac{p_1}{p_0} = RR\n\\] 因此在罕见事件（低发生率）情况下，OR 与 RR 数值非常接近。\n但当事件发生概率较高时，OR 会高估实际的风险比（RR），解释时容易产生误导。具体来说，随着 \\(p_1\\) 或 \\(p_0\\) 增大，\\(1-p_1\\) 和 \\(1-p_0\\) 不再接近 1，OR 的分母变小，导致 OR 明显大于 RR。例如：\n\n若 \\(p_0 = 0.5, p_1 = 0.75\\)，则 \\(RR = 0.75/0.5 = 1.5\\)，而 \\(OR = \\frac{0.75/0.25}{0.5/0.5} = 3\\)，OR 明显大于 RR。\n\n因此，优势比最适合用于低发生率（稀有事件）场景下的解释和比较；在高发生率场景下，需谨慎使用 OR，并建议同时报告 RR 以避免误导。\n\n\n\n\n\n\n\n\n那为什么 Logistic 回归要用优势（Odds）而不是直接用相对风险（RR）？\n\n\n\n实际上，在实际解读和政策建议时，我们更关心相对风险（RR），因为它直接反映概率的变化，对非专业人士也更容易理解。\n但在建模时，Logistic 回归选择用优势（Odds）和对数优势（log-odds）作为建模对象，主要原因有：\n\n概率的线性建模有限制：概率 \\(p\\) 的取值范围是 \\((0,1)\\)，直接用线性回归建模会导致预测值超出 \\([0,1]\\) 区间，不合理。\n优势（Odds）和对数优势（log-odds）可以取任意实数：对数优势 \\(log(\\frac{p}{1-p})\\) 的取值范围是 \\((-\\infty, +\\infty)\\)，适合用线性模型来建模。\nLogistic 回归的数学结构：Logistic 回归假定自变量的线性组合与对数优势（log-odds）成线性关系，即 \\[\n\\log\\left(\\frac{p}{1-p}\\right) = \\beta_0 + \\beta_1 X_1 + ... + \\beta_k X_k\n\\] 这样可以用最大似然法方便地估计参数。\n优势比（OR）易于解释和计算：对数优势的指数化（\\(e^{\\beta_j}\\)）就是优势比，能直观地反映自变量变化对事件发生“优势”的倍数影响。\n\n总结： Logistic 回归之所以用优势（Odds），主要是出于建模和数学推导的便利，而不是因为优势比本身比相对风险更有实际意义。实际解读时，尤其是向非专业人士汇报结果时，建议尽量补充相对风险（RR）的估算和解释。\n\n\n\n\n\n\n\n\n实际应用建议\n\n\n\n\n建模时：Logistic 回归只能直接输出优势比（OR），因为其数学结构决定了只能建模 log-odds。\n解读和报告时：如果事件发生率不高，可以用 OR 近似 RR；如果事件发生率较高，建议用其他方法（如风险回归模型、G-computation、marginal effect 等）估算和报告相对风险（RR），以便更贴近实际意义。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第十一周：预测分类结果：Logistic 回归（一）</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lecture.html#logistic-回归模型形式",
+    "href": "week11_lecture.html#logistic-回归模型形式",
+    "title": "第十一周：预测分类结果：Logistic 回归（一）",
+    "section": "3. Logistic 回归模型形式",
+    "text": "3. Logistic 回归模型形式\n核心模型是： \\[ \\log\\left(\\frac{P(Y=1|X)}{1-P(Y=1|X)}\\right) = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + ... + \\beta_k X_k \\]\n或者等价地写成概率形式： \\[ P(Y=1|X) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 X_1 + ... + \\beta_k X_k)}} \\]\n\n模型参数 \\(\\beta_0, \\beta_1, ..., \\beta_k\\) 通常使用最大似然估计 (Maximum Likelihood Estimation, MLE) 来获得，而不是 OLS。\n\n\n\n\n\n\n\n什么是最大似然估计 (Maximum Likelihood Estimation, MLE)？\n\n\n\n最大似然估计是一种常用的参数估计方法，其核心思想是：在已知观测数据的前提下，选择一组参数，使得在这些参数下，观测到的数据出现的“可能性”（即似然）最大。\n\n直观理解：假如你知道数据是某种分布（比如二项分布、正态分布等）生成的，但不知道具体参数（如均值、方差等），最大似然估计就是找到一组参数，使得“在这些参数下，实际观测到的数据最有可能出现”。\n数学表达：设观测数据为 \\(y_1, y_2, ..., y_n\\)，参数为 \\(\\theta\\)，则似然函数为 \\(L(\\theta) = P(\\text{数据}|\\theta)\\)。最大似然估计就是求使 \\(L(\\theta)\\) 最大的 \\(\\theta\\)。\n\n\n\n\n\n\n\n\n\nLogistic 回归中最大似然估计的计算方法\n\n\n\n在 Logistic 回归中，我们假设因变量 \\(Y_i\\) 服从伯努利分布（0/1），其概率由自变量 \\(X\\) 通过 logit 链接函数建模：\n\\[\nP(Y_i = 1|X_i) = p_i = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 X_{i1} + ... + \\beta_k X_{ik})}}\n\\]\n\n似然函数：所有观测的联合概率为 \\[\nL(\\beta) = \\prod_{i=1}^n p_i^{y_i} (1-p_i)^{1-y_i}\n\\]\n对数似然函数（便于计算）： \\[\n\\ell(\\beta) = \\sum_{i=1}^n \\left[ y_i \\log(p_i) + (1-y_i)\\log(1-p_i) \\right]\n\\]\n最大似然估计过程：\n\n写出对数似然函数 \\(\\ell(\\beta)\\)。\n对参数 \\(\\beta\\) 求偏导，令导数为 0，解方程组（通常无解析解）。\n用数值优化算法（如牛顿-拉夫森法）迭代求解最优参数 \\(\\hat{\\beta}\\)。\n\nR 中实现：glm() 函数自动完成最大似然估计，无需手动推导和优化。\n\n总结：Logistic 回归的系数估计本质上就是通过最大似然法，找到一组参数，使得在这些参数下，观测到的 0/1 结果最有可能出现。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第十一周：预测分类结果：Logistic 回归（一）</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lecture.html#系数解释优势比-odds-ratio-or---核心",
+    "href": "week11_lecture.html#系数解释优势比-odds-ratio-or---核心",
+    "title": "第十一周：预测分类结果：Logistic 回归（一）",
+    "section": "4. 系数解释：优势比 (Odds Ratio, OR) - 核心！",
+    "text": "4. 系数解释：优势比 (Odds Ratio, OR) - 核心！\n直接解释 Logistic 回归的系数 \\(\\beta_j\\) 比较困难，因为它表示自变量 \\(X_j\\) 每增加一个单位，对数优势 (Log-odds) 的变化量。为了更直观地理解，我们通常解释优势比 (Odds Ratio, OR)。\n\n优势比 (OR): 指自变量 \\(X_j\\) 增加一个单位时，事件发生的优势 (Odds) 变为原来的多少倍。 \\[ OR_j = \\frac{Odds(X_j+1)}{Odds(X_j)} = \\frac{e^{\\beta_0 + \\beta_1 X_1 + ... + \\beta_j(X_j+1) + ...}}{e^{\\beta_0 + \\beta_1 X_1 + ... + \\beta_j X_j + ...}} = e^{\\beta_j} \\]\n\n计算: \\(OR_j = \\exp(\\beta_j)\\)。\n\n解读 OR:\n\n\\(OR_j &gt; 1\\) (\\(\\beta_j &gt; 0\\)): \\(X_j\\) 增加一个单位，事件发生的优势增加 (变为原来的 \\(OR_j\\) 倍)。\\(X_j\\) 是风险因素/促进因素。\n\\(OR_j &lt; 1\\) (\\(\\beta_j &lt; 0\\)): \\(X_j\\) 增加一个单位，事件发生的优势减少 (变为原来的 \\(OR_j\\) 倍)。\\(X_j\\) 是保护因素。\n\\(OR_j = 1\\) (\\(\\beta_j = 0\\)): \\(X_j\\) 变化对事件发生的优势没有影响。\n\n示例解释:\n\n假设研究吸烟 (X=1 表示吸烟, X=0 表示不吸烟) 对患肺癌 (Y=1) 的影响，得到 \\(\\hat{\\beta}_{smoke} = 1.609\\)。\n计算 \\(OR_{smoke} = \\exp(1.609) \\approx 5.0\\)。\n解释: 吸烟者的患肺癌优势是不吸烟者的5 倍 (在控制其他变量后)。\n假设研究年龄 (X，连续变量) 对购买某产品 (Y=1) 的影响，得到 \\(\\hat{\\beta}_{age} = -0.05\\)。\n计算 \\(OR_{age} = \\exp(-0.05) \\approx 0.95\\)。\n解释: 年龄每增加 1 岁，购买该产品的优势变为原来的0.95 倍 (即降低了约 5%) (在控制其他变量后)。\n\n分类自变量的 OR: 如果 \\(X_j\\) 是一个分类变量（如用虚拟编码表示），\\(e^{\\beta_j}\\) 表示该类别相对于参照类别的优势比。\n\n\n\n\n\n\n\nOR vs RR\n\n\n\n优势比 (OR) 不等于 相对风险 (Relative Risk, RR = \\(P(Y=1|X_j+1) / P(Y=1|X_j)\\))。只有当事件发生率很低时，OR 才近似等于 RR。解释时要用“优势”而非“风险”或“概率”。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第十一周：预测分类结果：Logistic 回归（一）</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lecture.html#r-实现-glm-generalized-linear-model",
+    "href": "week11_lecture.html#r-实现-glm-generalized-linear-model",
+    "title": "第十一周：预测分类结果：Logistic 回归（一）",
+    "section": "5. R 实现: glm() (Generalized Linear Model)",
+    "text": "5. R 实现: glm() (Generalized Linear Model)\n使用 glm() 函数拟合 Logistic 回归模型。\n\n关键参数:\n\nformula: 与 lm() 类似，Y ~ X1 + X2 + ...。Y 应该是 0/1 编码或因子（R 会自动处理第一个水平为 0，第二个为 1）。\nfamily: 指定模型的分布族和连接函数。对于 Logistic 回归，使用 family = binomial(link = \"logit\") 或简写 family = binomial。\ndata: 数据框。\n\n示例： 使用 ISLR 包中的 Default 数据集，预测客户是否违约（default），基于信用卡余额（balance）和是否为学生（student）。\n\nlibrary(tidyverse)\nlibrary(ISLR)\nlibrary(broom)\n\n# 1. 数据准备：确保 default 是因子，student 也是因子\ndata(\"Default\")\nglimpse(Default)\n\n#&gt; Rows: 10,000\n#&gt; Columns: 4\n#&gt; $ default &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No, No, No…\n#&gt; $ student &lt;fct&gt; No, Yes, No, No, No, Yes, No, Yes, No, No, Yes, Yes, No, No, N…\n#&gt; $ balance &lt;dbl&gt; 729.5265, 817.1804, 1073.5492, 529.2506, 785.6559, 919.5885, 8…\n#&gt; $ income  &lt;dbl&gt; 44361.625, 12106.135, 31767.139, 35704.494, 38463.496, 7491.55…\n\n# 默认 default 已为因子，student 也是因子\n\n# 2. 拟合 Logistic 回归模型\nlogistic_model &lt;- glm(default ~ balance + student, data = Default, family = binomial)\n\n# 3. 查看模型摘要（系数、标准误、z值、P值等）\ntidy_logistic &lt;- tidy(logistic_model)\nprint(tidy_logistic)\n\n#&gt; # A tibble: 3 × 5\n#&gt;   term         estimate std.error statistic   p.value\n#&gt;   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n#&gt; 1 (Intercept) -10.7      0.369       -29.1  2.23e-186\n#&gt; 2 balance       0.00574  0.000232     24.7  3.14e-135\n#&gt; 3 studentYes   -0.715    0.148        -4.85 1.26e-  6\n\n# 4. 计算系数的优势比（OR）及其置信区间\n# 4.1 计算 OR\nor_table &lt;- tidy_logistic %&gt;%\n  mutate(OR = exp(estimate))\nprint(or_table)\n\n#&gt; # A tibble: 3 × 6\n#&gt;   term         estimate std.error statistic   p.value        OR\n#&gt;   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n#&gt; 1 (Intercept) -10.7      0.369       -29.1  2.23e-186 0.0000215\n#&gt; 2 balance       0.00574  0.000232     24.7  3.14e-135 1.01     \n#&gt; 3 studentYes   -0.715    0.148        -4.85 1.26e-  6 0.489\n\n# 4.2 计算置信区间（对数优势尺度）\nconfint_logistic &lt;- confint(logistic_model)\nprint(confint_logistic)\n\n#&gt;                     2.5 %        97.5 %\n#&gt; (Intercept) -11.498144891 -10.049841998\n#&gt; balance       0.005296591   0.006206095\n#&gt; studentYes   -1.007777857  -0.429075610\n\n# 4.3 计算 OR 的置信区间\nor_ci &lt;- exp(confint_logistic)\nprint(or_ci)\n\n#&gt;                    2.5 %       97.5 %\n#&gt; (Intercept) 0.0000101489 4.319257e-05\n#&gt; balance     1.0053106429 1.006225e+00\n#&gt; studentYes  0.3650292262 6.511107e-01\n\n\n结果解读：\n\n系数表（tidy_logistic） 包含每个变量的估计值（Estimate）、标准误（Std. Error）、z值（z value）和P值（Pr(&gt;|z|)）。\n优势比（OR） 通过 exp(estimate) 计算，表示自变量每增加一个单位，违约的优势变化倍数。\n置信区间 通过 confint() 计算，exp(confint()) 得到 OR 的置信区间。\n如何解读：\n\n查看 or_table 和 or_ci 的输出，结合 P 值判断变量是否显著影响违约概率。\n例如，若 balance 的 OR &gt; 1 且 P 值显著，说明余额每增加 1 单位，违约的优势增加；若 student 的 OR &lt; 1，说明学生身份对违约的优势有保护作用（或相反，视结果而定）。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第十一周：预测分类结果：Logistic 回归（一）</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lecture.html#综合实践项目启动",
+    "href": "week11_lecture.html#综合实践项目启动",
+    "title": "第十一周：预测分类结果：Logistic 回归（一）",
+    "section": "6. 综合实践项目启动",
+    "text": "6. 综合实践项目启动\n本周，我们将正式启动课程的 综合实践项目！\n\n目标: 应用本课程（主要是第一阶段，后续会补充第二阶段知识）所学的数据处理、可视化和统计推断/建模技能，选择一个你感兴趣的数据集和研究问题，完成一次相对完整的数据分析过程，并撰写报告或进行展示。\n选题方向:\n\n可以使用课程提供的示例数据集。\n可以寻找公开数据集（如 Kaggle, UCI Machine Learning Repository, 政府公开数据平台等）。\n可以使用与你专业领域相关的数据（需确保可获取性）。\n关键： 选题范围要适中，问题要明确，数据应较为规整，或能够通过 tidyverse 工具进行清理。\n\n时间节点 (暂定，以老师最终通知为准):\n\n第 11-12 周: 确定选题、研究问题、获取数据、初步数据探索 (EDA)。\n第 13-14 周: 数据清理、模型构建（选择合适的统计方法）、模型诊断与改进。\n第 15 周: 结果解释、报告撰写、展示准备、预演与反馈。\n第 16 周: 最终项目展示与答辩 / 报告提交。\n\n评分标准 (大致方向):\n\n问题定义的清晰性与合理性。\n数据处理与准备的恰当性。\n探索性数据分析 (可视化) 的有效性。\n统计方法选择与应用的正确性。\n模型诊断与评估的完整性 (如适用)。\n结果解释的准确性与深入性。\n报告/展示的清晰度与专业性。\n\n\n本周任务: 开始思考你的综合实践项目选题！寻找可能的数据集，明确你想要通过数据分析回答什么问题。下周我们将讨论选题并进行初步的数据探索。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第十一周：预测分类结果：Logistic 回归（一）</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lecture.html#本周总结与预告",
+    "href": "week11_lecture.html#本周总结与预告",
+    "title": "第十一周：预测分类结果：Logistic 回归（一）",
+    "section": "7. 本周总结与预告",
+    "text": "7. 本周总结与预告\n本周我们开启了分类预测的大门，学习了 Logistic 回归的基本原理，包括 Sigmoid 函数、Logit 变换以及最重要的优势比 (Odds Ratio) 解释。我们还掌握了使用 glm() 函数在 R 中拟合模型的方法。同时，综合实践项目正式启动，请大家积极思考选题。\n下周预告: 拟合了 Logistic 回归模型，如何评估它的表现？下周我们将学习 Logistic 回归的评估指标，如混淆矩阵、准确率、精确率、召回率、F1 分数以及 ROC 曲线和 AUC 值，并探讨如何在不同模型间进行比较。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第十一周：预测分类结果：Logistic 回归（一）</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lecture.html",
+    "href": "week12_lecture.html",
+    "title": "第十二周：Logistic 回归评估 与 模型比较初步",
+    "section": "",
+    "text": "1. 模型好坏：如何评估分类模型？\n上周我们学习了如何拟合 Logistic 回归模型来预测分类结果的概率。但是，仅仅拟合模型是不够的，我们还需要评估模型的预测性能 (Predictive Performance)，即模型在区分不同类别方面的表现如何。与线性回归使用 R² 或 RMSE 不同，分类模型有其独特的评估指标。\n我们将继续使用上周的 mtcars Logistic 回归模型作为示例。\nlibrary(tidyverse)\nlibrary(broom)\nlibrary(pROC) # 用于 ROC 曲线和 AUC 计算\n# install.packages(\"pROC\") # 如果尚未安装\nlibrary(yardstick) # tidyverse 风格的模型评估包 (可选)\n# install.packages(\"yardstick\") # 如果尚未安装\n\n# 回顾上周的模型\nmtcars_data &lt;- mtcars %&gt;%\n  mutate(am = factor(am, levels = c(0, 1), labels = c(\"Automatic\", \"Manual\")))\n\nlogistic_model &lt;- glm(am ~ hp + wt, data = mtcars_data, family = binomial)\n# summary(logistic_model)\n\n# 获取模型预测的概率 (预测为 \"Manual\" 的概率)\npredictions_prob &lt;- predict(logistic_model, type = \"response\") # type=\"response\" 返回概率\n\n# 为了计算混淆矩阵等指标，需要将概率转换为类别预测\n# 通常使用 0.5 作为阈值 (threshold)\nthreshold &lt;- 0.5\npredictions_class &lt;- ifelse(predictions_prob &gt; threshold, \"Manual\", \"Automatic\")\npredictions_class &lt;- factor(predictions_class, levels = c(\"Automatic\", \"Manual\")) # 确保因子水平一致\n\n# 将真实值和预测值放入一个 tibble，方便后续计算\neval_data &lt;- tibble(\n  observed = mtcars_data$am,\n  predicted_prob = predictions_prob,\n  predicted_class = predictions_class\n)\n\n# glimpse(eval_data)",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第十二周：Logistic 回归评估 与 模型比较初步</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lecture.html#模型好坏如何评估分类模型",
+    "href": "week12_lecture.html#模型好坏如何评估分类模型",
+    "title": "第十二周：Logistic 回归评估 与 模型比较初步",
+    "section": "",
+    "text": "本周目标\n\n\n\n\n理解并能够计算混淆矩阵 (Confusion Matrix)。\n掌握常用的分类模型评估指标：准确率 (Accuracy)、精确率 (Precision)、召回率 (Recall / Sensitivity)、F1 分数 (F1-Score)、特异度 (Specificity)，并理解它们之间的权衡。\n理解 ROC 曲线 (Receiver Operating Characteristic Curve) 和 AUC 值 (Area Under the Curve) 的含义和作用。\n能够使用 R 实现上述评估指标和 ROC/AUC 的计算与可视化。\n了解使用 AIC/BIC 等信息准则比较广义线性模型 (GLM) 的思路。\n继续推进 Capstone 项目：选题讨论与初步数据探索。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第十二周：Logistic 回归评估 与 模型比较初步</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lecture.html#混淆矩阵-confusion-matrix",
+    "href": "week12_lecture.html#混淆矩阵-confusion-matrix",
+    "title": "第十二周：Logistic 回归评估 与 模型比较初步",
+    "section": "2. 混淆矩阵 (Confusion Matrix)",
+    "text": "2. 混淆矩阵 (Confusion Matrix)\n混淆矩阵是评估分类模型性能的基础。它是一个表格，总结了模型预测类别与实际类别之间的匹配情况。对于二元分类，它通常是一个 2x2 的矩阵。\n\n结构:\n\n\n\n\n\n\n\n\n\n预测为 Positive (1)\n预测为 Negative (0)\n\n\n\n\n实际为 Positive (1)\nTP (True Positive)\nFN (False Negative)\n\n\n实际为 Negative (0)\nFP (False Positive)\nTN (True Negative)\n\n\n\n\nTP (真正例): 实际为 Positive，预测也为 Positive (预测正确)。\nFN (假反例): 实际为 Positive，但预测为 Negative (预测错误，漏报，Type II Error)。\nFP (假正例): 实际为 Negative，但预测为 Positive (预测错误，误报，Type I Error)。\nTN (真反例): 实际为 Negative，预测也为 Negative (预测正确)。\n\nR 实现:\n# 方法1: 使用基础 table() 函数\n# 注意：第一个参数是实际值，第二个参数是预测值\nconfusion_matrix_base &lt;- table(Observed = eval_data$observed, Predicted = eval_data$predicted_class)\nprint(confusion_matrix_base)\n#          Predicted\n# Observed  Automatic Manual\n# Automatic        16      3  &lt;- TN=16, FP=3\n# Manual            3     10  &lt;- FN=3, TP=10\n\n# 方法2: 使用 yardstick 包 (更推荐，输出更规范)\nconf_mat_tbl &lt;- eval_data %&gt;%\n  conf_mat(truth = observed, estimate = predicted_class) # truth=真实值, estimate=预测值\n\nprint(conf_mat_tbl)\n#            Truth\n# Prediction Automatic Manual\n#  Automatic        16      3\n#  Manual            3     10\n\n# 可以绘制混淆矩阵图\nautoplot(conf_mat_tbl, type = \"heatmap\") +\n  labs(title = \"Confusion Matrix Heatmap\")\n# autoplot(conf_mat_tbl, type = \"mosaic\") # 马赛克图",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第十二周：Logistic 回归评估 与 模型比较初步</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lecture.html#基于混淆矩阵的评估指标",
+    "href": "week12_lecture.html#基于混淆矩阵的评估指标",
+    "title": "第十二周：Logistic 回归评估 与 模型比较初步",
+    "section": "3. 基于混淆矩阵的评估指标",
+    "text": "3. 基于混淆矩阵的评估指标\n从混淆矩阵可以衍生出多个评估指标，从不同角度衡量模型性能。\n\n准确率 (Accuracy):\n\n定义: 模型预测正确的样本占总样本的比例。\n公式: \\(Accuracy = \\frac{TP + TN}{TP + TN + FP + FN}\\)\n解读: 最直观的指标，但在类别不平衡 (Imbalanced Classes) 的数据集中具有误导性。例如，如果 99% 的样本是 Negative，一个将所有样本都预测为 Negative 的模型也能达到 99% 的准确率，但这显然不是一个好模型。\nR 实现:\n# 手动计算\naccuracy_manual &lt;- (16 + 10) / (16 + 10 + 3 + 3)\nprint(accuracy_manual) # 约 0.8125\n\n# 使用 yardstick\neval_data %&gt;% accuracy(truth = observed, estimate = predicted_class)\n\n精确率 (Precision): (也叫查准率)\n\n定义: 在所有预测为 Positive 的样本中，实际也为 Positive 的比例。\n公式: \\(Precision = \\frac{TP}{TP + FP}\\)\n解读: 衡量模型预测 Positive 的准确性。高精确率表示模型预测为 Positive 的结果中，很少有误报 (FP)。关注“预测出来的 Positive 有多准？”。\n应用: 当误报 (FP) 的代价很高时很重要（例如，垃圾邮件检测，宁可漏掉一些垃圾邮件，也不想把正常邮件误判为垃圾邮件）。\nR 实现:\n# 手动计算 (预测为 Manual 的精确率)\nprecision_manual &lt;- 10 / (10 + 3)\nprint(precision_manual) # 约 0.769\n\n# 使用 yardstick (需要指定 positive 类)\neval_data %&gt;% precision(truth = observed, estimate = predicted_class, event_level = \"second\") # \"second\" 表示第二个因子水平 \"Manual\" 是 positive 类\n\n召回率 (Recall / Sensitivity / True Positive Rate, TPR): (也叫查全率、敏感度)\n\n定义: 在所有实际为 Positive 的样本中，被模型成功预测为 Positive 的比例。\n公式: \\(Recall = Sensitivity = TPR = \\frac{TP}{TP + FN}\\)\n解读: 衡量模型找出所有 Positive 样本的能力。高召回率表示模型很少漏报 (FN)。关注“所有 Positive 的样本，找出来了多少？”。\n应用: 当漏报 (FN) 的代价很高时很重要（例如，疾病诊断，宁可误诊一些健康人，也不想漏掉真正的病人）。\nR 实现:\n# 手动计算 (Manual 类的召回率)\nrecall_manual &lt;- 10 / (10 + 3)\nprint(recall_manual) # 约 0.769 (在这个例子中恰好与 Precision 相等)\n\n# 使用 yardstick\neval_data %&gt;% recall(truth = observed, estimate = predicted_class, event_level = \"second\")\n# 或者使用 sensitivity()\neval_data %&gt;% sensitivity(truth = observed, estimate = predicted_class, event_level = \"second\")\n\nF1 分数 (F1-Score):\n\n定义: 精确率 (Precision) 和召回率 (Recall) 的调和平均数 (Harmonic Mean)。\n公式: \\(F1 = 2 \\times \\frac{Precision \\times Recall}{Precision + Recall} = \\frac{2TP}{2TP + FP + FN}\\)\n解读: 综合考虑了精确率和召回率，当两者都较高时，F1 分数也较高。是评估模型综合性能的常用指标，尤其在类别不平衡时比准确率更可靠。\nR 实现:\n# 手动计算\nf1_manual &lt;- 2 * (precision_manual * recall_manual) / (precision_manual + recall_manual)\nprint(f1_manual) # 约 0.769\n\n# 使用 yardstick\neval_data %&gt;% f_meas(truth = observed, estimate = predicted_class, event_level = \"second\") # f_meas 计算 F-beta score, 默认 beta=1 即 F1\n\n特异度 (Specificity / True Negative Rate, TNR):\n\n定义: 在所有实际为 Negative 的样本中，被模型成功预测为 Negative 的比例。\n公式: \\(Specificity = TNR = \\frac{TN}{TN + FP}\\)\n解读: 衡量模型正确识别 Negative 样本的能力。与召回率 (Sensitivity) 对应。\n应用: 在疾病诊断中，表示正确识别健康人的能力。\nR 实现:\n# 手动计算\nspecificity_manual &lt;- 16 / (16 + 3)\nprint(specificity_manual) # 约 0.842\n\n# 使用 yardstick\neval_data %&gt;% specificity(truth = observed, estimate = predicted_class, event_level = \"second\") # 注意 event_level 仍然是 positive 类\n\n\n\n\n\n\n\n\n指标权衡 (Trade-off)\n\n\n\n\n精确率 vs 召回率: 通常存在权衡。提高精确率（减少 FP）可能会降低召回率（增加 FN），反之亦然。选择哪个更重要取决于具体应用场景和两类错误的代价。\n阈值选择: 改变分类阈值（默认 0.5）会影响预测类别，从而改变混淆矩阵和所有这些指标。ROC 曲线可以帮助我们理解不同阈值下的性能。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第十二周：Logistic 回归评估 与 模型比较初步</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lecture.html#roc-曲线-与-auc-值",
+    "href": "week12_lecture.html#roc-曲线-与-auc-值",
+    "title": "第十二周：Logistic 回归评估 与 模型比较初步",
+    "section": "4. ROC 曲线 与 AUC 值",
+    "text": "4. ROC 曲线 与 AUC 值\n\nROC 曲线 (Receiver Operating Characteristic Curve):\n\n一种可视化分类模型在所有可能阈值下性能表现的图形。\n横轴: 假正例率 (False Positive Rate, FPR) = \\(1 - Specificity = \\frac{FP}{FP + TN}\\)。\n纵轴: 真正例率 (True Positive Rate, TPR) = \\(Recall = Sensitivity = \\frac{TP}{TP + FN}\\)。\n绘制方法: 连续改变分类阈值，计算每个阈值下的 TPR 和 FPR，描点连接。\n解读: 曲线越靠近左上角 (TPR 高，FPR 低)，模型性能越好。对角线代表随机猜测。\n\nAUC 值 (Area Under the ROC Curve):\n\nROC 曲线下的面积，取值 0 到 1。\n解读: AUC 越大，模型区分 Positive 和 Negative 样本的整体能力越强。不依赖特定阈值。AUC=0.5 表示随机猜测。\n直观含义: 从 Positive 和 Negative 样本中各随机抽取一个，AUC 值等于模型将 Positive 样本预测概率排在 Negative 样本预测概率之前的概率。\n\nR 实现 (使用 pROC 包):\nlibrary(pROC)\n\n# 创建 ROC 对象\n# response: 真实类别 (因子或 0/1)\n# predictor: 预测为 Positive 类别的概率\n# levels: 指定哪个是 Negative(0), 哪个是 Positive(1)\nroc_obj &lt;- roc(response = eval_data$observed,\n               predictor = eval_data$predicted_prob,\n               levels = c(\"Automatic\", \"Manual\")) # 指定 Automatic 为 0, Manual 为 1\n\n# 计算 AUC 值\nauc_value &lt;- auc(roc_obj)\nprint(paste(\"AUC:\", round(auc_value, 4))) # 约 0.909\n\n# 绘制 ROC 曲线\nggroc(roc_obj, legacy.axes = TRUE) + # legacy.axes=TRUE 使 x 轴为 FPR\n  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color=\"grey\", linetype=\"dashed\") + # 添加对角线\n  labs(title = paste(\"ROC Curve (AUC =\", round(auc_value, 3), \")\"),\n       x = \"False Positive Rate (1 - Specificity)\",\n       y = \"True Positive Rate (Sensitivity)\") +\n  theme_minimal()\n\n# 找到最佳阈值 (例如，基于 Youden's J statistic = Sensitivity + Specificity - 1 最大化)\n# coords(roc_obj, \"best\", ret = \"threshold\")",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第十二周：Logistic 回归评估 与 模型比较初步</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lecture.html#模型比较初步aic-与-bic",
+    "href": "week12_lecture.html#模型比较初步aic-与-bic",
+    "title": "第十二周：Logistic 回归评估 与 模型比较初步",
+    "section": "5. 模型比较初步：AIC 与 BIC",
+    "text": "5. 模型比较初步：AIC 与 BIC\n当我们有多个候选的 Logistic 回归模型时，如何比较它们？\n\n信息准则 (Information Criteria): AIC 和 BIC 同样适用于广义线性模型 (GLM)。\n\n权衡模型的拟合优度和模型复杂度。\n目标: 选择 AIC 或 BIC 最小的模型。\n只能用于比较使用相同因变量和相同数据集拟合的模型。\n\nR 实现:\n# 假设我们有另一个模型，只用 wt 预测 am\nlogistic_model_wt_only &lt;- glm(am ~ wt, data = mtcars_data, family = binomial)\n\n# 比较两个模型的 AIC 和 BIC\nAIC(logistic_model, logistic_model_wt_only)\nBIC(logistic_model, logistic_model_wt_only)\n\n# 结果显示 logistic_model (包含 hp 和 wt) 的 AIC 和 BIC 都更小，\n# 表明在拟合优度和复杂度之间权衡后，它是相对更优的模型。\n其他比较方法:\n\n似然比检验 (LRT): 比较嵌套模型。anova(model1, model2, test=\"LRT\")。\n交叉验证 (Cross-Validation): (更高级) 在测试集上评估模型性能，更可靠。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第十二周：Logistic 回归评估 与 模型比较初步</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lecture.html#capstone-项目进展",
+    "href": "week12_lecture.html#capstone-项目进展",
+    "title": "第十二周：Logistic 回归评估 与 模型比较初步",
+    "section": "6. Capstone 项目进展",
+    "text": "6. Capstone 项目进展\n\n本周任务:\n\n确定选题和研究问题: 与老师或助教讨论你的初步想法，确保可行性。\n获取并初步检查数据: 使用 readr 导入数据，使用 glimpse(), summary(), skimr::skim() 等函数了解数据结构、变量类型、缺失值等。\n进行初步的 EDA: 使用 ggplot2 绘制关键变量的分布图（直方图、箱线图、条形图）和变量关系图（散点图、分组箱线图）。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第十二周：Logistic 回归评估 与 模型比较初步</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lecture.html#本周总结与预告",
+    "href": "week12_lecture.html#本周总结与预告",
+    "title": "第十二周：Logistic 回归评估 与 模型比较初步",
+    "section": "7. 本周总结与预告",
+    "text": "7. 本周总结与预告\n本周我们重点学习了如何评估分类模型（特别是 Logistic 回归）的性能。我们掌握了混淆矩阵及其衍生指标（准确率、精确率、召回率、F1、特异度），理解了它们的应用场景和权衡。我们还学习了 ROC 曲线和 AUC 值作为不依赖阈值的整体性能评估工具。最后，我们了解了使用 AIC/BIC 比较 GLM 的思路。\n下周预告: 我们将进一步探讨 AI 工具在数据分析中的应用，学习如何更有效地利用 AI 进行编程、调试、解释和报告写作，并强调批判性思维和验证的重要性。同时，我们将学习可重复报告的基础知识（R Markdown / Quarto），让我们的分析过程和结果更规范、更易于分享。",
+    "crumbs": [
+      "讲义",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第十二周：Logistic 回归评估 与 模型比较初步</span>"
+    ]
+  },
+  {
     "objectID": "week1_lab.html",
     "href": "week1_lab.html",
     "title": "第一周实验：R 环境与基础操作",
@@ -895,7 +1071,7 @@
     "text": "1. 目标\n本实验旨在帮助你熟悉 R 和 RStudio 环境，练习基本的 R 语法，并为后续的数据分析打下基础。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -906,7 +1082,7 @@
     "text": "熟悉 RStudio 界面。\n练习使用 R 作为计算器。\n掌握变量赋值。\n理解并创建不同类型的向量。\n安装并加载 tidyverse 包。\n(可选) 尝试使用 AI 助手查询简单问题。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -917,7 +1093,7 @@
     "text": "2. RStudio 环境熟悉\n打开 RStudio，花几分钟熟悉以下几个主要窗口：\n\n脚本编辑器 (Script Editor / Source Pane): 左上角。用于编写和保存 R 代码脚本 (.R 文件) 或 Quarto/R Markdown 文档 (.qmd / .Rmd)。\n控制台 (Console): 左下角。用于直接输入和执行 R 命令，查看输出结果和错误信息。&gt; 符号是命令提示符。\n环境/历史记录 (Environment/History): 右上角。\n\nEnvironment: 显示当前工作空间中已创建的对象（变量、数据框、函数等）。\nHistory: 显示你之前在控制台中执行过的命令。\n\n文件/图形/包/帮助 (Files/Plots/Packages/Help/Viewer): 右下角。\n\nFiles: 浏览你的计算机文件系统。\nPlots: 显示生成的图形。\nPackages: 查看已安装的 R 包，加载或卸载包，安装新包。\nHelp: 查看 R 函数或数据集的帮助文档。\nViewer: 显示本地网页内容（例如 shiny 应用或 htmlwidgets）。\n\n\n尝试:\n\n在控制台中输入 1 + 1 并按 Enter。\n在脚本编辑器中输入 x &lt;- 5，然后选中这行代码，点击 “Run” 按钮（或使用快捷键 Cmd/Ctrl + Enter）。观察环境窗口中是否出现了变量 x。\n在控制台中输入 ?mean 查看 mean 函数的帮助文档，观察帮助窗口的变化。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -928,7 +1104,7 @@
     "text": "3. R 作为计算器\n在控制台中尝试执行以下计算：\n# 加法\n5 + 12\n\n# 减法\n100 - 45\n\n# 乘法\n6 * 7\n\n# 除法\n50 / 4\n\n# 幂运算 (2 的 5 次方)\n2 ^ 5\n\n# 模运算 (取余数)\n17 %% 5\n\n# 整数除法\n17 %/% 5\n\n# 复杂表达式 (注意运算优先级)\n(5 + 3) * 2 / 4 - 1",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -939,7 +1115,7 @@
     "text": "4. 变量赋值与基本类型\n\n使用 &lt;- 将计算结果赋值给变量。\n变量名可以包含字母、数字、点 (.) 和下划线 (_)，但必须以字母或点开头（如果以点开头，后面不能是数字）。区分大小写。\n\n# 将 10 赋值给变量 a\na &lt;- 10\n\n# 将 \"Hello\" 赋值给变量 message\nmessage &lt;- \"Hello, R learners!\"\n\n# 创建一个逻辑变量\nis_learning &lt;- TRUE\n\n# 查看变量的值\na\nmessage\nis_learning\n\n# 对变量进行运算\nb &lt;- a * 3\nb\n\n# 查看变量的数据类型\nclass(a)\nclass(message)\nclass(is_learning)\n练习:\n\n创建一个变量 my_age 并存储你的年龄。\n创建一个变量 course_name 并存储课程名称 “STAT & R”。\n计算 my_age 的 5 年后年龄，并将结果存储在 age_in_5_years 中。\n查看 age_in_5_years 的值和类型。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -950,7 +1126,7 @@
     "text": "5. 向量 (Vectors)\n向量是 R 中最基本的数据结构，用于存储相同类型的元素序列。使用 c() 函数创建。\n# 数值向量\nnumeric_vec &lt;- c(10.5, 5.2, 8.0, 1.5)\nnumeric_vec\nclass(numeric_vec)\nlength(numeric_vec) # 查看向量长度\n\n# 整数向量 (可以在数字后加 L)\ninteger_vec &lt;- c(1L, 5L, 10L, -2L)\ninteger_vec\nclass(integer_vec)\n\n# 字符向量\nchar_vec &lt;- c(\"apple\", \"banana\", \"cherry\", \"date\")\nchar_vec\nclass(char_vec)\n\n# 逻辑向量\nlogical_vec &lt;- c(TRUE, FALSE, FALSE, TRUE, TRUE)\nlogical_vec\nclass(logical_vec)\n\n# 访问向量元素 (索引从 1 开始)\nchar_vec[1]       # 第一个元素\nnumeric_vec[3]    # 第三个元素\nnumeric_vec[c(1, 4)] # 第一个和第四个元素\nnumeric_vec[2:4]    # 第二个到第四个元素\n\n# 向量运算 (通常是元素级别的)\nvec1 &lt;- c(1, 2, 3)\nvec2 &lt;- c(4, 5, 6)\nvec1 + vec2\nvec1 * 2\nvec1 &gt; 1\n\n# 向量类型强制转换\nmixed_vec &lt;- c(1, \"two\", TRUE)\nmixed_vec # 所有元素都变成了字符型\nclass(mixed_vec)\n练习:\n\n创建包含你最喜欢的 3 部电影名称的字符向量 favorite_movies。\n创建包含这 3 部电影大致评分（1-10）的数值向量 movie_ratings。\n访问 favorite_movies 中的第二部电影名称。\n访问 movie_ratings 中评分大于 8 的所有评分。 (提示: 可以使用逻辑索引 movie_ratings[movie_ratings &gt; 8])",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -961,7 +1137,7 @@
     "text": "6. 安装与加载 tidyverse\ntidyverse 是我们进行数据科学工作流的核心工具集。\n# 1. 安装 tidyverse (如果尚未安装)\n# 你只需要在你的 R 环境中执行一次这个命令。\n# 如果不确定是否安装过，可以先尝试加载，如果报错再安装。\n# install.packages(\"tidyverse\")\n\n# 2. 加载 tidyverse\n# 每次启动新的 R 会话 (Session) 时，如果需要使用 tidyverse 中的函数，\n# 都需要先加载它。\nlibrary(tidyverse)\n\n# 加载成功后，会显示 tidyverse 包含的核心包及其版本信息。\n检查: 加载 tidyverse 后，在控制台中输入 dplyr:: 并按 Tab 键，是否能看到 dplyr 包中的函数列表（如 filter, mutate 等）？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -972,7 +1148,7 @@
     "text": "7. (可选) 尝试 AI 助手\n打开你选择的 AI 助手（如 ChatGPT 网页版，或 VS Code 中的 Copilot Chat）。\n尝试提问:\n\n“如何在 R 中创建从 1 到 10 的数字序列？” (提示: 答案可能是 1:10 或 seq(1, 10))\n“R 中的 length() 函数有什么作用？”\n“请举例说明如何在 R 中将计算结果赋值给变量。”\n\n思考:\n\nAI 的回答是否准确？\nAI 的解释是否清晰？\n与你自己查找帮助文档 (?length) 或讲义相比，AI 辅助的优缺点是什么？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -983,7 +1159,7 @@
     "text": "8. 实验总结\n在本实验中，我们熟悉了 RStudio 环境，练习了 R 的基本运算、变量赋值和向量操作，并成功安装和加载了 tidyverse。这些是后续进行更复杂数据分析的基础。确保你理解了向量的概念以及如何创建和访问它们。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第一周实验：R 环境与基础操作</span>"
     ]
   },
   {
@@ -994,7 +1170,7 @@
     "text": "1. 目标\n本实验旨在练习使用 readr 包导入数据，熟悉数据框 (Data Frame) 和 Tibble，处理因子类型，并计算和解释基本的描述性统计量，同时初步使用 dplyr 进行数据筛选。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
     ]
   },
   {
@@ -1005,7 +1181,7 @@
     "text": "使用 read_csv() 导入数据文件。\n检查和理解导入数据的结构 (glimpse, str, summary)。\n创建和操作因子变量 (factor, levels)。\n计算集中趋势（均值、中位数）和离散趋势（标准差、IQR、分位数）统计量。\n使用 dplyr 的 select() 和 filter() 选择和筛选数据。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
     ]
   },
   {
@@ -1016,7 +1192,7 @@
     "text": "2. 数据导入 (readr)\n我们将使用一个模拟的学生成绩数据集 grades.csv。\ngrades.csv 文件内容:\nStudentID,Name,Major,Exam1,Exam2,FinalProject,Attendance\nS001,Alice,Statistics,85,88,92,Present\nS002,Bob,CompSci,92,NA,85,Present\nS003,Charlie,Math,78,82,75,Absent\nS004,David,Statistics,88,90,95,Present\nS005,Eve,CompSci,75,80,NA,Absent\nS006,Frank,Statistics,95,98,96,Present\nS007,Grace,Math,NA,75,80,Present\nS008,Heidi,CompSci,81,84,88,Present\n任务:\n\n将上面的 CSV 内容复制到一个纯文本文件中，并将其命名为 grades.csv，保存在你的 R 项目工作目录下（或者你知道其路径的地方）。\n使用 readr::read_csv() 函数将 grades.csv 文件读入 R，并将结果存储在一个名为 grades_data 的 Tibble 中。\n打印 grades_data 查看内容。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
     ]
   },
   {
@@ -1027,7 +1203,7 @@
     "text": "3. 数据结构探索\n导入数据后，检查其结构非常重要。\n任务: 使用以下函数探索 grades_data 的结构：\n\nglimpse(): 快速查看数据结构，包括列名、类型和前几行数据。\nstr(): 显示对象的内部结构（更详细）。\nsummary(): 对每一列计算基本的描述性统计（对数值型计算最小值、Q1、中位数、均值、Q3、最大值、NA 数量；对字符型/因子型计算频数）。\nhead(): 查看前几行数据。\ntail(): 查看后几行数据。\n\n思考:\n\nread_csv 自动识别的列类型是否都正确？\n哪些列包含缺失值 (NA)？summary() 如何提示我们？\nMajor 和 Attendance 列目前是什么类型？你认为它们应该是什么类型更合适？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
     ]
   },
   {
@@ -1038,7 +1214,7 @@
     "text": "4. 因子 (Factor)\nMajor 和 Attendance 列代表分类信息。将它们转换为因子类型通常更便于后续分析和绘图。\n任务:\n\n将 grades_data 中的 Major 列转换为因子类型。查看转换后的列和它的水平 (levels)。\n将 Attendance 列转换为因子类型。思考一下，Attendance 的水平是否有自然的顺序？（例如，“Present” 是否优于 “Absent”？在这个场景下可能没有）。\n(可选挑战) 如果我们认为专业 “Statistics” &gt; “Math” &gt; “CompSci”，如何创建一个有序因子？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
     ]
   },
   {
@@ -1049,7 +1225,7 @@
     "text": "5. 描述性统计计算\n现在我们来计算一些描述性统计量，以更好地理解数值型变量（如考试成绩）的分布。\n任务: 计算 Exam1, Exam2, 和 FinalProject 这三列的：\n\n均值 (Mean)\n中位数 (Median)\n标准差 (Standard Deviation)\n四分位距 (IQR)\n最小值 (Minimum) 和最大值 (Maximum)\n0.1 分位数和 0.9 分位数\n\n注意处理缺失值 (NA)！ 很多函数需要设置 na.rm = TRUE。\n思考:\n\n比较 Exam1 和 Exam2 的均值和中位数，哪个考试的平均表现似乎更好？哪个考试的成绩分布更受异常值影响（如果看均值和中位数的差异）？\n比较 Exam1 和 Exam2 的标准差和 IQR，哪个考试的成绩更分散？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
     ]
   },
   {
@@ -1060,7 +1236,7 @@
     "text": "6. dplyr 初步：select() 与 filter()\n练习使用 dplyr 选择特定的列和行。\n任务: 使用 grades_data Tibble 完成以下操作：\n\n选择 StudentID, Name, 和 FinalProject 这三列。\n选择除了 Attendance 之外的所有列。\n筛选出 Major 为 “Statistics” 的所有学生记录。\n筛选出 Exam1 成绩大于 85 分的学生记录。\n筛选出 Major 为 “CompSci” 且 Exam2 成绩大于 80 分的学生记录。\n筛选出 Attendance 为 “Absent” 或 FinalProject 成绩低于 80 分的学生记录。\n链式操作: 筛选出 Major 为 “Statistics” 的学生，然后只选择他们的 Name 和 FinalProject 成绩。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
     ]
   },
   {
@@ -1071,7 +1247,7 @@
     "text": "7. 实验总结\n在本实验中，我们练习了从 CSV 文件导入数据，使用多种函数检查了数据结构，将分类变量转换为因子，计算了关键的描述性统计量（注意处理 NA），并使用 dplyr 的 select 和 filter 对数据进行了基本的筛选和子集提取。这些是进行任何数据分析前必不可少的数据熟悉和准备步骤。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第二周实验：数据导入与描述性统计</span>"
     ]
   },
   {
@@ -1082,7 +1258,7 @@
     "text": "1. 目标\n本实验旨在熟练掌握 dplyr 包中更高级的数据转换函数，并使用 tidyr 包进行数据整形，同时练习处理缺失值和使用管道连接操作。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
     ]
   },
   {
@@ -1093,7 +1269,7 @@
     "text": "熟练使用 dplyr::mutate() 创建和修改列。\n熟练使用 dplyr::arrange() 对数据进行排序。\n掌握 dplyr::group_by() 和 dplyr::summarise() 进行分组汇总计算。\n理解整洁数据 (Tidy Data) 的概念。\n使用 tidyr::pivot_longer() 将宽数据转换为长数据。\n使用 tidyr::pivot_wider() 将长数据转换为宽数据。\n练习识别和处理缺失值 (NA)。\n熟练运用管道 (%&gt;%) 串联多个数据处理步骤。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
     ]
   },
   {
@@ -1104,7 +1280,7 @@
     "text": "2. 数据准备\n我们将继续使用上周的 grades.csv 数据，并引入一个新的数据集 exam_attempts.csv 来练习 pivot_longer 和 pivot_wider。\ngrades.csv (回顾):\nStudentID,Name,Major,Exam1,Exam2,FinalProject,Attendance\nS001,Alice,Statistics,85,88,92,Present\nS002,Bob,CompSci,92,NA,85,Present\nS003,Charlie,Math,78,82,75,Absent\nS004,David,Statistics,88,90,95,Present\nS005,Eve,CompSci,75,80,NA,Absent\nS006,Frank,Statistics,95,98,96,Present\nS007,Grace,Math,NA,75,80,Present\nS008,Heidi,CompSci,81,84,88,Present\nexam_attempts.csv 文件内容:\nStudentID,Attempt1_Score,Attempt1_Time,Attempt2_Score,Attempt2_Time\nS001,85,50,88,45\nS002,92,60,NA,NA\nS003,78,55,82,50\nS004,88,48,90,42\n任务:\n\n确保 grades.csv 文件在你的工作目录中。\n创建 exam_attempts.csv 文件并保存在工作目录。\n加载 tidyverse 包。\n读入 grades.csv 到 grades_data。\n读入 exam_attempts.csv 到 attempts_data。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
     ]
   },
   {
@@ -1115,7 +1291,7 @@
     "text": "3. dplyr 进阶练习\n\n3.1 mutate()\n任务: 使用 grades_data：\n\n计算 Exam1 和 Exam2 的平均分（忽略 NA），并将结果存储在新列 AvgExamScore 中。\n创建一个新列 FinalGrade，假设最终成绩计算方式为：Exam1 * 0.3 + Exam2 * 0.3 + FinalProject * 0.4。注意处理 NA 值（如果任一成绩为 NA，则 FinalGrade 也应为 NA）。\n创建一个逻辑列 PassedExam1，表示 Exam1 成绩是否大于等于 60 (假设 60 分及格)。\n\n\n\n3.2 arrange()\n任务: 使用 grades_data_mutated：\n\n按 FinalGrade 降序排列学生。\n先按 Major 字母顺序排列，然后在每个专业内按 Exam1 升序排列。\n\n\n\n3.3 group_by() 与 summarise()\n任务: 使用 grades_data：\n\n计算每个 Major 的学生人数。\n计算每个 Major 的 Exam1 平均分和 FinalProject 平均分（忽略 NA）。\n找出每个 Major 中 Exam1 的最高分。\n计算 Attendance 为 “Present” 和 “Absent” 的学生人数分别是多少。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
     ]
   },
   {
@@ -1126,7 +1302,7 @@
     "text": "4. tidyr 数据整形练习\n\n4.1 pivot_longer()\nattempts_data 目前是“宽”格式，每次尝试的成绩和时间分布在不同的列中。我们希望将其转换为“长”格式，每行代表一次尝试。\n任务: 将 attempts_data 转换为长格式，包含以下列：\n\nStudentID\nAttempt (值为 1 或 2)\nScore (对应尝试的得分)\nTime (对应尝试的时间)\n\n\n\n4.2 pivot_wider()\n任务: 将刚刚创建的长格式数据 attempts_long 转换回原来的宽格式。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
     ]
   },
   {
@@ -1137,7 +1313,7 @@
     "text": "5. 处理缺失值 (NA)\n任务: 使用 grades_data：\n\n计算 Exam2 列有多少个缺失值。\n创建一个新数据框 grades_no_na_exam2，移除 Exam2 列包含 NA 的所有行。\n创建一个新数据框 grades_filled_project，将 FinalProject 列中的 NA 替换为该列的中位数。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
     ]
   },
   {
@@ -1148,7 +1324,7 @@
     "text": "6. 综合链式操作 (%&gt;%)\n任务: 使用 grades_data，通过一步链式操作完成以下任务：\n\n筛选出 Major 为 “Statistics” 或 “Math” 的学生。\n计算这些学生的 Exam1 和 Exam2 的平均分（忽略 NA），命名为 AvgExamScore。\n只保留 StudentID, Name, Major, 和 AvgExamScore 这几列。\n按 AvgExamScore 降序排列结果。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
     ]
   },
   {
@@ -1159,7 +1335,7 @@
     "text": "7. 实验总结\n在本实验中，我们深入练习了 dplyr 的核心数据转换函数 mutate, arrange, group_by, summarise，并掌握了使用 tidyr 的 pivot_longer 和 pivot_wider 在长宽数据格式间转换。我们还练习了处理缺失值的常用方法，并通过管道将这些操作流畅地组合起来。熟练掌握这些 tidyverse 技能对于高效地进行数据清理和准备至关重要。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>14</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第三周实验：`dplyr` 进阶与 `tidyr` 数据整形</span>"
     ]
   },
   {
@@ -1170,7 +1346,7 @@
     "text": "1. 目标\n本实验旨在通过实践 ggplot2 包，熟练掌握创建常用统计图形进行探索性数据分析 (EDA) 的技能，并练习基本的图形定制。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
     ]
   },
   {
@@ -1181,7 +1357,7 @@
     "text": "回顾 ggplot2 的图层语法。\n练习绘制单变量图形：直方图、密度图、箱线图。\n练习绘制双变量图形：散点图、分组箱线图/小提琴图、条形图。\n使用 labs() 添加标题和标签。\n使用 theme_...() 应用不同的视觉主题。\n(可选) 结合 dplyr 进行数据汇总后再绘图。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
     ]
   },
   {
@@ -1192,7 +1368,7 @@
     "text": "2. 数据准备\n我们将主要使用 ggplot2 内置的 mpg 数据集。确保 tidyverse 已加载。\nlibrary(tidyverse)\nlibrary(ggplot2) # ggplot2 包含在 tidyverse 中，但显式加载有时有助于代码清晰\n\n# 查看 mpg 数据集结构\nglimpse(mpg)\n# ?mpg # 查看帮助文档",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
     ]
   },
   {
@@ -1203,7 +1379,7 @@
     "text": "3. 单变量可视化练习\n探索单个变量的分布特征。\n\n3.1 直方图 (geom_histogram)\n任务:\n\n绘制变量 cty (城市里程/加仑) 的直方图。\n尝试调整 binwidth 参数（例如 binwidth = 2 或 binwidth = 5），观察图形的变化。\n为直方图添加填充色 (fill) 和边框色 (color)。\n\n\n\n3.2 密度图 (geom_density)\n任务:\n\n绘制变量 hwy (高速公路里程/加仑) 的密度图。\n添加填充色，并使用 alpha 参数设置透明度。\n(可选挑战) 在同一张图上绘制不同 drv (驱动方式) 的 hwy 密度图，使用 fill 映射到 drv 并设置 alpha。\n\n\n\n3.3 箱线图 (geom_boxplot)\n任务:\n\n绘制变量 displ (发动机排量) 的箱线图。\n绘制按 class (车辆类别) 分组的 hwy (高速公路里程) 的箱线图。\n将上一步的箱线图翻转，使类别标签在 Y 轴上，更易阅读 (coord_flip())。\n(可选挑战) 在分组箱线图上叠加 geom_jitter()，显示原始数据点（设置 alpha 和 width）。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
     ]
   },
   {
@@ -1214,7 +1390,7 @@
     "text": "4. 双变量可视化练习\n探索两个变量之间的关系。\n\n4.1 散点图 (geom_point)\n任务:\n\n绘制 displ (发动机排量) 和 cty (城市里程) 的散点图。\n在散点图上，将点的颜色映射到 drv (驱动方式)。\n在散点图上，将点的大小映射到 cyl (气缸数)。\n(可选挑战) 添加一条线性拟合线 (geom_smooth(method = \"lm\"))。\n\n\n\n4.2 条形图 (geom_bar / geom_col)\n任务:\n\n使用 geom_bar() 统计 drv (驱动方式) 的频数并绘制条形图。\n(结合 dplyr) 先计算每个 manufacturer (制造商) 的平均 hwy (高速公路里程)，然后使用 geom_col() 绘制条形图展示结果，并按平均里程排序。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
     ]
   },
   {
@@ -1225,7 +1401,7 @@
     "text": "5. 图形定制练习 (labs & theme)\n任务: 选择你之前绘制的任意一个图形，进行以下定制：\n\n使用 labs() 添加一个有意义的 title, subtitle, x 轴标签, y 轴标签, 以及 caption。\n尝试应用不同的内置主题，如 theme_bw(), theme_minimal(), theme_classic(), theme_light()，观察效果。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
     ]
   },
   {
@@ -1236,7 +1412,7 @@
     "text": "6. 实验总结\n在本实验中，我们通过 mpg 数据集实践了 ggplot2 的核心功能。我们练习了绘制用于探索单变量分布的直方图、密度图和箱线图，以及用于探索双变量关系的散点图和条形图（包括分组比较）。我们还学习了如何使用 labs() 和 theme_...() 对图形进行基本定制，使其更具信息量和美观性。熟练掌握 ggplot2 是进行有效数据探索和结果沟通的关键技能。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>15</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第四周实验：`ggplot2` 可视化探索</span>"
     ]
   },
   {
@@ -1247,7 +1423,7 @@
     "text": "1. 目标\n本实验旨在通过实践应用，熟练掌握单样本 t 检验、双独立样本 t 检验、配对样本 t 检验以及单因素方差分析 (ANOVA) 的 R 实现和结果解读。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
     ]
   },
   {
@@ -1258,7 +1434,7 @@
     "text": "根据问题场景选择合适的假设检验方法。\n使用 t.test() 执行各种 t 检验，并解释 P 值和置信区间。\n理解并检查 t 检验和 ANOVA 的假设条件（特别是正态性和方差齐性）。\n使用 aov() 和 summary() 执行 ANOVA，并解读 ANOVA 表。\n在 ANOVA 结果显著后，使用 TukeyHSD() 进行事后检验，找出具体差异。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
     ]
   },
   {
@@ -1269,7 +1445,7 @@
     "text": "2. 数据准备\n我们将使用 R 内置数据集和一些模拟数据进行练习。\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(car) # 用于 Levene's Test\n\n# 查看内置数据集 sleep (比较两种安眠药的效果)\n# ?sleep\nglimpse(sleep)\nhead(sleep)\n\n# 模拟一些单样本数据 (例如，一批零件的长度，已知标准为 10cm)\nset.seed(123)\npart_lengths &lt;- rnorm(25, mean = 10.1, sd = 0.2) # 模拟 25 个零件，均值略偏离 10\n\n# 模拟 ANOVA 数据 (例如，三种不同教学方法 A, B, C 的学生得分)\nset.seed(456)\nscores_A &lt;- rnorm(20, mean = 75, sd = 5)\nscores_B &lt;- rnorm(20, mean = 80, sd = 5)\nscores_C &lt;- rnorm(20, mean = 78, sd = 5)\n\nanova_sim_data &lt;- tibble(\n  Score = c(scores_A, scores_B, scores_C),\n  Method = factor(rep(c(\"A\", \"B\", \"C\"), each = 20))\n)",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
     ]
   },
   {
@@ -1280,7 +1456,7 @@
     "text": "3. 单样本 t 检验 (t.test)\n场景: 假设已知零件的标准长度应为 10cm。我们抽取了 25 个零件样本 (part_lengths)，想要检验这批零件的平均长度是否显著不等于 10cm。\n任务:\n\n陈述原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n(可选) 检查数据的正态性假设（例如，使用 QQ 图或 Shapiro-Wilk 检验）。\n使用 t.test() 对 part_lengths 进行单样本 t 检验，检验均值是否等于 10。\n解读检验结果：t 值、自由度、P 值、置信区间、样本均值估计。\n根据 P 值和选择的显著性水平 \\(\\alpha = 0.05\\) 做出决策。\n用通俗语言解释结论。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
     ]
   },
   {
@@ -1291,7 +1467,7 @@
     "text": "4. 双独立样本 t 检验 (t.test)\n场景: 我们想比较两种不同的肥料（A 和 B）对作物产量 (yield) 的影响是否有显著差异。假设我们有两组独立的样本数据。\n模拟数据:\nset.seed(789)\nyield_fertA &lt;- rnorm(15, mean = 50, sd = 8)\nyield_fertB &lt;- rnorm(18, mean = 56, sd = 7)\n任务:\n\n陈述原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n(可选) 分别检查两组数据的正态性。\n检查方差齐性假设 (使用 Levene’s Test 或 var.test())。\n根据方差齐性检验结果，选择合适的 t.test() 参数 (var.equal = TRUE 或 FALSE，推荐默认 FALSE 即 Welch’s test)。执行双独立样本 t 检验。\n解读检验结果：t 值 (或 Welch’s t)、自由度、P 值、置信区间 (针对均值差)、样本均值估计。\n根据 P 值和 \\(\\alpha = 0.05\\) 做出决策。\n用通俗语言解释结论。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
     ]
   },
   {
@@ -1302,7 +1478,7 @@
     "text": "5. 配对样本 t 检验 (t.test)\n场景: 使用 R 内置的 sleep 数据集。该数据集记录了 10 位病人在分别使用两种安眠药（group=1 和 group=2）后，相比未使用药物时额外睡眠时间的变化 (extra)。我们想检验这两种药物的效果是否有显著差异。这是一个典型的配对样本设计，因为每个病人都尝试了两种药物。\n任务:\n\n陈述原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n(可选) 检查配对差值的正态性。\n使用 t.test() 对 sleep 数据进行配对样本 t 检验 (比较 group 1 和 2 的 extra 值)。设置 paired = TRUE。\n解读检验结果：t 值、自由度、P 值、置信区间 (针对差值的均值)、差值的样本均值估计。\n根据 P 值和 \\(\\alpha = 0.05\\) 做出决策。\n用通俗语言解释结论。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
     ]
   },
   {
@@ -1313,7 +1489,7 @@
     "text": "6. 单因素 ANOVA 与事后检验\n场景: 使用我们之前模拟的 anova_sim_data，比较三种不同教学方法 (A, B, C) 的学生平均得分 (Score) 是否存在显著差异。\n任务:\n\n陈述 ANOVA 的原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n(可选) 检查各组数据的正态性。\n检查方差齐性假设 (使用 Levene’s Test)。\n使用 aov() 拟合 ANOVA 模型。\n使用 summary() 查看 ANOVA 表，并解读 F 值和 P 值。\n根据 ANOVA 的 P 值和 \\(\\alpha = 0.05\\) 做出初步决策。\n如果 ANOVA 结果显著 (P &lt; 0.05)，则使用 TukeyHSD() 进行事后检验。\n解读 TukeyHSD 的结果（调整后的 P 值和置信区间），判断具体哪些组之间存在显著差异。\n用通俗语言总结最终结论。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
     ]
   },
   {
@@ -1324,7 +1500,7 @@
     "text": "7. 实验总结\n在本实验中，我们针对不同的研究场景，实践了四种核心的假设检验方法：单样本 t 检验、双独立样本 t 检验、配对样本 t 检验和单因素方差分析 (ANOVA) 及其事后检验。我们重点练习了如何在 R 中实现这些检验，并根据输出结果（特别是 P 值和置信区间）做出统计决策和解释结论。同时，我们也强调了在应用这些方法前检查相关假设条件（如正态性、方差齐性）的重要性。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>16</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第五周实验：假设检验实践 (t-检验与 ANOVA)</span>"
     ]
   },
   {
@@ -1335,7 +1511,7 @@
     "text": "1. 目标\n本实验旨在练习计算和解释相关系数，使用散点图可视化变量关系，并拟合和解释简单的线性回归模型。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
     ]
   },
   {
@@ -1346,7 +1522,7 @@
     "text": "使用 cor() 计算 Pearson 和 Spearman 相关系数。\n使用 cor.test() 对相关性进行显著性检验并解释结果。\n使用 ggplot2::geom_point() 和 geom_smooth() 创建和解读散点图。\n理解相关不等于因果。\n使用 lm() 拟合简单线性回归模型。\n解读 summary(lm()) 的输出，特别是系数、P 值和 R²。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
     ]
   },
   {
@@ -1357,7 +1533,7 @@
     "text": "2. 数据准备\n我们将继续使用 mpg 数据集，并可能使用 mtcars 数据集。\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(GGally) # 用于绘制散点图矩阵\n\n# glimpse(mpg)\n# glimpse(mtcars)",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
     ]
   },
   {
@@ -1368,7 +1544,7 @@
     "text": "3. 相关分析练习\n\n3.1 计算与可视化\n场景: 我们想探索 mpg 数据集中几个连续变量之间的关系，例如 displ (排量), cty (城市里程), hwy (高速里程)。\n任务:\n\n绘制 displ 和 hwy 的散点图，并在图上添加一条线性拟合线 (method = \"lm\") 和一条非线性平滑曲线 (默认 geom_smooth)。观察它们的关系是线性的吗？\n计算 displ 和 hwy 之间的 Pearson 相关系数。\n计算 displ 和 hwy 之间的 Spearman 相关系数。比较两者的大小，思考为何可能有差异。\n(可选挑战) 使用 GGally::ggpairs() 函数创建一个散点图矩阵，可视化多个连续变量（如 displ, cty, hwy, cyl）之间的两两关系和各自的分布。 (需要先 install.packages(\"GGally\"))\n\n\n\n3.2 相关性检验 (cor.test)\n任务:\n\n使用 cor.test() 对 displ 和 hwy 之间的 Pearson 相关性进行显著性检验。\n解读检验结果：相关系数估计值、P 值、置信区间。根据 P 值和 \\(\\alpha = 0.05\\) 判断相关性是否显著。\n使用 cor.test() 对 displ 和 hwy 之间的 Spearman 相关性进行显著性检验。\n解读检验结果。\n\n\n\n3.3 相关不等于因果讨论\n思考题: 假设你发现一个城市中冰淇淋销量 (ice_cream_sales) 与犯罪率 (crime_rate) 之间存在强正相关 (\\(r \\approx 0.8, p &lt; 0.001\\))。\n\n这是否意味着吃冰淇淋会导致犯罪？为什么？\n你能想到一个可能的混淆变量来解释这种相关性吗？\n如果想研究冰淇淋是否真的影响犯罪率（虽然听起来很荒谬），相关分析足够吗？需要什么样的研究设计？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
     ]
   },
   {
@@ -1379,7 +1555,7 @@
     "text": "4. 简单线性回归 (SLR) 练习\n场景: 我们想建立一个模型，用汽车重量 wt (单位：1000 lbs) 来预测其每加仑英里数 mpg (使用 mtcars 数据集)。\n任务:\n\n绘制 wt (x 轴) 和 mpg (y 轴) 的散点图，并添加线性拟合线 (geom_smooth(method = \"lm\"))。初步判断两者是否存在线性关系。\n使用 lm() 函数拟合一个简单线性回归模型，用 wt 预测 mpg。将模型存储在 slr_mpg_wt 中。\n使用 summary() 查看模型 slr_mpg_wt 的详细结果。\n解读模型结果:\n\n写出回归方程 (\\(\\hat{mpg} = \\hat{\\beta}_0 + \\hat{\\beta}_1 \\times wt\\))。\n解释截距\\(\\hat{\\beta}_0\\)的含义（在这个场景下是否有实际意义？）。\n解释斜率\\(\\hat{\\beta}_1\\)的含义。\nwt 对 mpg 的影响是否统计显著？依据是什么 (P 值)？\n模型解释了 mpg 变异的百分之多少 (R-squared)？这个模型的拟合优度如何？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
     ]
   },
   {
@@ -1390,7 +1566,7 @@
     "text": "5. (可选) 预测\n使用我们拟合的模型 slr_mpg_wt 来进行预测。\n任务:\n\n预测一辆重量为 2500 lbs (即 wt = 2.5) 的汽车的 MPG。\n预测一辆重量为 4000 lbs (即 wt = 4.0) 的汽车的 MPG。\n使用 predict() 函数进行预测，并可以获取预测值的置信区间或预测区间。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
     ]
   },
   {
@@ -1401,7 +1577,7 @@
     "text": "6. 实验总结\n在本实验中，我们练习了相关分析和简单线性回归。我们计算并检验了 Pearson 和 Spearman 相关系数，强调了相关不等于因果。我们使用 ggplot2 可视化了变量间的关系。最重要的是，我们使用 lm() 拟合了简单线性回归模型，并详细解读了 summary() 输出中的系数、P 值和 R²，理解了它们在描述变量关系和模型拟合优度方面的含义。我们还初步尝试了使用拟合的模型进行预测。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>17</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第六周实验：相关与简单线性回归实践</span>"
     ]
   },
   {
@@ -1412,7 +1588,7 @@
     "text": "1. 目标\n本实验旨在练习处理分类数据，特别是使用列联表和卡方检验来分析两个分类变量之间的关联性，并巩固根据研究问题选择合适统计方法的能力。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
     ]
   },
   {
@@ -1423,7 +1599,7 @@
     "text": "使用 table() 创建列联表，并使用 prop.table() 计算百分比。\n使用 chisq.test() 执行卡方独立性检验。\n检查卡方检验的期望频数假设。\n解读卡方检验的结果（\\(\\chi^2\\) 值, df, P 值）。\n(可选) 了解并使用 fisher.test()。\n练习根据不同场景选择合适的统计检验方法（回顾阶段一内容）。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
     ]
   },
   {
@@ -1434,7 +1610,7 @@
     "text": "2. 数据准备\n我们将使用 ggplot2 内置的 diamonds 数据集，并可能创建一些模拟数据。\nlibrary(tidyverse)\n\n# 使用 diamonds 数据集\n# 为了避免样本量过大导致期望频数都很大，我们抽取一个子集\nset.seed(123)\ndiamonds_subset &lt;- diamonds %&gt;% sample_n(1000)\n\n# 查看数据结构和变量类型\nglimpse(diamonds_subset)\n# 我们将重点关注 cut (切割质量) 和 color (颜色) 这两个分类变量",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
     ]
   },
   {
@@ -1445,7 +1621,7 @@
     "text": "3. 列联表分析\n任务:\n\n使用 table() 函数创建 diamonds_subset 数据集中 cut 和 color 变量的列联表，存储在 cut_color_table 中并打印。\n使用 prop.table() 计算该列联表的：\n\n单元格占总数的百分比。\n行百分比 (每行的和为 100%)。\n列百分比 (每列的和为 100%)。\n\n解读: 根据行百分比或列百分比，初步判断 cut 和 color 之间是否存在某种关联的迹象？（例如，某个切割等级是否更倾向于出现某种颜色？）",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
     ]
   },
   {
@@ -1456,7 +1632,7 @@
     "text": "4. 卡方独立性检验 (chisq.test)\n场景: 我们想正式检验钻石的切割质量 (cut) 与颜色 (color) 是否相互独立。\n任务:\n\n陈述卡方独立性检验的原假设 (\\(H_0\\)) 和备择假设 (\\(H_1\\))。\n使用 chisq.test() 对 cut_color_table 进行卡方检验。\n检查期望频数假设: 从检验结果中提取期望频数 ($expected)，检查是否有期望频数小于 5 的单元格？如果有很多，卡方检验的 P 值可能不准确。\n解读检验结果：\\(\\chi^2\\) 统计量值、自由度 (df)、P 值。\n根据 P 值和 \\(\\alpha = 0.05\\) 做出决策。\n用通俗语言解释结论。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
     ]
   },
   {
@@ -1467,7 +1643,7 @@
     "text": "5. (可选) Fisher 精确检验 (fisher.test)\n场景: 假设我们有一个 2x2 的列联表，或者卡方检验的期望频数假设不满足。\n模拟 2x2 数据: 假设我们调查了 30 人是否使用某 APP（UseApp: Yes/No）以及他们的性别（Gender: Male/Female）。\nset.seed(999)\n\ngender &lt;- sample(c(\"Male\", \"Female\"), 30, replace = TRUE)\nuse_app &lt;- sample(c(\"Yes\", \"No\"), 30, replace = TRUE, prob = c(0.6, 0.4))\n\napp_gender_table &lt;- table(Gender = gender, UseApp = use_app)\n\nprint(app_gender_table)\n任务:\n\n对 app_gender_table 执行 Fisher 精确检验。\n解读 P 值并做出结论。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
     ]
   },
   {
@@ -1478,7 +1654,7 @@
     "text": "6. 统计方法选择练习\n根据以下场景，选择最合适的统计检验或分析方法，并简要说明理由。\n\n场景一: 比较两种不同品牌（A 和 B）灯泡的平均使用寿命（单位：小时）。收集了两组独立样本数据。\n场景二: 调查某大学学生对新图书馆规章的满意度（分为：非常满意、满意、一般、不满意、非常不满意）是否与其所在学院（文学院、理学院、工学院、商学院）有关。\n场景三: 研究跑步距离（公里）与跑步者消耗的卡路里（大卡）之间的关系强度和方向。\n场景四: 一家公司想知道其新推出的广告（花费：万元）是否显著提升了产品月销量（件）。他们有广告投放前 12 个月和投放后 12 个月的月销量数据。\n场景五: 检验一个标准的六面骰子是否是公平的（即每个点数出现的概率是否都是 1/6）。进行了 600 次投掷。\n场景六: 想要预测一个客户是否会购买某产品（是/否），基于该客户的年龄、收入和历史购买次数。\n场景七: 比较三种不同施肥方案（方案 1、方案 2、对照组）对玉米平均产量的影响。\n场景八: 检验一批产品的实际重量（克）是否显著低于其标注重量 500 克。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
     ]
   },
   {
@@ -1489,7 +1665,7 @@
     "text": "7. 实验总结\n在本实验中，我们重点练习了处理分类变量关联性的主要工具——列联表和卡方独立性检验。我们学会了如何创建表格、计算百分比、执行检验、检查假设并解读结果。我们还了解了 Fisher 精确检验的适用场景。最后，通过场景分析，我们巩固了根据研究问题和数据类型选择合适统计方法的能力，这是整个第一阶段学习的核心技能之一。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第七周实验：卡方检验与统计方法选择</span>"
     ]
   },
   {
@@ -1500,7 +1676,7 @@
     "text": "1. 目标\n本实验旨在巩固第一阶段的核心知识，并通过实践加深对多元线性回归 (MLR) 的理解，特别是偏回归系数的解释和模型基本假设的回顾。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
     ]
   },
   {
@@ -1511,7 +1687,7 @@
     "text": "快速回顾 tidyverse 数据处理、ggplot2 可视化和第一阶段的关键统计方法。\n使用 lm() 拟合包含多个自变量的 MLR 模型。\n重点练习解读 MLR 模型 summary() 输出，特别是偏回归系数的含义（控制其他变量）。\n解释分类自变量（因子）在 MLR 中的系数含义。\n区分 R-squared 和 Adjusted R-squared。\n理解模型整体 F 检验的意义。\n回顾 L.I.N.E. 假设在线性回归中的重要性。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
     ]
   },
   {
@@ -1522,7 +1698,7 @@
     "text": "2. 阶段一快速回顾练习\n在深入 MLR 之前，快速完成以下练习以巩固基础。\n数据: 使用 mpg 数据集。\n\nlibrary(tidyverse)\nlibrary(car)  # 用于后续可能需要的方差膨胀因子(VIF)计算\n\n练习题:\n\ndplyr: 计算每个 class (车辆类别) 的平均 cty (城市里程)，并按平均里程降序排列。\nggplot2: 绘制 displ (排量) 与 cty 的散点图，并将点的颜色映射到 drv (驱动方式)，添加合适的标题和轴标签。\n假设检验选择: 你想比较 drv 为 ‘f’ (前驱) 和 ‘r’ (后驱) 的车辆的平均 hwy (高速里程) 是否有显著差异，你会选择哪种统计检验？(写出名称即可)\n相关性: 计算 cty 和 hwy 之间的 Pearson 相关系数。\nSLR 回顾: 拟合一个简单线性回归模型，用 cty 预测 hwy。写出回归方程，并解释斜率的含义。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
     ]
   },
   {
@@ -1533,7 +1709,7 @@
     "text": "3. 多元线性回归 (MLR) 实践\n场景: 我们想建立一个更全面的模型来预测 mpg 数据集中的 hwy (高速公路里程)，同时考虑 cty (城市里程)、year (生产年份) 和 class (车辆类别) 的影响。\n任务:\n\n使用 lm() 拟合一个 MLR 模型，公式为 hwy ~ cty + as.factor(year) + class。将模型存储在 mlr_hwy 中。(注意：year 是二分类变量（1999 和 2008），使用 as.factor() 将其转换为因子变量)\n使用 summary() 查看模型 mlr_hwy 的详细结果。\n解读模型系数 (Coefficients):\n\n解释截距 (Intercept) 的含义（是否有实际意义？）。\n解释 cty 的偏回归系数的含义（强调“控制其他变量”）。\n解释 year 的偏回归系数的含义。(注意：year 的系数表示 2008 年相对于 1999 年（参照组）的 hwy 差异)\n解释 class 各水平的系数含义（它们是相对于哪个参照组的？）。\n判断每个系数的统计显著性（基于 P 值和 \\(\\alpha = 0.05\\)）。\n\n解读模型整体性能:\n\n解释 Adjusted R-squared 的值代表什么？\n解释 F-statistic 和对应的 p-value 的含义（检验模型的整体显著性）。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
     ]
   },
   {
@@ -1544,7 +1720,7 @@
     "text": "4. 统计显著性 vs 实际重要性讨论\n思考:在上面的 mlr_hwy 模型中，year 的系数是统计显著的 (p ≈ 0.0036)，估计值为 0.46。\n\n这个结果的统计意义是什么？\n这个结果的实际重要性如何？增加约 0.46 MPG 对于购车者或汽车工程师来说，是一个值得关注的差异吗？（这取决于具体情境和比较基准）。\n如果样本量增大很多，一个估计值为 0.1 MPG 的系数也可能变得统计显著 (p &lt; 0.05)。在这种情况下，它的实际重要性又如何？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
     ]
   },
   {
@@ -1555,7 +1731,7 @@
     "text": "5. 回顾 L.I.N.E. 假设\n回顾线性回归的四个关键假设：\n\nLinearity (线性性): Y 与 X 之间的关系是线性的。\nIndependence (独立性): 误差项（残差）相互独立。\nNormality (正态性): 误差项（残差）服从正态分布。\nEqual Variance (等方差性 / Homoscedasticity): 误差项（残差）的方差在所有 X 水平上是恒定的。\n\n思考: 对于我们拟合的 mlr_hwy 模型： * 你认为哪个假设最有可能被违反？为什么？ * 如果这些假设被违反，会对我们的模型结果（系数估计、P 值、置信区间）产生什么影响？（回顾讲义内容）。\n（我们将在下周的实验中学习如何具体诊断这些假设。）",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
     ]
   },
   {
@@ -1566,7 +1742,7 @@
     "text": "6. 实验总结\n在本实验中，我们通过简短练习回顾了第一阶段的关键知识点。接着，我们重点实践了多元线性回归模型的拟合与解读，特别是深入理解了偏回归系数的含义——在控制其他变量影响下的独立效应。我们还练习了解读模型摘要中的 R² 和整体 F 检验，并讨论了统计显著性与实际重要性的区别。最后，我们回顾了 L.I.N.E. 假设，为下周的模型诊断做好铺垫。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>19</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第八周实验：阶段回顾与多元回归实践</span>"
     ]
   },
   {
@@ -1577,7 +1753,7 @@
     "text": "1. 目标\n本实验旨在通过实践操作，熟练掌握诊断线性回归模型（特别是多元线性回归）的常用方法，识别模型是否违反关键假设以及是否存在异常或强影响点。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
   },
   {
@@ -1588,7 +1764,7 @@
     "text": "使用 plot() 函数生成默认的回归诊断图。\n解读残差图 (Residuals vs Fitted)，检查线性性和等方差性。\n解读正态 Q-Q 图 (Normal Q-Q Plot)，检查残差正态性。\n(可选) 解读标度-位置图 (Scale-Location Plot)，进一步检查等方差性。\n(可选) 解读残差与杠杆图 (Residuals vs Leverage Plot)，识别高杠杆点和强影响点。\n使用 shapiro.test() 对残差进行正态性检验。\n使用 car::vif() 计算方差膨胀因子，诊断多重共线性。\n使用 cooks.distance() 计算 Cook 距离，识别强影响点。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
   },
   {
@@ -1599,7 +1775,7 @@
     "text": "2. 数据与模型准备\n我们将使用以下两个新模型进行诊断：\n\nmodel_diamonds: 基于 diamonds 数据集（抽样），price ~ carat + cut + color + clarity。\nmodel_complex_sim: 基于模拟的 complex_sim_data，y ~ x1 + x2 + x3，该模型拟合的数据包含非线性和异方差性，但模型本身是简单线性的，以便于诊断。\n\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(car)    # For vif() and leveneTest() if needed\nlibrary(broom)  # For augment()\n\n# --- 模型 1: diamonds 数据 ---\n# diamonds 数据集来自 ggplot2 (已通过 tidyverse 加载)\n# 选择价格作为因变量，克拉、切割、颜色、净度作为自变量\n# 注意: cut, color, clarity 是因子变量，lm() 会自动处理\n# 为了避免模型过于庞大和运行缓慢，可以考虑抽样一部分数据\nset.seed(123)\ndiamonds_sample &lt;- sample_n(diamonds, 5000) # 抽取 5000 个样本\nmodel_diamonds &lt;- lm(price ~ carat + cut + color + clarity, data = diamonds_sample)\n# summary(model_diamonds) # 回顾模型\n\n# --- 模型 2: 更复杂的模拟数据 ---\n# 目标: 创建包含非线性关系和异方差性的数据\nset.seed(123) # 使用不同的种子\nn_complex &lt;- 200 # 样本量增加到 200\nx1_complex &lt;- rnorm(n_complex)\nx2_complex &lt;- x1_complex * 0.5 + rnorm(n_complex, 0, 0.5) # 中等相关性\nx3_complex &lt;- runif(n_complex, -2, 2) # 均匀分布的变量\n\n# 真实模型包含非线性 (x1^2), 交互作用 (x1*x2), 和异方差性 (误差标准差随 |x1| 增加)\nerror_complex &lt;- rnorm(n_complex, 0, 1 + abs(x1_complex))\ny_complex &lt;- 5 + 2*x1_complex - 1*x1_complex^2 + 3*x2_complex + 1.5*x1_complex*x2_complex - 0.5*x3_complex + error_complex\n\n# 可以选择性地加入异常点或高杠杆点 (这里暂时不加，让问题更微妙)\n# y_complex[5] &lt;- y_complex[5] - 20 # y方向的异常点\n# x1_complex[10] &lt;- x1_complex[10] + 3 # x方向的高杠杆点\n\ncomplex_sim_data &lt;- tibble(y = y_complex, x1 = x1_complex, x2 = x2_complex, x3 = x3_complex)\n\n# 拟合一个 *错误设定* 的简单线性模型，以便诊断发现问题\nmodel_complex_sim &lt;- lm(y ~ x1 + x2 + x3, data = complex_sim_data)\n# summary(model_complex_sim) # 回顾模型",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
   },
   {
@@ -1610,7 +1786,7 @@
     "text": "3. 使用 plot(model) 进行图形诊断\nplot() 函数作用于 lm 对象时，会默认生成一系列有用的诊断图。\n任务:\n\n对 model_diamonds 模型使用 plot() 函数。观察生成的 4 个主要图形。\n解读第一个图 (Residuals vs Fitted):\n\n红线是否大致水平接近 0？\n点的散布是否随机，没有明显模式（如曲线、喇叭形）？\n这表明线性性和等方差性假设是否大致满足？\n\n解读第二个图 (Normal Q-Q):\n\n点是否大致落在虚线（对角线）上？\n尾部是否有系统性偏离？\n这表明残差正态性假设是否大致满足？\n\n解读第三个图 (Scale-Location):\n\n纵轴是标准化残差的平方根 (\\(\\sqrt{|Standardized Residuals|}\\))。\n红线是否大致水平？\n这进一步检查了等方差性假设。如果红线有明显上升或下降趋势，提示异方差。\n\n解读第四个图 (Residuals vs Leverage):\n\n横轴是杠杆值 (Leverage)，衡量 X 值的极端程度。\n纵轴是标准化残差。\n图中会用等高线标出 Cook’s distance 的阈值（如 0.5, 1）。\n观察是否有同时具有高杠杆值和高残差的点（通常在右上角或右下角）？这些点可能是强影响点。是否有 Cook’s D 很大的点？\n\n对 model_complex_sim 模型重复步骤 1-5，并比较其诊断图与 model_diamonds 的差异，观察模拟数据中引入的非线性和异方差性是如何在诊断图中体现的。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
   },
   {
@@ -1621,7 +1797,7 @@
     "text": "4. 残差正态性检验 (shapiro.test)\n任务:\n\n提取 model_diamonds 模型的残差。\n对这些残差进行 Shapiro-Wilk 正态性检验。\n根据 P 值和 \\(\\alpha = 0.05\\) 判断是否拒绝正态性假设。结合 Q-Q 图的观察，做出综合判断。\n对 model_complex_sim 的残差重复步骤 1-3。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
   },
   {
@@ -1632,7 +1808,7 @@
     "text": "5. 多重共线性诊断 (vif)\n任务:\n\n使用 car::vif() 函数计算 model_diamonds 模型中数值型自变量（carat）和因子变量的广义方差膨胀因子 (GVIF)。注意：对于因子变量，需要关注 GVIF^(1/(2*Df)) 的值。\n解读 VIF 值。是否存在 VIF &gt; 5 或 &gt; 10 的情况？这说明了什么？\n对 model_complex_sim 模型重复步骤 1-2。比较结果。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
   },
   {
@@ -1643,7 +1819,7 @@
     "text": "6. 强影响点诊断 (cooks.distance)\n任务:\n\n使用 cooks.distance() 计算 model_diamonds 模型中每个观测点的 Cook 距离。\n确定一个阈值（如 \\(4/n\\)）。找出 Cook 距离大于该阈值的点的索引。这些点是潜在的强影响点吗？\n对 model_complex_sim 模型重复步骤 1-2。观察是否存在 Cook 距离较大的点。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
   },
   {
@@ -1654,7 +1830,7 @@
     "text": "7. 实验总结\n在本实验中，我们系统地实践了线性回归模型诊断的常用工具。通过解读 plot(model) 生成的诊断图，我们评估了模型的线性性、等方差性和残差正态性假设。我们还使用 shapiro.test() 对正态性进行了检验。利用 vif()，我们诊断了模型中是否存在多重共线性问题。最后，通过计算 cooks.distance()，我们识别了潜在的强影响点。掌握这些诊断技能对于评估模型可靠性、发现潜在问题并为下一步的模型改进奠定基础至关重要。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>20</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>第九周实验：回归模型诊断实践</span>"
     ]
   },
   {
@@ -1665,7 +1841,7 @@
     "text": "1. 目标\n本实验旨在基于上周的模型诊断结果，实践模型改进的常用策略，并练习使用不同标准进行模型选择。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
     ]
   },
   {
@@ -1676,7 +1852,7 @@
     "text": "应用变量变换（如对数变换）尝试解决非线性或异方差问题，并比较诊断结果。\n根据 VIF 结果，通过移除变量来处理多重共线性问题，并观察模型变化。\n通过移除强影响点（基于 Cook’s D）来评估其对模型的影响。\n在模型中添加交互项，并解释交互效应。\n使用 AIC 和 BIC 比较不同模型的相对优劣。\n了解 step() 函数的使用，并理解其局限性。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
     ]
   },
   {
@@ -1687,7 +1863,7 @@
     "text": "2. 数据与模型准备\n我们将继续使用上周诊断过的模型：\n\nmlr_hwy: 基于 mpg 数据集，hwy ~ displ + cyl + drv。诊断显示可能存在轻微非线性/异方差，以及 displ 和 cyl 之间的共线性。\nprob_model: 基于模拟的 prob_data，y ~ x1 + x2 + x3。诊断显示存在严重共线性 (x1, x2) 和强影响点 (点 1)。\n\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(car)    # For vif()\nlibrary(broom)  # For augment()\nlibrary(interactions) # For interact_plot()\n\n# --- 模型 1: mpg 数据 ---\nmlr_hwy &lt;- lm(hwy ~ displ + cyl + drv, data = mpg)\n# summary(mlr_hwy)\n# vif(mlr_hwy)\n# par(mfrow=c(2,2)); plot(mlr_hwy); par(mfrow=c(1,1))\n\n\n# --- 模型 2: 问题数据 ---\nset.seed(42)\nn_prob &lt;- 100\nx1_prob &lt;- rnorm(n_prob)\nx2_prob &lt;- x1_prob * 0.8 + rnorm(n_prob, 0, 0.1) # 共线性\nx3_prob &lt;- rnorm(n_prob)\ny_prob &lt;- 2 + 3*x1_prob + 1*x2_prob - 2*x3_prob + rnorm(n_prob, 0, 2)\ny_prob[1] &lt;- y_prob[1] + 15 # 异常/强影响点\nx1_prob[2] &lt;- x1_prob[2] + 4 # 高杠杆点\nprob_data &lt;- tibble(y = y_prob, x1 = x1_prob, x2 = x2_prob, x3 = x3_prob)\nprob_model &lt;- lm(y ~ x1 + x2 + x3, data = prob_data)\n# summary(prob_model)\n# vif(prob_model)\n# plot(prob_model, which=4) # Cook's D",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
     ]
   },
   {
@@ -1698,7 +1874,7 @@
     "text": "3. 变量变换实践\n场景: mlr_hwy 模型的诊断图（特别是 Residuals vs Fitted 和 Scale-Location）提示可能存在轻微的异方差（方差随拟合值增大而增大）。燃油效率这类变量有时进行对数变换效果较好。\n任务:\n\n创建一个新模型 mlr_hwy_log，对因变量 hwy 进行自然对数变换 (log(hwy))，自变量保持不变。\n使用 plot() 函数对新模型 mlr_hwy_log 进行诊断。\n比较 mlr_hwy_log 和 mlr_hwy 的诊断图（特别是 Residuals vs Fitted 和 Scale-Location）。对数变换是否改善了异方差问题？对残差正态性是否有影响？\n(思考) 对数变换后，系数的解释发生了什么变化？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
     ]
   },
   {
@@ -1709,7 +1885,7 @@
     "text": "4. 处理多重共线性实践\n场景: prob_model 模型的 VIF 诊断显示 x1 和 x2 存在严重共线性。\n任务:\n\n回顾 prob_model 的 VIF 值。\n创建一个新模型 prob_model_nox2，从 prob_model 中移除共线性严重的变量之一（例如 x2）。\n查看新模型 prob_model_nox2 的摘要 (summary()) 和 VIF 值。\n比较 prob_model 和 prob_model_nox2 的结果：\n\nx1 的系数估计值和标准误有何变化？P 值呢？\n模型的 Adjusted R-squared 有何变化？\n移除 x2 是否解决了共线性问题？这样做是否合理（取决于 x1 和 x2 的理论重要性）？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
     ]
   },
   {
@@ -1720,7 +1896,7 @@
     "text": "5. 处理强影响点实践\n场景: prob_model 的 Cook’s D 诊断显示第一个观测点是强影响点。\n任务:\n\n找出 prob_model 中 Cook’s D 大于某个阈值（例如 0.5 或 1）的点的索引。\n创建一个新模型 prob_model_noinf，从 prob_data 中移除这些强影响点后重新拟合模型 (y ~ x1 + x2 + x3)。\n比较 prob_model 和 prob_model_noinf 的模型摘要 (summary())。\n\n系数估计值（特别是截距和受影响变量的系数）是否有显著变化？\n标准误和 P 值是否有变化？\nR-squared 和 Adjusted R-squared 是否有变化？\n\n讨论: 移除这个点对模型结果产生了多大的影响？你认为应该移除它吗？（强调移除的谨慎性）。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
     ]
   },
   {
@@ -1731,7 +1907,7 @@
     "text": "6. 交互项实践\n场景: 我们想探究 mpg 数据集中，发动机排量 (displ) 对高速公路里程 (hwy) 的影响是否会因为驱动方式 (drv) 的不同而不同。\n任务:\n\n拟合一个包含 displ 和 drv 主效应以及它们之间交互项的模型 hwy ~ displ * drv。将模型存储在 interaction_hwy 中。\n查看模型摘要 summary(interaction_hwy)。\n解读交互项系数:\n\n找到 displ:drv4 和 displ:drvr 的系数和 P 值。\n解释 displ:drv4 系数的含义（它如何调节 displ 的效应？）。\n这些交互项是否统计显著？这说明了什么？\n\n使用 interactions::interact_plot() 可视化交互效应。观察不同 drv 水平下 displ 对 hwy 的拟合线斜率是否不同。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
     ]
   },
   {
@@ -1742,7 +1918,7 @@
     "text": "7. 模型比较实践 (AIC/BIC)\n场景: 比较我们为 hwy 建立的几个模型：\n\nslr_hwy_displ &lt;- lm(hwy ~ displ, data = mpg) (仅排量)\nmlr_hwy (hwy ~ displ + cyl + drv) (排量+气缸+驱动)\nmlr_hwy_log (log(hwy) ~ displ + cyl + drv) (因变量对数变换) - 注意：AIC/BIC 不能直接比较因变量不同的模型！\ninteraction_hwy (hwy ~ displ * drv) (排量与驱动交互)\n\n任务:\n\n拟合 slr_hwy_displ 模型。\n使用 AIC() 和 BIC() 函数比较 因变量相同 的模型：slr_hwy_displ, mlr_hwy, interaction_hwy。\n哪个模型的 AIC/BIC 值最低？这表明哪个模型在拟合优度和复杂度之间取得了更好的平衡？",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
     ]
   },
   {
@@ -1753,7 +1929,172 @@
     "text": "8. 实验总结\n在本实验中，我们基于模型诊断的结果，实践了多种模型改进策略，包括变量变换、处理多重共线性和强影响点。我们还学习了如何添加和解释交互项，以捕捉更复杂的变量关系。最后，我们使用 AIC 和 BIC 作为参考指标，比较了不同模型的相对优劣。模型构建是一个迭代的过程，需要结合诊断、改进和选择，才能得到一个相对可靠和有效的模型。",
     "crumbs": [
       "实验",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>第十周实验：模型改进与选择实践</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lab.html",
+    "href": "week11_lab.html",
+    "title": "第十一周实验：Logistic 回归拟合与解释",
+    "section": "",
+    "text": "1. 目标\n本实验旨在练习使用 R 拟合二元 Logistic 回归模型，并重点掌握其系数（特别是优势比 Odds Ratio）的解释。同时，开始构思综合实践项目。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>第十一周实验：Logistic 回归拟合与解释</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lab.html#目标",
+    "href": "week11_lab.html#目标",
+    "title": "第十一周实验：Logistic 回归拟合与解释",
+    "section": "",
+    "text": "理解 Logistic 回归的应用场景（预测二元分类结果）。\n准备用于 Logistic 回归的数据（确保因变量是因子或 0/1）。\n使用 glm() 函数拟合 Logistic 回归模型 (family = binomial)。\n解读 summary(glm()) 的输出，特别是系数、z 值和 P 值。\n计算并解释优势比 (OR = exp(coef)) 及其置信区间。\n开始思考并初步确定综合实践项目的选题和研究问题。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>第十一周实验：Logistic 回归拟合与解释</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lab.html#数据准备",
+    "href": "week11_lab.html#数据准备",
+    "title": "第十一周实验：Logistic 回归拟合与解释",
+    "section": "2. 数据准备",
+    "text": "2. 数据准备\n我们将使用 ISLR 包中的 Default 数据集（需要先安装 ISLR 包）。该数据集包含了关于信用卡客户是否违约 (default) 的信息，以及他们的收入 (income)、余额 (balance) 和是否是学生 (student) 等变量。\n\nlibrary(tidyverse)\n# install.packages(\"ISLR\") # 如果尚未安装\nlibrary(ISLR)     # 包含 Default 数据集\nlibrary(broom)    # 用于 tidy() 函数提取模型结果\n\n# 加载并查看 Default 数据集\ndata(\"Default\")\nglimpse(Default)\n\n#&gt; Rows: 10,000\n#&gt; Columns: 4\n#&gt; $ default &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No, No, No…\n#&gt; $ student &lt;fct&gt; No, Yes, No, No, No, Yes, No, Yes, No, No, Yes, Yes, No, No, N…\n#&gt; $ balance &lt;dbl&gt; 729.5265, 817.1804, 1073.5492, 529.2506, 785.6559, 919.5885, 8…\n#&gt; $ income  &lt;dbl&gt; 44361.625, 12106.135, 31767.139, 35704.494, 38463.496, 7491.55…\n\nsummary(Default)\n\n#&gt;  default    student       balance           income     \n#&gt;  No :9667   No :7056   Min.   :   0.0   Min.   :  772  \n#&gt;  Yes: 333   Yes:2944   1st Qu.: 481.7   1st Qu.:21340  \n#&gt;                        Median : 823.6   Median :34553  \n#&gt;                        Mean   : 835.4   Mean   :33517  \n#&gt;                        3rd Qu.:1166.3   3rd Qu.:43808  \n#&gt;                        Max.   :2654.3   Max.   :73554\n\n# 我们的目标是预测客户是否会违约 (default = Yes)\n# 检查因变量 default 的类型和水平\nclass(Default$default)\n\n#&gt; [1] \"factor\"\n\nlevels(Default$default) # No 是第一个水平 (参照组, 0), Yes 是第二个水平 (目标事件, 1)\n\n#&gt; [1] \"No\"  \"Yes\"",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>第十一周实验：Logistic 回归拟合与解释</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lab.html#拟合简单-logistic-回归模型",
+    "href": "week11_lab.html#拟合简单-logistic-回归模型",
+    "title": "第十一周实验：Logistic 回归拟合与解释",
+    "section": "3. 拟合简单 Logistic 回归模型",
+    "text": "3. 拟合简单 Logistic 回归模型\n场景: 我们首先尝试只用信用卡余额 (balance) 来预测客户是否会违约 (default)。\n任务:\n\n使用 glm() 拟合一个简单 Logistic 回归模型，公式为 default ~ balance，family 设置为 binomial。将模型存储在 logistic_simple 中。\n使用 summary() 查看模型结果。\n解读系数:\n\n解释截距 (Intercept) 的对数优势 (log-odds) 含义。\n解释 balance 系数的对数优势 (log-odds) 含义。\nbalance 对违约的影响是否统计显著？\n\n计算并解释优势比 (OR):\n\n计算 balance 系数的优势比 (exp(coef))。\n解释该 OR 的含义（信用卡余额每增加一个单位，违约的优势变为原来的多少倍？）。\n计算 OR 的置信区间 (exp(confint(model)))。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>第十一周实验：Logistic 回归拟合与解释</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lab.html#拟合多元-logistic-回归模型",
+    "href": "week11_lab.html#拟合多元-logistic-回归模型",
+    "title": "第十一周实验：Logistic 回归拟合与解释",
+    "section": "4. 拟合多元 Logistic 回归模型",
+    "text": "4. 拟合多元 Logistic 回归模型\n场景: 现在我们加入更多预测变量：student (是否是学生) 和 income (收入)，来构建一个更全面的违约预测模型。\n任务:\n\n使用 glm() 拟合一个多元 Logistic 回归模型，公式为 default ~ balance + income + student。将模型存储在 logistic_multi 中。\n使用 summary() 查看模型结果。\n解读系数:\n\n解释 balance 的偏系数的对数优势含义（强调控制其他变量）。\n解释 income 的偏系数的对数优势含义。\n解释 studentYes 系数的对数优势含义（它是相对于哪个参照组的？）。\n判断每个变量的统计显著性。\n\n计算并解释优势比 (OR):\n\n计算所有系数的 OR。\n解释 balance 的 OR（控制收入和学生身份后）。\n解释 income 的 OR。\n解释 studentYes 的 OR（学生相对于非学生的违约优势比是多少？）。\n\n\n思考:\n\n比较简单模型和多元模型中 balance 的系数和 OR，它们有变化吗？为什么？（因为加入了控制变量 income 和 student）。\nincome 变量在多元模型中变得统计显著了（虽然效应量很小），这可能是什么原因？（可能是由于控制了其他变量后，income 的微小独立效应显现出来，或者与样本量有关）。\nstudentYes 的系数是负的，OR 小于 1，这说明学生身份是违约的“保护”因素吗？（注意：这只是在控制了 balance 和 income 之后的结果。单独看学生身份和违约的关系可能会不同，可能存在混淆）。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>第十一周实验：Logistic 回归拟合与解释</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lab.html#综合实践项目构思",
+    "href": "week11_lab.html#综合实践项目构思",
+    "title": "第十一周实验：Logistic 回归拟合与解释",
+    "section": "5. 综合实践项目构思",
+    "text": "5. 综合实践项目构思\n任务:\n\n初步选题: 确定 1-2 个你感兴趣的综合实践项目主题或方向。\n寻找数据: 尝试寻找与你选题相关的公开数据集，或者思考你已有的数据。评估数据的可获取性和大致质量。\n明确研究问题: 针对你的选题和数据，提出 1-2 个具体、可衡量、可通过数据分析回答的研究问题。\n\n例如：“哪些因素（如年龄、性别、浏览时长）显著影响用户是否会点击广告？” (Logistic 回归)\n例如：“不同促销策略（A, B, C）对产品周销量的平均影响是否存在显著差异？” (ANOVA)\n例如：“空气质量指数 (AQI) 与城市交通流量之间是否存在线性关系？能否用交通流量预测 AQI？” (相关/回归)\n\n初步计划: 简要思考你可能需要进行哪些数据处理步骤？可能用到哪些主要的统计方法？\n\n准备在下周课堂上简要分享和讨论你的初步想法。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>第十一周实验：Logistic 回归拟合与解释</span>"
+    ]
+  },
+  {
+    "objectID": "week11_lab.html#实验总结",
+    "href": "week11_lab.html#实验总结",
+    "title": "第十一周实验：Logistic 回归拟合与解释",
+    "section": "6. 实验总结",
+    "text": "6. 实验总结\n在本实验中，我们使用 ISLR::Default 数据集实践了拟合简单和多元 Logistic 回归模型。我们重点练习了使用 glm(family = binomial) 函数，并深入解读了模型系数，特别是计算和解释了优势比 (Odds Ratio) 及其含义。理解 OR 是掌握 Logistic 回归的关键。同时，我们也正式启动了综合实践项目的构思阶段。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>第十一周实验：Logistic 回归拟合与解释</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lab.html",
+    "href": "week12_lab.html",
+    "title": "第十二周实验：Logistic 回归评估与模型比较",
+    "section": "",
+    "text": "1. 目标\n本实验旨在练习评估 Logistic 回归模型的性能，理解各种评估指标的含义和计算方法，并初步实践模型比较。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>第十二周实验：Logistic 回归评估与模型比较</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lab.html#目标",
+    "href": "week12_lab.html#目标",
+    "title": "第十二周实验：Logistic 回归评估与模型比较",
+    "section": "",
+    "text": "从拟合的 Logistic 回归模型生成预测概率和预测类别。\n使用 table() 或 yardstick::conf_mat() 创建和解读混淆矩阵。\n使用 yardstick 包计算并解释 Accuracy, Precision, Recall, Specificity, F1-Score。\n理解不同评估指标的侧重点和适用场景。\n使用 pROC 包绘制 ROC 曲线并计算 AUC 值，评估模型的整体区分能力。\n使用 AIC() 和 BIC() 比较不同 Logistic 回归模型的相对优劣。\n讨论 Capstone 项目选题和初步 EDA。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>第十二周实验：Logistic 回归评估与模型比较</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lab.html#数据与模型准备",
+    "href": "week12_lab.html#数据与模型准备",
+    "title": "第十二周实验：Logistic 回归评估与模型比较",
+    "section": "2. 数据与模型准备",
+    "text": "2. 数据与模型准备\n我们将继续使用上周的 ISLR::Default 数据集和拟合的多元 Logistic 回归模型 logistic_multi。\n\nlibrary(tidyverse)\n# install.packages(\"ISLR\") # 如果尚未安装\nlibrary(ISLR)\nlibrary(broom)\n# install.packages(\"yardstick\") # 如果尚未安装\nlibrary(yardstick) # For metrics: conf_mat, accuracy, precision, recall, f_meas, spec\n# install.packages(\"pROC\") # 如果尚未安装\nlibrary(pROC)      # For ROC and AUC\nlibrary(ggplot2)   # For plotting ROC\n\n# 加载数据并回顾模型\ndata(\"Default\")\nlogistic_multi &lt;- glm(default ~ balance + income + student, data = Default, family = binomial)\n# summary(logistic_multi)\n\n# --- 生成预测 ---\n# 预测概率 (预测 default = Yes 的概率)\npred_prob_yes &lt;- predict(logistic_multi, type = \"response\") # type=\"response\" 返回概率\n\n# 设定阈值并生成预测类别\nthreshold &lt;- 0.5\npred_class &lt;- ifelse(pred_prob_yes &gt; threshold, \"Yes\", \"No\")\npred_class &lt;- factor(pred_class, levels = levels(Default$default)) # 确保因子水平一致\n\n# 创建包含观测值和预测值的 tibble\neval_data_w12 &lt;- tibble(\n  observed = Default$default,\n  predicted_prob = pred_prob_yes,\n  predicted_class = pred_class\n)\n\nglimpse(eval_data_w12)\n\n#&gt; Rows: 10,000\n#&gt; Columns: 3\n#&gt; $ observed        &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No…\n#&gt; $ predicted_prob  &lt;dbl&gt; 1.428724e-03, 1.122204e-03, 9.812272e-03, 4.415893e-04…\n#&gt; $ predicted_class &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No…",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>第十二周实验：Logistic 回归评估与模型比较</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lab.html#混淆矩阵与基础指标",
+    "href": "week12_lab.html#混淆矩阵与基础指标",
+    "title": "第十二周实验：Logistic 回归评估与模型比较",
+    "section": "3. 混淆矩阵与基础指标",
+    "text": "3. 混淆矩阵与基础指标\n任务: 1. 使用 yardstick::conf_mat() 创建 eval_data_w12 的混淆矩阵。 2. 手动识别混淆矩阵中的 TP, FN, FP, TN (假设 “Yes” 是 Positive 类)。 3. 使用 yardstick 函数计算以下指标，并解释其含义： * Accuracy * Precision (for class “Yes”) * Recall (Sensitivity, for class “Yes”) * Specificity (for class “Yes”, i.e., correctly identifying “No”) * F1-Score (for class “Yes”)\n\n# 1. 创建混淆矩阵\nconf_matrix &lt;- eval_data_w12 %&gt;%\n  conf_mat(truth = observed, estimate = predicted_class)\n\nprint(\"Confusion Matrix:\")\n\n#&gt; [1] \"Confusion Matrix:\"\n\nprint(conf_matrix)\n\n#&gt;           Truth\n#&gt; Prediction   No  Yes\n#&gt;        No  9627  228\n#&gt;        Yes   40  105\n\n# 2. 手动识别 (基于上面打印的矩阵)\n# TP: Observed=Yes, Predicted=Yes (右下角)\n# FN: Observed=Yes, Predicted=No (右上角)\n# FP: Observed=No, Predicted=Yes (左下角)\n# TN: Observed=No, Predicted=No (左上角)\n# (具体数值依赖于模型和阈值)\n\n# 3. 计算评估指标\n# metrics_summary &lt;- eval_data_w12 %&gt;%\n#   metrics(truth = observed, estimate = predicted_class) # metrics 可以一次计算多个, 但可能不含概率指标\n\nprint(\"Metrics Summary (using default threshold 0.5):\")\n\n#&gt; [1] \"Metrics Summary (using default threshold 0.5):\"\n\n# 计算单个指标并解释\nacc &lt;- eval_data_w12 %&gt;% accuracy(truth = observed, estimate = predicted_class)\nprec &lt;- eval_data_w12 %&gt;% precision(truth = observed, estimate = predicted_class, event_level = \"second\") # \"Yes\" is the second level\nrec &lt;- eval_data_w12 %&gt;% recall(truth = observed, estimate = predicted_class, event_level = \"second\")\nspec &lt;- eval_data_w12 %&gt;% specificity(truth = observed, estimate = predicted_class, event_level = \"second\")\nf1 &lt;- eval_data_w12 %&gt;% f_meas(truth = observed, estimate = predicted_class, event_level = \"second\")\n\nprint(paste(\"Accuracy:\", round(acc$.estimate, 4)))\n\n#&gt; [1] \"Accuracy: 0.9732\"\n\n# 解释: 模型整体预测正确的比例。\n\nprint(paste(\"Precision (for Yes):\", round(prec$.estimate, 4)))\n\n#&gt; [1] \"Precision (for Yes): 0.7241\"\n\n# 解释: 在所有被预测为违约(Yes)的客户中，实际确实违约的比例。\n\nprint(paste(\"Recall/Sensitivity (for Yes):\", round(rec$.estimate, 4)))\n\n#&gt; [1] \"Recall/Sensitivity (for Yes): 0.3153\"\n\n# 解释: 在所有实际违约(Yes)的客户中，被模型成功预测出来的比例。\n\nprint(paste(\"Specificity (for No):\", round(spec$.estimate, 4)))\n\n#&gt; [1] \"Specificity (for No): 0.9959\"\n\n# 解释: 在所有实际未违约(No)的客户中，被模型成功预测为未违约的比例。\n\nprint(paste(\"F1-Score (for Yes):\", round(f1$.estimate, 4)))\n\n#&gt; [1] \"F1-Score (for Yes): 0.4393\"\n\n# 解释: Precision 和 Recall 的调和平均，综合衡量模型对违约(Yes)类别的预测性能。\n\n思考: * 在这个 Default 数据集中，类别是否平衡？（提示：查看 summary(Default$default) 或 table(Default$default)）。如果不平衡，Accuracy 是一个好的评估指标吗？为什么？ * 对于信用卡违约预测，你认为 Precision 和 Recall 哪个更重要？或者说，误报 (FP - 将未违约者预测为违约) 和漏报 (FN - 将违约者预测为未违约) 哪个代价更大？这会如何影响你对模型的评估侧重？\n\ntable(Default$default)\n\n#&gt; \n#&gt;   No  Yes \n#&gt; 9667  333\n\n# 结果显示 No 类别远多于 Yes 类别，数据不平衡。\n# 因此，Accuracy 可能具有误导性，应更关注 Precision, Recall, F1 或 AUC。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>第十二周实验：Logistic 回归评估与模型比较</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lab.html#roc-曲线与-auc",
+    "href": "week12_lab.html#roc-曲线与-auc",
+    "title": "第十二周实验：Logistic 回归评估与模型比较",
+    "section": "4. ROC 曲线与 AUC",
+    "text": "4. ROC 曲线与 AUC\n任务: 1. 使用 pROC::roc() 函数，根据 eval_data_w12 中的真实观测值 (observed) 和预测概率 (predicted_prob) 创建 ROC 对象。确保正确指定 levels 参数。 2. 使用 pROC::auc() 计算 AUC 值。 3. 解读 AUC 值的含义（模型的整体区分能力如何？）。 4. 使用 pROC::ggroc() 绘制 ROC 曲线，并添加对角线和 AUC 值标注。\n\n# 1. 创建 ROC 对象\n# levels = c(\"No\", \"Yes\") 表示 \"No\" 是参照组 (0), \"Yes\" 是事件组 (1)\nroc_curve &lt;- roc(response = eval_data_w12$observed,\n                 predictor = eval_data_w12$predicted_prob,\n                 levels = c(\"No\", \"Yes\")) # 指定 No 为阴性，Yes 为阳性\n\n# 2. 计算 AUC\nauc_value &lt;- auc(roc_curve)\nprint(paste(\"AUC:\", round(auc_value, 4)))\n\n#&gt; [1] \"AUC: 0.9496\"\n\n# 3. 解读 AUC\n# AUC 值（例如接近 0.97）非常高，表明该模型在区分违约和不违约客户方面具有很强的整体能力。\n# 远好于随机猜测 (AUC=0.5)。\n\n# 4. 绘制 ROC 曲线\nggroc(roc_curve, legacy.axes = TRUE) + # legacy.axes=TRUE 使 x 轴为 FPR\n  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color=\"darkgrey\", linetype=\"dashed\") + # 添加对角线\n  labs(title = paste(\"ROC Curve (AUC =\", round(auc_value, 3), \")\"),\n       x = \"False Positive Rate (1 - Specificity)\",\n       y = \"True Positive Rate (Sensitivity)\") +\n  annotate(\"text\", x = 0.75, y = 0.25, label = paste(\"AUC =\", round(auc_value, 3)), size = 4) +\n  theme_minimal()\n\n\n\n\n\n\n\n# (可选) 找到最佳阈值点\n# plot.roc(roc_curve, print.thres = \"best\", print.thres.best.method = \"youden\")\n# best_threshold &lt;- coords(roc_curve, \"best\", ret = \"threshold\", best.method=\"youden\")$threshold\n# print(paste(\"Best threshold (Youden):\", round(best_threshold, 4)))",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>第十二周实验：Logistic 回归评估与模型比较</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lab.html#模型比较-aicbic",
+    "href": "week12_lab.html#模型比较-aicbic",
+    "title": "第十二周实验：Logistic 回归评估与模型比较",
+    "section": "5. 模型比较 (AIC/BIC)",
+    "text": "5. 模型比较 (AIC/BIC)\n场景: 比较上周拟合的两个 Logistic 回归模型： * logistic_simple: default ~ balance * logistic_multi: default ~ balance + income + student\n任务: 1. 重新拟合 logistic_simple 模型（如果需要）。 2. 使用 AIC() 和 BIC() 比较这两个模型。 3. 哪个模型的 AIC 和 BIC 更低？根据这些信息准则，哪个模型相对更优？这是否符合你对模型复杂度和拟合效果的直观感受？\n\n# 1. 重新拟合简单模型 (如果需要)\nlogistic_simple &lt;- glm(default ~ balance, data = Default, family = binomial)\n\n# 2. 比较 AIC 和 BIC\nprint(\"--- Model Comparison (AIC/BIC) ---\")\n\n#&gt; [1] \"--- Model Comparison (AIC/BIC) ---\"\n\nAIC_comp &lt;- AIC(logistic_simple, logistic_multi)\nBIC_comp &lt;- BIC(logistic_simple, logistic_multi)\n\nprint(\"AIC Comparison:\")\n\n#&gt; [1] \"AIC Comparison:\"\n\nprint(AIC_comp)\n\n#&gt;                 df      AIC\n#&gt; logistic_simple  2 1600.452\n#&gt; logistic_multi   4 1579.545\n\nprint(\"BIC Comparison:\")\n\n#&gt; [1] \"BIC Comparison:\"\n\nprint(BIC_comp)\n\n#&gt;                 df      BIC\n#&gt; logistic_simple  2 1614.872\n#&gt; logistic_multi   4 1608.386\n\n# 3. 解读\n# 比较两个模型的 AIC 和 BIC 值。通常 logistic_multi 的值会更低。\n# 结论：根据 AIC 和 BIC 标准，包含 balance, income, student 的多元模型\n#       在拟合优度和模型复杂度之间取得了更好的平衡，相对优于只包含 balance 的简单模型。\n#       这表明加入 income 和 student 变量（即使 income 效应很小）整体上改进了模型（根据信息准则）。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>第十二周实验：Logistic 回归评估与模型比较</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lab.html#capstone-项目进展讨论",
+    "href": "week12_lab.html#capstone-项目进展讨论",
+    "title": "第十二周实验：Logistic 回归评估与模型比较",
+    "section": "6. Capstone 项目进展讨论",
+    "text": "6. Capstone 项目进展讨论\n任务: 1. 分享你的选题: 向小组或全班简要介绍你选择的 Capstone 项目主题、研究问题和数据来源。 2. 展示初步 EDA: 展示你使用 ggplot2 等工具进行的初步数据探索结果（关键变量分布、变量关系图等）。 3. 讨论遇到的问题: 分享你在数据获取、清理或初步探索中遇到的困难或疑问。 4. 接受反馈: 听取老师、助教和同学的建议。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>第十二周实验：Logistic 回归评估与模型比较</span>"
+    ]
+  },
+  {
+    "objectID": "week12_lab.html#实验总结",
+    "href": "week12_lab.html#实验总结",
+    "title": "第十二周实验：Logistic 回归评估与模型比较",
+    "section": "7. 实验总结",
+    "text": "7. 实验总结\n在本实验中，我们深入实践了 Logistic 回归模型的评估。我们学会了如何生成预测、构建混淆矩阵，并计算和解释了 Accuracy, Precision, Recall, Specificity, F1-Score 等关键指标。我们还掌握了使用 ROC 曲线和 AUC 值来评估模型整体区分能力的方法。最后，我们练习了使用 AIC/BIC 来比较不同 Logistic 回归模型。这些评估技能对于理解和选择合适的分类模型至关重要。同时，我们也推进了 Capstone 项目的选题和初步探索。",
+    "crumbs": [
+      "实验",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>第十二周实验：Logistic 回归评估与模型比较</span>"
     ]
   }
 ]

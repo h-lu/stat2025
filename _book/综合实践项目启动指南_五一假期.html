@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="陆海波">
-<meta name="dcterms.date" content="2025-04-28">
 
-<title>统计学与R语言</title>
+<title>综合实践项目启动详细指南 (五一假期任务) – 统计学与R语言</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./week1_lecture.html" rel="next">
+<link href="./week1_lab.html" rel="next">
+<link href="./week12_lecture.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -84,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-title">课程介绍</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./综合实践项目启动指南_五一假期.html"><span class="chapter-title">综合实践项目启动详细指南 (五一假期任务)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -111,7 +110,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">课程介绍</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">课程介绍</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -185,7 +184,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./综合实践项目启动指南_五一假期.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">综合实践项目启动详细指南 (五一假期任务)</span></a>
+  <a href="./综合实践项目启动指南_五一假期.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">综合实践项目启动详细指南 (五一假期任务)</span></a>
   </div>
 </li>
       </ul>
@@ -271,37 +270,26 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#课程目标" id="toc-课程目标" class="nav-link active" data-scroll-target="#课程目标">课程目标</a></li>
-  <li><a href="#课程内容" id="toc-课程内容" class="nav-link" data-scroll-target="#课程内容">课程内容</a></li>
-  <li><a href="#考核方式" id="toc-考核方式" class="nav-link" data-scroll-target="#考核方式">考核方式</a></li>
+  <li><a href="#任务一最终确定选题与研究问题" id="toc-任务一最终确定选题与研究问题" class="nav-link active" data-scroll-target="#任务一最终确定选题与研究问题">任务一：最终确定选题与研究问题</a></li>
+  <li><a href="#任务二确保数据到位获取导入与整理" id="toc-任务二确保数据到位获取导入与整理" class="nav-link" data-scroll-target="#任务二确保数据到位获取导入与整理">任务二：确保数据到位：获取、导入与整理</a></li>
+  <li><a href="#任务三完成初步探索性数据分析-eda" id="toc-任务三完成初步探索性数据分析-eda" class="nav-link" data-scroll-target="#任务三完成初步探索性数据分析-eda">任务三：完成初步探索性数据分析 (EDA)</a></li>
+  <li><a href="#假期结束时你应该拥有" id="toc-假期结束时你应该拥有" class="nav-link" data-scroll-target="#假期结束时你应该拥有">假期结束时你应该拥有：</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./week1_lecture.html">讲义</a></li><li class="breadcrumb-item"><a href="./综合实践项目启动指南_五一假期.html"><span class="chapter-title">综合实践项目启动详细指南 (五一假期任务)</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">统计学与R语言</h1>
+<h1 class="title"><span class="chapter-title">综合实践项目启动详细指南 (五一假期任务)</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>陆海波 </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">April 28, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -311,22 +299,175 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>欢迎来到《统计学与R语言》课程！</p>
-<section id="课程目标" class="level2">
-<h2 class="anchored" data-anchor-id="课程目标">课程目标</h2>
-<p>本课程旨在帮助你掌握统计学的基础知识，并使用R语言进行数据分析。</p>
-</section>
-<section id="课程内容" class="level2">
-<h2 class="anchored" data-anchor-id="课程内容">课程内容</h2>
-</section>
-<section id="考核方式" class="level2">
-<h2 class="anchored" data-anchor-id="考核方式">考核方式</h2>
+<p>大家好！</p>
+<p>综合实践项目是我们应用所学知识、深入探索数据分析过程的重要机会。这个”五一”假期是启动项目、奠定坚实基础的绝佳时机。本指南将详细分解假期内需要完成的核心任务，确保你能有效地开始你的数据分析之旅。</p>
+<p><strong>假期核心目标：</strong> 完成项目选题、数据准备和初步探索性数据分析 (EDA)。</p>
+<hr>
+<section id="任务一最终确定选题与研究问题" class="level3">
+<h3 class="anchored" data-anchor-id="任务一最终确定选题与研究问题">任务一：最终确定选题与研究问题</h3>
+<p>这是项目的起点和方向，至关重要。一个清晰、具体的问题将指导你后续所有的数据分析工作。</p>
+<ol type="1">
+<li><strong>从兴趣出发，聚焦具体问题：</strong>
 <ul>
-<li><strong>课堂参与 (20%)：</strong> 出勤、课堂互动、课堂表现</li>
-<li><strong>小组项目1次 (10%)：</strong> 包括项目选题、数据收集、统计分析、结果解释和结论。</li>
-<li><strong>最终项目1次 (20%)：</strong> 包括项目选题、数据收集、统计分析、结果解释和结论。</li>
-<li><strong>期末考试 (50%)：</strong> 闭卷考试，考察学生对统计学基本概念、原理和方法的掌握程度。</li>
-</ul>
+<li>回顾你初步构思的 1-2 个主题。哪个最让你感兴趣？哪个的数据看起来更容易获取和处理？</li>
+<li>将宽泛的主题转化为一个或两个<strong>可以明确回答</strong>的问题。避免过于宏大或模糊不清的问题。</li>
+<li><strong>检查问题是否”SMART”：</strong>
+<ul>
+<li><strong>S</strong>pecific (具体的): 问题明确指向特定的现象或关系吗？</li>
+<li><strong>M</strong>easurable (可衡量的): 你能用数据来量化和衡量问题中的关键概念吗？</li>
+<li><strong>A</strong>chievable (可实现的): 你拥有的数据和当前掌握的技能足以回答这个问题吗？</li>
+<li><strong>R</strong>elevant (相关的): 这个问题与你的兴趣、专业或课程内容相关吗？</li>
+<li><strong>T</strong>ime-bound (有时限的): (在项目整体框架下) 这个问题能在课程时间内完成分析吗？</li>
+</ul></li>
+</ul></li>
+<li><strong>问题示例 (更通用):</strong>
+<ul>
+<li><strong>好问题 (具体、可衡量):</strong>
+<ul>
+<li><strong>描述性/比较性:</strong> “不同产品类别 (<code>category</code>) 的平均销售额 (<code>sales</code>) 是否存在差异？哪个类别平均销售额最高？” (适用于 EDA 的分组箱线图或后续的 ANOVA)</li>
+<li><strong>描述性/比较性:</strong> “来自不同地区 (<code>region</code>) 的用户在网站停留时间 (<code>session_duration</code>) 上有何不同？” (适用于 EDA 的分组箱线图)</li>
+<li><strong>关系探索:</strong> “广告支出 (<code>ad_spend</code>) 与网站访问量 (<code>visits</code>) 之间是否存在关联？它们的关系是怎样的？” (适用于 EDA 的散点图或后续的相关/简单回归分析)</li>
+<li><strong>关系探索:</strong> “顾客年龄 (<code>age</code>) 与其购买金额 (<code>purchase_amount</code>) 之间有关系吗？” (适用于 EDA 的散点图)</li>
+<li><strong>分类导向:</strong> “哪些用户特征（如 <code>age</code>, <code>region</code>, <code>past_purchases</code>）可以帮助区分高价值客户和普通客户？” (引向分类问题)</li>
+</ul></li>
+<li><strong>待改进的问题 (过于宽泛):</strong>
+<ul>
+<li>“分析销售数据。” (分析什么？目标是什么？)</li>
+<li>“研究用户行为。” (研究哪些行为？与什么相关？)</li>
+</ul></li>
+</ul></li>
+<li><strong>最终确认：</strong> 写下你最终确定的 1-2 个核心研究问题。确保你理解这些问题，并相信你的数据能够帮助回答它们。</li>
+</ol>
+<hr>
+</section>
+<section id="任务二确保数据到位获取导入与整理" class="level3">
+<h3 class="anchored" data-anchor-id="任务二确保数据到位获取导入与整理">任务二：确保数据到位：获取、导入与整理</h3>
+<p>数据是分析的基础。你需要确保你的”原材料”已经准备就绪。</p>
+<ol type="1">
+<li><strong>获取数据：</strong>
+<ul>
+<li>根据你的选题，下载所需的数据集。</li>
+<li>来源可能包括：老师提供的文件、Kaggle、UCI 机器学习库、天池、国家/地方政府数据开放平台、特定研究机构网站等。</li>
+<li><strong>建议：</strong> 将下载的原始数据文件保存在你电脑上一个清晰、易于查找的位置。</li>
+</ul></li>
+<li><strong>创建项目结构 (推荐)：</strong>
+<ul>
+<li>在你的电脑上为这个项目创建一个总文件夹。</li>
+<li>在总文件夹内，建议创建子文件夹，例如：
+<ul>
+<li><code>data/</code>: 存放原始数据文件和清理后的数据文件。</li>
+<li><code>scripts/</code> 或 <code>code/</code>: 存放你的 R 脚本文件 (.R 或 .qmd)。</li>
+<li><code>plots/</code>: (可选) 存放生成的图表文件。</li>
+<li><code>reports/</code>: (可选) 存放最终的报告文件。</li>
+</ul></li>
+<li>这样做有助于保持项目文件的整洁和有序。</li>
+</ul></li>
+<li><strong>导入数据到 R 环境：</strong>
+<ul>
+<li>启动 RStudio，建议创建一个新的 R 项目 (File -&gt; New Project…) 并将其设置在你创建的总文件夹中。这样可以更好地管理工作目录。</li>
+<li>使用 <code>readr</code> 包 (属于 <code>tidyverse</code>) 中的函数导入数据。最常用的是：
+<ul>
+<li><code>read_csv("path/to/your/data.csv")</code>: 读取逗号分隔值文件 (.csv)。这是最常见的数据格式。</li>
+<li><code>read_tsv("path/to/your/data.tsv")</code>: 读取制表符分隔值文件 (.tsv)。</li>
+<li>(如果需要读取 Excel 文件，可能需要 <code>readxl</code> 包)：<code>readxl::read_excel("path/to/your/data.xlsx")</code>。</li>
+</ul></li>
+<li><strong>路径:</strong> <code>"path/to/your/data.csv"</code> 应替换为你数据文件的实际路径。如果 R 项目设置正确，且数据在 <code>data/</code> 子文件夹下，路径通常是 <code>"data/your_data.csv"</code>。</li>
+<li>将读取的数据赋值给一个变量 (数据框)，例如：<code>my_data &lt;- read_csv("data/your_data.csv")</code>。</li>
+</ul></li>
+<li><strong>检查导入是否成功：</strong>
+<ul>
+<li><code>head(my_data)</code>: 查看数据框的前几行。</li>
+<li><code>tail(my_data)</code>: 查看数据框的后几行。</li>
+<li><code>dim(my_data)</code>: 查看数据框的维度 (行数和列数)。</li>
+<li><code>colnames(my_data)</code>: 查看所有列名。</li>
+<li>确保数据看起来符合预期，没有明显的读取错误。</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+<section id="任务三完成初步探索性数据分析-eda" class="level3">
+<h3 class="anchored" data-anchor-id="任务三完成初步探索性数据分析-eda">任务三：完成初步探索性数据分析 (EDA)</h3>
+<p>EDA 的目的是深入了解你的数据，发现其内在规律、异常情况以及变量间的潜在联系，为后续的建模和分析提供依据。</p>
+<ol type="1">
+<li><strong>数据整体检查 (使用 R 函数):</strong>
+<ul>
+<li><code>glimpse(my_data)</code>: 必用！快速概览数据结构，每列的名称、数据类型 (如 <code>dbl</code> 双精度浮点数, <code>int</code> 整数, <code>chr</code> 字符, <code>fct</code> 因子) 和前几行的值。特别关注数据类型是否符合预期 (例如，分类变量是否应为因子 <code>fct</code>？)。</li>
+<li><code>summary(my_data)</code>: 提供数值变量的五数概括 (最小值、第一四分位数、中位数、均值、第三四分位数、最大值) 和缺失值计数 (NA’s)，以及字符/因子变量的频数统计。有助于发现异常值和数据分布的初步印象。</li>
+<li><code>skimr::skim(my_data)</code>: (需要先安装和加载 <code>skimr</code> 包: <code>install.packages("skimr"); library(skimr)</code>) 提供一个非常详尽的概览，包括缺失值比例、数值变量的迷你直方图、字符变量的独特性等。强烈推荐使用！</li>
+<li><strong>重点检查:</strong>
+<ul>
+<li><strong>缺失值 (NA):</strong> 哪些列有缺失？缺失比例高吗？ (这会影响后续分析)</li>
+<li><strong>数据类型:</strong> 是否有需要转换类型的列？(例如，代表类别的数字应转为因子)</li>
+<li><strong>数值范围:</strong> 数值变量的范围是否合理？是否存在明显的极端值或异常值？</li>
+<li><strong>分类变量水平:</strong> 如果有分类变量 (因子)，其水平 (levels) 是否正确？例如，对于 Logistic 回归的因变量，确保代表”成功”或”目标事件”的水平是第二个。</li>
+</ul></li>
+</ul></li>
+<li><strong>单变量可视化 (<code>ggplot2</code>):</strong> 探索每个重要变量自身的分布特征。
+<ul>
+<li><strong>连续变量:</strong>
+<ul>
+<li><code>ggplot(my_data, aes(x = continuous_variable)) + geom_histogram(bins = 30)</code>: 直方图，观察分布形状 (对称、左偏、右偏)、峰值位置。<code>bins</code> 参数可以调整分组数量。</li>
+<li><code>ggplot(my_data, aes(x = continuous_variable)) + geom_density()</code>: 核密度图，平滑版的直方图，更清晰地展示分布形态。</li>
+<li><code>ggplot(my_data, aes(y = continuous_variable)) + geom_boxplot()</code>: 箱线图，展示中位数、四分位数范围 (IQR)、以及潜在的异常点。</li>
+</ul></li>
+<li><strong>分类变量:</strong>
+<ul>
+<li><code>ggplot(my_data, aes(x = categorical_variable)) + geom_bar()</code>: 条形图，展示每个类别的频数或计数。</li>
+</ul></li>
+</ul></li>
+<li><strong>变量间关系可视化 (<code>ggplot2</code>):</strong> 探索变量之间可能存在的联系。
+<ul>
+<li><strong>连续 vs.&nbsp;连续:</strong>
+<ul>
+<li><code>ggplot(my_data, aes(x = var1, y = var2)) + geom_point()</code>: 散点图，观察是否存在线性关系、非线性关系、聚类或异常点。</li>
+</ul></li>
+<li><strong>分类 vs.&nbsp;连续:</strong>
+<ul>
+<li><code>ggplot(my_data, aes(x = categorical_var, y = continuous_var)) + geom_boxplot()</code>: 分组箱线图，比较不同类别下连续变量的分布、中位数、离散程度和异常值。非常常用！</li>
+<li><code>ggplot(my_data, aes(x = categorical_var, y = continuous_var)) + geom_violin()</code>: 分组小提琴图，是箱线图和密度图的结合，能更详细地展示分布形态。</li>
+<li>(可选) <code>ggplot(my_data, aes(x = continuous_var, fill = categorical_var)) + geom_density(alpha = 0.5)</code>: 分组密度图，比较不同类别下连续变量的分布曲线。</li>
+</ul></li>
+<li><strong>分类 vs.&nbsp;分类:</strong>
+<ul>
+<li><code>ggplot(my_data, aes(x = cat_var1, fill = cat_var2)) + geom_bar(position = "fill")</code>: 填充条形图，展示在一个分类变量的每个类别中，另一个分类变量的相对比例。</li>
+<li><code>ggplot(my_data, aes(x = cat_var1, fill = cat_var2)) + geom_bar(position = "dodge")</code>: 并列条形图，比较不同类别组合的绝对频数。</li>
+<li><code>my_data %&gt;% count(cat_var1, cat_var2) %&gt;% ggplot(aes(x = cat_var1, y = cat_var2, fill = n)) + geom_tile()</code>: 热力图，用颜色深浅表示两个分类变量组合的频数。</li>
+</ul></li>
+</ul></li>
+<li><strong>记录你的发现！:</strong> 这是 EDA 最重要的一步。
+<ul>
+<li><strong>在代码中添加注释:</strong> 对你的代码进行解释，说明你为什么进行某个检查或绘图。</li>
+<li><strong>记录关键观察:</strong> 在脚本的注释中，或者单独的笔记文件中，记下你从检查和图表中获得的主要信息。例如：
+<ul>
+<li>“变量 <code>income</code> 呈右偏分布，可能需要进行对数变换。”</li>
+<li>“变量 <code>age</code> 与 <code>purchase_amount</code> 似乎存在正相关。”</li>
+<li>“发现 <code>location</code> 列有 15% 的缺失值，需要后续处理。”</li>
+<li>“不同 <code>education_level</code> 组的平均 <code>salary</code> 有明显差异，<code>boxplot</code> 显示…”</li>
+</ul></li>
+<li><strong>保存重要图表:</strong> 将具有启发性的图表保存下来 (可以使用 <code>ggsave("plots/my_plot.png")</code>)，并给予有意义的文件名。</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+<section id="假期结束时你应该拥有" class="level3">
+<h3 class="anchored" data-anchor-id="假期结束时你应该拥有">假期结束时你应该拥有：</h3>
+<ol type="1">
+<li><strong>一份明确的研究问题陈述。</strong></li>
+<li><strong>一个包含你的 R 项目、数据文件和初步 R 脚本的项目文件夹。</strong></li>
+<li><strong>一个可以成功运行的 R 脚本，该脚本能够：</strong>
+<ul>
+<li>加载所需的库 (<code>library(tidyverse)</code>, <code>library(skimr)</code> 等)。</li>
+<li>成功导入你的数据集。</li>
+<li>包含你进行数据整体检查的代码 (<code>glimpse</code>, <code>summary</code>, <code>skim</code>)。</li>
+<li>包含你绘制关键变量分布和变量关系图的 <code>ggplot2</code> 代码。</li>
+</ul></li>
+<li><strong>一份记录了你 EDA 主要发现的笔记或代码注释。</strong></li>
+</ol>
+<hr>
+<p><strong>遇到困难怎么办？</strong></p>
+<p>如果在假期中遇到难以解决的问题 (找不到数据、R 代码报错、不确定如何解释图表等)，请记录下问题，可以在假期后向老师、助教或同学请教。</p>
+<hr>
+<p>祝大家五一假期愉快，项目启动顺利！认真完成这三个任务将为你的综合实践项目打下坚实的基础。</p>
 
 
 </section>
@@ -754,10 +895,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./week12_lecture.html" class="pagination-link" aria-label="第十二周：Logistic 回归评估 与 模型比较初步">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./week1_lecture.html" class="pagination-link" aria-label="第一周：启程：统计思维、R与数据世界">
-        <span class="nav-page-text"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./week1_lab.html" class="pagination-link" aria-label="第一周实验：R 环境与基础操作">
+        <span class="nav-page-text"><span class="chapter-title">第一周实验：R 环境与基础操作</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

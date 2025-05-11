@@ -24,7 +24,7 @@ book:
         - week11_lecture.qmd
         - week12_lecture.qmd
         - 综合实践项目启动指南_五一假期.qmd
-        # - week13_lecture.qmd
+        - week13_lecture.qmd
         # - week14_lecture.qmd
         # - week15_lecture.qmd
         # - week16_lecture.qmd
@@ -42,6 +42,7 @@ book:
         - week10_lab.qmd
         - week11_lab.qmd
         - week12_lab.qmd
+        - week13_lab.qmd
 execute:
   echo: true
   message: false

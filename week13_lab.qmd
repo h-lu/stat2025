@@ -1,234 +1,401 @@
 ---
-title: "第十三周实验：AI 辅助与 Quarto 报告实践"
+title: "第13周实验：深入探索nycflights13 - AI与Quarto实战"
+subtitle: "利用复杂数据集提升分析与报告技能"
 ---
 
-## 1. 目标
+# 实验导览：深入探索 `nycflights13`
 
-本实验旨在练习如何有效地利用 AI 助手辅助数据分析任务，并实践使用 Quarto 创建可重复的分析报告。
+欢迎来到第13周的进阶实验！本次实验我们将使用著名的 `nycflights13` 数据集，它包含了2013年从纽约市三大机场出发的所有航班的详细信息。这个数据集的复杂性和丰富性为我们提供了绝佳的机会，来实践并深化本周学习的AI辅助分析和Quarto可重复报告技能。
 
-*   练习使用 AI 助手生成 R 代码（`dplyr`, `ggplot2`）并进行验证和修改。
-*   练习使用 AI 助手解释 R 代码、函数或统计概念，并进行批判性评估。
-*   练习使用 AI 助手辅助调试 R 代码错误。
-*   掌握 Quarto 文档的基本结构（YAML 头、Markdown 文本、代码块）。
-*   熟练使用 Quarto 代码块选项控制代码和输出的显示。
-*   将之前的分析步骤（例如，数据导入、描述统计、可视化、模型拟合）整合到一个 Quarto 文档中，并渲染生成报告。
+**实验目标：**
 
-## 2. AI 辅助实践
+*   熟练运用AI工具对复杂数据集进行数据操纵、探索性分析和可视化。
+*   练习构建针对复杂分析任务的有效AI Prompt。
+*   掌握使用Quarto创建包含多步骤分析、复杂图表和洞察解读的动态报告。
+*   将AI和Quarto应用于一个更接近真实世界场景的数据分析流程中。
 
-选择以下至少**两个**场景，使用你选择的 AI 助手（如 ChatGPT, Copilot Chat, Claude 等）进行尝试。**关键在于记录你的 Prompt、AI 的回答、你对其的评估以及最终你采纳或修改的内容。**
+**准备工作：**
 
-### 场景一：生成绘图代码
+*   确保你的电脑已安装最新版的R和RStudio。
+*   确保RStudio中Quarto已正确安装并可使用。
+*   能够访问至少一种AI大语言模型工具。
+*   在R中安装必要的包： `install.packages(c("tidyverse", "nycflights13", "skimr", "knitr", "lubridate", "ggrepel"))` (如果尚未安装)。`lubridate` 用于日期时间处理，`ggrepel` 用于优化文本标签显示。
 
-**任务:**
-假设你想使用 `mpg` 数据集绘制一个分组箱线图，比较不同 `class` (车辆类别) 的 `hwy` (高速公路里程)，并按 `drv` (驱动方式) 进行分面 (facet)。
-
-1.  **设计 Prompt:** 向 AI 请求生成实现此功能的 `ggplot2` 代码。你的 Prompt 应该包含数据集名称 (`mpg`)、变量名 (`hwy`, `class`, `drv`)、图形类型（箱线图）、分组变量 (`class`)、分面变量 (`drv`)。
-2.  **获取并评估代码:** 运行 AI 生成的代码。
-    *   代码是否能成功运行？
-    *   生成的图形是否符合你的预期？
-    *   代码是否清晰易懂？是否有可以改进的地方？
-3.  **记录:** 记下你的 Prompt、AI 的原始代码、你的评估和（如果需要）你修改后的最终代码。
-
-**示例 Prompt (非唯一):**
-"Generate R code using ggplot2 to create a boxplot of highway mileage (`hwy`) grouped by vehicle class (`class`) from the `mpg` dataset. Also, facet the plot by drive train (`drv`). Add appropriate labels."
-
-```{r ai-practice-plot, eval=FALSE}
-# 在这里粘贴并运行 AI 生成的代码，然后进行评估和修改
-# 示例 AI 可能生成的代码 (需要验证):
-library(ggplot2)
-ggplot(mpg, aes(x = class, y = hwy, fill = class)) +
-  geom_boxplot() +
-  facet_wrap(~ drv) + # 或 facet_grid(drv ~ .)
-  labs(title = "Highway Mileage by Vehicle Class and Drive Train",
-       x = "Vehicle Class",
-       y = "Highway Mileage (MPG)") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # 可能需要旋转标签
-
-# 你的评估: ...
-# 修改后的代码 (如果需要): ...
-```
-
-### 场景二：解释统计输出
-
-**任务:**
-假设你拟合了之前的多元 Logistic 回归模型 `logistic_multi` (`default ~ balance + income + student`)，并得到了 `summary()` 输出。
-
-1.  **设计 Prompt:** 向 AI 请求解释 `studentYes` 系数的**优势比 (Odds Ratio)** 含义。确保提供足够的上下文（模型公式、因变量是什么、`student` 变量的含义和参照组）。
-2.  **获取并评估解释:** 阅读 AI 的解释。
-    *   解释是否准确？是否正确使用了“优势比”而不是“概率比”或“风险比”？
-    *   是否提到了“控制其他变量”？
-    *   解释是否清晰易懂？
-3.  **记录:** 记下你的 Prompt、AI 的解释、你的评估。
-
-**示例 Prompt:**
-"I fitted a logistic regression model in R: `glm(default ~ balance + income + student, data = Default, family = binomial)`. The `default` variable is 'Yes' (1) or 'No' (0). The `student` variable is a factor with levels 'No' (reference) and 'Yes'. The summary output shows a coefficient for `studentYes` of approximately -0.647. Please explain the meaning of the **Odds Ratio** for this `studentYes` coefficient in the context of this model."
-
-```{r ai-practice-interpret, eval=FALSE}
-# 记录 AI 的解释和你的评估
-# AI 的解释: ...
-# 你的评估: ...
-```
-
-### 场景三：代码调试
-
-**任务:**
-假设你有以下 R 代码片段，它尝试计算每个 `cyl` (气缸数) 在 `mpg` 数据集中的占比，但运行时可能会出错或结果不理想。
-
-```R
-# 错误或不理想的代码示例
-library(dplyr)
-data(mpg)
-mpg %>%
-  group_by(cyl) %>%
-  summarise(count = n) %>% # 错误：n 是函数，需要写 n()
-  mutate(proportion = count / sum(count) * 100)
-```
-
-1.  **运行代码并获取错误信息 (如果有)。**
-2.  **设计 Prompt:** 向 AI 提供代码片段和错误信息（或描述不符合预期的结果），请求帮助调试。
-3.  **获取并评估建议:** 查看 AI 提出的修改建议。
-    *   建议是否解决了问题？
-    *   修改后的代码是否能正确计算出每个气缸数所占的百分比？
-4.  **记录:** 记下原始代码、错误信息、你的 Prompt、AI 的建议、你的评估和最终正确的代码。
-
-```{r ai-practice-debug, eval=TRUE} # eval=TRUE 以便演示错误和正确代码
-# 原始代码 (会出错)
-print("--- Running original (potentially faulty) code ---")
-faulty_result <- tryCatch({
-  mpg %>%
-    group_by(cyl) %>%
-    summarise(count = n) %>% # 错误在这里
-    mutate(proportion = count / sum(count) * 100)
-}, error = function(e) {
-  print(paste("Error:", e$message))
-  return(NULL)
-})
-if (!is.null(faulty_result)) print(faulty_result)
-
-
-# 错误信息 (如果有): Error in `summarise()`:... Caused by error in `n()`: ! `n()` must be used inside dplyr verbs.
-# 你的 Prompt: "My R code `mpg %>% group_by(cyl) %>% summarise(count = n) %>% mutate(proportion = count / sum(count) * 100)` gives an error 'n() must be used inside dplyr verbs'. How can I fix this to calculate the proportion of each cylinder count?"
-# AI 的建议: (可能建议使用 n() 或 count())
-# 你的评估: (AI 应该能指出 n 需要写成 n())
-
-# 正确的代码:
-print("--- Running corrected code ---")
-correct_result <- mpg %>%
-  count(cyl) %>% # 使用 count() 更简洁
-  mutate(proportion = n / sum(n) * 100)
-print(correct_result)
-
-```
-
-## 4. Quarto 报告实践
-
-**任务:**
-创建一个新的 Quarto 文档 (`.qmd`)，将你**第二周实验**（数据导入与描述性统计）的主要分析步骤整合进去。
-
-1.  **创建文件:** 新建一个名为 `week2_report.qmd` 的文件。
-2.  **添加 YAML 头:** 设置 `title`, `author`, `date`, 和 `format: html` (可以添加 `toc: true`, `code-fold: true`)。
-3.  **编写 Markdown 文本:** 添加必要的标题和说明文字，解释每个分析步骤的目的。例如：
-    *   "# 第二周实验报告"
-    *   "## 1. 数据导入"
-    *   "首先，我们加载必要的 `tidyverse` 包，并读入 `grades.csv` 数据集。"
-    *   "## 2. 数据结构探索"
-    *   "接下来，我们使用 `glimpse` 和 `summary` 查看数据结构和基本统计。"
-    *   "## 3. 描述性统计"
-    *   "计算主要成绩列的描述性统计量..."
-    *   "## 4. 初步筛选"
-    *   "使用 `filter` 筛选出特定专业的学生..."
-4.  **插入代码块:** 将第二周实验中的 R 代码复制到相应的代码块中。
-5.  **设置代码块选项:**
-    *   对于加载包的代码块，可以设置 `include=FALSE` 或 `message=FALSE, warning=FALSE`。
-    *   对于展示数据或结果的代码块，确保 `echo=TRUE` (显示代码) 和 `eval=TRUE` (执行代码)。
-    *   根据需要调整其他选项。
-6.  **渲染报告:** 点击 "Render" 按钮（或使用 `quarto::quarto_render("week2_report.qmd")`），生成 HTML 报告。
-7.  **检查报告:** 打开生成的 HTML 文件，检查：
-    *   文本、代码、输出是否都正确显示？
-    *   代码块选项是否按预期工作？
-    *   报告整体是否清晰、易读？
-
-```{r quarto-example-structure, eval=FALSE, engine='markdown'}
-# --- week2_report.qmd 示例内容 ---
----
-title: "第二周实验报告 (Quarto 示例)"
-author: "你的名字"
-date: today
-format:
-  html:
-    toc: true
-    code-fold: true
-    theme: cosmo
-editor: visual
 ---
 
-# 第二周实验报告
+# Part 1: `nycflights13` 数据集初探与AI辅助探索
 
-## 1. 引言
+`nycflights13` 包中包含了多个关联的数据框，我们主要关注 `flights` 数据框，但也会涉及到 `airports` 和 `planes`。
 
-本报告重现了第二周实验的主要步骤，包括数据导入、结构探索、描述性统计计算和初步的数据筛选。
-
-## 2. 数据准备
-
-首先，加载必要的 `tidyverse` 包。
-
-```{r load-packages, include=FALSE}
+```{r load-nycflights13, message=FALSE, warning=FALSE}
 library(tidyverse)
+library(nycflights13) # 加载数据集
+library(skimr)
+library(lubridate) # 用于日期时间处理
+library(ggrepel)   # 用于优化ggplot2文本标签
+
+# 查看包含的数据集
+# data(package = "nycflights13") # 会列出所有数据集
+
+# 我们主要使用 flights 数据
+data(flights)
+data(airports)
+data(planes)
+data(weather) # 天气数据也很有用
+
+# 初步了解 flights 数据
+cat("Flights 数据集维度 (行, 列): ", dim(flights), "\n")
+glimpse(flights)
 ```
 
-接下来，读入 `grades.csv` 数据集。假设该文件位于当前工作目录。
+## 任务1.1: AI辅助理解数据结构与提出探索性问题
 
-```{r import-data-report, echo=TRUE, eval=TRUE}
-grades_file <- "grades.csv"
-if (!file.exists(grades_file)) {
-  grades_csv_content <- "StudentID,Name,Major,Exam1,Exam2,FinalProject,Attendance\nS001,Alice,Statistics,85,88,92,Present\nS002,Bob,CompSci,92,NA,85,Present\nS003,Charlie,Math,78,82,75,Absent\nS004,David,Statistics,88,90,95,Present\nS005,Eve,CompSci,75,80,NA,Absent\nS006,Frank,Statistics,95,98,96,Present\nS007,Grace,Math,NA,75,80,Present\nS008,Heidi,CompSci,81,84,88,Present"
-  writeLines(grades_csv_content, grades_file)
-}
-grades_data <- read_csv(grades_file)
-print(grades_data)
+`flights` 数据集包含很多列。
+
+1.  **向AI提问以理解关键变量：**
+    *   **Prompt示例：** "我正在使用R中的`nycflights13::flights`数据集。请解释以下几个关键列的含义：`dep_delay`, `arr_delay`, `carrier`, `origin`, `dest`, `air_time`, `distance`。特别是，`dep_delay` 和 `arr_delay` 是如何计算的？正值和负值分别代表什么？"
+
+    ```text
+    # 记录你向AI提问关于变量含义的Prompt和AI的回答要点：
+    # Prompt:
+    #
+    # AI回答要点:
+    #
+    ```
+
+2.  **AI辅助生成探索性问题：**
+    *   **Prompt示例：** "基于`nycflights13::flights`数据集的主要变量（如起飞/到达延误、航空公司、出发地/目的地、飞行时间、距离、月份、星期几等），请帮我提出至少5个有趣的、可以通过数据分析来探索的问题。这些问题应该能帮助我们了解航班延误的模式、航空公司的表现或航线的特点。"
+
+    ```text
+    # 记录AI为你生成的探索性问题：
+    # 1.
+    # 2.
+    # 3.
+    # 4.
+    # 5.
+    # (选择你认为最有趣的2-3个问题进行后续分析)
+    ```
+
+## 任务1.2: AI辅助数据清洗与转换 (针对你选择的问题)
+
+根据你在任务1.1中选择的探索性问题，你可能需要对数据进行一些清洗或转换。
+
+**示例场景：** 假设你选择的一个问题是“哪个航空公司的平均出发延误时间最长？”
+
+1.  **思考需要的数据和潜在问题：**
+    *   我们需要 `carrier` 和 `dep_delay` 列。
+    *   `dep_delay` 可能包含NA值（例如，航班取消）。在计算平均延误时，我们应该如何处理这些NA？
+
+2.  **构建Prompt请求数据处理代码：**
+    *   **Prompt示例：** "我正在使用`nycflights13::flights`数据集，想找出每个航空公司 (`carrier`) 的平均出发延误时间 (`dep_delay`)。请帮我写一段`dplyr`代码完成以下步骤：
+        1.  移除`dep_delay`为NA的行。
+        2.  按`carrier`分组。
+        3.  计算每个`carrier`的平均`dep_delay`和航班数量。
+        4.  按平均延误时间降序排列结果。
+        5.  我还想将航空公司的代码 (`carrier`) 替换为完整的航空公司名称，你能告诉我如何通过`nycflights13::airlines`数据框来实现这个合并吗？"
+
+    ```text
+    # 记录你的Prompt和AI生成的代码：
+    # Prompt:
+    #
+    # AI生成代码 (粘贴并测试):
+    # library(nycflights13)
+    # data(airlines) # 需要加载airlines数据
+    #
+    # carrier_delay_summary <- flights %>%
+    #   filter(!is.na(dep_delay)) %>%
+    #   group_by(carrier) %>%
+    #   summarise(
+    #     avg_dep_delay = mean(dep_delay),
+    #     num_flights = n()
+    #   ) %>%
+    #   left_join(airlines, by = "carrier") %>% # 合并航空公司名称
+    #   arrange(desc(avg_dep_delay)) %>%
+    #   select(name, carrier, avg_dep_delay, num_flights) # 选择并重排序列
+    #
+    # print(carrier_delay_summary)
+    ```
+    *   评估AI代码的正确性和效率。AI是否正确处理了NA和合并操作？
+
+**练习：** 针对你自己选择的另一个探索性问题，思考需要的数据清理/转换步骤，并尝试让AI生成相应的代码。
+
+## 任务1.3: AI辅助复杂可视化
+
+**示例场景：** 探索一天中不同时段的航班出发延误情况。
+
+1.  **数据准备 (可能需要AI辅助)：**
+    *   我们可能需要从 `dep_time` (格式如517代表5:17 AM) 中提取小时。
+    *   **Prompt示例：** "在`nycflights13::flights`数据集中，`dep_time`列表示计划起飞时间（例如517代表5:17 AM）。我想创建一个新的列 `dep_hour` 来表示起飞的小时。请注意处理NA值。另外，`dep_delay`是出发延误时间。我想计算每个出发小时的平均出发延误，并统计每个小时的航班数量。请给出`dplyr`代码。"
+
+2.  **构建可视化Prompt：**
+    *   **Prompt示例：** "基于上一步按小时汇总的平均出发延误数据（包含`dep_hour`, `avg_hourly_delay`, `hourly_flight_count`列），请帮我用`ggplot2`创建一个组合图：
+        1.  用条形图展示每个小时的航班数量 (`hourly_flight_count`)。
+        2.  在同一张图上（可能使用双Y轴，或者将条形图作为背景），用折线图展示每个小时的平均出发延误 (`avg_hourly_delay`)。
+        3.  确保图形有清晰的标题和轴标签。"
+
+    ```text
+    # 记录你的Prompt和AI生成的ggplot2代码 (可能需要多次迭代调整才能得到理想效果)：
+    # Prompt for data prep:
+    #
+    # AI code for data prep (test and modify):
+    # flights_with_hour <- flights %>%
+    #   filter(!is.na(dep_time), !is.na(dep_delay)) %>%
+    #   mutate(dep_hour = dep_time %/% 100) # 简单提取小时
+    #
+    # hourly_delay_summary <- flights_with_hour %>%
+    #   group_by(dep_hour) %>%
+    #   summarise(
+    #     avg_hourly_delay = mean(dep_delay),
+    #     hourly_flight_count = n()
+    #   ) %>%
+    #   filter(hourly_flight_count > 100) # 过滤掉航班过少的小时，使图形更稳定
+    #
+    # Prompt for visualization:
+    #
+    # AI code for visualization (test and modify):
+    # # 简单的双Y轴实现可能比较复杂，AI或许会建议分面或颜色映射
+    # # 例如，一个可能的简化版是：
+    # ggplot(hourly_delay_summary, aes(x = dep_hour)) +
+    #   geom_col(aes(y = hourly_flight_count), fill = "lightblue", alpha = 0.7) +
+    #   geom_line(aes(y = avg_hourly_delay * 10), color = "red", size = 1) + # 乘以一个因子以便在同一尺度上显示
+    #   scale_y_continuous(
+    #     name = "Hourly Flight Count",
+    #     sec.axis = sec_axis(~./10, name = "Average Departure Delay (min)") # 创建第二个Y轴
+    #   ) +
+    #   labs(title = "Hourly Flight Departures and Average Delays from NYC",
+    #        x = "Hour of Departure",
+    #        caption = "Note: Delay axis scaled by factor of 10 for visualization") +
+    #   theme_minimal()
+    ```
+    *   **挑战：** 双Y轴图有时难以解读。和AI讨论是否有其他更好的可视化方式来展示这两个变量的关系（例如，将延误时间用颜色深浅映射到条形图上，或者使用分面图）。
+
+**练习：** 针对你自己选择的探索性问题，尝试让AI辅助你创建一个有洞察力的、可能比较复杂的可视化。
+
+---
+
+# Part 2: 使用Quarto呈现 `nycflights13` 的深度分析
+
+现在，我们将Part 1中对 `nycflights13` 的探索（或你自己选择的分析点）组织到一个Quarto报告中。
+
+## 任务2.1: 创建并配置 `nycflights13` 项目的Quarto文档
+
+1.  **新建Quarto文档：**
+    *   Title: "NYC Flights 2013: 延误模式与航空公司表现分析" (或根据你的分析焦点命名)
+    *   Author: 你的名字
+    *   保存为 `nycflights_analysis.qmd`。
+2.  **配置YAML头部：**
+
+    ```yaml
+    ---
+    title: "NYC Flights 2013: 延误模式与航空公司表现分析"
+    author: "你的名字"
+    date: "today"
+    format:
+      html:
+        toc: true
+        toc-depth: 3
+        number-sections: true # 给章节编号
+        code-fold: true
+        code-tools: true
+        theme: lumen # 或其他你喜欢的主题
+    editor: source
+    execute:
+      echo: true
+      warning: false
+      message: false
+      error: true # 在报告中显示错误，方便调试
+    bibliography: references.bib # 如果有参考文献，可以添加
+    csl: apa.csl #参考文献格式
+    ---
+    ```
+
+    *(注意：`bibliography` 和 `csl` 是可选的，用于更正式的报告。)*
+
+## 任务2.2: 规划报告结构与填充内容
+
+根据你的分析焦点，规划报告的章节。以下是一个示例结构，你可以根据自己的分析进行调整：
+
+````
+# 1. 引言
+
+*   项目背景：简要介绍`nycflights13`数据集。
+*   研究问题/分析目标：明确你本报告要探索的核心问题 (例如，哪些因素影响航班延误？不同航空公司的准点率如何？特定航线有何特点？)。
+
+# 2. 数据准备与概览
+
+## 2.1 加载所需R包与数据
+```{{r setup-data, echo=TRUE}}
+# library(tidyverse)
+# library(nycflights13)
+# library(skimr)
+# library(lubridate)
+# library(knitr)
+# library(ggrepel)
+# data(flights)
+# data(airports)
+# data(airlines)
+# data(weather)
+# data(planes)
 ```
+*简要说明加载的数据集。*
 
-## 3. 数据结构探索
-
-使用 `glimpse` 和 `summary` 查看数据结构。
-
-```{r explore-structure-report}
-glimpse(grades_data)
-summary(grades_data)
+## 2.2 数据初步探查
+```{{r initial-glimpse, echo=TRUE}}
+# glimpse(flights)
+# kable(head(flights, 5), caption = "Flights数据集前5行预览")
 ```
+*对`flights`数据集的关键变量进行初步说明 (可结合AI在任务1.1的回答)。*
 
-## 4. 描述性统计
+# 3. 航班延误分析 (示例章节，根据你的焦点调整)
 
-计算 `Exam1` 的主要描述性统计量。
-
-```{r descriptive-stats-report}
-grades_data %>%
-  summarise(
-    Mean = mean(Exam1, na.rm = TRUE),
-    Median = median(Exam1, na.rm = TRUE),
-    SD = sd(Exam1, na.rm = TRUE),
-    IQR = IQR(Exam1, na.rm = TRUE),
-    Min = min(Exam1, na.rm = TRUE),
-    Max = max(Exam1, na.rm = TRUE)
-  )
+## 3.1 延误的整体情况
+```{{r overall-delay-stats, echo=TRUE}}
+# # 计算总体延误统计，例如平均延误、延误百分比等
+# flights %>%
+#   summarise(
+#     avg_dep_delay = mean(dep_delay, na.rm = TRUE),
+#     avg_arr_delay = mean(arr_delay, na.rm = TRUE),
+#     prop_dep_delayed = mean(dep_delay > 0, na.rm = TRUE),
+#     prop_arr_delayed = mean(arr_delay > 0, na.rm = TRUE)
+#   ) %>%
+#   kable(caption = "航班总体延误情况", digits = 2)
 ```
+*解读总体延误情况。*
 
-## 5. 初步筛选
+## 3.2 不同因素对出发延误的影响
 
-筛选出专业为 "Statistics" 的学生。
-
-```{r filter-report}
-grades_data %>%
-  filter(Major == "Statistics")
+### 3.2.1 按月份/季节分析延误
+```{{r delay-by-month, echo=TRUE, fig.cap="每月平均出发延误与航班量"}}
+# # 创建 month 列
+# flights_with_month <- flights %>% 
+#   filter(!is.na(dep_delay)) %>%
+#   mutate(month = factor(month, levels = 1:12, labels = month.abb))
+# 
+# monthly_delay_summary <- flights_with_month %>%
+#   group_by(month) %>%
+#   summarise(
+#     avg_dep_delay = mean(dep_delay),
+#     num_flights = n()
+#   )
+# 
+# # 可视化 (例如，条形图显示航班量，折线图显示平均延误)
+# ggplot(monthly_delay_summary, aes(x = month)) +
+#   geom_col(aes(y = num_flights, group = 1), fill = "skyblue", alpha = 0.7) + # group=1 for month factor
+#   geom_line(aes(y = avg_dep_delay * (max(monthly_delay_summary$num_flights)/max(monthly_delay_summary$avg_dep_delay, na.rm=TRUE))/2 , group = 1), color = "red", size = 1.2) + # 调整缩放因子
+#   scale_y_continuous(
+#     name = "月航班数量",
+#     sec.axis = sec_axis(~. * (max(monthly_delay_summary$avg_dep_delay, na.rm=TRUE) / (max(monthly_delay_summary$num_flights)/2)), name = "平均出发延误 (分钟)")
+#   ) +
+#   labs(title = "每月航班量与平均出发延误 (NYC, 2013)", x = "月份")
 ```
+*解读月份/季节对延误的影响。*
 
-## 6. 结论
-
-本报告演示了基本的数据导入和探索步骤。
-
+### 3.2.2 按航空公司分析延误
+```{{r delay-by-carrier, echo=TRUE, fig.cap="各航空公司平均出发延误（至少飞行1000次）"}}
+# # 使用任务1.2中生成的 carrier_delay_summary (或重新生成)
+# # 确保 airlines 数据框已加载并合并
+# carrier_delay_plot_data <- flights %>%
+#   filter(!is.na(dep_delay), dep_delay > -60) %>% # 过滤掉一些极端提前起飞的情况
+#   group_by(carrier) %>%
+#   summarise(
+#     avg_dep_delay = mean(dep_delay),
+#     num_flights = n()
+#   ) %>%
+#   left_join(airlines, by = "carrier") %>%
+#   filter(num_flights > 1000) %>% # 筛选航班较多的航空公司
+#   mutate(name = reorder(name, avg_dep_delay)) # 按平均延误排序
+# 
+# ggplot(carrier_delay_plot_data, aes(x = name, y = avg_dep_delay, fill = avg_dep_delay)) +
+#   geom_col() +
+#   geom_text(aes(label = round(avg_dep_delay, 1)), hjust = -0.2, size = 3) +
+#   coord_flip() + # 水平条形图更易读
+#   scale_fill_gradient(low = "green", high = "red") +
+#   labs(title = "各航空公司平均出发延误 (NYC, 2013)",
+#        x = "航空公司", y = "平均出发延误 (分钟)", fill = "平均延误") +
+#   theme_minimal() +
+#   theme(legend.position = "none")
 ```
+*解读不同航空公司的延误表现。*
 
-## 5. 实验总结
+*(继续添加其他你感兴趣的分析，例如按出发机场、目的地、一天中的时段、星期几等分析延误。每个分析点都应该包含：*
+*   *简要的文字说明你的分析目的。*
+*   *执行数据处理和可视化的R代码块 (确保`echo=TRUE`，并为图表添加`fig.cap`)。*
+*   *对图表或结果的文字解读，阐述你的发现。*
+*   *在这个过程中，遇到R代码难题或需要可视化灵感时，积极使用AI辅助。*)*
 
-在本实验中，我们通过具体场景练习了如何利用 AI 助手辅助 R 编程、概念理解和调试，并强调了批判性评估 AI 输出的重要性。我们还实践了 Quarto 的基本用法，学习了如何将 R 代码、结果和叙述性文本结合起来，创建可重复的动态报告。掌握 AI 辅助和可重复报告的技能将极大提升你未来数据分析工作的效率和规范性。
+# 4. (可选) 深入探索：特定航线或飞机型号分析
+
+*   例如，选择一条热门航线 (如 NYC 到 LAX)，分析其延误特点。
+*   或者，分析不同飞机型号 (`planes`数据) 与飞行表现 (如速度、延误) 的关系。这需要连接 `flights` 和 `planes` 数据框。
+    ```{{r join-planes-example, eval=FALSE}}
+    # # 连接 flights 和 planes (需要处理 tailnum 的NA)
+    # flights_with_plane_data <- flights %>%
+    #   filter(!is.na(tailnum)) %>%
+    #   left_join(select(planes, tailnum, type, manufacturer, model, year), by = "tailnum")
+    # 
+    # # 然后可以按飞机制造商或型号进行分析...
+    ```
+
+# 5. 结论与展望
+
+*   总结你本报告中的主要发现。
+*   提出基于分析的可能结论或建议。
+*   指出未来可以进一步探索的方向。
+
+---
+````
+
+## 任务2.3: 填充、渲染与迭代
+
+1.  **逐步填充内容：**
+    *   将你在Part 1中进行的AI辅助探索（或你自己独立完成的分析）的代码和发现，系统地组织到你的Quarto报告的相应章节中。
+    *   对于每个分析点，确保有清晰的**目标说明**、**R代码块** (带注释和合适的选项)、以及**结果解读**。
+    *   **遇到编码或分析难题时，使用AI辅助。** 例如，如果你想计算特定条件下航班准点率，但不确定如何用`dplyr`实现，可以向AI提问。
+
+2.  **AI辅助撰写报告文本：**
+    *   **描述复杂图表：** "我绘制了一个显示不同航空公司每月平均延误时间的热力图。请帮我写一段文字，描述如何解读这个热力图，以及它可能揭示的模式。"
+    *   **总结分析发现：** "基于对纽约航班数据的分析，我发现月份和航空公司是影响出发延误的两个重要因素。具体来说，[总结你的关键发现]。请帮我将这些发现组织成一段流畅的总结性文字，用于报告的结论部分。"
+    *   **润色语言：** 如果你已经写了草稿，可以让AI帮你检查语法、改进表达，使其更专业。
+
+3.  **频繁渲染与迭代：**
+    *   在写作过程中，经常点击 "Render" 按钮生成HTML报告。
+    *   检查报告的结构、代码的运行、图表的显示、文本的流畅性。
+    *   根据渲染结果，不断修改和完善你的 `.qmd` 文件。这是一个迭代的过程。
+
+**挑战与思考：**
+
+*   `nycflights13` 数据集中还有 `weather` 数据。你能否将其与 `flights` 数据结合，探索天气对航班延误的影响？这可能需要你向AI咨询如何按日期和机场合并这两个数据集，并进行相应的分析和可视化。
+*   尝试使用 `DT` 包 (`DT::datatable()`) 来创建交互式的HTML表格，以更好地展示某些摘要数据。
+
+---
+
+# Part 3: 项目应用与深化 (针对你的综合实践项目)
+
+虽然本次实验主要使用 `nycflights13`，但核心目标是让你掌握将AI和Quarto应用于任何数据分析项目的方法。
+
+**请回顾你的综合实践项目：**
+
+1.  **借鉴 `nycflights13` 的分析思路：**
+    *   `nycflights13` 实验中涉及的分析方法（如按时间/类别分组比较、复杂可视化、数据合并等）是否能启发你对自己项目数据的分析？
+    *   例如，如果你的项目数据包含时间序列信息，是否可以借鉴按月份/季度分析的思路？如果包含多个分类变量，是否可以探索它们对结果变量的组合影响？
+
+2.  **将AI和Quarto系统性地应用到你的项目中：**
+    *   **确保你的项目有一个核心的Quarto文档 (`.qmd`)**，作为所有分析代码、图表、表格和文字解读的中心。
+    *   在数据清理、特征工程、模型构建和结果解释的每一步，都思考AI如何能提供帮助。
+    *   **定期更新和渲染你的项目Quarto报告**，使其成为一个动态的、反映你分析思考过程的“活文档”。
+
+**目标：** 在接下来的项目进展中，你能够自信地使用AI作为分析助手，并用Quarto清晰、专业地呈现你的完整分析流程和成果。
+
+---
+
+# 实验总结
+
+通过本次对 `nycflights13` 数据集的深入探索，你应该对如何运用AI处理更复杂的数据分析任务，以及如何使用Quarto构建内容丰富的、结构化的分析报告有了更深刻的理解和实践经验。
+
+**关键收获：**
+
+*   AI可以辅助完成从数据理解、清洗、转换到复杂可视化和结果解释的多个环节。
+*   有效的Prompting和对AI输出的批判性评估对于成功利用AI至关重要。
+*   Quarto是组织和呈现深度数据分析项目的强大工具，能确保分析过程的透明性和可重复性。
+
+请继续将这些技能应用于你的综合实践项目和其他数据分析任务中！

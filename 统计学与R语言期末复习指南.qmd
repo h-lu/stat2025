@@ -1,0 +1,1089 @@
+---
+title: "统计学与R语言期末复习指南"
+author: "期末复习材料"
+date: today
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    theme: cosmo
+  pdf:
+    toc: true
+    number-sections: true
+lang: zh
+---
+
+## 前言
+
+本复习指南基于《统计学与R语言》期末试题内容，系统梳理了课程的核心知识点，并提供了相应的练习题。复习建议按照以下顺序进行：
+
+1. **R语言基础与数据处理**
+2. **描述性统计与数据可视化**
+3. **假设检验**
+4. **方差分析**
+5. **回归分析**
+6. **模型评估与诊断**
+
+---
+
+## 第一章：R语言基础与数据处理
+
+### 1.1 核心知识点
+
+#### 1.1.1 tidyverse生态系统
+
+`tidyverse` 是R语言中用于数据科学的核心包集合，包含以下主要包：
+
+- **dplyr**：数据操作和变换
+- **ggplot2**：数据可视化
+- **tidyr**：数据整理
+- **readr**：数据读取
+- **purrr**：函数式编程
+- **tibble**：现代化数据框
+
+**整洁数据（Tidy Data）原则：**
+
+- 每个变量自成一列
+- 每个观测自成一行  
+- 每个值是一个单元格
+
+#### 1.1.2 dplyr核心函数
+
+```r
+library(tidyverse)
+
+# 主要数据操作函数
+# select()：选择列
+# filter()：筛选行
+# mutate()：创建/修改列
+# summarise()：汇总统计
+# group_by()：分组操作
+# arrange()：排序
+
+# 管道操作符 %>% 的使用
+data %>%
+  filter(condition) %>%
+  select(variables) %>%
+  mutate(new_var = expression) %>%
+  group_by(group_var) %>%
+  summarise(stat = function(variable))
+```
+
+#### 1.1.3 数据导入与处理
+
+```r
+# CSV文件读取
+library(readr)
+data <- read_csv("file.csv")
+
+# 缺失值处理
+library(tidyr)
+# 删除缺失值
+clean_data <- data %>% 
+  drop_na()  # 或使用 na.omit()
+
+# 替换缺失值
+data %>% 
+  replace_na(list(column_name = replacement_value))
+
+# 检查缺失值
+is.na(data)
+```
+
+#### 1.1.4 数据重塑
+
+```r
+# 宽格式转长格式
+long_data <- wide_data %>%
+  pivot_longer(cols = c(col1, col2, col3), 
+               names_to = "variable", 
+               values_to = "value")
+
+# 长格式转宽格式
+wide_data <- long_data %>%
+  pivot_wider(names_from = variable, 
+              values_from = value)
+```
+
+### 1.2 练习题
+
+**练习1：** 使用 `dplyr` 完成以下操作
+```r
+# 假设有销售数据 sales_data，包含列：region, product, sales, date
+# 1. 计算每个地区的平均销售额
+# 2. 筛选销售额大于1000的记录
+# 3. 按地区分组，计算总销售额和记录数
+
+# 参考答案
+sales_summary <- sales_data %>%
+  filter(sales > 1000) %>%
+  group_by(region) %>%
+  summarise(
+    avg_sales = mean(sales),
+    total_sales = sum(sales),
+    count = n()
+  )
+```
+
+**练习2：** 数据读取与缺失值处理
+```r
+# 1. 读取CSV文件
+# 2. 检查并处理缺失值
+# 3. 创建数据质量报告
+
+# 参考代码
+data_quality_check <- function(data) {
+  missing_summary <- data %>%
+    summarise_all(~sum(is.na(.))) %>%
+    pivot_longer(everything(), names_to = "variable", values_to = "missing_count") %>%
+    mutate(missing_percent = missing_count / nrow(data) * 100)
+  
+  return(missing_summary)
+}
+```
+
+---
+
+## 第二章：描述性统计与数据可视化
+
+### 2.1 核心知识点
+
+#### 2.1.1 描述性统计量
+
+**集中趋势指标：**
+
+- **均值（Mean）**：对异常值敏感
+- **中位数（Median）**：对异常值稳健
+- **众数（Mode）**：最频繁出现的值
+
+**离散程度指标：**
+
+- **标准差（Standard Deviation）**：衡量数据离散程度
+- **方差（Variance）**：标准差的平方
+- **四分位距（IQR）**：第75百分位数减去第25百分位数
+
+```r
+# R中的描述性统计函数
+mean(x, na.rm = TRUE)
+median(x, na.rm = TRUE)
+sd(x, na.rm = TRUE)
+var(x, na.rm = TRUE)
+quantile(x, probs = c(0.25, 0.75), na.rm = TRUE)
+summary(data)
+```
+
+#### 2.1.2 ggplot2数据可视化
+
+**ggplot2语法结构：**
+```r
+ggplot(data = dataset, aes(x = variable1, y = variable2)) +
+  geom_function() +
+  theme_function() +
+  labs()
+```
+
+**常用几何对象（geom）：**
+
+- `geom_point()`：散点图
+- `geom_line()`：线图
+- `geom_bar()`：条形图（计算频数）
+- `geom_col()`：柱状图（使用原始值）
+- `geom_histogram()`：直方图
+- `geom_boxplot()`：箱线图
+
+**美学映射（aes）：**
+
+- `x`, `y`：坐标轴
+- `color`：颜色
+- `fill`：填充色
+- `size`：大小
+- `shape`：形状
+
+#### 2.1.3 探索性数据分析（EDA）
+
+EDA的主要目的：
+
+- 理解数据分布
+- 发现数据中的模式和异常
+- 识别变量间的关系
+- 为后续建模提供依据
+
+### 2.2 练习题
+
+**练习3：** 创建综合的数据可视化
+```r
+# 使用 mtcars 数据集
+library(ggplot2)
+
+# 1. 创建散点图显示 mpg 与 wt 的关系
+# 2. 按照 cyl 进行颜色分组
+# 3. 添加趋势线
+# 4. 设置图表标题和坐标轴标签
+
+# 参考答案
+ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "汽车重量与油耗关系",
+    x = "重量 (1000 lbs)",
+    y = "油耗 (miles/gallon)",
+    color = "气缸数"
+  ) +
+  theme_minimal()
+```
+
+**练习4：** 描述性统计分析
+```r
+# 为数据集生成完整的描述性统计报告
+descriptive_stats <- function(data, numeric_vars) {
+  stats <- data %>%
+    select(all_of(numeric_vars)) %>%
+    summarise_all(list(
+      mean = ~mean(., na.rm = TRUE),
+      median = ~median(., na.rm = TRUE),
+      sd = ~sd(., na.rm = TRUE),
+      min = ~min(., na.rm = TRUE),
+      max = ~max(., na.rm = TRUE),
+      q25 = ~quantile(., 0.25, na.rm = TRUE),
+      q75 = ~quantile(., 0.75, na.rm = TRUE)
+    )) %>%
+    pivot_longer(everything(), names_to = "stat", values_to = "value") %>%
+    separate(stat, into = c("variable", "statistic"), sep = "_(?=[^_]+$)")
+  
+  return(stats)
+}
+```
+
+---
+
+## 第三章：假设检验
+
+### 3.1 核心知识点
+
+#### 3.1.1 假设检验基本概念
+
+**假设检验步骤：**
+
+1. 建立原假设（H₀）和备择假设（H₁）
+2. 选择显著性水平（α，通常为0.05）
+3. 选择适当的检验统计量
+4. 计算p值
+5. 做出统计决策
+
+**两类错误：**
+
+- **第一类错误（Type I Error）**：拒绝了实际为真的原假设，概率为α
+- **第二类错误（Type II Error）**：接受了实际为伪的原假设，概率为β
+
+**p值的正确理解：**
+
+p值是在原假设为真的前提下，观察到当前样本结果或更极端结果的概率。
+
+#### 3.1.2 t检验
+
+**单样本t检验：**
+```r
+# 检验样本均值是否等于某个值
+t.test(x, mu = hypothesized_mean)
+```
+
+**双独立样本t检验：**
+```r
+# 比较两个独立样本的均值
+t.test(group1, group2, var.equal = TRUE)  # 等方差
+t.test(group1, group2, var.equal = FALSE) # 不等方差（Welch's t-test）
+
+# 或使用公式形式
+t.test(outcome ~ group, data = dataset, var.equal = TRUE)
+```
+
+**配对样本t检验：**
+```r
+# 比较配对样本的均值差异
+t.test(before, after, paired = TRUE)
+```
+
+**前提假设：**
+
+- 数据来自正态分布（或样本量足够大）
+- 对于双样本t检验，两样本相互独立
+- 对于等方差t检验，两总体方差相等
+
+#### 3.1.3 方差齐性检验
+
+```r
+# Levene's 检验
+library(car)
+leveneTest(outcome ~ group, data = dataset)
+
+# Bartlett's 检验
+bartlett.test(outcome ~ group, data = dataset)
+```
+
+### 3.2 练习题
+
+**练习5：** 双独立样本t检验
+```r
+# 场景：比较两种教学方法对学生成绩的影响
+# 1. 进行方差齐性检验
+# 2. 选择适当的t检验
+# 3. 解释结果
+
+# 参考答案
+# 假设数据存储在 education_data 中，包含 score 和 method 列
+
+# 1. 方差齐性检验
+levene_result <- leveneTest(score ~ method, data = education_data)
+print(levene_result)
+
+# 2. 根据方差齐性检验结果选择t检验
+if (levene_result$`Pr(>F)`[1] > 0.05) {
+  # 方差齐性，使用等方差t检验
+  t_result <- t.test(score ~ method, data = education_data, var.equal = TRUE)
+} else {
+  # 方差不齐，使用Welch's t检验
+  t_result <- t.test(score ~ method, data = education_data, var.equal = FALSE)
+}
+
+# 3. 结果解释
+cat("t统计量:", t_result$statistic, "\n")
+cat("p值:", t_result$p.value, "\n")
+cat("95%置信区间:", t_result$conf.int, "\n")
+
+if (t_result$p.value < 0.05) {
+  cat("结论：两种教学方法的平均效果存在显著差异（p < 0.05）\n")
+} else {
+  cat("结论：没有足够证据表明两种教学方法的平均效果存在显著差异（p ≥ 0.05）\n")
+}
+```
+
+---
+
+## 第四章：方差分析
+
+### 4.1 核心知识点
+
+#### 4.1.1 单因素方差分析（One-way ANOVA）
+
+**适用场景：** 比较三个或更多独立样本组的均值
+
+**前提假设：**
+
+- 各组样本相互独立
+- 各组数据来自正态分布
+- 各组方差相等（方差齐性）
+
+**R语言实现：**
+```r
+# 拟合ANOVA模型
+anova_model <- aov(outcome ~ group, data = dataset)
+
+# 查看ANOVA表
+summary(anova_model)
+
+# 模型诊断
+plot(anova_model)
+
+# 检查残差正态性
+shapiro.test(residuals(anova_model))
+```
+
+#### 4.1.2 事后检验（Post-hoc Tests）
+
+当ANOVA结果显著时，需要进行事后检验确定具体哪些组之间存在差异：
+
+```r
+# Tukey's HSD检验
+TukeyHSD(anova_model)
+
+# 或使用其他包
+library(agricolae)
+HSD.test(anova_model, "group")
+```
+
+### 4.2 练习题
+
+**练习6：** 单因素方差分析
+```r
+# 场景：比较三种促销活动对销售额的影响
+# 1. 进行方差分析
+# 2. 检查模型假设
+# 3. 如果结果显著，进行事后检验
+
+# 参考答案
+# 假设数据在 promotion_data 中，包含 sales 和 promotion_type 列
+
+# 1. 拟合ANOVA模型
+anova_model <- aov(sales ~ promotion_type, data = promotion_data)
+anova_summary <- summary(anova_model)
+print(anova_summary)
+
+# 2. 模型诊断
+par(mfrow = c(2, 2))
+plot(anova_model)
+
+# 检查残差正态性
+shapiro_result <- shapiro.test(residuals(anova_model))
+cat("Shapiro-Wilk正态性检验 p值:", shapiro_result$p.value, "\n")
+
+# 3. 如果ANOVA显著，进行事后检验
+if (anova_summary[[1]]$`Pr(>F)`[1] < 0.05) {
+  cat("ANOVA结果显著，进行Tukey's HSD事后检验：\n")
+  tukey_result <- TukeyHSD(anova_model)
+  print(tukey_result)
+} else {
+  cat("ANOVA结果不显著，各组均值无显著差异\n")
+}
+```
+
+---
+
+## 第五章：相关分析与回归分析
+
+### 5.1 核心知识点
+
+#### 5.1.1 相关分析
+
+**Pearson相关系数：**
+
+- 衡量两个连续变量之间的线性关系强度和方向
+- 取值范围：-1 到 1
+- |r| > 0.7：强相关；0.3 < |r| < 0.7：中等相关；|r| < 0.3：弱相关
+
+```r
+# 计算相关系数
+cor(x, y, use = "complete.obs")
+
+# 相关性检验
+cor.test(x, y)
+
+# 相关矩阵
+cor(data[, numeric_columns])
+
+# 相关性可视化
+library(corrplot)
+corrplot(cor_matrix, method = "circle")
+```
+
+**重要注意：** 相关性不等于因果关系！
+
+#### 5.1.2 简单线性回归
+
+**模型形式：** $Y = \beta_0 + \beta_1X + \epsilon$
+
+其中：
+
+- $\beta_0$：截距，当X=0时Y的期望值
+- $\beta_1$：斜率，X每增加一个单位，Y的期望平均变化量
+- $\epsilon$：误差项
+
+```r
+# 拟合线性回归模型
+lm_model <- lm(y ~ x, data = dataset)
+
+# 模型摘要
+summary(lm_model)
+
+# 模型诊断图
+plot(lm_model)
+
+# 预测
+predict(lm_model, newdata = new_data)
+```
+
+**模型评价指标：**
+
+- **R²（决定系数）**：因变量总变异中能被自变量解释的比例
+- **调整R²**：考虑自变量个数的R²调整版本
+- **残差标准误（RSE）**：模型预测的平均误差
+
+#### 5.1.3 多元线性回归
+
+**模型形式：** $Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p + \epsilon$
+
+**偏回归系数解释：** $\beta_i$ 表示在控制了模型中其他所有自变量的影响后，$X_i$ 每变化一个单位，Y的期望平均变化量。
+
+```r
+# 多元回归
+multi_model <- lm(y ~ x1 + x2 + x3, data = dataset)
+
+# 检测多重共线性
+library(car)
+vif(multi_model)  # VIF > 10 表示存在严重多重共线性
+```
+
+#### 5.1.4 回归模型假设与诊断
+
+**线性回归的基本假设：**
+
+1. 线性关系
+2. 残差独立性
+3. 残差正态性
+4. 残差方差齐性（同方差性）
+5. 无多重共线性（多元回归）
+
+**模型诊断：**
+```r
+# 残差图
+plot(lm_model, which = 1)  # 残差 vs 拟合值
+
+# 正态Q-Q图
+plot(lm_model, which = 2)  # 检查残差正态性
+
+# 影响点图
+plot(lm_model, which = 4)  # Cook距离
+
+# 残差分布检验
+shapiro.test(residuals(lm_model))
+```
+
+### 5.2 练习题
+
+**练习7：** 简单线性回归分析
+```r
+# 场景：分析广告投入与销售额的关系
+# 1. 创建散点图观察关系
+# 2. 拟合线性回归模型
+# 3. 模型诊断
+# 4. 解释结果
+
+# 参考答案
+# 假设数据在 advertising_data 中，包含 ad_spend 和 sales 列
+
+# 1. 探索性分析
+ggplot(advertising_data, aes(x = ad_spend, y = sales)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "广告投入与销售额关系",
+       x = "广告投入（万元）",
+       y = "销售额（万元）")
+
+# 相关性分析
+cor_result <- cor.test(advertising_data$ad_spend, advertising_data$sales)
+cat("相关系数:", cor_result$estimate, "\n")
+cat("相关性检验 p值:", cor_result$p.value, "\n")
+
+# 2. 拟合回归模型
+lm_model <- lm(sales ~ ad_spend, data = advertising_data)
+model_summary <- summary(lm_model)
+print(model_summary)
+
+# 3. 模型诊断
+par(mfrow = c(2, 2))
+plot(lm_model)
+
+# 4. 结果解释
+cat("模型方程: 销售额 =", round(coef(lm_model)[1], 2), "+", 
+    round(coef(lm_model)[2], 2), "× 广告投入\n")
+cat("R²:", round(model_summary$r.squared, 3), "\n")
+cat("解释：广告投入每增加1万元，销售额平均增加", 
+    round(coef(lm_model)[2], 2), "万元\n")
+```
+
+---
+
+## 第六章：Logistic回归与分类
+
+### 6.1 核心知识点
+
+#### 6.1.1 Logistic回归模型
+
+**适用场景：** 二分类或多分类问题
+
+**模型形式：**
+$$\log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p$$
+
+其中 $p$ 是事件发生的概率。
+
+**概率转换：**
+$$p = \frac{e^{\beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p}}{1 + e^{\beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p}}$$
+
+```r
+# 拟合Logistic回归
+logit_model <- glm(outcome ~ x1 + x2 + x3, 
+                   data = dataset, 
+                   family = binomial(link = "logit"))
+
+# 模型摘要
+summary(logit_model)
+
+# 优势比计算
+exp(coef(logit_model))
+
+# 预测概率
+predicted_probs <- predict(logit_model, type = "response")
+```
+
+#### 6.1.2 优势比（Odds Ratio）
+
+**优势（Odds）**：事件发生概率与不发生概率的比值
+$$Odds = \frac{p}{1-p}$$
+
+**优势比（OR）**：$e^{\beta_i}$，表示该变量增加一个单位时，事件发生的优势变化倍数
+
+- OR = 1：该变量对结果无影响
+- OR > 1：该变量增加时，事件发生的优势增加
+- OR < 1：该变量增加时，事件发生的优势减少
+
+#### 6.1.3 模型评估
+
+**分类性能指标：**
+
+```r
+# 混淆矩阵
+library(caret)
+predictions <- ifelse(predicted_probs > 0.5, 1, 0)
+confusionMatrix(factor(predictions), factor(actual_outcomes))
+
+# 准确率、精确率、召回率、F1分数
+accuracy <- sum(predictions == actual_outcomes) / length(actual_outcomes)
+precision <- sum(predictions == 1 & actual_outcomes == 1) / sum(predictions == 1)
+recall <- sum(predictions == 1 & actual_outcomes == 1) / sum(actual_outcomes == 1)
+f1_score <- 2 * (precision * recall) / (precision + recall)
+```
+
+**ROC曲线和AUC：**
+```r
+library(pROC)
+roc_curve <- roc(actual_outcomes, predicted_probs)
+auc_value <- auc(roc_curve)
+plot(roc_curve, main = paste("ROC Curve (AUC =", round(auc_value, 3), ")"))
+```
+
+### 6.2 练习题
+
+**练习8：** Logistic回归分析
+```r
+# 场景：预测客户是否会购买产品
+# 变量：年龄、收入、是否有促销、购买历史
+# 结果：是否购买（1=购买，0=不购买）
+
+# 参考答案
+# 假设数据在 customer_data 中
+
+# 1. 数据预处理
+customer_data$promotion <- as.factor(customer_data$promotion)
+customer_data$purchase <- as.factor(customer_data$purchase)
+
+# 2. 拟合Logistic回归模型
+logit_model <- glm(purchase ~ age + income + promotion + purchase_history,
+                   data = customer_data,
+                   family = binomial(link = "logit"))
+
+# 3. 模型摘要
+summary(logit_model)
+
+# 4. 优势比计算和解释
+or_values <- exp(coef(logit_model))
+or_ci <- exp(confint(logit_model))
+cbind(OR = or_values, or_ci)
+
+# 5. 模型预测
+predictions <- predict(logit_model, type = "response")
+
+# 6. 性能评估
+library(pROC)
+roc_result <- roc(customer_data$purchase, predictions)
+cat("AUC:", auc(roc_result), "\n")
+
+# 7. 决策阈值分析
+thresholds <- seq(0.1, 0.9, 0.1)
+performance <- data.frame(
+  threshold = thresholds,
+  accuracy = sapply(thresholds, function(t) {
+    pred_class <- ifelse(predictions > t, 1, 0)
+    sum(pred_class == as.numeric(customer_data$purchase) - 1) / length(pred_class)
+  })
+)
+print(performance)
+```
+
+---
+
+## 第七章：卡方检验与分类数据分析
+
+### 7.1 核心知识点
+
+#### 7.1.1 卡方独立性检验
+
+**适用场景：** 检验两个分类变量之间是否存在关联
+
+**前提假设：**
+
+- 样本随机抽取
+- 期望频数 ≥ 5（至少80%的单元格）
+- 没有期望频数 < 1
+
+```r
+# 创建列联表
+contingency_table <- table(variable1, variable2)
+
+# 卡方检验
+chi_square_result <- chisq.test(contingency_table)
+print(chi_square_result)
+
+# 期望频数检查
+chi_square_result$expected
+```
+
+#### 7.1.2 结果解释
+
+**卡方统计量：** $\chi^2 = \sum \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
+
+其中 $O_{ij}$ 是观察频数，$E_{ij}$ 是期望频数。
+
+**p值解释：**
+
+- p < 0.05：拒绝原假设，认为两变量存在关联
+- p ≥ 0.05：不拒绝原假设，没有足够证据表明两变量存在关联
+
+### 7.2 练习题
+
+**练习9：** 卡方独立性检验
+```r
+# 场景：分析不同地区用户对产品满意度的差异
+# 变量：地区（东部、中部、西部）、满意度（满意、一般、不满意）
+
+# 参考答案
+# 1. 创建列联表
+satisfaction_table <- table(survey_data$region, survey_data$satisfaction)
+print(satisfaction_table)
+
+# 2. 卡方检验
+chi_result <- chisq.test(satisfaction_table)
+print(chi_result)
+
+# 3. 检查期望频数
+cat("期望频数：\n")
+print(chi_result$expected)
+
+# 检查是否满足假设
+min_expected <- min(chi_result$expected)
+prop_greater_5 <- sum(chi_result$expected >= 5) / length(chi_result$expected)
+
+cat("最小期望频数:", min_expected, "\n")
+cat("期望频数≥5的比例:", prop_greater_5, "\n")
+
+# 4. 结果解释
+if (chi_result$p.value < 0.05) {
+  cat("结论：地区和满意度之间存在显著关联 (p =", 
+      round(chi_result$p.value, 4), ")\n")
+} else {
+  cat("结论：没有足够证据表明地区和满意度之间存在关联 (p =", 
+      round(chi_result$p.value, 4), ")\n")
+}
+
+# 5. 残差分析（如果结果显著）
+if (chi_result$p.value < 0.05) {
+  standardized_residuals <- chi_result$stdres
+  cat("标准化残差（绝对值>2表示贡献较大）：\n")
+  print(round(standardized_residuals, 2))
+}
+```
+
+---
+
+## 第八章：综合分析案例
+
+### 8.1 完整数据分析流程
+
+以下是一个完整的数据分析项目示例：
+
+```r
+# 完整数据分析流程示例
+library(tidyverse)
+library(corrplot)
+library(car)
+library(pROC)
+
+# 1. 数据导入和初步探索
+data <- read_csv("dataset.csv")
+glimpse(data)
+summary(data)
+
+# 2. 数据清理
+data_clean <- data %>%
+  # 处理缺失值
+  drop_na(critical_variables) %>%
+  # 数据类型转换
+  mutate(
+    categorical_var = as.factor(categorical_var),
+    date_var = as.Date(date_var)
+  ) %>%
+  # 创建新变量
+  mutate(
+    new_var = ifelse(condition, value1, value2)
+  )
+
+# 3. 探索性数据分析
+# 描述性统计
+numeric_vars <- data_clean %>% select_if(is.numeric) %>% names()
+categorical_vars <- data_clean %>% select_if(is.factor) %>% names()
+
+descriptive_stats <- data_clean %>%
+  select(all_of(numeric_vars)) %>%
+  summary()
+
+# 相关性分析
+correlation_matrix <- cor(data_clean[numeric_vars], use = "complete.obs")
+corrplot(correlation_matrix, method = "circle")
+
+# 可视化
+# 分布图
+data_clean %>%
+  select(all_of(numeric_vars)) %>%
+  pivot_longer(everything()) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 30) +
+  facet_wrap(~name, scales = "free")
+
+# 分类变量分布
+data_clean %>%
+  select(all_of(categorical_vars)) %>%
+  pivot_longer(everything()) %>%
+  ggplot(aes(x = value)) +
+  geom_bar() +
+  facet_wrap(~name, scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# 4. 假设检验分析
+# 示例：比较不同组别的均值
+group_comparison <- data_clean %>%
+  group_by(group_variable) %>%
+  summarise(
+    mean_outcome = mean(outcome_variable, na.rm = TRUE),
+    sd_outcome = sd(outcome_variable, na.rm = TRUE),
+    n = n()
+  )
+
+# t检验或ANOVA
+if (length(unique(data_clean$group_variable)) == 2) {
+  test_result <- t.test(outcome_variable ~ group_variable, data = data_clean)
+} else {
+  anova_model <- aov(outcome_variable ~ group_variable, data = data_clean)
+  test_result <- summary(anova_model)
+}
+
+# 5. 回归分析
+# 线性回归
+lm_model <- lm(continuous_outcome ~ predictor1 + predictor2 + predictor3, 
+               data = data_clean)
+summary(lm_model)
+
+# 模型诊断
+par(mfrow = c(2, 2))
+plot(lm_model)
+
+# Logistic回归（如果是分类问题）
+logit_model <- glm(binary_outcome ~ predictor1 + predictor2 + predictor3,
+                   data = data_clean,
+                   family = binomial())
+summary(logit_model)
+
+# 6. 模型评估和验证
+# 交叉验证
+library(caret)
+set.seed(123)
+train_indices <- createDataPartition(data_clean$outcome, p = 0.8, list = FALSE)
+train_data <- data_clean[train_indices, ]
+test_data <- data_clean[-train_indices, ]
+
+# 重新拟合模型
+final_model <- lm(outcome ~ ., data = train_data)
+predictions <- predict(final_model, newdata = test_data)
+
+# 评估指标
+rmse <- sqrt(mean((test_data$outcome - predictions)^2))
+mae <- mean(abs(test_data$outcome - predictions))
+r_squared <- cor(test_data$outcome, predictions)^2
+
+# 7. 结果可视化和报告
+# 残差图
+residuals_df <- data.frame(
+  fitted = fitted(final_model),
+  residuals = residuals(final_model)
+)
+
+ggplot(residuals_df, aes(x = fitted, y = residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "残差图", x = "拟合值", y = "残差")
+
+# 预测 vs 实际值
+prediction_df <- data.frame(
+  actual = test_data$outcome,
+  predicted = predictions
+)
+
+ggplot(prediction_df, aes(x = actual, y = predicted)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
+  labs(title = "预测值 vs 实际值", x = "实际值", y = "预测值")
+```
+
+### 8.2 综合练习
+
+**练习10：** 完整数据分析项目
+```r
+# 场景：分析影响员工满意度的因素
+# 数据包含：员工ID、部门、工作年限、薪资、培训小时数、满意度评分
+
+# 任务：
+# 1. 数据探索和清理
+# 2. 描述性统计分析
+# 3. 相关性分析
+# 4. 比较不同部门的满意度（ANOVA）
+# 5. 建立预测满意度的回归模型
+# 6. 模型评估和解释
+
+# 提示代码结构：
+employee_analysis <- function(data) {
+  # 1. 数据清理
+  # 2. EDA
+  # 3. 统计检验
+  # 4. 建模
+  # 5. 评估
+  # 6. 可视化报告
+}
+```
+
+---
+
+## 第九章：R Markdown/Quarto与可重复研究
+
+### 9.1 核心知识点
+
+#### 9.1.1 R Markdown/Quarto基础
+
+**代码块语法：**
+```{r}
+# R代码块
+```
+
+**常用代码块选项：**
+
+- `echo = FALSE`：不显示代码，只显示结果
+- `include = FALSE`：不在输出中包含代码块
+- `eval = FALSE`：不执行代码
+- `warning = FALSE`：不显示警告信息
+- `message = FALSE`：不显示消息
+
+#### 9.1.2 可重复研究最佳实践
+
+1. **清晰的文档结构**
+2. **完整的代码和注释**
+3. **版本控制**
+4. **数据和代码的分离**
+5. **环境管理**
+
+---
+
+## 第十章：考试策略与复习建议
+
+### 10.1 题型分析
+
+**选择题（40分）：**
+
+- 重点：基础概念、函数用法、统计原理
+- 策略：理解概念，记忆关键函数
+
+**判断题（20分）：**
+
+- 重点：常见误区、概念辨析
+- 策略：注意细节，避免绝对化表述
+
+**简答题（40分）：**
+
+- 重点：分析思路、方法选择、结果解释
+- 策略：条理清晰，步骤完整
+
+### 10.2 复习时间安排
+
+**建议复习计划：**
+
+1. **第1-2天：** R语言基础和数据处理
+2. **第3-4天：** 描述性统计和可视化
+3. **第5-6天：** 假设检验和方差分析
+4. **第7-8天：** 回归分析
+5. **第9天：** 分类数据分析和Logistic回归
+6. **第10天：** 综合练习和真题演练
+
+### 10.3 重点知识清单
+
+**必须掌握的概念：**
+
+- [x] 整洁数据原则
+- [x] dplyr核心函数（select, filter, mutate, summarise, group_by）
+- [x] ggplot2基本语法（aes, geom_*）
+- [x] 描述性统计指标的适用场景
+- [x] 假设检验的基本步骤和p值解释
+- [x] t检验的类型和适用条件
+- [x] ANOVA的前提假设和事后检验
+- [x] 线性回归的假设和诊断
+- [x] Logistic回归的原理和优势比解释
+- [x] 卡方检验的适用场景
+- [x] 模型评估指标（R²、AUC、精确率、召回率等）
+
+**必须会用的函数：**
+```r
+# 数据处理
+read_csv(), filter(), select(), mutate(), group_by(), summarise()
+
+# 统计检验
+t.test(), aov(), chisq.test(), cor.test()
+
+# 建模
+lm(), glm(), predict(), summary()
+
+# 可视化
+ggplot(), aes(), geom_point(), geom_bar(), geom_histogram()
+```
+
+---
+
+## 附录：常用函数速查表
+
+### A.1 数据操作函数
+
+| 函数 | 功能 | 示例 |
+|------|------|------|
+| `read_csv()` | 读取CSV文件 | `read_csv("data.csv")` |
+| `filter()` | 筛选行 | `filter(data, x > 10)` |
+| `select()` | 选择列 | `select(data, x, y, z)` |
+| `mutate()` | 创建/修改列 | `mutate(data, new_col = x + y)` |
+| `group_by()` | 分组 | `group_by(data, group_var)` |
+| `summarise()` | 汇总统计 | `summarise(data, mean_x = mean(x))` |
+
+### A.2 统计检验函数
+
+| 函数 | 功能 | 示例 |
+|------|------|------|
+| `t.test()` | t检验 | `t.test(x ~ group, data = df)` |
+| `aov()` | 方差分析 | `aov(y ~ group, data = df)` |
+| `chisq.test()` | 卡方检验 | `chisq.test(table(x, y))` |
+| `cor.test()` | 相关性检验 | `cor.test(x, y)` |
+
+### A.3 建模函数
+
+| 函数 | 功能 | 示例 |
+|------|------|------|
+| `lm()` | 线性回归 | `lm(y ~ x1 + x2, data = df)` |
+| `glm()` | 广义线性模型 | `glm(y ~ x, family = binomial, data = df)` |
+| `predict()` | 模型预测 | `predict(model, newdata = new_df)` |
+
+---
+
+## 结语
+
+本复习指南涵盖了《统计学与R语言》课程的核心内容。建议结合课堂笔记、教材和实际练习进行复习。记住，统计学不仅仅是记忆公式和函数，更重要的是理解概念、掌握分析思路、能够正确解释结果。
+
+**最后提醒：**
+
+1. 多做练习，熟悉R语言操作
+2. 重视概念理解，不要死记硬背
+3. 注意结果解释，培养批判性思维
+4. 保持代码整洁，养成良好编程习惯
+
+祝您考试顺利！🎉 

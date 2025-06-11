@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AI协作终极指南：你才是驾驶员，AI是你的最强副驾 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./week1_lecture.html" rel="next">
+<link href="./course_design.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+
+<link rel="stylesheet" href="styles/custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./course_design.html">课程设计</a></li><li class="breadcrumb-item"><a href="./course_design_ai.html"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">课程介绍</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">课程设计</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./course_design.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">《统计学与R语言》课程设计：端到端数据智能应用开发周</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./course_design_ai.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">讲义</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周：分类数据的智慧：卡方检验与阶段总结</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周：承前启后：阶段回顾与多元回归再探</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week9_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第九周：模型诊断实战：发现模型的问题</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week10_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十周：模型改进与选择的批判性视角</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week11_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十一周：预测分类结果：Logistic 回归（一）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week12_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./综合实践项目启动指南_五一假期.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">综合实践项目启动详细指南 (五一假期任务)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week13_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第13周：AI赋能分析、可重复报告与项目实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./统计学与R语言期末复习指南.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学与R语言期末复习指南</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./统计学与R语言复习练习题集.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学与R语言复习练习题集</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">实验</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周实验：R 环境与基础操作</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周实验：数据导入与描述性统计</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周实验：<code>dplyr</code> 进阶与 <code>tidyr</code> 数据整形</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周实验：<code>ggplot2</code> 可视化探索</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周实验：假设检验实践 (t-检验与 ANOVA)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周实验：卡方检验与统计方法选择</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周实验：阶段回顾与多元回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week9_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第九周实验：回归模型诊断实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week10_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十周实验：模型改进与选择实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week11_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week12_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十二周实验：Logistic 回归评估与模型比较</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week13_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第13周实验：深入探索nycflights13 - AI与Quarto实战</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot" id="toc-核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot" class="nav-link active" data-scroll-target="#核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot"><strong>核心法则：你是驾驶员，AI永远是副驾驶 (You are the Driver, AI is the Co-pilot)</strong></a></li>
+  <li><a href="#第一天蓝图设计日---从混沌到清晰的战略家" id="toc-第一天蓝图设计日---从混沌到清晰的战略家" class="nav-link" data-scroll-target="#第一天蓝图设计日---从混沌到清晰的战略家"><strong>第一天：蓝图设计日 - 从混沌到清晰的战略家</strong></a>
+  <ul class="collapse">
+  <li><a href="#深度战略探索-strategic-deep-dive" id="toc-深度战略探索-strategic-deep-dive" class="nav-link" data-scroll-target="#深度战略探索-strategic-deep-dive"><strong>1. 深度战略探索 (Strategic Deep Dive)</strong></a></li>
+  <li><a href="#探索与拓展激发你的战略家潜能-5个探索方向" id="toc-探索与拓展激发你的战略家潜能-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展激发你的战略家潜能-5个探索方向"><strong>探索与拓展：激发你的战略家潜能 (5个探索方向)</strong></a></li>
+  </ul></li>
+  <li><a href="#第二天python工程日---精益求精的建造者" id="toc-第二天python工程日---精益求精的建造者" class="nav-link" data-scroll-target="#第二天python工程日---精益求精的建造者"><strong>第二天：Python工程日 - 精益求精的建造者</strong></a>
+  <ul class="collapse">
+  <li><a href="#编写工业级爬虫-robust-scraping" id="toc-编写工业级爬虫-robust-scraping" class="nav-link" data-scroll-target="#编写工业级爬虫-robust-scraping"><strong>1. 编写“工业级”爬虫 (Robust Scraping)</strong></a></li>
+  <li><a href="#探索与拓展铸造你的工程师匠心-5个探索方向" id="toc-探索与拓展铸造你的工程师匠心-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展铸造你的工程师匠心-5个探索方向"><strong>探索与拓展：铸造你的工程师匠心 (5个探索方向)</strong></a></li>
+  </ul></li>
+  <li><a href="#第三天r统计核心日---洞察深刻的侦探" id="toc-第三天r统计核心日---洞察深刻的侦探" class="nav-link" data-scroll-target="#第三天r统计核心日---洞察深刻的侦探"><strong>第三天：R统计核心日 - 洞察深刻的侦探</strong></a>
+  <ul class="collapse">
+  <li><a href="#严谨的模型诊断与解读-rigorous-modeling" id="toc-严谨的模型诊断与解读-rigorous-modeling" class="nav-link" data-scroll-target="#严谨的模型诊断与解读-rigorous-modeling"><strong>1. 严谨的模型诊断与解读 (Rigorous Modeling)</strong></a></li>
+  <li><a href="#探索与拓展磨砺你的统计学思维-5个探索方向" id="toc-探索与拓展磨砺你的统计学思维-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展磨砺你的统计学思维-5个探索方向"><strong>探索与拓展：磨砺你的统计学思维 (5个探索方向)</strong></a></li>
+  </ul></li>
+  <li><a href="#第四天python应用开发日---用户至上的产品经理" id="toc-第四天python应用开发日---用户至上的产品经理" class="nav-link" data-scroll-target="#第四天python应用开发日---用户至上的产品经理"><strong>第四天：Python应用开发日 - 用户至上的产品经理</strong></a>
+  <ul class="collapse">
+  <li><a href="#优化用户体验ux" id="toc-优化用户体验ux" class="nav-link" data-scroll-target="#优化用户体验ux"><strong>1. 优化用户体验(UX)</strong></a></li>
+  <li><a href="#探索与拓展打造卓越产品的追求-5个探索方向" id="toc-探索与拓展打造卓越产品的追求-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展打造卓越产品的追求-5个探索方向"><strong>探索与拓展：打造卓越产品的追求 (5个探索方向)</strong></a></li>
+  </ul></li>
+  <li><a href="#第五天产品路演与交付日---成果斐然的沟通者" id="toc-第五天产品路演与交付日---成果斐然的沟通者" class="nav-link" data-scroll-target="#第五天产品路演与交付日---成果斐然的沟通者"><strong>第五天：产品路演与交付日 - 成果斐然的沟通者</strong></a>
+  <ul class="collapse">
+  <li><a href="#准备一场精彩的演讲" id="toc-准备一场精彩的演讲" class="nav-link" data-scroll-target="#准备一场精彩的演讲"><strong>1. 准备一场精彩的演讲</strong></a></li>
+  <li><a href="#探索与拓展成为沟通大师的修炼-5个探索方向" id="toc-探索与拓展成为沟通大师的修炼-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展成为沟通大师的修炼-5个探索方向"><strong>探索与拓展：成为沟通大师的修炼 (5个探索方向)</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./course_design.html">课程设计</a></li><li class="breadcrumb-item"><a href="./course_design_ai.html"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot" class="level3">
+<h3 class="anchored" data-anchor-id="核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot"><strong>核心法则：你是驾驶员，AI永远是副驾驶 (You are the Driver, AI is the Co-pilot)</strong></h3>
+<p>在开启这个项目之前，请将这条法则刻在你的脑海里。这不仅是一个比喻，更是决定你能否从本项目中真正学到东西的关键。</p>
+<ul>
+<li><strong>你设定目的地 (You Set the Destination):</strong> 项目的目标、要解决的问题、最终的价值主张，<strong>必须由你来定义</strong>。AI无法替你思考“我们应该去向何方”。</li>
+<li><strong>你掌控方向盘 (You Steer the Wheel):</strong> 在每个决策点——选择哪个模型、如何设计应用界面、如何解读一个模棱两可的结果——<strong>最终的决定权在你手中</strong>。AI会提供多种路线，但选择哪条路、何时转弯，是你作为驾驶员的职责。</li>
+<li><strong>你对结果负责 (You Own the Outcome):</strong> 如果项目跑偏了，或者代码出现了意想不到的bug，你不能说“是AI让我这么做的”。你需要理解AI建议的原理，对其进行批判性评估，并为你采纳的每一个方案负全责。</li>
+</ul>
+<p>AI这位副驾驶，博学、高效、不知疲倦。他能帮你看到你视野盲区的路况（风险预警），能帮你瞬间计算出最优路径（代码生成），能帮你解读复杂的交通标志（概念解释）。<strong>但你的任务，是学会如何向他发出清晰的指令，理解他的建议，并结合你对全局的判断，做出最终的驾驶决策。</strong></p>
+<p>本指南将教你如何成为一名能与最强副驾默契配合的顶尖驾驶员。</p>
+<hr>
+</section>
+<section id="第一天蓝图设计日---从混沌到清晰的战略家" class="level2">
+<h2 class="anchored" data-anchor-id="第一天蓝图设计日---从混沌到清晰的战略家"><strong>第一天：蓝图设计日 - 从混沌到清晰的战略家</strong></h2>
+<p><strong>今日目标：</strong> 成为一名项目架构师。不仅要规划做什么，更要思考为什么这么做，以及如何做得更好。</p>
+<section id="深度战略探索-strategic-deep-dive" class="level3">
+<h3 class="anchored" data-anchor-id="深度战略探索-strategic-deep-dive"><strong>1. 深度战略探索 (Strategic Deep Dive)</strong></h3>
+<blockquote class="blockquote">
+<p><strong>进阶提示示例（角色扮演与战略推演）：</strong></p>
+</blockquote>
+<pre><code>请扮演一家新能源汽车初创公司的CEO。我们即将发布一款新车，需要利用“汽车之家”上的竞品（比如特斯拉Model Y, 小鹏G9）口碑数据来制定我们的产品和营销策略。
+
+请帮我进行一次战略分析，输出一个包含以下内容的Markdown报告：
+1.  **关键业务问题：** 提出3个最尖锐的问题，例如：“消费者对竞品‘智能座舱’的真实抱怨是什么？我们的机会点在哪里？”
+2.  **数据需求清单：** 为了回答这些问题，我需要从网站上采集哪些具体的数据字段？除了基本信息，还应包含哪些隐藏信息？
+3.  **潜在假设与检验方法：** 针对每个问题，提出一个可以用R进行统计检验的假设。
+4.  **项目风险评估：** 列出这个数据项目在技术、数据、分析上可能遇到的三大风险，并提出规避建议。</code></pre>
+</section>
+<section id="探索与拓展激发你的战略家潜能-5个探索方向" class="level3">
+<h3 class="anchored" data-anchor-id="探索与拓展激发你的战略家潜能-5个探索方向"><strong>探索与拓展：激发你的战略家潜能 (5个探索方向)</strong></h3>
+<ol type="1">
+<li><strong>竞争对手模拟:</strong> “非常好。现在请扮演我们的主要竞争对手（如特斯拉）的数据分析主管。你看到了我刚才的分析计划，请指出这个计划对我司（初创公司）来说最大的三个战略盲点是什么？你会如何利用这些盲点来反制我们？”</li>
+<li><strong>资源约束下的决策:</strong> “假设我只有非常有限的API调用预算和开发时间（比如只有两天）。请基于这个严格的约束，重新审视你刚才提出的计划，并给出一个‘最小可行性产品(MVP)’版本的方案。哪些是可以放弃的，哪些是必须保留的核心？”</li>
+<li><strong>数据源的交叉验证:</strong> “只分析‘汽车之家’的数据可能存在偏见。请再推荐2个不同类型的、可以与‘汽车之家’数据形成互补的公开数据源（例如社交媒体、二手车交易平台等），并说明如何将这些多源数据结合起来，以获得更全面的洞察。”</li>
+<li><strong>长期价值思考:</strong> “除了为新车上市提供短期策略，这个数据项目还能为公司创造哪些长期价值？请设计一个数据产品的路线图(Roadmap)，规划未来三个季度我们可以基于这个项目迭代出哪些新的功能或分析模块。”</li>
+<li><strong>伦理与偏见审查:</strong> “请扮演一位数据伦理专家。审视我的项目计划，并指出其中可能存在的算法偏见或数据隐私问题。例如，用户评论数据是否可能过度代表某一类人群？我应该如何在分析和报告中解决或声明这些潜在的偏见？”</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="第二天python工程日---精益求精的建造者" class="level2">
+<h2 class="anchored" data-anchor-id="第二天python工程日---精益求精的建造者"><strong>第二天：Python工程日 - 精益求精的建造者</strong></h2>
+<p><strong>今日目标：</strong> 成为一名严谨的软件工程师。代码不仅要能跑，还要健壮、高效、可维护。</p>
+<section id="编写工业级爬虫-robust-scraping" class="level3">
+<h3 class="anchored" data-anchor-id="编写工业级爬虫-robust-scraping"><strong>1. 编写“工业级”爬虫 (Robust Scraping)</strong></h3>
+<blockquote class="blockquote">
+<p><strong>进阶提示示例（追求健壮性）：</strong></p>
+</blockquote>
+<pre><code>我正在用Playwright写一个爬虫。请帮我重构我的代码，加入以下“工业级”特性，并为每个特性添加详细注释说明其作用：
+
+1.  **智能等待:** 不要用固定的`sleep(5)`，而是使用Playwright的智能等待机制。
+2.  **重试逻辑:** 当网络波动或页面加载失败时，自动重试3次。
+3.  **增量保存:** 每成功爬取10条数据就保存一次。
+4.  **日志记录:** 使用Python的`logging`模块记录关键步骤。</code></pre>
+</section>
+<section id="探索与拓展铸造你的工程师匠心-5个探索方向" class="level3">
+<h3 class="anchored" data-anchor-id="探索与拓展铸造你的工程师匠心-5个探索方向"><strong>探索与拓展：铸造你的工程师匠心 (5个探索方向)</strong></h3>
+<ol type="1">
+<li><strong>配置化与可扩展性:</strong> “请将我的爬虫脚本改造得更具通用性。将需要爬取的目标URL、要提取的CSS选择器、以及翻页次数等硬编码的参数，全部提取到一个单独的<code>config.yaml</code>或<code>config.json</code>文件中。让我的Python主脚本读取这个配置文件来执行任务。”</li>
+<li><strong>浏览器指纹与反侦察:</strong> “我担心被网站识别为机器人。请解释什么是‘浏览器指纹’，并提供代码示例，展示如何使用Playwright的扩展功能或第三方库来伪造一个更真实的浏览器指纹（例如，修改<code>navigator.webdriver</code>属性、伪造Canvas指纹等）。”</li>
+<li><strong>数据校验与清洗层:</strong> “数据采集后，往往是脏乱的。请帮我设计一个数据校验层。使用<code>Pandas</code>或<code>Pydantic</code>库，在数据存入最终CSV文件之前，自动检查每一行数据是否符合预设的格式（如，价格必须是数字，评分必须在0-5之间），并将不合格的数据记录到另一个错误日志文件中。”</li>
+<li><strong>任务调度与自动化:</strong> “我希望这个爬虫能每周自动运行一次。请给我一个简单的教程，说明如何将这个Python脚本部署到一个轻量级的任务调度工具上，比如在Linux服务器上使用<code>Cron</code>，或者在Windows上使用‘任务计划程序’。”</li>
+<li><strong>代码质量与测试:</strong> “请扮演一名代码审查员(Code Reviewer)，并使用静态分析工具的视角（如Flake8, Black）来审查我的爬虫代码。指出其中不符合PEP 8规范、可能存在潜在bug或可以优化的地方。另外，请为我的一个核心函数编写一个简单的单元测试用例（使用<code>pytest</code>）。”</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="第三天r统计核心日---洞察深刻的侦探" class="level2">
+<h2 class="anchored" data-anchor-id="第三天r统计核心日---洞察深刻的侦探"><strong>第三天：R统计核心日 - 洞察深刻的侦探</strong></h2>
+<p><strong>今日目标：</strong> 成为一名数据侦探，从纷繁复杂的数据中找到线索，并用统计学构建一个令人信服的“案件报告”。</p>
+<section id="严谨的模型诊断与解读-rigorous-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="严谨的模型诊断与解读-rigorous-modeling"><strong>1. 严谨的模型诊断与解读 (Rigorous Modeling)</strong></h3>
+<blockquote class="blockquote">
+<p><strong>进阶提示示例（模型诊断与深度解读）：</strong></p>
+</blockquote>
+<pre><code>我用R建立了一个租金预测模型 `rent_model`。现在，我需要对这个模型进行一次全面的“体检”。
+
+请逐步指导我完成以下任务，并提供相应的R代码和结果解读：
+1.  **残差分析:** 检查残差的正态性。
+2.  **同方差性检验:** 检查同方差性。
+3.  **多重共线性诊断:** 计算VIF。
+4.  **最终解读:** 将模型结果翻译成业务洞察报告。</code></pre>
+</section>
+<section id="探索与拓展磨砺你的统计学思维-5个探索方向" class="level3">
+<h3 class="anchored" data-anchor-id="探索与拓展磨砺你的统计学思维-5个探索方向"><strong>探索与拓展：磨砺你的统计学思维 (5个探索方向)</strong></h3>
+<ol type="1">
+<li><strong>交互效应的探索:</strong> “我的模型<code>lm(y ~ x1 + x2)</code>显示x1和x2都不显著。但直觉告诉我它们之间可能有交互作用。请教我如何在R中探索和可视化两个连续变量的交互效应，并解释如何在模型中加入交互项<code>x1:x2</code>。如果交互项显著，我应该如何向业务方解释它的含义？”</li>
+<li><strong>模型选择的艺术:</strong> “除了线性回归，对于我的预测任务，可能还有其他更合适的模型，比如广义线性模型(GLM)、稳健回归(Robust Regression)或决策树。请为我简要介绍这三种模型的适用场景，并教我如何使用<code>caret</code>或<code>tidymodels</code>包，通过交叉验证来客观地比较这些不同模型的性能，从而选择出最优模型。”</li>
+<li><strong>挑战模型的假设:</strong> “如果我的残差分析显示残差严重不符合正态分布，我该怎么办？请提供至少三种处理策略，例如对因变量进行Box-Cox变换、使用对非正态数据更稳健的模型，或者分析是否存在异常值。请分别给出相应的R代码示例。”</li>
+<li><strong>因果推断的边界:</strong> “我的回归模型显示‘近地铁’这个标签与高租金强相关。请扮演一名挑剔的统计学家，提醒我为什么‘相关不等于因果’。并启发我思考，如果要更有力地论证‘近地铁’是导致租金上涨的<strong>原因</strong>，我还需要收集哪些额外的数据（即控制哪些混杂变量）？”</li>
+<li><strong>贝叶斯方法的视角:</strong> “传统的频率派统计给出了一个点估计的系数。请简单介绍一下贝叶斯回归的基本思想，它与频率派回归有何不同？并演示如何使用一个R包（如<code>rstanarm</code>）来拟合一个简单的贝叶斯模型，并解释如何解读其结果中的‘后验分布’，这又能带来什么额外的信息？”</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="第四天python应用开发日---用户至上的产品经理" class="level2">
+<h2 class="anchored" data-anchor-id="第四天python应用开发日---用户至上的产品经理"><strong>第四天：Python应用开发日 - 用户至上的产品经理</strong></h2>
+<p><strong>今日目标：</strong> 成为一名产品经理，思考的不是“我能做什么”，而是“用户需要什么”。</p>
+<section id="优化用户体验ux" class="level3">
+<h3 class="anchored" data-anchor-id="优化用户体验ux"><strong>1. 优化用户体验(UX)</strong></h3>
+<blockquote class="blockquote">
+<p><strong>进阶提示示例（优化用户体验）：</strong></p>
+</blockquote>
+<pre><code>我的Streamlit应用已经基本成型，但感觉体验不够好。请扮演一名资深UX设计师和前端性能优化专家，帮我改进：
+
+1.  **性能优化:** 如何正确使用`st.cache_data`和`st.cache_resource`来提升应用的响应速度？
+2.  **布局优化:** 给我使用`st.tabs`和`st.expander`的布局方案。
+3.  **交互反馈:** 如何使用`st.spinner`给用户明确的进度提示？</code></pre>
+</section>
+<section id="探索与拓展打造卓越产品的追求-5个探索方向" class="level3">
+<h3 class="anchored" data-anchor-id="探索与拓展打造卓越产品的追求-5个探索方向"><strong>探索与拓展：打造卓越产品的追求 (5个探索方向)</strong></h3>
+<ol type="1">
+<li><strong>状态管理与用户会话:</strong> “我的应用需要记住用户之前的选择。例如，用户在页面A选择了一个城市，我希望当他导航到页面B再回来时，页面A的选择依然保留。请解释Streamlit的Session State (<code>st.session_state</code>)是如何工作的，并给我一个跨页面保持用户选择的完整代码示例。”</li>
+<li><strong>自定义组件与美化:</strong> “Streamlit的基础组件样式有限。请教我如何引入自定义CSS来修改应用的外观（如字体、颜色、按钮样式），或者推荐一个可以集成到Streamlit中的第三方组件库（如图表库ECharts或地图库Folium），并给出演示代码。”</li>
+<li><strong>用户引导与可解释性:</strong> “我的应用中有一个复杂的图表。如何设计一个‘帮助’或‘信息’按钮（一个小问号图标），当用户点击时，会弹出一个<code>st.info</code>或<code>st.popover</code>来解释这个图表应该如何解读？这能极大地提升应用的可解释性。”</li>
+<li><strong>URL参数化与分享:</strong> “我希望用户可以将他们当前的选择（如筛选器状态）分享给别人。请教我如何实现URL参数化？即当用户改变筛选器时，应用的URL会自动更新（如 <code>...?city=北京&amp;price=5000</code>），这样用户只需复制链接，别人打开就能看到完全相同的视图。”</li>
+<li><strong>A/B测试的思考:</strong> “如果我想测试两种不同的界面布局或推荐算法哪个更受用户欢迎，请从产品经理的角度，为我的Streamlit应用设计一个简单的A/B测试框架。我需要记录哪些用户行为数据？如何在应用中实现流量的随机分配？”</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="第五天产品路演与交付日---成果斐然的沟通者" class="level2">
+<h2 class="anchored" data-anchor-id="第五天产品路演与交付日---成果斐然的沟通者"><strong>第五天：产品路演与交付日 - 成果斐然的沟通者</strong></h2>
+<p><strong>今日目标：</strong> 成为一名出色的沟通者，将你数日的心血，以最精彩的方式呈现出来。</p>
+<section id="准备一场精彩的演讲" class="level3">
+<h3 class="anchored" data-anchor-id="准备一场精彩的演讲"><strong>1. 准备一场精彩的演讲</strong></h3>
+<blockquote class="blockquote">
+<p><strong>进阶提示示例（准备演讲稿）：</strong></p>
+</blockquote>
+<pre><code>我需要为我的Streamlit应用做一个5分钟的项目路演。观众是完全不懂技术的教授和同学。
+
+请帮我设计一份详细的**演讲逐字稿**，要求如下：
+1.  **开场“钩子” (Hook):** 30秒内抓住所有人的注意力。
+2.  **问题阐述:** 清晰地说明项目解决了什么痛点。
+3.  **产品演示串词:** 边演示边说的话。
+4.  **“Aha!”时刻:** 突出展示最惊人的一个洞察。
+5.  **结尾升华:** 总结价值，展望未来。</code></pre>
+</section>
+<section id="探索与拓展成为沟通大师的修炼-5个探索方向" class="level3">
+<h3 class="anchored" data-anchor-id="探索与拓展成为沟通大师的修炼-5个探索方向"><strong>探索与拓展：成为沟通大师的修炼 (5个探索方向)</strong></h3>
+<ol type="1">
+<li><strong>准备Q&amp;A环节:</strong> “请扮演三位不同类型的听众来向我提问：一位是挑剔的技术专家，一位是关心商业价值的投资人，还有一位是普通用户。请分别提出2个他们最可能问的尖锐问题，并为我提供回答这些问题的思路和策略。”</li>
+<li><strong>制作一页纸报告(One-Pager):</strong> “除了演讲，我还需要一份高度浓缩的‘一页纸项目报告’作为书面材料。请帮我设计这份报告的布局和内容，需要包含项目摘要、核心发现（用图表）、技术架构图和关键成果等，确保所有信息在一页A4纸内清晰呈现。”</li>
+<li><strong>量化项目影响力:</strong> “如何用数据来证明我的项目是有价值的？请启发我思考，我可以在我的应用中埋入哪些简单的追踪点，来量化我的项目影响力。例如，‘在上线第一天，共有XX位用户使用了我们的租金预测器，平均为每位用户节省了YY分钟的决策时间’。请给出3个类似的能量化影响力的指标。”</li>
+<li><strong>项目复盘与反思:</strong> “请设计一个项目复盘会议的框架。引导我思考并回答以下问题：1. 在这次项目中，我们做得最出色的是什么？2. 我们遇到的最大挑战是什么，以及我们是如何解决的？3. 如果可以重来一次，我们会做出哪些不同的决策？4. 通过这个项目，我个人最大的收获和成长是什么？”</li>
+<li><strong>撰写博客文章:</strong> “请帮我将这个项目的故事，改写成一篇适合发布在技术博客（如知乎、CSDN）上的文章。文章标题要吸引人，结构要清晰，语言要生动，不仅要展示最终成果，还要分享我在开发过程中的心路历程和踩过的坑，让其他学习者也能从中受益。”</li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./course_design.html" class="pagination-link" aria-label="《统计学与R语言》课程设计：端到端数据智能应用开发周">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">《统计学与R语言》课程设计：端到端数据智能应用开发周</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./week1_lecture.html" class="pagination-link" aria-label="第一周：启程：统计思维、R与数据世界">
+        <span class="nav-page-text"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

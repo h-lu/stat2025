@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>《统计学与R语言》课程设计：端到端数据智能应用开发周 – 统计学与R语言</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./course_design_ai.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xkm/sYwpb+ilR5gUw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+
+<link rel="stylesheet" href="styles/custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./course_design.html">课程设计</a></li><li class="breadcrumb-item"><a href="./course_design.html"><span class="chapter-title">《统计学与R语言》课程设计：端到端数据智能应用开发周</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">统计学与R语言</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">课程介绍</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">课程设计</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./course_design.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">《统计学与R语言》课程设计：端到端数据智能应用开发周</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./course_design_ai.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">讲义</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周：启程：统计思维、R与数据世界</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周：数据的语言：获取、导入与初步描述</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周：数据整形：<code>tidyverse</code> 的核心技艺</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周：眼见为实：<code>ggplot2</code> 可视化探索与推断初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周：做出判断：假设检验 (单/双样本) 与 ANOVA 应用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周：探索关系：相关与简单线性回归入门</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周：分类数据的智慧：卡方检验与阶段总结</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周：承前启后：阶段回顾与多元回归再探</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week9_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第九周：模型诊断实战：发现模型的问题</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week10_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十周：模型改进与选择的批判性视角</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week11_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十一周：预测分类结果：Logistic 回归（一）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week12_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十二周：Logistic 回归评估 与 模型比较初步</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./综合实践项目启动指南_五一假期.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">综合实践项目启动详细指南 (五一假期任务)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week13_lecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第13周：AI赋能分析、可重复报告与项目实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./统计学与R语言期末复习指南.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学与R语言期末复习指南</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./统计学与R语言复习练习题集.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">统计学与R语言复习练习题集</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">实验</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week1_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第一周实验：R 环境与基础操作</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week2_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第二周实验：数据导入与描述性统计</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week3_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第三周实验：<code>dplyr</code> 进阶与 <code>tidyr</code> 数据整形</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week4_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第四周实验：<code>ggplot2</code> 可视化探索</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week5_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第五周实验：假设检验实践 (t-检验与 ANOVA)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week6_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第六周实验：相关与简单线性回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week7_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第七周实验：卡方检验与统计方法选择</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week8_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第八周实验：阶段回顾与多元回归实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week9_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第九周实验：回归模型诊断实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week10_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十周实验：模型改进与选择实践</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week11_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十一周实验：Logistic 回归拟合与解释</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week12_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第十二周实验：Logistic 回归评估与模型比较</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week13_lab.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">第13周实验：深入探索nycflights13 - AI与Quarto实战</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#项目概述-project-overview" id="toc-项目概述-project-overview" class="nav-link active" data-scroll-target="#项目概述-project-overview">1. 项目概述 (Project Overview)</a></li>
+  <li><a href="#核心设计理念-core-design-philosophy" id="toc-核心设计理念-core-design-philosophy" class="nav-link" data-scroll-target="#核心设计理念-core-design-philosophy">2. 核心设计理念 (Core Design Philosophy)</a></li>
+  <li><a href="#课程目标与能力要求-learning-objectives" id="toc-课程目标与能力要求-learning-objectives" class="nav-link" data-scroll-target="#课程目标与能力要求-learning-objectives">3. 课程目标与能力要求 (Learning Objectives)</a></li>
+  <li><a href="#技术栈与推荐工具-technical-stack" id="toc-技术栈与推荐工具-technical-stack" class="nav-link" data-scroll-target="#技术栈与推荐工具-technical-stack">4. 技术栈与推荐工具 (Technical Stack)</a></li>
+  <li><a href="#为期五天的冲刺流程-five-day-sprint-workflow" id="toc-为期五天的冲刺流程-five-day-sprint-workflow" class="nav-link" data-scroll-target="#为期五天的冲刺流程-five-day-sprint-workflow">5. 为期五天的冲刺流程 (Five-Day Sprint Workflow)</a></li>
+  <li><a href="#项目选题六选一" id="toc-项目选题六选一" class="nav-link" data-scroll-target="#项目选题六选一">6. 项目选题（六选一）</a>
+  <ul class="collapse">
+  <li><a href="#选题一豆瓣电影口碑量化分析系统" id="toc-选题一豆瓣电影口碑量化分析系统" class="nav-link" data-scroll-target="#选题一豆瓣电影口碑量化分析系统">选题一：豆瓣电影口碑量化分析系统</a></li>
+  <li><a href="#选题二城市美食风向标" id="toc-选题二城市美食风向标" class="nav-link" data-scroll-target="#选题二城市美食风向标">选题二：城市美食风向标</a></li>
+  <li><a href="#选题三智慧旅游决策助手" id="toc-选题三智慧旅游决策助手" class="nav-link" data-scroll-target="#选题三智慧旅游决策助手">选题三：智慧旅游决策助手</a></li>
+  <li><a href="#选题四链家租房智能选址顾问" id="toc-选题四链家租房智能选址顾问" class="nav-link" data-scroll-target="#选题四链家租房智能选址顾问">选题四：链家租房智能选址顾问</a></li>
+  <li><a href="#选题五汽车消费口碑分析平台" id="toc-选题五汽车消费口碑分析平台" class="nav-link" data-scroll-target="#选题五汽车消费口碑分析平台">选题五：汽车消费口碑分析平台</a></li>
+  <li><a href="#选题六招聘市场需求导航" id="toc-选题六招聘市场需求导航" class="nav-link" data-scroll-target="#选题六招聘市场需求导航">选题六：招聘市场需求导航</a></li>
+  </ul></li>
+  <li><a href="#最终交付成果-final-deliverables" id="toc-最终交付成果-final-deliverables" class="nav-link" data-scroll-target="#最终交付成果-final-deliverables">7. 最终交付成果 (Final Deliverables)</a></li>
+  <li><a href="#评估标准-assessment-criteria" id="toc-评估标准-assessment-criteria" class="nav-link" data-scroll-target="#评估标准-assessment-criteria">8. 评估标准 (Assessment Criteria)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./course_design.html">课程设计</a></li><li class="breadcrumb-item"><a href="./course_design.html"><span class="chapter-title">《统计学与R语言》课程设计：端到端数据智能应用开发周</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">《统计学与R语言》课程设计：端到端数据智能应用开发周</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="项目概述-project-overview" class="level1">
+<h1>1. 项目概述 (Project Overview)</h1>
+<p>欢迎来到《统计学与R语言》课程的终极挑战——<strong>“端到端数据智能应用开发周”</strong>。本次课程设计旨在模拟一个真实世界的数据产品开发冲刺流程。你将不再是撰写一份静态的分析报告，而是以一个敏捷开发小组的身份，在为期五天的时间内，完成一个从数据获取、智能处理、统计分析到应用交付的完整闭环。</p>
+<p>项目的最终交付物是一个<strong>可交互、有商业价值的Web应用原型</strong>，它将全面检验你在数据采集、AI工具应用、统计建模和工程实践中的综合能力。</p>
+</section>
+<section id="核心设计理念-core-design-philosophy" class="level1">
+<h1>2. 核心设计理念 (Core Design Philosophy)</h1>
+<ul>
+<li><strong>全栈体验 (Full-Stack Experience):</strong> 打破单一工具的局限，你将体验从前端数据采集到后端应用部署的全过程。</li>
+<li><strong>跨语言协同 (Cross-Language Synergy):</strong> 你将学习并实践现代数据科学团队的工作模式——<strong>用最合适的工具解决最合适的问题</strong>。我们将发挥Python在工程和AI集成上的优势，以及R在统计分析和探索性可视化上的卓越能力。</li>
+<li><strong>AI赋能 (AI-Empowered):</strong> 大语言模型(LLM)不再是遥远的概念，而是你手中的强大工具。你将通过API调用，将非结构化文本转化为深刻的量化洞찰。</li>
+<li><strong>产品导向 (Product-Oriented):</strong> 你的最终目标是创造一个“产品”，而不仅仅是完成一个“作业”。这要求你不仅关注技术实现，更要思考用户体验和商业价值。</li>
+</ul>
+</section>
+<section id="课程目标与能力要求-learning-objectives" class="level1">
+<h1>3. 课程目标与能力要求 (Learning Objectives)</h1>
+<p>完成本次课程设计后，你将能够：</p>
+<ol type="1">
+<li><strong>熟练使用 Python (Playwright)</strong> 从复杂的动态网页中采集数据。</li>
+<li><strong>通过编程方式调用 LLM API</strong>，对非结构化文本数据进行高级处理与特征提取。</li>
+<li><strong>精通 R (<code>tidyverse</code>)</strong> 进行复杂的数据清洗、转换和深度探索性分析。</li>
+<li><strong>应用 R (<code>ggplot2</code>)</strong> 创建具有洞察力的、专业的统计图表。</li>
+<li><strong>在 R 中建立并解释统计模型</strong>（如多元回归），以回答具体的业务问题。</li>
+<li><strong>掌握 Python (Streamlit)</strong>，快速将数据分析结果转化为交互式Web应用。</li>
+<li><strong>实践一个完整的、跨语言的数据科学项目工作流</strong>，并具备项目管理和团队协作的基本素养。</li>
+</ol>
+</section>
+<section id="技术栈与推荐工具-technical-stack" class="level1">
+<h1>4. 技术栈与推荐工具 (Technical Stack)</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 7%">
+<col style="width: 41%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>任务领域</th>
+<th>核心语言</th>
+<th>推荐工具/库</th>
+<th>角色与职责</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>数据工程与AI</strong></td>
+<td><strong>Python</strong></td>
+<td><code>Playwright</code>, <code>Pandas</code>, <code>openai</code> (或其他LLM库)</td>
+<td>负责数据采集、调用AI进行智能处理，产出干净的增强数据集</td>
+</tr>
+<tr class="even">
+<td><strong>统计分析核心</strong></td>
+<td><strong>R</strong></td>
+<td><code>tidyverse</code>, <code>ggplot2</code>, <code>caret</code>/<code>tidymodels</code>, <code>R Markdown</code></td>
+<td>负责数据探索、统计建模、洞察发现，验证核心假设</td>
+</tr>
+<tr class="odd">
+<td><strong>应用构建与展示</strong></td>
+<td><strong>Python</strong></td>
+<td><code>Streamlit</code></td>
+<td>负责将R的分析成果转化为一个可交互的Web应用</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="为期五天的冲刺流程-five-day-sprint-workflow" class="level1">
+<h1>5. 为期五天的冲刺流程 (Five-Day Sprint Workflow)</h1>
+<ul>
+<li><strong>Day 1: 蓝图设计 (Blueprint Day)</strong>
+<ul>
+<li><strong>任务:</strong> 小组选择一个项目题目，并完成一份详细的<strong>《项目技术方案书》</strong>。</li>
+<li><strong>产出:</strong> 方案书应包含目标网站、采集字段、LLM分析方案、R分析思路和最终Streamlit应用的界面草图。</li>
+</ul></li>
+<li><strong>Day 2: Python数据工程日 (Data Engineering Day)</strong>
+<ul>
+<li><strong>任务:</strong> 集中精力用Python完成Playwright爬虫和LLM API调用。</li>
+<li><strong>产出:</strong> 生成高质量、已增强的<code>enriched_data.csv</code>文件。</li>
+</ul></li>
+<li><strong>Day 3: R统计核心日 (Statistical Insight Day)</strong>
+<ul>
+<li><strong>任务:</strong> 将接力棒交给R。进行深度的数据清洗、探索性分析、可视化和统计建模。</li>
+<li><strong>产出:</strong> 一份详细的<code>R Markdown</code>过程报告，记录所有发现，并可能导出一个包含模型结果的中间文件。</li>
+</ul></li>
+<li><strong>Day 4: Python应用开发日 (App Development Day)</strong>
+<ul>
+<li><strong>任务:</strong> 再次回到Python。使用Streamlit读取R分析后的数据和结论，将其转化为一个美观、可交互的Web应用。</li>
+<li><strong>产出:</strong> 一个本地可运行的Streamlit应用。</li>
+</ul></li>
+<li><strong>Day 5: 产品路演与交付 (Showcase &amp; Handoff Day)</strong>
+<ul>
+<li><strong>任务:</strong> 进行最终的项目展示，核心是Live Demo可运行的Streamlit应用。</li>
+<li><strong>产出:</strong> 提交一个组织良好的GitHub仓库，包含所有代码、数据和文档。</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="项目选题六选一" class="level1">
+<h1>6. 项目选题（六选一）</h1>
+<p>请从以下六个项目中选择一个进行开发。每个项目的“智能分析”部分都提供了多种可能性，鼓励你们在此基础上进行创新和扩展。</p>
+<section id="选题一豆瓣电影口碑量化分析系统" class="level3">
+<h3 class="anchored" data-anchor-id="选题一豆瓣电影口碑量化分析系统">选题一：豆瓣电影口碑量化分析系统</h3>
+<ul>
+<li><strong>目标网站:</strong> 豆瓣电影 (movie.douban.com)</li>
+<li><strong>Python 核心任务:</strong>
+<ol type="1">
+<li><strong>数据采集:</strong> 爬取“豆瓣Top250”榜单或特定类型电影的详情页信息及大量热门短评。</li>
+<li><strong>智能分析 (LLM API):</strong> 对每条短评进行处理，<strong>至少完成以下一项，鼓励组合或创新</strong>：
+<ul>
+<li><strong>基础 - 方面级情感分析 (ABSA):</strong> 识别评论针对的是<strong>剧情、演技、画面、配乐</strong>等哪个方面，并判断其情感（正面/负面/中性）。</li>
+<li><strong>进阶 - “金句”提取:</strong> 让LLM从长评或多条短评中，提炼出最能代表大众观点的“神吐槽”或“金句赞美”。</li>
+<li><strong>高级 - 观众画像初探:</strong> 根据评论的用词风格和内容，尝试为评论者打上标签，如“原著党”、“技术控”、“感性派”。</li>
+<li><strong>创意 - 生成式摘要:</strong> 将一部电影的数百条评论作为上下文，让LLM生成一段200字左右的、包含正反两方观点的“口碑综述”。</li>
+</ul></li>
+</ol></li>
+<li><strong>R 核心任务:</strong> 基于Python处理后的增强数据，进行探索分析和建模。例如，分析不同“观众画像”的评分倾向，或将“口碑综述”作为文本特征纳入模型。</li>
+<li><strong>最终系统 (Python-Streamlit):</strong> 开发“豆瓣电影解码器”，展示电影基本信息、交互式的方面情感分布图，并可展示LLM生成的“口碑综述”或“金句”。</li>
+</ul>
+</section>
+<section id="选题二城市美食风向标" class="level3">
+<h3 class="anchored" data-anchor-id="选题二城市美食风向标">选题二：城市美食风向标</h3>
+<ul>
+<li><strong>目标网站:</strong> 大众点评 (dianping.com)</li>
+<li><strong>Python 核心任务:</strong>
+<ol type="1">
+<li><strong>数据采集:</strong> 选取一个城市的美食排行榜，爬取餐厅信息及大量图文点评中的文本内容。</li>
+<li><strong>智能分析 (LLM API):</strong> 对每条评论进行处理，<strong>至少完成以下一项，鼓励组合或创新</strong>：
+<ul>
+<li><strong>基础 - 菜品与体验标签提取:</strong> 识别评论中提到的具体菜品（如“麻辣锅底”）和体验（如“服务热情”、“排队久”）。</li>
+<li><strong>进阶 - 场景识别:</strong> 判断该评论描述的消费场景是“情侣约会”、“家庭聚餐”、“商务宴请”还是“一人食”。</li>
+<li><strong>高级 - 撰写“探店攻略”:</strong> 将一家餐厅的多条优质评论聚合，让LLM自动生成一篇结构化的“探店攻略”，包含推荐菜品、避坑指南和总体建议。</li>
+<li><strong>创意 - 价值提炼:</strong> 识别评论中哪些是“性价比”相关的描述，并量化其正负面程度。</li>
+</ul></li>
+</ol></li>
+<li><strong>R 核心任务:</strong> 分析不同消费场景下，用户最关注的菜品和体验是什么。建立模型，探究哪些因素对“商务宴请”场景的评分影响最大。</li>
+<li><strong>最终系统 (Python-Streamlit):</strong> 构建“美食智能探店”应用，用户可按“消费场景”筛选餐厅，并查看由AI生成的“探店攻略”。</li>
+</ul>
+</section>
+<section id="选题三智慧旅游决策助手" class="level3">
+<h3 class="anchored" data-anchor-id="选题三智慧旅游决策助手">选题三：智慧旅游决策助手</h3>
+<ul>
+<li><strong>目标网站:</strong> 携程旅行 (ctrip.com) 或 马蜂窝 (mafengwo.cn)</li>
+<li><strong>Python 核心任务:</strong>
+<ol type="1">
+<li><strong>数据采集:</strong> 爬取热门旅游城市的景点和酒店信息及大量用户评论。</li>
+<li><strong>智能分析 (LLM API):</strong> 对评论进行处理，<strong>至少完成以下一项，鼓励组合或创新</strong>：
+<ul>
+<li><strong>基础 - 旅行者类型与关注点识别:</strong> 将评论者分为“家庭出游”、“情侣蜜月”、“独自旅行”等类型，并提取他们关注的要点。</li>
+<li><strong>进阶 - 行程建议生成:</strong> 根据用户的评论内容，反向推断并总结出一条可能的“一日游”路线建议。</li>
+<li><strong>高级 - 隐藏玩法挖掘:</strong> 从大量评论中，发现官方介绍里没有提及的“小众玩法”、“最佳拍照机位”或“省钱技巧”。</li>
+<li><strong>创意 - 安全与风险警示:</strong> 识别评论中提到的潜在安全风险或不愉快的经历（如“黑车”、“强制消费”），并进行汇总警示。</li>
+</ul></li>
+</ol></li>
+<li><strong>R 核心任务:</strong> 分析不同旅行者类型对“隐藏玩法”的偏好。建模研究哪些因素（包括LLM提取的标签）与“差评”或“安全警示”的出现显著相关。</li>
+<li><strong>最终系统 (Python-Streamlit):</strong> 开发“个性化旅行顾问”，除了推荐酒店景点，还能根据用户选择的旅行者类型，展示AI挖掘出的“隐藏玩法”和“避坑指南”。</li>
+</ul>
+</section>
+<section id="选题四链家租房智能选址顾问" class="level3">
+<h3 class="anchored" data-anchor-id="选题四链家租房智能选址顾问">选题四：链家租房智能选址顾问</h3>
+<ul>
+<li><strong>目标网站:</strong> 链家 (lianjia.com) 或 贝壳找房 (ke.com)</li>
+<li><strong>Python 核心任务:</strong>
+<ol type="1">
+<li><strong>数据采集:</strong> 爬取特定区域的租房信息，包括房源介绍的“核心卖点”文本。</li>
+<li><strong>智能分析 (LLM API):</strong> 对“核心卖点”文本进行处理，<strong>至少完成以下一项，鼓励组合或创新</strong>：
+<ul>
+<li><strong>基础 - 标准化标签提取:</strong> 提取如“近地铁”、“精装修”、“家电齐全”等标签。</li>
+<li><strong>进阶 - 生活便利性评估:</strong> 根据描述中提到的周边设施（如“楼下就是超市”、“步行到公园5分钟”），给出一个0-10分的生活便利性评分。</li>
+<li><strong>高级 - 目标人群画像:</strong> 根据房源描述的口吻和强调的特点，判断该房源最适合的目标人群是“白领青年”、“新婚夫妇”还是“有孩家庭”。</li>
+<li><strong>创意 - 文本“美颜”与“卸妆”:</strong> 让LLM将中介充满营销辞令的描述，改写成一段客观、中立的陈述（“卸妆”），或者反向生成更吸引人的文案（“美颜”）。</li>
+</ul></li>
+</ol></li>
+<li><strong>R 核心任务:</strong> 在租金预测模型中，加入LLM生成的“生活便利性评分”和“目标人群画像”作为新变量，看其是否能提升模型解释力。</li>
+<li><strong>最终系统 (Python-Streamlit):</strong> 创建“智能租金评估器”，除了预测租金，还能展示房源的“生活便利性得分”，并提供文本“卸妆”功能，帮助用户看清房源的真实情况。</li>
+</ul>
+</section>
+<section id="选题五汽车消费口碑分析平台" class="level3">
+<h3 class="anchored" data-anchor-id="选题五汽车消费口碑分析平台">选题五：汽车消费口碑分析平台</h3>
+<ul>
+<li><strong>目标网站:</strong> 汽车之家 (autohome.com.cn) 或 易车 (yiche.com)</li>
+<li><strong>Python 核心任务:</strong>
+<ol type="1">
+<li><strong>数据采集:</strong> 爬取多款竞品车型的配置、价格及大量真实车主的评价。</li>
+<li><strong>智能分析 (LLM API):</strong> 对车主评价进行处理，<strong>至少完成以下一项，鼓励组合或创新</strong>：
+<ul>
+<li><strong>基础 - 优缺点维度提取:</strong> 将评价归类到<strong>动力、油耗、空间、内饰、智能化</strong>等维度。</li>
+<li><strong>进阶 - 需求场景关联:</strong> 分析车主在提到某个优缺点时，通常是在什么样的用车场景下（如“高速超车时动力足”、“市区拥堵路段油耗高”）。</li>
+<li><strong>高级 - “幻想”功能挖掘:</strong> 从车主的抱怨和建议中，提炼出他们希望该车型拥有但目前没有的“未来功能”。</li>
+<li><strong>创意 - 生成竞品对比段子:</strong> 输入两款车的优缺点数据，让LLM用幽默的“脱口秀”风格，生成一段对比文案。</li>
+</ul></li>
+</ol></li>
+<li><strong>R 核心任务:</strong> 分析不同“用车场景”与“口碑维度”的关联矩阵。研究车主提及的“未来功能”是否能预测该品牌未来的产品迭代方向。</li>
+<li><strong>最终系统 (Python-Streamlit):</strong> 构建“购车决策对比”工具，除了口碑雷达图，还能展示不同车型在特定场景下（如“长途自驾”）的口碑表现，并可一键生成有趣的对比段子。</li>
+</ul>
+</section>
+<section id="选题六招聘市场需求导航" class="level3">
+<h3 class="anchored" data-anchor-id="选题六招聘市场需求导航">选题六：招聘市场需求导航</h3>
+<ul>
+<li><strong>目标网站:</strong> Boss直聘 (zhipin.com) 或 猎聘 (liepin.com)</li>
+<li><strong>Python 核心任务:</strong>
+<ol type="1">
+<li><strong>数据采集:</strong> 爬取特定职位的JD信息。</li>
+<li><strong>智能分析 (LLM API):</strong> 对JD文本进行处理，<strong>至少完成以下一项，鼓励组合或创新</strong>：
+<ul>
+<li><strong>基础 - 技能栈与工具提取:</strong> 提取并归一化所需的技能、工具、学历和经验年限。</li>
+<li><strong>进阶 - “软技能”识别:</strong> 从JD中识别出对沟通能力、团队协作、领导力等软技能的要求。</li>
+<li><strong>高级 - 公司文化速览:</strong> 根据JD的语言风格、福利描述、对候选人的期望等，让LLM总结出这家公司可能的文化氛围（如“扁平化管理”、“加班文化严重”、“结果导向”）。</li>
+<li><strong>创意 - “简历匹配度”打分:</strong> 输入一份模拟的简历，让LLM根据JD要求，计算出这份简历的匹配度分数，并给出优化建议。</li>
+</ul></li>
+</ol></li>
+<li><strong>R 核心任务:</strong> 建模分析“软技能”要求和“公司文化”标签对薪资水平的影响。探究高薪职位是否更看重软技能。</li>
+<li><strong>最终系统 (Python-Streamlit):</strong> 创建“职业路径导航”，除了展示技能需求和薪资预测，还能提供“公司文化”速览，并集成一个“简历匹配度”初步评估工具。</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="最终交付成果-final-deliverables" class="level1">
+<h1>7. 最终交付成果 (Final Deliverables)</h1>
+<p>你需要提交一个<strong>单一的GitHub项目仓库链接</strong>，该仓库应包含以下内容，并有清晰的目录结构：</p>
+<ol type="1">
+<li><strong><code>README.md</code>:</strong> 项目的“门面”。详细说明项目背景、功能、如何运行你的Streamlit应用，以及小组成员分工。</li>
+<li><strong><code>/src</code> 目录:</strong>
+<ul>
+<li><code>scrape_and_process.py</code>: Python脚本，负责数据采集和调用LLM API。</li>
+<li><code>analysis.R</code> 或 <code>analysis.Rmd</code>: R脚本/文档，包含所有数据分析和建模代码。</li>
+<li><code>app.py</code>: 最终的Streamlit应用代码。</li>
+</ul></li>
+<li><strong><code>/data</code> 目录:</strong>
+<ul>
+<li><code>raw_data.csv</code>: 原始爬取的数据（少量样本即可）。</li>
+<li><code>enriched_data.csv</code>: 经过LLM处理后的、供R分析的完整数据集。</li>
+</ul></li>
+<li><strong><code>/reports</code> 目录:</strong>
+<ul>
+<li><code>Project_Proposal.pdf</code>: 第一天完成的技术方案书。</li>
+<li><code>R_Analysis_Report.html</code>: 由<code>analysis.Rmd</code>生成的HTML报告，展示分析过程与发现。</li>
+</ul></li>
+<li><strong><code>requirements.txt</code>:</strong> 运行Python脚本所需的所有库。</li>
+<li><strong><code>AI_Collaboration_Log.md</code>:</strong> (可选但强烈推荐) 记录你们在项目中如何与AI（ChatGPT, Copilot等）协作解决问题的日志。</li>
+</ol>
+</section>
+<section id="评估标准-assessment-criteria" class="level1">
+<h1>8. 评估标准 (Assessment Criteria)</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 4%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>评估维度</th>
+<th>权重</th>
+<th>核心考察点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>数据工程与AI应用 (Python)</strong></td>
+<td>30%</td>
+<td>Playwright脚本的健壮性；<strong>LLM API调用的创新性与有效性</strong>；数据处理流程的合理性。</td>
+</tr>
+<tr class="even">
+<td><strong>统计分析与建模深度 (R)</strong></td>
+<td>30%</td>
+<td>EDA的洞察力；统计方法与模型的恰当性；<code>ggplot2</code>可视化的专业性；对模型结果的解释能力。</td>
+</tr>
+<tr class="odd">
+<td><strong>最终应用与产品价值 (Python)</strong></td>
+<td>25%</td>
+<td>Streamlit应用的交互性、稳定性和用户体验；能否清晰、有效地传达核心洞察；功能的完整性与创新性。</td>
+</tr>
+<tr class="even">
+<td><strong>项目管理与文档规范</strong></td>
+<td>15%</td>
+<td>GitHub仓库的组织清晰度；<code>README</code>文档的质量；代码注释与可读性；团队协作与项目进度管理。</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+关于API Key
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>本项目需要使用LLM API，这通常需要个人申请并可能涉及少量费用。请提前准备好你的API Key。在代码中，<strong>严禁硬编码你的API Key</strong>，应使用环境变量或配置文件等安全方式进行管理。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+学术诚信
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>所有代码和分析必须由小组成员独立完成。允许使用AI工具辅助编程和解决问题，但必须在日志中记录。严禁任何形式的抄袭。一经发现，本次课程设计成绩将记为零分。</p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="课程介绍">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">课程介绍</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./course_design_ai.html" class="pagination-link" aria-label="AI协作终极指南：你才是驾驶员，AI是你的最强副驾">
+        <span class="nav-page-text"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

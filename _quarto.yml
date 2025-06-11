@@ -9,6 +9,10 @@ book:
   date: today
   chapters:
     - index.qmd
+    - part: "课程设计"
+      chapters:
+        - course_design.qmd
+        - course_design_ai.qmd
     - part: "讲义"
       chapters:
         - week1_lecture.qmd

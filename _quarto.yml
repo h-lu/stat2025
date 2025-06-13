@@ -13,42 +13,42 @@ book:
       chapters:
         - course_design.qmd
         - course_design_ai.qmd
-    - part: "讲义"
-      chapters:
-        - week1_lecture.qmd
-        - week2_lecture.qmd
-        - week3_lecture.qmd
-        - week4_lecture.qmd
-        - week5_lecture.qmd
-        - week6_lecture.qmd
-        - week7_lecture.qmd
-        - week8_lecture.qmd
-        - week9_lecture.qmd
-        - week10_lecture.qmd
-        - week11_lecture.qmd
-        - week12_lecture.qmd
-        - 综合实践项目启动指南_五一假期.qmd
-        - week13_lecture.qmd
-        - 统计学与R语言期末复习指南.qmd
-        - 统计学与R语言复习练习题集.qmd
-        # - week14_lecture.qmd
-        # - week15_lecture.qmd
-        # - week16_lecture.qmd
-    - part: "实验"
-      chapters:
-        - week1_lab.qmd
-        - week2_lab.qmd
-        - week3_lab.qmd
-        - week4_lab.qmd
-        - week5_lab.qmd
-        - week6_lab.qmd
-        - week7_lab.qmd
-        - week8_lab.qmd
-        - week9_lab.qmd
-        - week10_lab.qmd
-        - week11_lab.qmd
-        - week12_lab.qmd
-        - week13_lab.qmd
+    # - part: "讲义"
+    #   chapters:
+    #     - week1_lecture.qmd
+    #     - week2_lecture.qmd
+    #     - week3_lecture.qmd
+    #     - week4_lecture.qmd
+    #     - week5_lecture.qmd
+    #     - week6_lecture.qmd
+    #     - week7_lecture.qmd
+    #     - week8_lecture.qmd
+    #     - week9_lecture.qmd
+    #     - week10_lecture.qmd
+    #     - week11_lecture.qmd
+    #     - week12_lecture.qmd
+    #     - 综合实践项目启动指南_五一假期.qmd
+    #     - week13_lecture.qmd
+    #     - 统计学与R语言期末复习指南.qmd
+    #     - 统计学与R语言复习练习题集.qmd
+    #     # - week14_lecture.qmd
+    #     # - week15_lecture.qmd
+    #     # - week16_lecture.qmd
+    # - part: "实验"
+    #   chapters:
+    #     - week1_lab.qmd
+    #     - week2_lab.qmd
+    #     - week3_lab.qmd
+    #     - week4_lab.qmd
+    #     - week5_lab.qmd
+    #     - week6_lab.qmd
+    #     - week7_lab.qmd
+    #     - week8_lab.qmd
+    #     - week9_lab.qmd
+    #     - week10_lab.qmd
+    #     - week11_lab.qmd
+    #     - week12_lab.qmd
+    #     - week13_lab.qmd
 execute:
   echo: true
   message: false

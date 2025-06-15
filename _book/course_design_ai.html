@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>AI协作终极指南：你才是驾驶员，AI是你的最强副驾 – 统计学与R语言</title>
+<title>AI协作终极指南：从“提问者”到“AI驾驭者” – 统计学与R语言</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -82,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./course_design.html">课程设计</a></li><li class="breadcrumb-item"><a href="./course_design_ai.html"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./course_design.html">课程设计</a></li><li class="breadcrumb-item"><a href="./course_design_ai.html"><span class="chapter-title">AI协作终极指南：从“提问者”到“AI驾驭者”</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -128,7 +162,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./course_design_ai.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></a>
+  <a href="./course_design_ai.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">AI协作终极指南：从“提问者”到“AI驾驭者”</span></a>
   </div>
 </li>
       </ul>
@@ -143,41 +177,27 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot" id="toc-核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot" class="nav-link active" data-scroll-target="#核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot"><strong>核心法则：你是驾驶员，AI永远是副驾驶 (You are the Driver, AI is the Co-pilot)</strong></a></li>
-  <li><a href="#第一天蓝图设计日---从混沌到清晰的战略家" id="toc-第一天蓝图设计日---从混沌到清晰的战略家" class="nav-link" data-scroll-target="#第一天蓝图设计日---从混沌到清晰的战略家"><strong>第一天：蓝图设计日 - 从混沌到清晰的战略家</strong></a>
+  <li><a href="#核心理念ai是你的超能实习生而你是项目总监" id="toc-核心理念ai是你的超能实习生而你是项目总监" class="nav-link active" data-scroll-target="#核心理念ai是你的超能实习生而你是项目总监">1. 核心理念：AI是你的“超能实习生”，而你是“项目总监”</a></li>
+  <li><a href="#协作四项基本原则" id="toc-协作四项基本原则" class="nav-link" data-scroll-target="#协作四项基本原则">2. 协作四项基本原则</a></li>
+  <li><a href="#项目全流程ai战术指南" id="toc-项目全流程ai战术指南" class="nav-link" data-scroll-target="#项目全流程ai战术指南">3. 项目全流程AI战术指南</a>
   <ul class="collapse">
-  <li><a href="#深度战略探索-strategic-deep-dive" id="toc-深度战略探索-strategic-deep-dive" class="nav-link" data-scroll-target="#深度战略探索-strategic-deep-dive"><strong>1. 深度战略探索 (Strategic Deep Dive)</strong></a></li>
-  <li><a href="#探索与拓展激发你的战略家潜能-5个探索方向" id="toc-探索与拓展激发你的战略家潜能-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展激发你的战略家潜能-5个探索方向"><strong>探索与拓展：激发你的战略家潜能 (5个探索方向)</strong></a></li>
+  <li><a href="#day-1-蓝图设计-ai-as-a-brainstorming-partner" id="toc-day-1-蓝图设计-ai-as-a-brainstorming-partner" class="nav-link" data-scroll-target="#day-1-蓝图设计-ai-as-a-brainstorming-partner">Day 1: 蓝图设计 (AI as a Brainstorming Partner)</a></li>
+  <li><a href="#day-2-python数据工程-ai-as-a-pair-programmer" id="toc-day-2-python数据工程-ai-as-a-pair-programmer" class="nav-link" data-scroll-target="#day-2-python数据工程-ai-as-a-pair-programmer">Day 2: Python数据工程 (AI as a Pair Programmer)</a></li>
+  <li><a href="#day-3-r统计核心-ai-as-a-statistics-tutor-r-expert" id="toc-day-3-r统计核心-ai-as-a-statistics-tutor-r-expert" class="nav-link" data-scroll-target="#day-3-r统计核心-ai-as-a-statistics-tutor-r-expert">Day 3: R统计核心 (AI as a Statistics Tutor &amp; R Expert)</a></li>
+  <li><a href="#day-4-python应用开发-ai-as-a-full-stack-assistant" id="toc-day-4-python应用开发-ai-as-a-full-stack-assistant" class="nav-link" data-scroll-target="#day-4-python应用开发-ai-as-a-full-stack-assistant">Day 4: Python应用开发 (AI as a Full-Stack Assistant)</a></li>
   </ul></li>
-  <li><a href="#第二天python工程日---精益求精的建造者" id="toc-第二天python工程日---精益求精的建造者" class="nav-link" data-scroll-target="#第二天python工程日---精益求精的建造者"><strong>第二天：Python工程日 - 精益求精的建造者</strong></a>
-  <ul class="collapse">
-  <li><a href="#编写工业级爬虫-robust-scraping" id="toc-编写工业级爬虫-robust-scraping" class="nav-link" data-scroll-target="#编写工业级爬虫-robust-scraping"><strong>1. 编写“工业级”爬虫 (Robust Scraping)</strong></a></li>
-  <li><a href="#探索与拓展铸造你的工程师匠心-5个探索方向" id="toc-探索与拓展铸造你的工程师匠心-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展铸造你的工程师匠心-5个探索方向"><strong>探索与拓展：铸造你的工程师匠心 (5个探索方向)</strong></a></li>
-  </ul></li>
-  <li><a href="#第三天r统计核心日---洞察深刻的侦探" id="toc-第三天r统计核心日---洞察深刻的侦探" class="nav-link" data-scroll-target="#第三天r统计核心日---洞察深刻的侦探"><strong>第三天：R统计核心日 - 洞察深刻的侦探</strong></a>
-  <ul class="collapse">
-  <li><a href="#严谨的模型诊断与解读-rigorous-modeling" id="toc-严谨的模型诊断与解读-rigorous-modeling" class="nav-link" data-scroll-target="#严谨的模型诊断与解读-rigorous-modeling"><strong>1. 严谨的模型诊断与解读 (Rigorous Modeling)</strong></a></li>
-  <li><a href="#探索与拓展磨砺你的统计学思维-5个探索方向" id="toc-探索与拓展磨砺你的统计学思维-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展磨砺你的统计学思维-5个探索方向"><strong>探索与拓展：磨砺你的统计学思维 (5个探索方向)</strong></a></li>
-  </ul></li>
-  <li><a href="#第四天python应用开发日---用户至上的产品经理" id="toc-第四天python应用开发日---用户至上的产品经理" class="nav-link" data-scroll-target="#第四天python应用开发日---用户至上的产品经理"><strong>第四天：Python应用开发日 - 用户至上的产品经理</strong></a>
-  <ul class="collapse">
-  <li><a href="#优化用户体验ux" id="toc-优化用户体验ux" class="nav-link" data-scroll-target="#优化用户体验ux"><strong>1. 优化用户体验(UX)</strong></a></li>
-  <li><a href="#探索与拓展打造卓越产品的追求-5个探索方向" id="toc-探索与拓展打造卓越产品的追求-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展打造卓越产品的追求-5个探索方向"><strong>探索与拓展：打造卓越产品的追求 (5个探索方向)</strong></a></li>
-  </ul></li>
-  <li><a href="#第五天产品路演与交付日---成果斐然的沟通者" id="toc-第五天产品路演与交付日---成果斐然的沟通者" class="nav-link" data-scroll-target="#第五天产品路演与交付日---成果斐然的沟通者"><strong>第五天：产品路演与交付日 - 成果斐然的沟通者</strong></a>
-  <ul class="collapse">
-  <li><a href="#准备一场精彩的演讲" id="toc-准备一场精彩的演讲" class="nav-link" data-scroll-target="#准备一场精彩的演讲"><strong>1. 准备一场精彩的演讲</strong></a></li>
-  <li><a href="#探索与拓展成为沟通大师的修炼-5个探索方向" id="toc-探索与拓展成为沟通大师的修炼-5个探索方向" class="nav-link" data-scroll-target="#探索与拓展成为沟通大师的修炼-5个探索方向"><strong>探索与拓展：成为沟通大师的修炼 (5个探索方向)</strong></a></li>
-  </ul></li>
+  <li><a href="#提问的艺术高质量prompt工程框架" id="toc-提问的艺术高质量prompt工程框架" class="nav-link" data-scroll-target="#提问的艺术高质量prompt工程框架">4. 提问的艺术：高质量Prompt工程框架</a></li>
+  <li><a href="#ai_collaboration_log.md你的学习与反思日志" id="toc-ai_collaboration_log.md你的学习与反思日志" class="nav-link" data-scroll-target="#ai_collaboration_log.md你的学习与反思日志">5. <code>AI_Collaboration_Log.md</code>：你的学习与反思日志</a></li>
+  <li><a href="#道德规范与评分准则" id="toc-道德规范与评分准则" class="nav-link" data-scroll-target="#道德规范与评分准则">6. 道德规范与评分准则</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./course_design.html">课程设计</a></li><li class="breadcrumb-item"><a href="./course_design_ai.html"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./course_design.html">课程设计</a></li><li class="breadcrumb-item"><a href="./course_design_ai.html"><span class="chapter-title">AI协作终极指南：从“提问者”到“AI驾驭者”</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">AI协作终极指南：你才是驾驶员，AI是你的最强副驾</span></h1>
+<h1 class="title"><span class="chapter-title">AI协作终极指南：从“提问者”到“AI驾驭者”</span></h1>
 </div>
 
 
@@ -194,156 +214,175 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot" class="level3">
-<h3 class="anchored" data-anchor-id="核心法则你是驾驶员ai永远是副驾驶-you-are-the-driver-ai-is-the-co-pilot"><strong>核心法则：你是驾驶员，AI永远是副驾驶 (You are the Driver, AI is the Co-pilot)</strong></h3>
-<p>在开启这个项目之前，请将这条法则刻在你的脑海里。这不仅是一个比喻，更是决定你能否从本项目中真正学到东西的关键。</p>
+<section id="核心理念ai是你的超能实习生而你是项目总监" class="level1">
+<h1>1. 核心理念：AI是你的“超能实习生”，而你是“项目总监”</h1>
+<p>在本次课程设计中，我们要求你<strong>必须、全面、且深入地</strong>使用AI工具（如ChatGPT, GitHub Copilot, Claude等）。但请记住，这绝不是为了让项目变得“简单”，而是为了让你提前掌握未来十年数据科学领域最重要的核心能力之一：<strong>人机协同</strong>。</p>
+<p>忘掉“用AI写作业”的旧观念。你需要将AI视为一个能力超群、不知疲倦、但缺乏项目宏观视野的“实习生”。</p>
 <ul>
-<li><strong>你设定目的地 (You Set the Destination):</strong> 项目的目标、要解决的问题、最终的价值主张，<strong>必须由你来定义</strong>。AI无法替你思考“我们应该去向何方”。</li>
-<li><strong>你掌控方向盘 (You Steer the Wheel):</strong> 在每个决策点——选择哪个模型、如何设计应用界面、如何解读一个模棱两可的结果——<strong>最终的决定权在你手中</strong>。AI会提供多种路线，但选择哪条路、何时转弯，是你作为驾驶员的职责。</li>
-<li><strong>你对结果负责 (You Own the Outcome):</strong> 如果项目跑偏了，或者代码出现了意想不到的bug，你不能说“是AI让我这么做的”。你需要理解AI建议的原理，对其进行批判性评估，并为你采纳的每一个方案负全责。</li>
+<li><strong>它知识渊博，但没有方向感：</strong> 它知道几乎所有的Python库和R函数，但不知道你的项目要解决的究竟是什么商业问题。</li>
+<li><strong>它执行力强，但缺乏批判性思维：</strong> 你让它做什么，它就做什么，但它不会质疑你的方法是否合理，也不会对自己的输出结果负责。</li>
+<li><strong>它擅长局部优化，但不懂整体架构：</strong> 它能帮你写一个完美的函数，但无法帮你设计一个健壮、可维护的项目。</li>
 </ul>
-<p>AI这位副驾驶，博学、高效、不知疲倦。他能帮你看到你视野盲区的路况（风险预警），能帮你瞬间计算出最优路径（代码生成），能帮你解读复杂的交通标志（概念解释）。<strong>但你的任务，是学会如何向他发出清晰的指令，理解他的建议，并结合你对全局的判断，做出最终的驾驶决策。</strong></p>
-<p>本指南将教你如何成为一名能与最强副驾默契配合的顶尖驾驶员。</p>
-<hr>
+<p><strong>你的角色是“项目总监”和“AI驾驭者”。</strong> 你的成功不仅取决于你写了多少代码，更取决于你如何高效、精准、并富有创造力地<strong>引导、启发和利用</strong>你的“AI实习生”，让它为你的项目目标服务。你的价值体现在提出正确的问题、整合分散的答案、做出最终的决策，并为项目的最终质量负全部责任。</p>
 </section>
-<section id="第一天蓝图设计日---从混沌到清晰的战略家" class="level2">
-<h2 class="anchored" data-anchor-id="第一天蓝图设计日---从混沌到清晰的战略家"><strong>第一天：蓝图设计日 - 从混沌到清晰的战略家</strong></h2>
-<p><strong>今日目标：</strong> 成为一名项目架构师。不仅要规划做什么，更要思考为什么这么做，以及如何做得更好。</p>
-<section id="深度战略探索-strategic-deep-dive" class="level3">
-<h3 class="anchored" data-anchor-id="深度战略探索-strategic-deep-dive"><strong>1. 深度战略探索 (Strategic Deep Dive)</strong></h3>
-<blockquote class="blockquote">
-<p><strong>进阶提示示例（角色扮演与战略推演）：</strong></p>
-</blockquote>
-<pre><code>请扮演一家新能源汽车初创公司的CEO。我们即将发布一款新车，需要利用“汽车之家”上的竞品（比如特斯拉Model Y, 小鹏G9）口碑数据来制定我们的产品和营销策略。
-
-请帮我进行一次战略分析，输出一个包含以下内容的Markdown报告：
-1.  **关键业务问题：** 提出3个最尖锐的问题，例如：“消费者对竞品‘智能座舱’的真实抱怨是什么？我们的机会点在哪里？”
-2.  **数据需求清单：** 为了回答这些问题，我需要从网站上采集哪些具体的数据字段？除了基本信息，还应包含哪些隐藏信息？
-3.  **潜在假设与检验方法：** 针对每个问题，提出一个可以用R进行统计检验的假设。
-4.  **项目风险评估：** 列出这个数据项目在技术、数据、分析上可能遇到的三大风险，并提出规避建议。</code></pre>
-</section>
-<section id="探索与拓展激发你的战略家潜能-5个探索方向" class="level3">
-<h3 class="anchored" data-anchor-id="探索与拓展激发你的战略家潜能-5个探索方向"><strong>探索与拓展：激发你的战略家潜能 (5个探索方向)</strong></h3>
+<section id="协作四项基本原则" class="level1">
+<h1>2. 协作四项基本原则</h1>
+<p>在开始协作之前，请将以下四条原则内化于心：</p>
 <ol type="1">
-<li><strong>竞争对手模拟:</strong> “非常好。现在请扮演我们的主要竞争对手（如特斯拉）的数据分析主管。你看到了我刚才的分析计划，请指出这个计划对我司（初创公司）来说最大的三个战略盲点是什么？你会如何利用这些盲点来反制我们？”</li>
-<li><strong>资源约束下的决策:</strong> “假设我只有非常有限的API调用预算和开发时间（比如只有两天）。请基于这个严格的约束，重新审视你刚才提出的计划，并给出一个‘最小可行性产品(MVP)’版本的方案。哪些是可以放弃的，哪些是必须保留的核心？”</li>
-<li><strong>数据源的交叉验证:</strong> “只分析‘汽车之家’的数据可能存在偏见。请再推荐2个不同类型的、可以与‘汽车之家’数据形成互补的公开数据源（例如社交媒体、二手车交易平台等），并说明如何将这些多源数据结合起来，以获得更全面的洞察。”</li>
-<li><strong>长期价值思考:</strong> “除了为新车上市提供短期策略，这个数据项目还能为公司创造哪些长期价值？请设计一个数据产品的路线图(Roadmap)，规划未来三个季度我们可以基于这个项目迭代出哪些新的功能或分析模块。”</li>
-<li><strong>伦理与偏见审查:</strong> “请扮演一位数据伦理专家。审视我的项目计划，并指出其中可能存在的算法偏见或数据隐私问题。例如，用户评论数据是否可能过度代表某一类人群？我应该如何在分析和报告中解决或声明这些潜在的偏见？”</li>
+<li><p><strong>你是最终负责人 (You Are the Principal Investigator):</strong> AI可以生成代码、文字和想法，但你必须是那个理解、验证并最终采纳它们的人。提交的任何内容，你都必须能向老师解释清楚其工作原理。<strong>“这是AI写的”永远不是借口。</strong></p></li>
+<li><p><strong>垃圾输入，垃圾输出 (Garbage In, Garbage Out):</strong> AI的回答质量直接取决于你提问的水平。一个模糊、宽泛的问题只会得到一个平庸、无用的答案。学会提出一个包含<strong>背景、目标、约束和格式要求</strong>的高质量问题，是本次项目最重要的训练之一。</p></li>
+<li><p><strong>保持健康的怀疑 (Maintain Healthy Skepticism):</strong> AI会犯错，会“一本正经地胡说八道”（我们称之为“幻觉”）。它可能会使用过时的库、写出有潜在bug的代码，或给出看似合理但统计上错误的解释。<strong>交叉验证、查阅官方文档、用小数据集测试</strong>是必不可少的步骤。</p></li>
+<li><p><strong>记录与反思是学习的核心 (Documentation &amp; Reflection is Learning):</strong> 创建并维护<code>AI_Collaboration_Log.md</code>不仅是为了评分，更是为了你自己。它强迫你反思你的提问方式、AI的回答质量以及你自己的决策过程。<strong>这是将一次性的“求助”转化为可复用的“经验”的关键。</strong></p></li>
 </ol>
-<hr>
+</section>
+<section id="项目全流程ai战术指南" class="level1">
+<h1>3. 项目全流程AI战术指南</h1>
+<p>以下是在项目不同阶段，你可以应用的AI战术，分为<strong>基础、进阶、开放探索</strong>三个层次。</p>
+<section id="day-1-蓝图设计-ai-as-a-brainstorming-partner" class="level3">
+<h3 class="anchored" data-anchor-id="day-1-蓝图设计-ai-as-a-brainstorming-partner">Day 1: 蓝图设计 (AI as a Brainstorming Partner)</h3>
+<ul>
+<li><strong>基础任务:</strong>
+<ul>
+<li><strong>理解数据集:</strong> “我正在使用Ames Housing数据集，请用通俗的语言解释 <code>OverallQual</code> 和 <code>GrLivArea</code> 这两个变量的含义。”</li>
+<li><strong>初步规划:</strong> “我的项目目标是预测房价，除了回归模型，还有哪些有趣的分析角度可以探索？请给出3个建议。”</li>
+</ul></li>
+<li><strong>进阶思路:</strong>
+<ul>
+<li><strong>风险评估:</strong> “我计划用Python的LLM API处理文本，用R建模，用Streamlit展示。在这个技术栈下，请列出我可能遇到的5个潜在技术风险以及相应的解决方案。”</li>
+</ul></li>
+<li><strong>开放探索:</strong>
+<ul>
+<li><strong>扮演角色:</strong> “你现在是一位资深的数据产品经理，请审视我的项目计划（[粘贴你的计划草稿]），并从商业价值和用户体验的角度提出3个尖锐的改进建议。”</li>
+</ul></li>
+</ul>
+</section>
+<section id="day-2-python数据工程-ai-as-a-pair-programmer" class="level3">
+<h3 class="anchored" data-anchor-id="day-2-python数据工程-ai-as-a-pair-programmer">Day 2: Python数据工程 (AI as a Pair Programmer)</h3>
+<ul>
+<li><strong>基础任务:</strong>
+<ul>
+<li><strong>生成样板代码:</strong> “请给我一个使用Pandas读取CSV文件，并对’Price’列进行空值填充（使用中位数）的Python代码片段。”</li>
+<li><strong>调试代码:</strong> “我的这段Python代码报错了（[粘贴代码和报错信息]），请帮我分析原因并给出修正方案。”</li>
+</ul></li>
+<li><strong>进阶思路:</strong>
+<ul>
+<li><strong>构建API调用函数:</strong> “我需要一个Python函数，它接受一段文本作为输入，使用openai库调用DeepSeek模型，任务是提取文本中的所有技能关键词，并以JSON列表的格式返回。请为我编写这个函数，并包含异常处理逻辑。”</li>
+<li><strong>优化性能:</strong> “我需要对一个很大的DataFrame进行逐行处理并调用API，速度很慢。除了简单的for循环，有没有更高效的实现方式，比如使用<code>.apply()</code>或者批处理？请给出代码示例。”</li>
+</ul></li>
+<li><strong>开放探索:</strong>
+<ul>
+<li><strong>设计Prompt模板:</strong> “我需要对大量文本进行多任务处理（提取A、判断B、总结C）。请帮我设计一个高效的、能让LLM稳定输出JSON格式的Prompt模板。”</li>
+</ul></li>
+</ul>
+</section>
+<section id="day-3-r统计核心-ai-as-a-statistics-tutor-r-expert" class="level3">
+<h3 class="anchored" data-anchor-id="day-3-r统计核心-ai-as-a-statistics-tutor-r-expert">Day 3: R统计核心 (AI as a Statistics Tutor &amp; R Expert)</h3>
+<ul>
+<li><strong>基础任务:</strong>
+<ul>
+<li><strong>解释统计概念:</strong> “请用一个关于房价的简单例子，向我解释R回归模型结果中’p-value’和’Adjusted R-squared’的实际含义。”</li>
+<li><strong>生成<code>ggplot2</code>代码:</strong> “我有一个数据框<code>df</code>，包含<code>Price</code>和<code>GrLivArea</code>两列，请用<code>ggplot2</code>画出它们的散点图，并添加一条平滑的回归线，图表标题为’居住面积与房价的关系’。”</li>
+</ul></li>
+<li><strong>进阶思路:</strong>
+<ul>
+<li><strong>模型选择建议:</strong> “我正在预测房价，自变量有数值型和类别型。除了线性回归，<code>caret</code>或<code>tidymodels</code>包中还有哪些适合的模型可以尝试？请简述各自的优缺点。”</li>
+<li><strong>代码互译:</strong> “我有一段用Python的<code>scikit-learn</code>实现逻辑回归的代码，请帮我把它翻译成等效的R语言代码，使用<code>glm()</code>函数。”</li>
+</ul></li>
+<li><strong>开放探索:</strong>
+<ul>
+<li><strong>结果解读与洞察:</strong> “这是我的回归模型摘要（[粘贴R的<code>summary(model)</code>结果]）。请帮我解读这些系数的业务含义。基于这些结果，我可以得出什么初步的商业洞察？”</li>
+</ul></li>
+</ul>
+</section>
+<section id="day-4-python应用开发-ai-as-a-full-stack-assistant" class="level3">
+<h3 class="anchored" data-anchor-id="day-4-python应用开发-ai-as-a-full-stack-assistant">Day 4: Python应用开发 (AI as a Full-Stack Assistant)</h3>
+<ul>
+<li><strong>基础任务:</strong>
+<ul>
+<li><strong>Streamlit布局:</strong> “请给我一个使用Streamlit创建一个侧边栏（sidebar），里面包含一个用于选择街区的下拉菜单和一个用于输入面积的滑块（slider）的Python代码示例。”</li>
+<li><strong>加载R模型:</strong> “我有一个用R的<code>saveRDS()</code>保存的模型文件<code>model.rds</code>。我如何在Python中加载它？如果不能直接加载，推荐的替代方案是什么？（例如，在R中将模型系数保存为CSV）”</li>
+</ul></li>
+<li><strong>进阶思路:</strong>
+<ul>
+<li><strong>交互逻辑:</strong> “在我的Streamlit应用中，当用户在侧边栏调整了滑块，我希望主页面的一个图表能动态更新。请给我一个实现这种响应式逻辑的回调（callback）函数示例。”</li>
+<li><strong>美化与组件:</strong> “我想让我的Streamlit应用看起来更专业。除了内置组件，还有哪些社区开发的组件库可以推荐？例如，如何创建一个更好看的指标卡片（metric card）？”</li>
+</ul></li>
+<li><strong>开放探索:</strong>
+<ul>
+<li><strong>部署指导:</strong> “我的Streamlit应用开发完成了。我想把它部署到Streamlit Community Cloud上。请给我一个详细的、一步一步的操作指南，包括如何准备<code>requirements.txt</code>文件。”</li>
+</ul></li>
+</ul>
 </section>
 </section>
-<section id="第二天python工程日---精益求精的建造者" class="level2">
-<h2 class="anchored" data-anchor-id="第二天python工程日---精益求精的建造者"><strong>第二天：Python工程日 - 精益求精的建造者</strong></h2>
-<p><strong>今日目标：</strong> 成为一名严谨的软件工程师。代码不仅要能跑，还要健壮、高效、可维护。</p>
-<section id="编写工业级爬虫-robust-scraping" class="level3">
-<h3 class="anchored" data-anchor-id="编写工业级爬虫-robust-scraping"><strong>1. 编写“工业级”爬虫 (Robust Scraping)</strong></h3>
+<section id="提问的艺术高质量prompt工程框架" class="level1">
+<h1>4. 提问的艺术：高质量Prompt工程框架</h1>
+<p>一个高质量的Prompt能将AI的效能提升数倍。请遵循<strong>R-C-T-F框架</strong>来构建你的问题。</p>
+<ul>
+<li><strong>R (Role - 角色):</strong> “你是一位…” —— 赋予AI一个身份，能极大地提升回答的专业性。</li>
+<li><strong>C (Context - 背景):</strong> “我正在…” —— 提供充足的上下文，告知AI你的目标、你正在使用的数据和工具。</li>
+<li><strong>T (Task - 任务):</strong> “你的任务是…” —— 清晰、明确、无歧义地描述你需要AI完成的具体工作。</li>
+<li><strong>F (Format - 格式):</strong> “请以…格式输出” —— 指定你想要的输出形式，如代码块、Markdown表格、JSON对象、项目列表等。</li>
+</ul>
+<p><strong>示例对比：</strong></p>
 <blockquote class="blockquote">
-<p><strong>进阶提示示例（追求健壮性）：</strong></p>
+<p><strong>低质量Prompt 👎:</strong> “如何用R预测房价？”</p>
+<p><em>(这只会得到泛泛而谈的、无法直接使用的教科书式答案。)</em></p>
 </blockquote>
-<pre><code>我正在用Playwright写一个爬虫。请帮我重构我的代码，加入以下“工业级”特性，并为每个特性添加详细注释说明其作用：
-
-1.  **智能等待:** 不要用固定的`sleep(5)`，而是使用Playwright的智能等待机制。
-2.  **重试逻辑:** 当网络波动或页面加载失败时，自动重试3次。
-3.  **增量保存:** 每成功爬取10条数据就保存一次。
-4.  **日志记录:** 使用Python的`logging`模块记录关键步骤。</code></pre>
-</section>
-<section id="探索与拓展铸造你的工程师匠心-5个探索方向" class="level3">
-<h3 class="anchored" data-anchor-id="探索与拓展铸造你的工程师匠心-5个探索方向"><strong>探索与拓展：铸造你的工程师匠心 (5个探索方向)</strong></h3>
-<ol type="1">
-<li><strong>配置化与可扩展性:</strong> “请将我的爬虫脚本改造得更具通用性。将需要爬取的目标URL、要提取的CSS选择器、以及翻页次数等硬编码的参数，全部提取到一个单独的<code>config.yaml</code>或<code>config.json</code>文件中。让我的Python主脚本读取这个配置文件来执行任务。”</li>
-<li><strong>浏览器指纹与反侦察:</strong> “我担心被网站识别为机器人。请解释什么是‘浏览器指纹’，并提供代码示例，展示如何使用Playwright的扩展功能或第三方库来伪造一个更真实的浏览器指纹（例如，修改<code>navigator.webdriver</code>属性、伪造Canvas指纹等）。”</li>
-<li><strong>数据校验与清洗层:</strong> “数据采集后，往往是脏乱的。请帮我设计一个数据校验层。使用<code>Pandas</code>或<code>Pydantic</code>库，在数据存入最终CSV文件之前，自动检查每一行数据是否符合预设的格式（如，价格必须是数字，评分必须在0-5之间），并将不合格的数据记录到另一个错误日志文件中。”</li>
-<li><strong>任务调度与自动化:</strong> “我希望这个爬虫能每周自动运行一次。请给我一个简单的教程，说明如何将这个Python脚本部署到一个轻量级的任务调度工具上，比如在Linux服务器上使用<code>Cron</code>，或者在Windows上使用‘任务计划程序’。”</li>
-<li><strong>代码质量与测试:</strong> “请扮演一名代码审查员(Code Reviewer)，并使用静态分析工具的视角（如Flake8, Black）来审查我的爬虫代码。指出其中不符合PEP 8规范、可能存在潜在bug或可以优化的地方。另外，请为我的一个核心函数编写一个简单的单元测试用例（使用<code>pytest</code>）。”</li>
-</ol>
-<hr>
-</section>
-</section>
-<section id="第三天r统计核心日---洞察深刻的侦探" class="level2">
-<h2 class="anchored" data-anchor-id="第三天r统计核心日---洞察深刻的侦探"><strong>第三天：R统计核心日 - 洞察深刻的侦探</strong></h2>
-<p><strong>今日目标：</strong> 成为一名数据侦探，从纷繁复杂的数据中找到线索，并用统计学构建一个令人信服的“案件报告”。</p>
-<section id="严谨的模型诊断与解读-rigorous-modeling" class="level3">
-<h3 class="anchored" data-anchor-id="严谨的模型诊断与解读-rigorous-modeling"><strong>1. 严谨的模型诊断与解读 (Rigorous Modeling)</strong></h3>
 <blockquote class="blockquote">
-<p><strong>进阶提示示例（模型诊断与深度解读）：</strong></p>
+<p><strong>高质量Prompt 👍:</strong> “<strong>(R)你是一位资深的数据科学家。</strong> <strong>(C)我正在使用R语言处理Ames Housing数据集，目标是建立一个预测<code>SalePrice</code>的多元线性回归模型。我的数据框<code>ames_df</code>中包含了<code>GrLivArea</code>, <code>OverallQual</code>, <code>YearBuilt</code>等变量。</strong> <strong>(T)你的任务是为我编写一段完整的R代码，内容包括：1. 对<code>YearBuilt</code>进行特征工程，生成<code>HouseAge</code>变量。2. 构建一个包含<code>GrLivArea</code>, <code>OverallQual</code>, 和<code>HouseAge</code>三个自变量的线性模型。3. 打印出模型的摘要信息(summary)。</strong> <strong>(F)请将所有R代码放在一个单独的代码块中，并对每一步添加必要的注释。</strong>”</p>
 </blockquote>
-<pre><code>我用R建立了一个租金预测模型 `rent_model`。现在，我需要对这个模型进行一次全面的“体检”。
-
-请逐步指导我完成以下任务，并提供相应的R代码和结果解读：
-1.  **残差分析:** 检查残差的正态性。
-2.  **同方差性检验:** 检查同方差性。
-3.  **多重共线性诊断:** 计算VIF。
-4.  **最终解读:** 将模型结果翻译成业务洞察报告。</code></pre>
 </section>
-<section id="探索与拓展磨砺你的统计学思维-5个探索方向" class="level3">
-<h3 class="anchored" data-anchor-id="探索与拓展磨砺你的统计学思维-5个探索方向"><strong>探索与拓展：磨砺你的统计学思维 (5个探索方向)</strong></h3>
-<ol type="1">
-<li><strong>交互效应的探索:</strong> “我的模型<code>lm(y ~ x1 + x2)</code>显示x1和x2都不显著。但直觉告诉我它们之间可能有交互作用。请教我如何在R中探索和可视化两个连续变量的交互效应，并解释如何在模型中加入交互项<code>x1:x2</code>。如果交互项显著，我应该如何向业务方解释它的含义？”</li>
-<li><strong>模型选择的艺术:</strong> “除了线性回归，对于我的预测任务，可能还有其他更合适的模型，比如广义线性模型(GLM)、稳健回归(Robust Regression)或决策树。请为我简要介绍这三种模型的适用场景，并教我如何使用<code>caret</code>或<code>tidymodels</code>包，通过交叉验证来客观地比较这些不同模型的性能，从而选择出最优模型。”</li>
-<li><strong>挑战模型的假设:</strong> “如果我的残差分析显示残差严重不符合正态分布，我该怎么办？请提供至少三种处理策略，例如对因变量进行Box-Cox变换、使用对非正态数据更稳健的模型，或者分析是否存在异常值。请分别给出相应的R代码示例。”</li>
-<li><strong>因果推断的边界:</strong> “我的回归模型显示‘近地铁’这个标签与高租金强相关。请扮演一名挑剔的统计学家，提醒我为什么‘相关不等于因果’。并启发我思考，如果要更有力地论证‘近地铁’是导致租金上涨的<strong>原因</strong>，我还需要收集哪些额外的数据（即控制哪些混杂变量）？”</li>
-<li><strong>贝叶斯方法的视角:</strong> “传统的频率派统计给出了一个点估计的系数。请简单介绍一下贝叶斯回归的基本思想，它与频率派回归有何不同？并演示如何使用一个R包（如<code>rstanarm</code>）来拟合一个简单的贝叶斯模型，并解释如何解读其结果中的‘后验分布’，这又能带来什么额外的信息？”</li>
-</ol>
-<hr>
+<section id="ai_collaboration_log.md你的学习与反思日志" class="level1">
+<h1>5. <code>AI_Collaboration_Log.md</code>：你的学习与反思日志</h1>
+<p>这是本次项目的一个<strong>强制性交付成果</strong>。请在项目开始时就创建该文件，并在每次与AI进行有意义的交互后及时更新。</p>
+<p><strong>Markdown模板:</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># AI 协作日志</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>**小组成员:** <span class="co">[</span><span class="ot">你的名字</span><span class="co">]</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">### 交互日期: 2025-XX-XX</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>**1. 我遇到的问题/任务:**</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 我需要在R中建立一个预测房价的多元回归模型，但不确定如何处理类别型变量，比如</span><span class="in">`Neighborhood`</span><span class="at">。</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>**2. 我向AI提出的核心Prompt:**</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; (R)你是一位精通R语言的统计学专家。 (C)我正在使用Ames Housing数据集，数据框名为</span><span class="in">`df`</span><span class="at">，其中有一个名为</span><span class="in">`Neighborhood`</span><span class="at">的因子(factor)类型变量，它有超过20个水平(levels)。我希望把它作为自变量纳入我的线性回归模型</span><span class="in">`lm(SalePrice ~ .)`</span><span class="at">中。 (T)请告诉我直接这样做可能有什么问题，并向我推荐至少两种更合理的处理方法。 (F)请以项目列表的形式给出解答，并为每种方法提供简短的R代码示例。</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>**3. AI给出的核心回答 (摘要或截图):**</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; AI指出，直接将高基数(high-cardinality)的类别变量纳入模型会导致虚拟变量过多、模型不稳定和过拟合。</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 它推荐了两种方法：</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 1.  **特征合并 (Feature Lumping):** 将频次较低的邻区合并为"Other"类别。提供了使用</span><span class="in">`forcats::fct_lump()`</span><span class="at">的代码。</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 2.  **目标编码 (Target Encoding):** 用每个邻区对应的平均房价来替换邻区名称。警告了这种方法可能导致数据泄露，并建议在交叉验证中使用。</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>**4. 我的反思与采纳决策:**</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 我认为AI的回答非常专业，指出的问题正是我担心的。目标编码虽然强大，但实现起来比较复杂且容易出错，不适合项目初期。特征合并的方法非常直观且易于实现。</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **最终决策：** 我决定采纳**方法1（特征合并）**。我将使用</span><span class="in">`fct_lump()`</span><span class="at">函数，将出现频率低于5%的邻区统一归为"Other"类别，然后再将处理后的变量投入模型。这既简化了模型，又保留了主要信息。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-</section>
-<section id="第四天python应用开发日---用户至上的产品经理" class="level2">
-<h2 class="anchored" data-anchor-id="第四天python应用开发日---用户至上的产品经理"><strong>第四天：Python应用开发日 - 用户至上的产品经理</strong></h2>
-<p><strong>今日目标：</strong> 成为一名产品经理，思考的不是“我能做什么”，而是“用户需要什么”。</p>
-<section id="优化用户体验ux" class="level3">
-<h3 class="anchored" data-anchor-id="优化用户体验ux"><strong>1. 优化用户体验(UX)</strong></h3>
-<blockquote class="blockquote">
-<p><strong>进阶提示示例（优化用户体验）：</strong></p>
-</blockquote>
-<pre><code>我的Streamlit应用已经基本成型，但感觉体验不够好。请扮演一名资深UX设计师和前端性能优化专家，帮我改进：
-
-1.  **性能优化:** 如何正确使用`st.cache_data`和`st.cache_resource`来提升应用的响应速度？
-2.  **布局优化:** 给我使用`st.tabs`和`st.expander`的布局方案。
-3.  **交互反馈:** 如何使用`st.spinner`给用户明确的进度提示？</code></pre>
-</section>
-<section id="探索与拓展打造卓越产品的追求-5个探索方向" class="level3">
-<h3 class="anchored" data-anchor-id="探索与拓展打造卓越产品的追求-5个探索方向"><strong>探索与拓展：打造卓越产品的追求 (5个探索方向)</strong></h3>
-<ol type="1">
-<li><strong>状态管理与用户会话:</strong> “我的应用需要记住用户之前的选择。例如，用户在页面A选择了一个城市，我希望当他导航到页面B再回来时，页面A的选择依然保留。请解释Streamlit的Session State (<code>st.session_state</code>)是如何工作的，并给我一个跨页面保持用户选择的完整代码示例。”</li>
-<li><strong>自定义组件与美化:</strong> “Streamlit的基础组件样式有限。请教我如何引入自定义CSS来修改应用的外观（如字体、颜色、按钮样式），或者推荐一个可以集成到Streamlit中的第三方组件库（如图表库ECharts或地图库Folium），并给出演示代码。”</li>
-<li><strong>用户引导与可解释性:</strong> “我的应用中有一个复杂的图表。如何设计一个‘帮助’或‘信息’按钮（一个小问号图标），当用户点击时，会弹出一个<code>st.info</code>或<code>st.popover</code>来解释这个图表应该如何解读？这能极大地提升应用的可解释性。”</li>
-<li><strong>URL参数化与分享:</strong> “我希望用户可以将他们当前的选择（如筛选器状态）分享给别人。请教我如何实现URL参数化？即当用户改变筛选器时，应用的URL会自动更新（如 <code>...?city=北京&amp;price=5000</code>），这样用户只需复制链接，别人打开就能看到完全相同的视图。”</li>
-<li><strong>A/B测试的思考:</strong> “如果我想测试两种不同的界面布局或推荐算法哪个更受用户欢迎，请从产品经理的角度，为我的Streamlit应用设计一个简单的A/B测试框架。我需要记录哪些用户行为数据？如何在应用中实现流量的随机分配？”</li>
-</ol>
-<hr>
-</section>
-</section>
-<section id="第五天产品路演与交付日---成果斐然的沟通者" class="level2">
-<h2 class="anchored" data-anchor-id="第五天产品路演与交付日---成果斐然的沟通者"><strong>第五天：产品路演与交付日 - 成果斐然的沟通者</strong></h2>
-<p><strong>今日目标：</strong> 成为一名出色的沟通者，将你数日的心血，以最精彩的方式呈现出来。</p>
-<section id="准备一场精彩的演讲" class="level3">
-<h3 class="anchored" data-anchor-id="准备一场精彩的演讲"><strong>1. 准备一场精彩的演讲</strong></h3>
-<blockquote class="blockquote">
-<p><strong>进阶提示示例（准备演讲稿）：</strong></p>
-</blockquote>
-<pre><code>我需要为我的Streamlit应用做一个5分钟的项目路演。观众是完全不懂技术的教授和同学。
-
-请帮我设计一份详细的**演讲逐字稿**，要求如下：
-1.  **开场“钩子” (Hook):** 30秒内抓住所有人的注意力。
-2.  **问题阐述:** 清晰地说明项目解决了什么痛点。
-3.  **产品演示串词:** 边演示边说的话。
-4.  **“Aha!”时刻:** 突出展示最惊人的一个洞察。
-5.  **结尾升华:** 总结价值，展望未来。</code></pre>
-</section>
-<section id="探索与拓展成为沟通大师的修炼-5个探索方向" class="level3">
-<h3 class="anchored" data-anchor-id="探索与拓展成为沟通大师的修炼-5个探索方向"><strong>探索与拓展：成为沟通大师的修炼 (5个探索方向)</strong></h3>
-<ol type="1">
-<li><strong>准备Q&amp;A环节:</strong> “请扮演三位不同类型的听众来向我提问：一位是挑剔的技术专家，一位是关心商业价值的投资人，还有一位是普通用户。请分别提出2个他们最可能问的尖锐问题，并为我提供回答这些问题的思路和策略。”</li>
-<li><strong>制作一页纸报告(One-Pager):</strong> “除了演讲，我还需要一份高度浓缩的‘一页纸项目报告’作为书面材料。请帮我设计这份报告的布局和内容，需要包含项目摘要、核心发现（用图表）、技术架构图和关键成果等，确保所有信息在一页A4纸内清晰呈现。”</li>
-<li><strong>量化项目影响力:</strong> “如何用数据来证明我的项目是有价值的？请启发我思考，我可以在我的应用中埋入哪些简单的追踪点，来量化我的项目影响力。例如，‘在上线第一天，共有XX位用户使用了我们的租金预测器，平均为每位用户节省了YY分钟的决策时间’。请给出3个类似的能量化影响力的指标。”</li>
-<li><strong>项目复盘与反思:</strong> “请设计一个项目复盘会议的框架。引导我思考并回答以下问题：1. 在这次项目中，我们做得最出色的是什么？2. 我们遇到的最大挑战是什么，以及我们是如何解决的？3. 如果可以重来一次，我们会做出哪些不同的决策？4. 通过这个项目，我个人最大的收获和成长是什么？”</li>
-<li><strong>撰写博客文章:</strong> “请帮我将这个项目的故事，改写成一篇适合发布在技术博客（如知乎、CSDN）上的文章。文章标题要吸引人，结构要清晰，语言要生动，不仅要展示最终成果，还要分享我在开发过程中的心路历程和踩过的坑，让其他学习者也能从中受益。”</li>
-</ol>
+<section id="道德规范与评分准则" class="level1">
+<h1>6. 道德规范与评分准则</h1>
+<ul>
+<li><strong>可以做 (Do’s):</strong>
+<ul>
+<li>用AI进行头脑风暴，启发思路。</li>
+<li>用AI生成样板代码、调试错误、解释概念。</li>
+<li>用AI学习新库的用法、优化代码性能。</li>
+<li>用AI进行文本的润色、总结和格式转换。</li>
+</ul></li>
+<li><strong>禁止做 (Don’ts):</strong>
+<ul>
+<li>将AI生成的代码或大段文字在不理解的情况下直接粘贴到项目中。</li>
+<li>让AI完成一个完整的、需要创造性思考的核心任务（如“请为我完成整个项目的探索性数据分析”）。</li>
+<li>在答辩或报告中，将AI的成果宣称为完全是自己的原创思考。</li>
+</ul></li>
+</ul>
+<div class="callout-critical" title="黄金准则 (The Golden Rule)">
+<p><strong>如果你无法向老师清晰、自信地解释这段由AI生成的代码或文字的每一部分，那么你就不应该提交它。</strong></p>
+</div>
+<p><strong>评分影响:</strong> 你的<code>AI_Collaboration_Log.md</code>将作为<strong>项目管理与文档规范</strong>部分的重要评分依据。一份详实、深刻、能体现你批判性思维和学习过程的日志，将会获得高分。反之，日志内容敷衍、缺乏反思，或项目成果与日志记录严重不符，将会被扣分。高质量的人机协作将是你项目成功的加速器，也是你获得高分的关键。</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

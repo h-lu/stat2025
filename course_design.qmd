@@ -1,16 +1,5 @@
 ---
 title: "《统计学与R语言》课程设计：端到端数据智能应用开发周"
-subtitle: "AI-Powered Full-Stack Insight System Sprint (Rigorously Verified & Enriched Edition)"
-author: "课程教学组"
-date: "today"
-format:
-  html:
-    toc: true
-    toc-location: left
-    toc-title: "文档目录"
-    theme: sandstone
-    code-fold: true
-    code-tools: true
 ---
 
 # 1. 项目概述 (Project Overview)
